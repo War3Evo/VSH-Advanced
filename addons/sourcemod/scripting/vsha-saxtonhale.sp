@@ -16,9 +16,10 @@ public Plugin myinfo =
 #define HALE_JUMPCHARGETIME		1
 #define HALE_JUMPCHARGE			(25 * HALE_JUMPCHARGETIME)
 
-#define HaleModel			"models/player/saxtonhale.mdl"
-#define HaleModelPrefix			"models/player/saxtonhale"
+#define HaleModel			"models/player/saxton_hale/saxton_hale.mdl"
+#define HaleModelPrefix			"models/player/saxton_hale/saxton_hale"
 
+// ?? i need to find these, as i dont have them - El Diablo
 #define HaleTheme1			"saxton_hale/saxtonhale.mp3"
 #define HaleTheme2			"saxton_hale/haletheme2.mp3"
 #define HaleTheme3			"saxton_hale/haletheme3.mp3"
@@ -85,6 +86,14 @@ public void OnAllPluginsLoaded()
 #endif
 	HookEvent("player_changeclass", ChangeClass);
 }
+public void OnPluginEnd()
+{
+	if(ThisPluginHandle != null)
+	{
+		VSHA_UnRegisterBoss("saxtonhale");
+	}
+}
+
 public void OnClientDisconnect(int client)
 {
 	if (client == Hale)
@@ -557,8 +566,31 @@ public void VSHA_OnMusic(char BossTheme[256], float &time)
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnMusic() **** Forward Responded ****");
 #endif
 }
+
+public Action OnVSHAEvent(VSHA_EVENT event, int client)
+{
+	switch(event)
+	{
+		case ModelTimer:
+		{
+			if (client != Hale)
+			{
+				SetVariantString("");
+				AcceptEntityInput(client, "SetCustomModel");
+				return Plugin_Stop;
+			}
+
+			SetVariantString(HaleModel);
+			AcceptEntityInput(client, "SetCustomModel");
+			SetEntProp(client, Prop_Send, "m_bUseClassAnimations", 1);
+		}
+	}
+	return Plugin_Continue;
+}
+/*
 public Action VSHA_OnModelTimer(int client, char modelpath[64])
 {
+	//DP("VSHA_OnModelTimer");
 	if (client != Hale)
 	{
 		SetVariantString("");
@@ -566,12 +598,18 @@ public Action VSHA_OnModelTimer(int client, char modelpath[64])
 		return Plugin_Stop;
 	}
 	modelpath = HaleModel;
+
+	SetVariantString(model);
+	AcceptEntityInput(client, "SetCustomModel");
+	SetEntProp(client, Prop_Send, "m_bUseClassAnimations", 1);
+
 #if defined DEBUG
 	//DEBUGPRINT1("VSH SaxtonHale::VSHA_OnModelTimer() **** Forward Responded ****");
 	//DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnModelTimer() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
-}
+}*/
+
 public void VSHA_OnBossRage(int client)
 {
 	if (client != Hale) return;
