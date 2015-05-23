@@ -4,7 +4,7 @@
 #include <morecolors>
 #include <vsha>
 
-public Plugin myinfo = 
+public Plugin myinfo =
 {
 	name 			= "Saxton Hale",
 	author 			= "Valve",
@@ -12,10 +12,6 @@ public Plugin myinfo =
 	version 		= "1.0",
 	url 			= "http://wiki.teamfortress.com/wiki/Saxton_Hale"
 }
-
-#define PLYR				MAXPLAYERS+1
-#define PATH				64
-#define PATHX				PLATFORM_MAX_PATH
 
 #define HALE_JUMPCHARGETIME		1
 #define HALE_JUMPCHARGE			(25 * HALE_JUMPCHARGETIME)
@@ -63,6 +59,8 @@ Handle ThisPluginHandle = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDIN
 
 //make defines, handles, variables heer lololol
 int HaleCharge;
+
+int Hale;
 
 float WeighDownTimer = 0.0;
 float RageDist = 800.0;
@@ -117,7 +115,7 @@ public void VSHA_AddToDownloads()
 	char s[PATHX];
 	char extensions[][] = { ".mdl", ".dx80.vtx", ".dx90.vtx", ".sw.vtx", ".vvd", ".phy" };
 	char extensionsb[][] = { ".vtf", ".vmt" };
-	char extensionsc[][] = { ".wav", ".mp3" };
+	//char extensionsc[][] = { ".wav", ".mp3" };
 	int i;
 	for (i = 0; i < sizeof(extensions); i++)
 	{
@@ -710,7 +708,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		if (attacker <= MaxClients && attacker > 0)
 		{
 			int iFlags = GetEntityFlags(victim);
-			if ( (iFlags & (FL_ONGROUND|FL_DUCKING)) == (FL_ONGROUND|FL_DUCKING) )    
+			if ( (iFlags & (FL_ONGROUND|FL_DUCKING)) == (FL_ONGROUND|FL_DUCKING) )
 			{
 				damage *= 0.2;
 				return Plugin_Changed;
