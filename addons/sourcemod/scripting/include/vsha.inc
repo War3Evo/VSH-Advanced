@@ -63,7 +63,21 @@
 
 enum VSHA_EVENT
 {
-	ModelTimer
+	ModelTimer,
+	OnLastSurvivorLoop,
+	OnBossSetHP,
+	OnPlayerKilled
+}
+
+// VSHA Events
+enum VSHA_Var
+{
+	hString,
+	EventArg1, //generic vsha event arguments
+	EventArg2,
+	EventArg3,
+	EventArg4,
+	SmEvent, ///usual game events from sm hooked events
 }
 
 /**
@@ -923,6 +937,19 @@ native int VSHA_CountScoutsLeft(); /* counts how many scouts are left */
 native int VSHA_GetPlayerCount();
 
 native int VSHA_CreateEvent(VSHA_EVENT event, int client);
+
+/* BEGIN GLOBAL VARS */
+//retrieves specified values from the main VSHA plugin, see VSHA_Var enum in constants.inc, only those values are allowed
+//this mostly used for accessing a variable without creating a special native just for it
+//this returns any:, you should tag it if return value is not suppose to be normal integer.
+// to get integer.. do this: view_as<int>(VSHA_GetVar(EventArg1)); or view_as<Handle>(VSHA_GetVar(EventArg1));
+//most are temporary variables and this function should be called immidiately in the right functions
+//examples VSHA_GetVar(EventArg1)   VSHA_GetVar(EventArg2)
+//See VSHA_Var enum in constants to get a list
+//Do not get/set vars arbitrarily unless you know what you are doing
+native float VSHA_GetVar(VSHA_Var variabletoretrieve);
+native void VSHA_SetVar(VSHA_Var variabletoretrieve, any value);
+/* END GLOBAL VARS */
 
 //=================================================================================================================================
 
