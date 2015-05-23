@@ -1,17 +1,17 @@
 // vsha_PawnTimer_EquipPlayers.inc
 
-public void EquipPlayers(int clientid)
+public void EquipPlayers(int iClientid)
 {
-	int client = GetClientOfUserId(clientid);
-	if ( client <= 0 || !IsPlayerAlive(client) || CheckRoundState() == 2) return;
+	int iClient = GetClientOfUserId(iClientid);
+	if ( iClient <= 0 || !IsPlayerAlive(iClient) || CheckRoundState() == 2) return;
 
-	if (IsValidEntity(client)) TF2Attrib_RemoveAll(client);
-	if (GetClientTeam(client) != OtherTeam)
+	if (IsValidEntity(iClient)) TF2Attrib_RemoveAll(iClient);
+	if (GetClientTeam(iClient) != OtherTeam)
 	{
-		ForceTeamChange(client, OtherTeam);
-		TF2_RegeneratePlayer(client); // Added fix by Chdata to correct team colors
+		ForceTeamChange(iClient, OtherTeam);
+		TF2_RegeneratePlayer(iClient); // Added fix by Chdata to correct team colors
 	}
-	int weapon = GetPlayerWeaponSlot(client, TFWeaponSlot_Primary);
+	int weapon = GetPlayerWeaponSlot(iClient, TFWeaponSlot_Primary);
 	int index = -1;
 	if (IsValidEdict(weapon) && IsValidEntity(weapon))
 	{
@@ -20,26 +20,26 @@ public void EquipPlayers(int clientid)
 		{
 			case 588:
 			{
-				TF2_RemoveWeaponSlot2(client, TFWeaponSlot_Primary);
-				weapon = SpawnWeapon(client, "tf_weapon_shotgun_primary", 415, 10, 6, "265 ; 999.0 ; 179 ; 1.0 ; 178 ; 0.6 ; 2 ; 1.1 ; 3 ; 0.66");
+				TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Primary);
+				weapon = SpawnWeapon(iClient, "tf_weapon_shotgun_primary", 415, 10, 6, "265 ; 999.0 ; 179 ; 1.0 ; 178 ; 0.6 ; 2 ; 1.1 ; 3 ; 0.66");
 			}
 			case 237:
 			{
-				TF2_RemoveWeaponSlot2(client, TFWeaponSlot_Primary);
-				weapon = SpawnWeapon(client, "tf_weapon_rocketlauncher", 18, 1, 0, "265 ; 999.0");
+				TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Primary);
+				weapon = SpawnWeapon(iClient, "tf_weapon_rocketlauncher", 18, 1, 0, "265 ; 999.0");
 				SetWeaponAmmo(weapon, 20);
 			}
 			case 17, 204, 36, 412:
 			{
 				if (GetItemQuality(weapon) != 10)
 				{
-					TF2_RemoveWeaponSlot2(client, TFWeaponSlot_Primary);
-					SpawnWeapon(client, "tf_weapon_syringegun_medic", 36, 1, 10, "17 ; 0.05 ; 144 ; 1");
+					TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Primary);
+					SpawnWeapon(iClient, "tf_weapon_syringegun_medic", 36, 1, 10, "17 ; 0.05 ; 144 ; 1");
 				}
 			}
 		}
 	}
-	weapon = GetPlayerWeaponSlot(client, TFWeaponSlot_Secondary);
+	weapon = GetPlayerWeaponSlot(iClient, TFWeaponSlot_Secondary);
 	if (IsValidEdict(weapon) && IsValidEntity(weapon))
 	{
 		index = GetItemIndex(weapon);
@@ -47,35 +47,35 @@ public void EquipPlayers(int clientid)
 		{
 			case 57, 231:
 			{
-				TF2_RemoveWeaponSlot2(client, TFWeaponSlot_Secondary);
-				weapon = SpawnWeapon(client, "tf_weapon_smg", 16, 1, 0, "");
+				TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Secondary);
+				weapon = SpawnWeapon(iClient, "tf_weapon_smg", 16, 1, 0, "");
 			}
 			case 265:
 			{
-				TF2_RemoveWeaponSlot2(client, TFWeaponSlot_Secondary);
-				weapon = SpawnWeapon(client, "tf_weapon_pipebomblauncher", 20, 1, 0, "");
+				TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Secondary);
+				weapon = SpawnWeapon(iClient, "tf_weapon_pipebomblauncher", 20, 1, 0, "");
 				SetWeaponAmmo(weapon, 24);
 			}
 			case 735, 736, 810, 831, 933, 1080, 1102: //NAILGUN FOR SAPPER, trust me it's more useful........
 			{
-				TF2_RemoveWeaponSlot2(client, TFWeaponSlot_Secondary);
-				weapon = SpawnWeapon(client, "tf_weapon_handgun_scout_secondary", 23, 5, 10, "280 ; 5 ; 6 ; 0.7 ; 2 ; 0.66 ; 4 ; 4.167 ; 78 ; 8.333 ; 137 ; 6.0");
-				SetWeaponAmmo(weapon, (GetMaxAmmo(client, 0)*200/GetMaxAmmo(client, 0)));
+				TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Secondary);
+				weapon = SpawnWeapon(iClient, "tf_weapon_handgun_scout_secondary", 23, 5, 10, "280 ; 5 ; 6 ; 0.7 ; 2 ; 0.66 ; 4 ; 4.167 ; 78 ; 8.333 ; 137 ; 6.0");
+				SetWeaponAmmo(weapon, (GetMaxAmmo(iClient, 0)*200/GetMaxAmmo(iClient, 0)));
 			}
 			case 39, 351, 1081:
 			{
-				TF2_RemoveWeaponSlot2(client, TFWeaponSlot_Secondary);
-				weapon = SpawnWeapon(client, "tf_weapon_flaregun", index, 5, 10, "25 ; 0.5 ; 207 ; 1.33 ; 144 ; 1.0 ; 58 ; 3.2");
+				TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Secondary);
+				weapon = SpawnWeapon(iClient, "tf_weapon_flaregun", index, 5, 10, "25 ; 0.5 ; 207 ; 1.33 ; 144 ; 1.0 ; 58 ; 3.2");
 				SetWeaponAmmo(weapon, 16);
 			}
 		}
 	}
-	if (IsValidEntity(FindPlayerBack(client, { 57 , 231 }, 2)))
+	if (IsValidEntity(FindPlayerBack(iClient, { 57 , 231 }, 2)))
 	{
-		RemovePlayerBack(client, { 57 , 231 }, 2);
-		weapon = SpawnWeapon(client, "tf_weapon_smg", 16, 1, 0, "");
+		RemovePlayerBack(iClient, { 57 , 231 }, 2);
+		weapon = SpawnWeapon(iClient, "tf_weapon_smg", 16, 1, 0, "");
 	}
-	weapon = GetPlayerWeaponSlot(client, TFWeaponSlot_Melee);
+	weapon = GetPlayerWeaponSlot(iClient, TFWeaponSlot_Melee);
 	if (IsValidEdict(weapon) && IsValidEntity(weapon))
 	{
 		index = GetItemIndex(weapon);
@@ -83,42 +83,42 @@ public void EquipPlayers(int clientid)
 		{
 			case 331:
 			{
-				TF2_RemoveWeaponSlot2(client, TFWeaponSlot_Melee);
-				weapon = SpawnWeapon(client, "tf_weapon_fists", 195, 1, 6, "");
+				TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Melee);
+				weapon = SpawnWeapon(iClient, "tf_weapon_fists", 195, 1, 6, "");
 			}
-			case 357: CreateTimer(1.0, Timer_RemoveHonorBound, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+			case 357: CreateTimer(1.0, Timer_RemoveHonorBound, GetClientUserId(iClient), TIMER_FLAG_NO_MAPCHANGE);
 			case 589:
 			{
 				if ( !EnableEurekaEffect.BoolValue ) //!GetConVarBool(EnableEurekaEffect))
 				{
-					TF2_RemoveWeaponSlot2(client, TFWeaponSlot_Melee);
-					weapon = SpawnWeapon(client, "tf_weapon_wrench", 7, 1, 0, "");
+					TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Melee);
+					weapon = SpawnWeapon(iClient, "tf_weapon_wrench", 7, 1, 0, "");
 				}
 			}
 		}
 	}
-	weapon = GetPlayerWeaponSlot(client, 4);
+	weapon = GetPlayerWeaponSlot(iClient, 4);
 	if (IsValidEdict(weapon) && IsValidEntity(weapon) && GetItemIndex(weapon) == 60)
 	{
-		TF2_RemoveWeaponSlot2(client, 4);
-		weapon = SpawnWeapon(client, "tf_weapon_invis", 30, 1, 0, "");
+		TF2_RemoveWeaponSlot2(iClient, 4);
+		weapon = SpawnWeapon(iClient, "tf_weapon_invis", 30, 1, 0, "");
 	}
-	TFClassType equip = TF2_GetPlayerClass(client);
+	TFClassType equip = TF2_GetPlayerClass(iClient);
 	switch (equip)
 	{
 		case TFClass_Medic:
 		{
-			weapon = GetPlayerWeaponSlot(client, TFWeaponSlot_Secondary);
+			weapon = GetPlayerWeaponSlot(iClient, TFWeaponSlot_Secondary);
 			int mediquality = (IsValidEdict(weapon) && IsValidEntity(weapon) ? GetItemQuality(weapon) : -1);
 			if (mediquality != 10)
 			{
-				TF2_RemoveWeaponSlot2(client, TFWeaponSlot_Secondary);
-				weapon = SpawnWeapon(client, "tf_weapon_medigun", 998, 5, 10, "18 ; 0.0 ; 10 ; 1.25 ; 178 ; 0.75 ; 144 ; 2.0");
+				TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Secondary);
+				weapon = SpawnWeapon(iClient, "tf_weapon_medigun", 998, 5, 10, "18 ; 0.0 ; 10 ; 1.25 ; 178 ; 0.75 ; 144 ; 2.0");
 //200 ; 1 for area of effect healing  ; 178 ; 0.75 Faster switch-to ; 14 ; 0.0 perm overheal
 				SetMediCharge(weapon, 0.41);
 			}
 		}
-		default: TF2Attrib_SetByDefIndex( client, 57, float(GetClientHealth(client)/50) ); //make by cvar
+		default: TF2Attrib_SetByDefIndex( iClient, 57, float(GetClientHealth(iClient)/50) ); //make by cvar
 	}
 	return;
 }
