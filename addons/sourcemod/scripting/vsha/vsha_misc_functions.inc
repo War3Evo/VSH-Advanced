@@ -2,10 +2,10 @@
 
 public void FindHealthBar()
 {
-	iHealthBar = FindEntityByClassname2(-1, "monster_resource");
+	iHealthBar = FindEntityByClassname2(-1, HEALTHBAR_CLASS);
 	if (iHealthBar == -1)
 	{
-		iHealthBar = CreateEntityByName("monster_resource");
+		iHealthBar = CreateEntityByName(HEALTHBAR_CLASS);
 		if (iHealthBar != -1) DispatchSpawn(iHealthBar);
 	}
 }
