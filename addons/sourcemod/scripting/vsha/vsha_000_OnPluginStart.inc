@@ -6,18 +6,18 @@ public void OnPluginStart()
 	hTrieBossSubplugins = new StringMap();	//CreateTrie();
 
 	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);
-	bEnabled = CreateConVar("vshe_enabled", "1", "Enable the VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	FirstRound = CreateConVar("vshe_firstround", "1", "Enable first round for VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	MedigunReset = CreateConVar("vshe_medigunreset", "0.40", "default ubercharge for when mediguns reset", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	AliveToEnable = CreateConVar("vshe_alivetoenable", "3", "how many players left to enable cap", FCVAR_PLUGIN, true, 0.0, true, 16.0);
-	CountDownPlayerLimit = CreateConVar("vshe_countdownplayerlimit", "3", "how many players must be left to start the final countdown timer", FCVAR_PLUGIN, true, 0.0, true, 16.0);
-	CountDownHealthLimit = CreateConVar("vshe_countdownbosshealth", "5000", "how low boss health must be to start the final countdown timer", FCVAR_PLUGIN, true, 0.0, true, 999999.0);
-	LastPlayersTimerCountDown = CreateConVar("vshe_finalcountdowntimer", "120", "how long the final countdown timer is", FCVAR_PLUGIN, true, 0.0, true, 99999.0);
-	EnableEurekaEffect = CreateConVar("vshe_alloweureka", "1", "(dis)allows the eureka wrench from being used", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	PointDelay = CreateConVar("vshe_capturepointdelay", "10", "time in seconds the cap is delayed from enabling", FCVAR_PLUGIN, true, 0.0, true, 999.0);
-	QueueIncrement = CreateConVar("vshe_queueincrement", "10", "by how much queue increments", FCVAR_PLUGIN, true, 1.0, true, 999.0);
-	//FallDmgSoldier = CreateConVar("vshe_soldierfalldamage", "20.0", "divides fall damage by this number", FCVAR_PLUGIN, true, 0.0, true, 999.0);
-	//DifficultyAmount = CreateConVar("vshe_difficultyamount", "3", "how many difficulty settings you want available for bosses to choose", FCVAR_PLUGIN, true, 0.0, true, 999.0);
+	bEnabled = CreateConVar("vsha_enabled", "1", "Enable the VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	FirstRound = CreateConVar("vsha_firstround", "1", "Enable first round for VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	MedigunReset = CreateConVar("vsha_medigunreset", "0.40", "default ubercharge for when mediguns reset", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	AliveToEnable = CreateConVar("vsha_alivetoenable", "3", "how many players left to enable cap", FCVAR_PLUGIN, true, 0.0, true, 16.0);
+	CountDownPlayerLimit = CreateConVar("vsha_countdownplayerlimit", "3", "how many players must be left to start the final countdown timer", FCVAR_PLUGIN, true, 0.0, true, 16.0);
+	CountDownHealthLimit = CreateConVar("vsha_countdownbosshealth", "5000", "how low boss health must be to start the final countdown timer", FCVAR_PLUGIN, true, 0.0, true, 999999.0);
+	LastPlayersTimerCountDown = CreateConVar("vsha_finalcountdowntimer", "120", "how long the final countdown timer is", FCVAR_PLUGIN, true, 0.0, true, 99999.0);
+	EnableEurekaEffect = CreateConVar("vsha_alloweureka", "1", "(dis)allows the eureka wrench from being used", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	PointDelay = CreateConVar("vsha_capturepointdelay", "10", "time in seconds the cap is delayed from enabling", FCVAR_PLUGIN, true, 0.0, true, 999.0);
+	QueueIncrement = CreateConVar("vsha_queueincrement", "10", "by how much queue increments", FCVAR_PLUGIN, true, 1.0, true, 999.0);
+	//FallDmgSoldier = CreateConVar("vsha_soldierfalldamage", "20.0", "divides fall damage by this number", FCVAR_PLUGIN, true, 0.0, true, 999.0);
+	//DifficultyAmount = CreateConVar("vsha_difficultyamount", "3", "how many difficulty settings you want available for bosses to choose", FCVAR_PLUGIN, true, 0.0, true, 999.0);
 
 	AddCommandListener(DoTaunt, "taunt");
 	AddCommandListener(DoTaunt, "+taunt");
@@ -44,6 +44,8 @@ public void OnPluginStart()
 	//HookEvent("player_changeclass", ChangeClass);
 
 	RegConsoleCmd("sm_vsha_special", CommandMakeNextSpecial);
+
+	RegAdminCmd("sm_forceboss", Command_forceboss, ADMFLAG_ROOT, "sm_forceboss");
 
 	RegConsoleCmd("sm_setboss", PickBossMenu);
 	RegConsoleCmd("sm_haleboss", PickBossMenu);
