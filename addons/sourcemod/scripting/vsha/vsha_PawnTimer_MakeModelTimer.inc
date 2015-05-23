@@ -14,6 +14,7 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 	Action result = VSHA_Private_Forward("VSHA_OnModelTimer");
 	if(result != Plugin_Stop)
 	{
+		ModelMap = VSHA_GetVar(EventModel);
 		ModelMap.GetString("Model",STRING(model));
 		SetVariantString(model);
 		AcceptEntityInput(iClient, "SetCustomModel");

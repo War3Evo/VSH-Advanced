@@ -16,6 +16,7 @@ public void MusicPlay()
 	VSHA_SetVar(EventTime,time);
 	VSHA_Private_Forward("VSHA_OnMusic");
 
+	SoundMap = VSHA_GetVar(EventSound);
 	time = VSHA_GetVar(EventTime);
 
 	SoundMap.GetString("Sound",STRING(sound));
