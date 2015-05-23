@@ -3,8 +3,8 @@
 public Action ClientTimer(Handle hTimer)
 {
 	if (CheckRoundState() > 1 || CheckRoundState() == -1) return Plugin_Stop;
-	for (int i = 1; i <= MaxClients; i++)
-        {
+	LoopAlivePlayers(i)
+	{
 		if (IsValidClient(i) && !bIsBoss[i] && GetClientTeam(i) == OtherTeam) continue;
 		char wepclassname[32];
 		//int killstreaker = iDamage[i] / 500;

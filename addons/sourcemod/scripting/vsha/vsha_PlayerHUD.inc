@@ -2,6 +2,8 @@
 
 public void PlayerHUD(int client)
 {
+	if(!ValidPlayer(client,true)) return;
+
 	if (GetClientButtons(client) & IN_SCORE) return;
 	TFClassType tfclass = TF2_GetPlayerClass(client);
 	if (!IsClientObserver(client) && IsPlayerAlive(client))
