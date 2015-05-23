@@ -66,13 +66,17 @@ enum VSHA_EVENT
 	ModelTimer,
 	OnLastSurvivorLoop,
 	OnBossSetHP,
-	OnPlayerKilled
+	OnPlayerKilled,
+	OnKillingSpree,
+	OnBossKilled
 }
 
 // VSHA Events
 enum VSHA_Var
 {
 	hString,
+	EventAttacker,
+	EventVictim,
 	EventArg1, //generic vsha event arguments
 	EventArg2,
 	EventArg3,
