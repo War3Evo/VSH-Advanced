@@ -25,6 +25,9 @@
 #define HEALTHBAR_CLASS "monster_resource"
 #define HEALTHBAR_PROPERTY "m_iBossHealthPercentageByte"
 #define HEALTHBAR_MAX 255
+
+#define TEAM_SPEC 1
+
 //#define DEBUG				0
 
 #if defined DEBUG
@@ -114,6 +117,16 @@ stock void DP(const char[] szMessage, ...)
 	PrintToServer("[DebugP %d] %s",RoundFloat(GetGameTime())%100, szBuffer);
 	PrintToChatAll("[DebugP %d] %s",RoundFloat(GetGameTime())%100, szBuffer);
 #endif
+}
+
+stock bool IsOnBlueOrRedTeam(int client)
+{
+	int iClientTeam = GetClientTeam(client);
+	if(iClientTeam == 2 || iClientTeam == 3)
+	{
+		return true;
+	}
+	return false;
 }
 
 #if !defined _diablostocks_included
@@ -344,14 +357,20 @@ stock void SetControlPoint(bool enable)
 		}
 	}
 }
+
+#define ROUNDSTATE_INVALID						-1		/**< Invalid RoundState (VSH is disabled)*/
+#define ROUNDSTATE_EVENT_ROUND_START			0		/**< set on a StartRound Timer and On event start round (preround freeze)*/
+#define ROUNDSTATE_START_ROUND_TIMER			1		/**< Start of a timer for roundstart (during round) */
+#define ROUNDSTATE_ROUND_END					2		/**< Found in SaxtonHale_Timers "StartHaleTimer" (after round end) */ //%50
+
 stock int CheckRoundState()
 {
 	switch ( GameRules_GetRoundState() )
 	{
-		case RoundState_Init, RoundState_Pregame: return -1;
-		case RoundState_StartGame, RoundState_Preround: return 0;
-		case RoundState_RoundRunning, RoundState_Stalemate: return 1;
-		default: return 2;
+		case RoundState_Init, RoundState_Pregame: return ROUNDSTATE_INVALID;
+		case RoundState_StartGame, RoundState_Preround: return ROUNDSTATE_EVENT_ROUND_START;
+		case RoundState_RoundRunning, RoundState_Stalemate: return ROUNDSTATE_START_ROUND_TIMER;
+		default: return ROUNDSTATE_ROUND_END;
 	}
 	return -1;
 }
