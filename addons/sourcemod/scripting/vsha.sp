@@ -274,6 +274,19 @@ public int FindNextBoss(bool[] array) //why force specs to Boss? They're prob AF
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
+	// Special Graphics for loading screen
+	PrintToServer("");
+	PrintToServer("");
+	PrintToServer(" #     #  #####  #     #    #    ");
+	PrintToServer(" #     # #     # #     #   # #   ");
+	PrintToServer(" #     # #       #     #  #   #  ");
+	PrintToServer(" #     #  #####  ####### #     # ");
+	PrintToServer("  #   #        # #     # ####### ");
+	PrintToServer("   # #   #     # #     # #     # ");
+	PrintToServer("    #     #####  #     # #     # ");
+	PrintToServer("");
+	PrintToServer("");
+
 	// F O R W A R D S ==============================================================================================
 	AddToDownloads = CreateGlobalForward("VSHA_AddToDownloads", ET_Ignore);
 	//===========================================================================================================================
