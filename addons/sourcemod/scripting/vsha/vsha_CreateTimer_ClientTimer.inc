@@ -29,25 +29,8 @@ public Action ClientTimer(Handle hTimer)
 
 			TF2_AddCondition(iClient, TFCond_Buffed, 0.3);
 
-			int boss = GetRandomBossIndex();
-			Function FuncLastSurvivorLoop = GetFunctionByName(Storage[boss], "VSHA_OnLastSurvivorLoop");
-			if (FuncLastSurvivorLoop != nullfunc)
-			{
-#if defined DEBUG
-				DEBUGPRINT1("VSH Engine::VSHA_OnLastSurvivorLoop() **** Forward Called ****");
-				DEBUGPRINT2("{lime}VSH Engine::VSHA_OnLastSurvivorLoop() **** Forward Called ****");
-#endif
-				Call_StartFunction(Storage[boss], FuncLastSurvivorLoop);
-				Call_PushCell(iClient);
-				Call_Finish();
-			}
-#if defined DEBUG
-			else
-			{
-				DEBUGPRINT1("VSH Engine::VSHA_OnLastSurvivorLoop() **** Forward Invalid/Not Called ****");
-				DEBUGPRINT2("{lime}VSH Engine::VSHA_OnLastSurvivorLoop() **** Forward Invalid/Not Called ****");
-			}
-#endif
+			VSHA_CreateEvent(OnLastSurvivorLoop, iClient);
+
 			//if (bAllowSuperWeap && HaleHealth >= 7000) PickSuperWeapon(i, -1); later
 			continue;
 		}
