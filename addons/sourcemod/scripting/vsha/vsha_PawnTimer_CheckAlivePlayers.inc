@@ -18,24 +18,8 @@ public void CheckAlivePlayers()
 	if (iRedAlivePlayers <= 0) ForceTeamWin(HaleTeam);
 	else if (iRedAlivePlayers == 1 && iBluAlivePlayers)
 	{
-		int boss = GetRandomBossIndex();
-		Function FuncLastSurvivor = GetFunctionByName(Storage[boss], "VSHA_OnLastSurvivor");
-		if (FuncLastSurvivor != nullfunc)
-		{
-#if defined DEBUG
-			DEBUGPRINT1("VSH Engine::VSHA_OnLastSurvivor() **** Forward Called ****");
-			DEBUGPRINT2("{lime}VSH Engine::VSHA_OnLastSurvivor() **** Forward Called ****");
-#endif
-			Call_StartFunction(Storage[boss], FuncLastSurvivor);
-			Call_Finish();
-		}
-#if defined DEBUG
-		else
-		{
-			DEBUGPRINT1("VSH Engine::VSHA_OnLastSurvivor() **** Forward Invalid/Not Called ****");
-			DEBUGPRINT2("{lime}VSH Engine::VSHA_OnLastSurvivor() **** Forward Invalid/Not Called ****");
-		}
-#endif
+		VSHA_Private_Forward("VSHA_OnLastSurvivor");
+
 		/*char message[PATH];
 		for (int boss = 1; bIsBoss[boss]; boss++)
 		{
