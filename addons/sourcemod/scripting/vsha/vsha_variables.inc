@@ -1,0 +1,89 @@
+// vsha_variables.sp
+
+// V A R I A B L E S =========================================================================
+
+//Handles
+Handle Storage[PLYR];
+
+//ints
+int iBossUserID[PLYR],		//USERID NUM OVER CLIENT INT
+	iBoss[PLYR],		//THIS IS NOT THE USER, IT'S THE SPECIAL BOSS IDs
+	iDifficulty[PLYR],
+	iPresetBoss[PLYR],
+	iBossHealth[PLYR],
+	iBossMaxHealth[PLYR],
+	iPlayerKilled[PLYR][2],	//0 - kill count, 1 - killing spree
+	iBossesKilled[PLYR],
+	iDamage[PLYR],
+	iAirDamage[PLYR],
+	iMarketed[PLYR],
+	iStabbed[PLYR],
+	iUberedTarget[PLYR],
+	iLives[PLYR],		//lives can work for BOTH Bosses & for players, get creative!
+	iHits[PLYR],		//How many times a player has been hit lol
+	AmmoTable[2049],
+	ClipTable[2049],
+	HaleTeam = 3,
+	OtherTeam = 2,
+	iNextBossPlayer,
+	iTotalBossHP,
+	iHealthBar = -1,
+	iRedAlivePlayers,
+	iBluAlivePlayers,
+	iPlaying = 0,
+	TeamRoundCounter,
+	RoundCount,
+	timeleft;
+
+//floats
+float flCharge[PLYR], //SINGLE MEDIC-TAUNT/RAGE CHARGE, MAKE YOUR OWN CHARGE VARS IN YOUR OWN BOSS SUBPLUGINS
+	flKillStreak[PLYR],
+	flGlowTimer[PLYR],
+	flHPTime;
+
+//bools
+bool Enabled,
+	bIsBoss[PLYR], //EITHER IS BOSS OR NOT
+	bInJump[PLYR],
+	bNoTaunt[PLYR],
+	bTenSecStart[2],
+	PointType,
+	PointReady,
+	steamtools;
+
+//================================================================================================
+
+int tf_arena_use_queue, mp_teams_unbalance_limit, tf_arena_first_blood, mp_forcecamera;
+float tf_scout_hype_pep_max;
+
+
+
+//cvar Handles
+ConVar bEnabled = null;
+ConVar FirstRound = null;
+ConVar MedigunReset = null;
+ConVar AliveToEnable = null;
+ConVar CountDownPlayerLimit = null;
+ConVar CountDownHealthLimit = null;
+ConVar LastPlayersTimerCountDown = null;
+ConVar EnableEurekaEffect = null;
+ConVar PointDelay = null;
+ConVar QueueIncrement = null;
+//ConVar FallDmgSoldier = null;
+//ConVar DifficultyAmount = null;
+
+//non-cvar Handles
+Handle hBossHUD;
+Handle hPlayerHUD;
+Handle TimeLeftHUD = null;
+Handle MiscHUD = null; //for various other HUD additions
+//Handle CustomHUD = null;
+Handle hdoorchecktimer = null;
+Handle PointCookie = null;
+Handle MusicTimer = null;
+Handle DrawGameTimer = null;
+
+//Forward Handles
+Handle AddToDownloads;
+
+

@@ -1,0 +1,27 @@
+// vsha_PawnTimer_CalcScores.inc
+
+public void CalcScores()
+{
+	int j, damage;
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if ( IsValidClient(i) && GetClientTeam(i) > view_as<int>(TFTeam_Spectator) )
+		{
+			damage = iDamage[i];
+
+			Event aevent = CreateEvent("player_escort_score", true);
+			aevent.SetInt("player", i);
+
+			for (j = 0; damage-600 > 0; damage -= 600, j++) {}
+			aevent.SetInt("points", j);
+			aevent.Fire();
+
+			if ( bIsBoss[i] ) SetClientQueuePoints(i, 0);
+			else
+			{
+				CPrintToChat(i, "{olive}[VSH Engine]{default} You get %i+ queue points.", QueueIncrement.IntValue); //GetConVarInt(QueueIncrement));
+				SetClientQueuePoints( i, (GetClientQueuePoints(i)+QueueIncrement.IntValue) );
+			}
+		}
+	}
+}
