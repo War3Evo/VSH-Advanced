@@ -61,7 +61,7 @@ public void CheckAlivePlayers()
 #endif
 	}
 	if ( iRedAlivePlayers <= CountDownPlayerLimit.IntValue &&
-		iTotalBossHP > CountDownHealthLimit.IntValue &&
+		iLowestBossHP > CountDownHealthLimit.IntValue &&
 		LastPlayersTimerCountDown.IntValue > 1 && !DrawGameTimer )
 	{
 		if (FindEntityByClassname2(-1, "team_control_point") != -1)
