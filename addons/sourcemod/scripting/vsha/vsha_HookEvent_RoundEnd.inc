@@ -22,23 +22,10 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 		{
 			if (event.GetInt("team") == HaleTeam && !playedwinsound)
 			{
-				Function FuncBossWon = GetFunctionByName(Storage[i], "VSHA_OnBossWin");
-				if (FuncBossWon != nullfunc)
-				{
-#if defined DEBUG
-					DEBUGPRINT1("VSH Engine::VSHA_OnBossWin() **** Forward Called ****");
-					DEBUGPRINT2("{lime}VSH Engine::VSHA_OnBossWin() **** Forward Called ****");
-#endif
-					Call_StartFunction(Storage[i], FuncBossWon);
-					Call_Finish();
-				} //stop music here, put win sound
-#if defined DEBUG
-				else
-				{
-					DEBUGPRINT1("VSH Engine::VSHA_OnBossWin() **** Forward Invalid/Not Called ****");
-					DEBUGPRINT2("{lime}VSH Engine::VSHA_OnBossWin() **** Forward Invalid/Not Called ****");
-				}
-#endif
+				VSHA_SetVar(SmEvent,event);
+				VSHA_SetVar(EventBoss,i);
+				VSHA_Private_Forward("VSHA_OnBossWin");
+
 				playedwinsound = true;
 			}
 			SetEntProp(i, Prop_Send, "m_bGlowEnabled", 0);
