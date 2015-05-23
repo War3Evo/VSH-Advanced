@@ -37,6 +37,8 @@ public void MakeBoss(int userid)
 	TF2_RemoveAllWeapons2(iClient);
 	TF2_RemovePlayerDisguise(iClient);
 
+	SDKHook(iClient, SDKHook_GetMaxHealth, OnGetMaxHealth);
+
 	VSHA_SetVar(EventOnPrepBoss,iClient);
 	VSHA_Private_Forward("VSHA_OnPrepBoss");
 
