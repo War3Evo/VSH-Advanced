@@ -364,6 +364,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	CreateNative("VSHA_GetPlayerCount", Native_GetPlayerCount);
 
+	CreateNative("VSHA_GetVar",Native_VSHA_GetVar);
+	CreateNative("VSHA_SetVar",Native_VSHA_SetVar);
+
 	vsha_Events_AskPluginLoad2();
 
 	//===========================================================================================================================
@@ -706,4 +709,15 @@ public void UnRegisterBoss(Handle pluginhndl, const char[] name)
 		return;
 	}
 	return;
+}
+
+
+public int Native_VSHA_GetVar(Handle plugin, int numParams)
+{
+	return view_as<int>(VSHA_VarArr[GetNativeCell(1)]);
+}
+public int Native_VSHA_SetVar(Handle plugin, int numParams)
+{
+	VSHA_VarArr[GetNativeCell(1)] = GetNativeCell(2);
+	return 0;
 }
