@@ -63,6 +63,8 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 		VSHA_SetVar(EventAttacker,attacker);
 		VSHA_Private_Forward("VSHA_OnBossKilled");
 
+		SDKUnhook(victim, SDKHook_GetMaxHealth, OnGetMaxHealth);
+
 		UpdateHealthBar();
 		iStabbed[victim] = 0;
 		iMarketed[victim] = 0;
