@@ -61,6 +61,11 @@
 
 #define Toggle(%1) %1=%1?false:true
 
+enum VSHA_EVENT
+{
+	ModelTimer
+}
+
 /**
  * Prints Message to server and all chat
  * For debugging prints
@@ -68,7 +73,7 @@
 stock void DP(const char[] szMessage, ...)
 {
 #if defined debugon
-	decl String:szBuffer[1000];
+	char szBuffer[1000];
 
 	VFormat(szBuffer, sizeof(szBuffer), szMessage, 2);
 	PrintToServer("[DebugP %d] %s",RoundFloat(GetGameTime())%100, szBuffer);
@@ -845,6 +850,7 @@ stock Handle GetBossSubPlugin(StringMap StrMapHndl)
 //=================================================== [ N A T I V E ] =============================================================
 
 native Handle VSHA_RegisterBoss(char[] BossName); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
+native void VSHA_UnRegisterBoss(char[] BossName); //YOU SHOULD PUT THIS OnPluginEnd() !! So you can reload your boss plugin for development
 
 native int VSHA_GetBossUserID(int client); //gets boss' userid
 native void VSHA_SetBossUserID(int client, int userid);
@@ -916,9 +922,13 @@ native int VSHA_CountScoutsLeft(); /* counts how many scouts are left */
 
 native int VSHA_GetPlayerCount();
 
+native int VSHA_CreateEvent(VSHA_EVENT event, int client);
+
 //=================================================================================================================================
 
 //=================================================== [ F O R W A R D S ] =========================================================
+
+forward Action OnVSHAEvent(VSHA_EVENT event, int client);
 
 forward void VSHA_AddToDownloads(); /* called during OnMapStart(); NOTICE: THIS IS A GLOBAL FORWARD */
 /*
@@ -977,6 +987,7 @@ public SharedPlugin __pl_vsha =
 public __pl_vsha_SetNTVOptional()
 {
 	MarkNativeAsOptional("VSHA_RegisterBoss");
+	MarkNativeAsOptional("VSHA_UnRegisterBoss");
 
 	MarkNativeAsOptional("VSHA_GetBossUserID");
 	MarkNativeAsOptional("VSHA_SetBossUserID");
