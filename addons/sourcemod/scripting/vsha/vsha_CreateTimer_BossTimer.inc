@@ -21,6 +21,9 @@ public Action BossTimer(Handle timer)
 
 public void ZeroPointTwoSecondThink(int client)
 {
+	VSHA_SetVar(EventClient,client);
+	VSHA_Private_Forward("VSHA_OnBossTimer");
+
 	Function FuncBossTimer = GetFunctionByName(Storage[client], "VSHA_OnBossTimer");
 	if (FuncBossTimer != nullfunc)
 	{
