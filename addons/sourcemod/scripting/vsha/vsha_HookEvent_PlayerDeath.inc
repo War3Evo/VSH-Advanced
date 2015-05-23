@@ -22,8 +22,6 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 			if ( GetGameTime() <= flKillStreak[attacker] ) iPlayerKilled[attacker][1]++;
 			else iPlayerKilled[attacker][1] = 0;
 
-			EventAttacker
-
 			VSHA_SetVar(EventAttacker,attacker);
 			VSHA_CreateEvent(OnPlayerKilled, victim);
 
