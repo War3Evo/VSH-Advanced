@@ -7,26 +7,9 @@ public Action DoTaunt(int client, const char[] command, int argc)
 	//TF2_AddCondition(client, TFCond:42, 4.0); //use this in the forward
 	if (flCharge[client] >= 100.0)
 	{
-		Function FuncBossRage = GetFunctionByName(Storage[client], "VSHA_OnBossRage");
-		if (FuncBossRage != nullfunc)
-		{
-#if defined DEBUG
-			DEBUGPRINT1("VSH Engine::VSHA_OnBossRage() **** Forward Called ****");
-			DEBUGPRINT2("{lime}VSH Engine::VSHA_OnBossRage() **** Forward Called ****");
-			DEBUGPRINT3("VSH Engine::VSHA_OnBossRage() **** Forward Called ****");
-#endif
-			Call_StartFunction(Storage[client], FuncBossRage);
-			Call_PushCell(client);
-			Call_Finish();
-		}
-#if defined DEBUG
-		else
-		{
-			DEBUGPRINT1("VSH Engine::VSHA_OnBossRage() **** Forward Invalid/Not Called ****");
-			DEBUGPRINT2("{lime}VSH Engine::VSHA_OnBossRage() **** Forward Invalid/Not Called ****");
-			DEBUGPRINT3("VSH Engine::VSHA_OnBossRage() **** Forward Invalid/Not Called ****");
-		}
-#endif
+		VSHA_SetVar(EventBoss,client);
+		VSHA_Private_Forward("VSHA_OnBossRage");
+
 		bNoTaunt[client] = true;
 		CreateTimer(1.5, TimerNoTaunting, iBossUserID[client], TIMER_FLAG_NO_MAPCHANGE);
 		flCharge[client] = 0.0;
