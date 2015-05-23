@@ -3,8 +3,14 @@
 #endif
 #define _vsha_included
 
+#include <tf2_stocks>
+// not sure why we need this, compiles without it
+//#include <sdktools_gamerules>
+#include <tf2items>
+
+#pragma newdecls			required
+
 #pragma semicolon			1
-#define PLUGIN_VERSION			"1.0"
 
 #define MaxEntities			2048
 #define PLYR				MAXPLAYERS+1
@@ -22,11 +28,6 @@
 	#define DEBUGPRINT3(%1)			LogToFile("addons/sourcemod/logs/vsha-debugoutput.txt", %1)
 #endif
 
-#include <tf2_stocks>
-#include <sdktools_gamerules>
-#include <tf2items>
-
-#pragma newdecls			required
 
 /*methodmap CTFBoss < CTFPlayer
 {
@@ -285,7 +286,7 @@ stock void TF2_RemoveWeaponSlot2(int client, int slot)
 {
 	int ew, weaponIndex;
 	while ((weaponIndex = GetPlayerWeaponSlot(client, slot)) != -1)
-	{ 
+	{
 		ew = GetEntPropEnt(weaponIndex, Prop_Send, "m_hExtraWearable");
 		if (IsValidEntity(ew)) TF2_RemoveWearable(client, ew);
 		ew = GetEntPropEnt(weaponIndex, Prop_Send, "m_hExtraWearableViewModel");
@@ -492,17 +493,17 @@ stock int GetHealingTarget(int client)
 	}
 	return -1;
 }
-stock bool IsNearSpencer(int client) 
-{ 
-	int medics = 0, healers = GetEntProp(client, Prop_Send, "m_nNumHealers"); 
-	if (healers > 0) 
-	{ 
-		for (int i = 1; i <= MaxClients; i++) 
-		{ 
-			if (IsValidClient(i) && IsPlayerAlive(i) && GetHealingTarget(i) == client) medics++; 
+stock bool IsNearSpencer(int client)
+{
+	int medics = 0, healers = GetEntProp(client, Prop_Send, "m_nNumHealers");
+	if (healers > 0)
+	{
+		for (int i = 1; i <= MaxClients; i++)
+		{
+			if (IsValidClient(i) && IsPlayerAlive(i) && GetHealingTarget(i) == client) medics++;
 		}
 	}
-	return (healers > medics); 
+	return (healers > medics);
 }
 
 stock int FindSentry(int client)
@@ -847,7 +848,7 @@ native int VSHA_FindNextBoss(bool[] clientarray, int arraysize); /* gets the nex
 
 native int VSHA_CountScoutsLeft(); /* counts how many scouts are left */
 
-native int VSHA_GetPlayerCount(); 
+native int VSHA_GetPlayerCount();
 
 //=================================================================================================================================
 
@@ -895,7 +896,7 @@ forward void VSHA_MessageTimer(); //called when a round begins.
 */
 //=================================================================================================================================
 
-public SharedPlugin __pl_VSHA = 
+public SharedPlugin __pl_vsha =
 {
 	name = "vsha",
 	file = "vsha.smx",
@@ -907,7 +908,7 @@ public SharedPlugin __pl_VSHA =
 };
 
 #if !defined REQUIRE_PLUGIN
-public __pl_VSHA_SetNTVOptional()
+public __pl_vsha_SetNTVOptional()
 {
 	MarkNativeAsOptional("VSHA_RegisterBoss");
 
