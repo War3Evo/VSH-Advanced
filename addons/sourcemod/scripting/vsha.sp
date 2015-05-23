@@ -76,7 +76,7 @@ enum VSHAError
 #include "vsha/vsha_PlayerHUD.inc"
 #include "vsha/vsha_BossHUD.inc"
 #include "vsha/vsha_UpdateHealthBar.inc"
-//#include "vsha/"
+#include "vsha/vsha_Events.sp"
 //#include "vsha/"
 //#include "vsha/"
 
@@ -293,6 +293,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	// N A T I V E S ============================================================================================================
 	CreateNative("VSHA_RegisterBoss", Native_RegisterBossSubplugin);
+	CreateNative("VSHA_UnRegisterBoss", Native_UnRegisterBossSubplugin);
 
 	CreateNative("VSHA_GetBossUserID", Native_GetBossUserID);
 	CreateNative("VSHA_SetBossUserID", Native_SetBossUserID);
@@ -363,6 +364,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	CreateNative("VSHA_GetPlayerCount", Native_GetPlayerCount);
 
+	vsha_Events_AskPluginLoad2();
+
 	//===========================================================================================================================
 
 	RegPluginLibrary("vsha");
@@ -374,11 +377,20 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public int Native_RegisterBossSubplugin(Handle plugin, int numParams)
 {
-	char BossSubPluginName[32]; GetNativeString(1, BossSubPluginName, sizeof(BossSubPluginName));
+	char BossSubPluginName[32];
+	GetNativeString(1, BossSubPluginName, sizeof(BossSubPluginName));
 	VSHAError erroar;
 	Handle BossHandle = RegisterBoss( plugin, BossSubPluginName, erroar ); //ALL PROPS TO COOKIES.NET AKA COOKIES.IO
 	return view_as<int>( BossHandle );
 }
+public int Native_UnRegisterBossSubplugin(Handle plugin, int numParams)
+{
+	char BossSubPluginName[32];
+	GetNativeString(1, BossSubPluginName, sizeof(BossSubPluginName));
+	UnRegisterBoss( plugin, BossSubPluginName );
+	return 0;
+}
+
 public int Native_GetBossUserID(Handle plugin, int numParams)
 {
 	return iBossUserID[GetNativeCell(1)];
@@ -608,6 +620,16 @@ public int Native_GetPlayerCount(Handle plugin, int numParams)
 {
 	return iPlaying;
 }
+public int FindBossBySubPluginByID(Handle plugin)
+{
+	int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
+	for (int i = 0; i < count; i++)
+	{
+		StringMap bossub = hArrayBossSubplugins.Get(i);
+		if (GetBossSubPlugin(bossub) == plugin) return i;
+	}
+	return -1;
+}
 public Handle FindBossBySubPlugin(Handle plugin)
 {
 	int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
@@ -659,4 +681,29 @@ public Handle RegisterBoss(Handle pluginhndl, const char[] name, VSHAError &erro
 
 	error = Error_None;
 	return pluginhndl;
+}
+
+public void UnRegisterBoss(Handle pluginhndl, const char[] name)
+{
+	if (!ValidateName(name))
+	{
+		LogError("**** UnRegisterBoss - Invalid Name ****");
+		return;
+	}
+	int BossID = FindBossBySubPluginByID(pluginhndl);
+	if (BossID > -1 && FindBossName(name) != null)
+	{
+		// Create the trie to hold the data about the boss
+		StringMap BossSubplug = new StringMap(); //CreateTrie();
+
+		BossSubplug.SetValue("Subplugin", pluginhndl); //SetTrieValue(BossSubplug, "Subplugin", pluginhndl);
+		BossSubplug.SetString("BossName", name); //SetTrieString(BossSubplug, "BossName", name);
+
+		// Then push it to the global array and trie
+		// Don't forget to convert the string to lower cases!
+		hArrayBossSubplugins.Erase(BossID); //PushArrayCell(hArrayBossSubplugins, BossSubplug);
+		RemoveFromTrie(hTrieBossSubplugins, name);
+		return;
+	}
+	return;
 }
