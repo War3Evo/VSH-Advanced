@@ -5,7 +5,7 @@ public void CalcScores()
 	int j, damage;
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if ( IsValidClient(i) && GetClientTeam(i) > view_as<int>(TFTeam_Spectator) )
+		if ( IsValidClient(i) && IsOnBlueOrRedTeam(i) )
 		{
 			damage = iDamage[i];
 
@@ -21,6 +21,7 @@ public void CalcScores()
 			{
 				CPrintToChat(i, "{olive}[VSH Engine]{default} You get %i+ queue points.", QueueIncrement.IntValue); //GetConVarInt(QueueIncrement));
 				SetClientQueuePoints( i, (GetClientQueuePoints(i)+QueueIncrement.IntValue) );
+				CPrintToChat(i, "{olive}[VSH Engine]{default} You now have %i+ queue points.", GetClientQueuePoints(i));
 			}
 		}
 	}
