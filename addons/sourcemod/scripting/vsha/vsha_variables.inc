@@ -86,4 +86,5 @@ Handle DrawGameTimer = null;
 //Forward Handles
 Handle AddToDownloads;
 
-
+// VSHA Events
+Handle g_VSHA_GlobalEventFH;
