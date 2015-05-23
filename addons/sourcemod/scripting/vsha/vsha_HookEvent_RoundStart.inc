@@ -33,7 +33,7 @@ public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 	iPlaying = 0;
 	for (i = 1; i <= MaxClients; i++)
 	{
-		if (IsValidClient(i) && GetClientTeam(i) > view_as<int>(TFTeam_Spectator))
+		if (IsValidClient(i) && IsOnBlueOrRedTeam(i))
 		{
 			//ForceTeamChange(i, OtherTeam);
 			iDamage[i] = 0;
@@ -85,7 +85,7 @@ public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		for (i = 1; i <= MaxClients; i++)
 		{
-			if ( IsValidClient(i) && GetClientTeam(i) > view_as<int>(TFTeam_Spectator) )
+			if ( IsValidClient(i) && IsOnBlueOrRedTeam(i) )
 			{
 				if (bIsBoss[i]) ForceTeamChange(i, HaleTeam);
 				else ForceTeamChange(i, OtherTeam);
