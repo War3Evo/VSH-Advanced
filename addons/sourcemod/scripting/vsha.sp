@@ -245,7 +245,7 @@ public void LoadSubPlugins() //"stolen" from ff2 lol
 #endif
 }
 
-public int GetRandomBossIndex() //purpose is for the Storage client Handle
+public int GetFirstBossIndex() //purpose is for the Storage client Handle
 {
 	int i = 0;
 	for ( i = 1; i <= MaxClients; i++ )

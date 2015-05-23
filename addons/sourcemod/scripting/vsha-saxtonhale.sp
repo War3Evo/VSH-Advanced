@@ -281,15 +281,15 @@ public void VSHA_AddToDownloads()
 }
 public Action VSHA_OnPlayerKilledByBoss()
 {
-	int iBoss = VSHA_GetVar(EventBoss);
+	int iiBoss = VSHA_GetVar(EventBoss);
 	int attacker = VSHA_GetVar(EventAttacker);
 
-	if(Hale != iBoss) return Plugin_Continue;
+	if(Hale != iiBoss) return Plugin_Continue;
 
 	if (!GetRandomInt(0, 2) && VSHA_GetAliveRedPlayers() != 1)
 	{
 		strcopy(playsound, PLATFORM_MAX_PATH, "");
-		TFClassType playerclass = TF2_GetPlayerClass(iBoss);
+		TFClassType playerclass = TF2_GetPlayerClass(iiBoss);
 		switch (playerclass)
 		{
 			case TFClass_Scout:     strcopy(playsound, PLATFORM_MAX_PATH, HaleKillScout132);
@@ -327,10 +327,10 @@ public Action VSHA_OnPlayerKilledByBoss()
 }
 public Action VSHA_OnKillingSpreeByBoss()
 {
-	int iBoss = VSHA_GetVar(EventBoss);
+	int iiBoss = VSHA_GetVar(EventBoss);
 	int attacker = VSHA_GetVar(EventAttacker);
 
-	if(Hale != iBoss) return Plugin_Continue;
+	if(Hale != iiBoss) return Plugin_Continue;
 
 	int see = GetRandomInt(0, 7);
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
@@ -348,27 +348,27 @@ public Action VSHA_OnKillingSpreeByBoss()
 }
 public Action VSHA_OnBossKilled() //victim is boss
 {
-	int iBoss = VSHA_GetVar(EventBoss);
+	int iiBoss = VSHA_GetVar(EventBoss);
 	//int attacker = VSHA_GetVar(EventAttacker);
 
-	if(Hale != iBoss) return Plugin_Continue;
+	if(Hale != iiBoss) return Plugin_Continue;
 
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
 	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleFail, GetRandomInt(1, 3));
-	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
+	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 #if defined DEBUG
 	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossKilled() **** Forward Responded ****");
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossKilled() **** Forward Responded ****");
 #endif
-	SDKUnhook(iBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossWin()
 {
 	//VSHA_GetVar(SmEvent,event);
-	int iBoss = VSHA_GetVar(EventBoss);
+	int iiBoss = VSHA_GetVar(EventBoss);
 
-	if(Hale != iBoss) return Plugin_Continue;
+	if(Hale != iiBoss) return Plugin_Continue;
 
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
 	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleWin, GetRandomInt(1, 2));
@@ -433,10 +433,10 @@ public Action VSHA_MessageTimer()
 }
 public Action VSHA_OnBossAirblasted()
 {
-	int iBoss = VSHA_GetVar(EventBoss);
+	int iiBoss = VSHA_GetVar(EventBoss);
 	//int airblaster = VSHA_GetVar(EventAttacker);
 
-	if (iBoss != Hale) return Plugin_Continue;
+	if (iiBoss != Hale) return Plugin_Continue;
 	//float rage = 0.04*RageDMG;
 	//HaleRage += RoundToCeil(rage);
 	//if (HaleRage > RageDMG) HaleRage = RageDMG;
@@ -449,14 +449,14 @@ public Action VSHA_OnBossAirblasted()
 }
 public Action VSHA_OnBossSelected()
 {
-	int iBoss = VSHA_GetVar(EventClient);
-	if (VSHA_IsBossPlayer(iBoss)) Hale = iBoss;
-	if ( iBoss != Hale && VSHA_IsBossPlayer(iBoss) )
+	int iiBoss = VSHA_GetVar(EventClient);
+	if (VSHA_IsBossPlayer(iiBoss)) Hale = iiBoss;
+	if ( iiBoss != Hale && VSHA_IsBossPlayer(iiBoss) )
 	{
-		VSHA_SetIsBossPlayer(iBoss, false);
-		ForceTeamChange(iBoss, 3);
+		VSHA_SetIsBossPlayer(iiBoss, false);
+		ForceTeamChange(iiBoss, 3);
 	}
-	SDKHook(iBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 #if defined DEBUG
 	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossSelected() **** Forward Responded ****");
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossSelected() **** Forward Responded ****");

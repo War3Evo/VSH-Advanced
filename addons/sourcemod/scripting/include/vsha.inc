@@ -22,6 +22,9 @@
 #define nullfunc			INVALID_FUNCTION
 #define nullvec				NULL_VECTOR
 
+#define HEALTHBAR_CLASS "monster_resource"
+#define HEALTHBAR_PROPERTY "m_iBossHealthPercentageByte"
+#define HEALTHBAR_MAX 255
 //#define DEBUG				0
 
 #if defined DEBUG

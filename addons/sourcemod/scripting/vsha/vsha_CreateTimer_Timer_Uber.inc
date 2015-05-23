@@ -17,7 +17,7 @@ public Action Timer_Uber(Handle timer, any medigunid)
 					TF2_AddCondition(target, TFCond_HalloweenCritCandy, 0.5);
 					iUberedTarget[medic] = target;
 
-					int boss = GetRandomBossIndex();
+					int boss = GetFirstBossIndex();
 					Function FuncHitUber = GetFunctionByName(Storage[boss], "VSHA_OnUberTimer");
 					if (FuncHitUber != nullfunc)
 					{
