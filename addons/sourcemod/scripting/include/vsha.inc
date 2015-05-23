@@ -59,8 +59,13 @@
 #define LoopDeadPlayers(%1) for(int %1=1;%1<=MaxClients;++%1)\
 								if(IsClientInGame(%1) && !IsPlayerAlive(%1))
 
+#define LoopActiveBosses(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientInGame(%1) && bIsBoss[%1])
+
 #define Toggle(%1) %1=%1?false:true
 
+// may use in future.. removed for now
+/*
 enum VSHA_EVENT
 {
 	ModelTimer,
@@ -68,13 +73,21 @@ enum VSHA_EVENT
 	OnBossSetHP,
 	OnPlayerKilled,
 	OnKillingSpree,
-	OnBossKilled
-}
+	OnBossKilled,
+	OnBossAirblasted,
+	OnBossKillBuilding
+}*/
 
 // VSHA Events
 enum VSHA_Var
 {
 	hString,
+	EventTime,
+	EventOnPrepBoss,
+	EventSound,
+	EventModelTimer,
+	EventModel,
+	EventClient,
 	EventAttacker,
 	EventVictim,
 	EventArg1, //generic vsha event arguments
@@ -940,7 +953,8 @@ native int VSHA_CountScoutsLeft(); /* counts how many scouts are left */
 
 native int VSHA_GetPlayerCount();
 
-native int VSHA_CreateEvent(VSHA_EVENT event, int client);
+// may use in future, removed for now
+//native int VSHA_CreateEvent(VSHA_EVENT event, int client);
 
 /* BEGIN GLOBAL VARS */
 //retrieves specified values from the main VSHA plugin, see VSHA_Var enum in constants.inc, only those values are allowed
@@ -951,7 +965,7 @@ native int VSHA_CreateEvent(VSHA_EVENT event, int client);
 //examples VSHA_GetVar(EventArg1)   VSHA_GetVar(EventArg2)
 //See VSHA_Var enum in constants to get a list
 //Do not get/set vars arbitrarily unless you know what you are doing
-native float VSHA_GetVar(VSHA_Var variabletoretrieve);
+native any VSHA_GetVar(VSHA_Var variabletoretrieve);
 native void VSHA_SetVar(VSHA_Var variabletoretrieve, any value);
 /* END GLOBAL VARS */
 
@@ -959,7 +973,8 @@ native void VSHA_SetVar(VSHA_Var variabletoretrieve, any value);
 
 //=================================================== [ F O R W A R D S ] =========================================================
 
-forward Action OnVSHAEvent(VSHA_EVENT event, int client);
+// may add in the future?
+//forward Action OnVSHAEvent(VSHA_EVENT event, int client);
 
 forward void VSHA_AddToDownloads(); /* called during OnMapStart(); NOTICE: THIS IS A GLOBAL FORWARD */
 /*
