@@ -11,7 +11,7 @@ public void OnMapStart()
 		mp_forcecamera = GetConVarInt( FindConVar("mp_forcecamera") );
 		tf_scout_hype_pep_max = GetConVarFloat( FindConVar("tf_scout_hype_pep_max") );
 		CacheDownloads();
-		FindHealthBar();
+		//FindHealthBar(); // removed so that UpdateHealthBar would do the checking.
 #if defined _steamtools_included
 		if (steamtools)
 		{
