@@ -29,7 +29,8 @@ public Action ClientTimer(Handle hTimer)
 
 			TF2_AddCondition(iClient, TFCond_Buffed, 0.3);
 
-			VSHA_CreateEvent(OnLastSurvivorLoop, iClient);
+			VSHA_SetVar(EventClient,iClient);
+			VSHA_Private_Forward("VSHA_OnLastSurvivorLoop");
 
 			//if (bAllowSuperWeap && HaleHealth >= 7000) PickSuperWeapon(i, -1); later
 			continue;

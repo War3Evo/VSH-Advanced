@@ -22,15 +22,15 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 			if ( GetGameTime() <= flKillStreak[attacker] ) iPlayerKilled[attacker][1]++;
 			else iPlayerKilled[attacker][1] = 0;
 
-			VSHA_SetVar(SmEvent,event);
+			VSHA_SetVar(EventVictim,victim);
 			VSHA_SetVar(EventAttacker,attacker);
-			VSHA_CreateEvent(OnPlayerKilled, victim);
+			VSHA_Private_Forward("VSHA_OnPlayerKilledByBoss");
 
 			if ( iPlayerKilled[attacker][1] >= GetRandomInt(2, 3) )
 			{
-				VSHA_SetVar(SmEvent,event);
+				VSHA_SetVar(EventVictim,victim);
 				VSHA_SetVar(EventAttacker,attacker);
-				VSHA_CreateEvent(OnKillingSpree, victim);
+				VSHA_Private_Forward("VSHA_OnKillingSpreeByBoss");
 
 				iPlayerKilled[attacker][1] = 0;
 			}
@@ -59,9 +59,9 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 		iBossesKilled[attacker]++;
 		if ( iBossHealth[victim] < 0 ) iBossHealth[victim] = 0;
 
-		VSHA_SetVar(SmEvent,event);
+		VSHA_SetVar(EventVictim,victim);
 		VSHA_SetVar(EventAttacker,attacker);
-		VSHA_CreateEvent(OnBossKilled, victim);
+		VSHA_Private_Forward("VSHA_OnBossKilled");
 
 		UpdateHealthBar();
 		iStabbed[victim] = 0;
