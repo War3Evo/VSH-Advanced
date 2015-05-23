@@ -3,6 +3,9 @@
 #endif
 #define _vsha_included
 
+// To enable printing debug messages via DP();
+#define debugon 1
+
 #include <tf2_stocks>
 // not sure why we need this, compiles without it
 //#include <sdktools_gamerules>
@@ -19,7 +22,7 @@
 #define nullfunc			INVALID_FUNCTION
 #define nullvec				NULL_VECTOR
 
-#define DEBUG				0
+//#define DEBUG				0
 
 #if defined DEBUG
 	#define DEBUGPRINT0(%1)			PrintToServer(%1)
@@ -28,6 +31,69 @@
 	#define DEBUGPRINT3(%1)			LogToFile("addons/sourcemod/logs/vsha-debugoutput.txt", %1)
 #endif
 
+#define STRING(%1) %1, sizeof(%1)
+
+#define LoopMaxClients(%1) for(int %1=1;%1<=MaxClients;++%1)
+
+#define LoopConnectedClients(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientConnected(%1))
+
+#define LoopIngameClients(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientInGame(%1))
+
+#define LoopInGameBots(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientInGame(%1) && IsFakeClient(%1))
+
+#define LoopIngamePlayers(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientInGame(%1) && !IsFakeClient(%1))
+
+#define LoopAuthorizedPlayers(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientConnected(%1) && IsClientAuthorized(%1))
+
+#define LoopAlivePlayers(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientInGame(%1) && IsPlayerAlive(%1))
+
+#define LoopTeamPlayers(%1,%2) for(int %2=1;%2<=MaxClients;++%2)\
+								if(IsClientInGame(%2) && IsPlayerAlive(%2) && (GetClientTeam(%1)==GetClientTeam(%2)))
+
+#define LoopDeadPlayers(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientInGame(%1) && !IsPlayerAlive(%1))
+
+#define Toggle(%1) %1=%1?false:true
+
+/**
+ * Prints Message to server and all chat
+ * For debugging prints
+ */
+stock void DP(const char[] szMessage, ...)
+{
+#if defined debugon
+	decl String:szBuffer[1000];
+
+	VFormat(szBuffer, sizeof(szBuffer), szMessage, 2);
+	PrintToServer("[DebugP %d] %s",RoundFloat(GetGameTime())%100, szBuffer);
+	PrintToChatAll("[DebugP %d] %s",RoundFloat(GetGameTime())%100, szBuffer);
+#endif
+}
+
+#if !defined _diablostocks_included
+#if !defined _vanilla_constants_included
+stock bool ValidPlayer(int client, bool check_alive = false,bool alivecheckbyhealth = false) {
+	if(client>0 && client<=MaxClients && IsClientConnected(client) && IsClientInGame(client))
+	{
+		if(check_alive && !IsPlayerAlive(client))
+		{
+			return false;
+		}
+		if(alivecheckbyhealth&&GetClientHealth(client)<1) {
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
+#endif
+#endif
 
 /*methodmap CTFBoss < CTFPlayer
 {
