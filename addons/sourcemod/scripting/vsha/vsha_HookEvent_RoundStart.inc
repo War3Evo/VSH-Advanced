@@ -78,29 +78,8 @@ public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 	DEBUGPRINT3("VSH Engine::PickBossSpecial() **** Boss subplugin has been chosen and player is set ****");
 #endif
 
-	Function FuncBossSelected = GetFunctionByName(Storage[boss], "VSHA_OnBossSelected");
-	if (FuncBossSelected != nullfunc)
-	{
-#if defined DEBUG
-		DEBUGPRINT1("VSH Engine::VSHA_RoundStart() **** Forward Called ****");
-		DEBUGPRINT2("{lime}VSH Engine::VSHA_RoundStart() **** Forward Called ****");
-		DEBUGPRINT3("VSH Engine::VSHA_RoundStart() **** Forward Called ****");
-#endif
-		Call_StartFunction(Storage[boss], FuncBossSelected);
-		Call_PushCell(boss);
-		Call_Finish();
-	}
-#if defined DEBUG
-	else
-	{
-		DEBUGPRINT1("VSH Engine::VSHA_OnBossSelected() **** Forward Invalid/Not Called ****");
-		DEBUGPRINT2("{lime}VSH Engine::VSHA_OnBossSelected() **** Forward Invalid/Not Called ****");
-		DEBUGPRINT3("VSH Engine::VSHA_OnBossSelected() **** Forward Invalid/Not Called ****");
-	}
-#endif
-#if defined DEBUG
-	DEBUGPRINT1("VSH Engine::RoundStart() **** Found Player to be boss! ****");
-#endif
+	VSHA_SetVar(EventClient,boss);
+	VSHA_Private_Forward("VSHA_OnBossSelected");
 
 	if ( GetTeamPlayerCount(HaleTeam) <= 0 || GetTeamPlayerCount(OtherTeam) <= 0 )
 	{
