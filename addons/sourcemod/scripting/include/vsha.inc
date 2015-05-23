@@ -87,6 +87,7 @@ enum VSHA_Var
 	EventSound,
 	EventModelTimer,
 	EventModel,
+	EventBoss,
 	EventClient,
 	EventAttacker,
 	EventVictim,
