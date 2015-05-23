@@ -26,7 +26,7 @@ int iBossUserID[PLYR],		//USERID NUM OVER CLIENT INT
 	HaleTeam = 3,
 	OtherTeam = 2,
 	iNextBossPlayer,
-	iTotalBossHP,
+	iLowestBossHP,
 	iHealthBar = -1,
 	iRedAlivePlayers,
 	iBluAlivePlayers,
