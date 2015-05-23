@@ -15,26 +15,8 @@ public void DoMessage()
 		hdoorchecktimer = CreateTimer(5.0, Timer_CheckDoors, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 
-	int client = GetRandomBossIndex();
-	Function FuncMessageTimer = GetFunctionByName(Storage[client], "VSHA_MessageTimer");
-	if (FuncMessageTimer != nullfunc)
-	{
-#if defined DEBUG
-		DEBUGPRINT1("VSH Engine::VSHA_DoMessage() **** Forward Called ****");
-		DEBUGPRINT2("{lime}VSH Engine::VSHA_DoMessage() **** Forward Called ****");
-		DEBUGPRINT3("VSH Engine::VSHA_DoMessage() **** Forward Called ****");
-#endif
-		Call_StartFunction(Storage[client], FuncMessageTimer);
-		Call_Finish();
-	}
-#if defined DEBUG
-	else
-	{
-		DEBUGPRINT1("VSH Engine::VSHA_DoMessage() **** Forward Invalid/Not Called ****");
-		DEBUGPRINT2("{lime}VSH Engine::VSHA_DoMessage() **** Forward Invalid/Not Called ****");
-		DEBUGPRINT3("VSH Engine::VSHA_DoMessage() **** Forward Invalid/Not Called ****");
-	}
-#endif
+	VSHA_Private_Forward("VSHA_MessageTimer");
+
 	/*SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
 	char text[PATHX];
 	for (int client = 1; bIsBoss[client]; client++)

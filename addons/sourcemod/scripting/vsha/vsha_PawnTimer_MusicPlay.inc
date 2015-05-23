@@ -7,29 +7,19 @@ public void MusicPlay()
 	float time = -1.0;
 	ClearTimer(MusicTimer);
 
-	int client = GetRandomBossIndex();
 	sound[0] = '\0';
-	Function FuncMusicTimer = GetFunctionByName(Storage[client], "VSHA_OnMusic");
-	if (FuncMusicTimer != nullfunc)
-	{
-#if defined DEBUG
-		DEBUGPRINT1("VSH Engine::VSHA_OnMusic() **** Forward Called ****");
-		DEBUGPRINT2("{lime}VSH Engine::VSHA_OnMusic() **** Forward Called ****");
-		DEBUGPRINT3("VSH Engine::VSHA_OnMusic() **** Forward Called ****");
-#endif
-		Call_StartFunction(Storage[client], FuncMusicTimer);
-		Call_PushStringEx(sound, sizeof(sound), 0, SM_PARAM_COPYBACK);
-		Call_PushFloatRef(time);
-		Call_Finish();
-	}
-#if defined DEBUG
-	else
-	{
-		DEBUGPRINT1("VSH Engine::VSHA_OnMusic() **** Forward Invalid/Not Called ****");
-		DEBUGPRINT2("{lime}VSH Engine::VSHA_OnMusic() **** Forward Invalid/Not Called ****");
-		DEBUGPRINT3("VSH Engine::VSHA_OnMusic() **** Forward Invalid/Not Called ****");
-	}
-#endif
+
+	StringMap SoundMap = new StringMap();
+	SoundMap.SetString("Sound", sound);
+
+	VSHA_SetVar(EventSound,SoundMap);
+	VSHA_SetVar(EventTime,time);
+	VSHA_Private_Forward("VSHA_OnMusic");
+
+	time = VSHA_GetVar(EventTime);
+
+	SoundMap.GetString("Sound",STRING(sound));
+
 	if ( sound[0] != '\0' )
 	{
 	//      Format(sound, sizeof(sound), "#%s", sound);

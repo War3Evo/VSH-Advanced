@@ -2,64 +2,46 @@
 
 public void MakeBoss(int userid)
 {
-	int client = GetClientOfUserId(userid);
-	if ( client <= 0 || !IsClientInGame(client) || !bIsBoss[client] ) return;
+	int iClient = GetClientOfUserId(userid);
+	if ( iClient <= 0 || !IsClientInGame(iClient) || !bIsBoss[iClient] ) return;
 
-	if (GetClientTeam(client) != HaleTeam) ForceTeamChange(client, HaleTeam);
-	if ( !IsPlayerAlive(client) )
+	if (GetClientTeam(iClient) != HaleTeam) ForceTeamChange(iClient, HaleTeam);
+	if ( !IsPlayerAlive(iClient) )
 	{
-		if ( CheckRoundState() == 0 ) TF2_RespawnPlayer(client);
+		if ( CheckRoundState() == 0 ) TF2_RespawnPlayer(iClient);
 		else return;
 	}
 	int ent = -1, index = -1;
 	while ((ent = FindEntityByClassname2(ent, "tf_wearable")) != -1)
 	{
-		if (GetOwner(ent) == client)
+		if (GetOwner(ent) == iClient)
 		{
 			index = GetItemIndex(ent);
 			switch (index)
 			{
 				case 167, 438, 463, 477, 1015, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1119, 1120: {}
-				default: TF2_RemoveWearable(client, ent); //AcceptEntityInput(ent, "kill");
+				default: TF2_RemoveWearable(iClient, ent); //AcceptEntityInput(ent, "kill");
 			}
 		}
 	}
 	ent = -1;
 	while ((ent = FindEntityByClassname2(ent, "tf_powerup_bottle")) != -1)
 	{
-		if (GetOwner(ent) == client) TF2_RemoveWearable(client, ent); //AcceptEntityInput(ent,
+		if (GetOwner(ent) == iClient) TF2_RemoveWearable(iClient, ent); //AcceptEntityInput(ent,
 	}
 	ent = -1;
 	while ((ent = FindEntityByClassname2(ent, "tf_wearable_demoshield")) != -1)
 	{
-		if (GetOwner(ent) == client) TF2_RemoveWearable(client, ent);
+		if (GetOwner(ent) == iClient) TF2_RemoveWearable(iClient, ent);
 	}
-	TF2_RemoveAllWeapons2(client);
-	TF2_RemovePlayerDisguise(client);
+	TF2_RemoveAllWeapons2(iClient);
+	TF2_RemovePlayerDisguise(iClient);
 
-	Function FuncPrepBossTimer = GetFunctionByName(Storage[client], "VSHA_OnPrepBoss");
-	if (FuncPrepBossTimer != nullfunc)
-	{
-#if defined DEBUG
-		DEBUGPRINT1("VSH Engine::VSHA_OnPrepBoss() **** Forward Called ****");
-		DEBUGPRINT2("{lime}VSH Engine::VSHA_OnPrepBoss() **** Forward Called ****");
-		DEBUGPRINT3("VSH Engine::VSHA_OnPrepBoss() **** Forward Called ****");
-#endif
-		Call_StartFunction(Storage[client], FuncPrepBossTimer);
-		Call_PushCell(client);
-		Call_Finish();
-	}
-#if defined DEBUG
-	else
-	{
-		DEBUGPRINT1("VSH Engine::VSHA_OnPrepBoss() **** Forward Invalid/Not Called ****");
-		DEBUGPRINT2("{lime}VSH Engine::VSHA_OnPrepBoss() **** Forward Invalid/Not Called ****");
-		DEBUGPRINT3("VSH Engine::VSHA_OnPrepBoss() **** Forward Invalid/Not Called ****");
-	}
-	DEBUGPRINT1("VSH Engine::MakeBoss() **** Boss Prepared! ****");
-#endif
-	PawnTimer(CleanScreen, 0.2, iBossUserID[client]); //CreateTimer(0.0, CleanScreen, iBossUserID[client]);
-	PawnTimer(MakeModelTimer, 0.2, iBossUserID[client]); //CreateTimer(0.2, MakeModelTimer, iBossUserID[client]);
-	CreateTimer(10.0, MakeModelTimer, iBossUserID[client], TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	VSHA_SetVar(EventOnPrepBoss,iClient);
+	VSHA_Private_Forward("VSHA_OnPrepBoss");
+
+	PawnTimer(CleanScreen, 0.2, iBossUserID[iClient]); //CreateTimer(0.0, CleanScreen, iBossUserID[iClient]);
+	PawnTimer(MakeModelTimer, 0.2, iBossUserID[iClient]); //CreateTimer(0.2, MakeModelTimer, iBossUserID[iClient]);
+	CreateTimer(10.0, MakeModelTimer, iBossUserID[iClient], TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	return;
 }

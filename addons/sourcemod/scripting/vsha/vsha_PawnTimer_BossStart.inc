@@ -24,7 +24,8 @@ public void BossStart()
 		if ( !IsPlayerAlive(iClient) ) TF2_RespawnPlayer(iClient);
 		SetEntityMoveType(iClient, MOVETYPE_WALK);
 
-		VSHA_CreateEvent(OnBossSetHP, iClient);
+		VSHA_SetVar(EventClient,iClient);
+		VSHA_Private_Forward("VSHA_OnBossSetHP");
 
 		//GetTrieString(GetArrayCell(hArrayBossSubplugins, iBoss[iClient]), "BossName", charBossName, sizeof(charBossName));
 		//if (iBossMaxHealth[iClient] <= 0) iBossMaxHealth[iClient] = HealthCalc(760.8, float(iPlaying), 1.0, 1.0341, 2046.0);

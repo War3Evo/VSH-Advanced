@@ -7,27 +7,12 @@ public Action Destroyed(Event event, const char[] name, bool dontBroadcast)
 		int attacker = GetClientOfUserId(event.GetInt("attacker"));
 		if ( bIsBoss[attacker] ) //&& !GetRandomInt(0, 2) )
 		{
-			int building = event.GetInt("index");
+			//int building = event.GetInt("index");
+			//VSHA_SetVar(building)
 
-			Function FuncBossKillToy = GetFunctionByName(Storage[attacker], "VSHA_OnBossKillBuilding");
-			if (FuncBossKillToy != nullfunc)
-			{
-#if defined DEBUG
-				DEBUGPRINT1("VSH Engine::VSHA_OnBossKillBuilding() **** Forward Called ****");
-				DEBUGPRINT2("{lime}VSH Engine::VSHA_OnBossKillBuilding() **** Forward Called ****");
-#endif
-				Call_StartFunction(Storage[attacker], FuncBossKillToy);
-				Call_PushCell(attacker);
-				Call_PushCell(building);
-				Call_Finish();
-			}
-#if defined DEBUG
-			else
-			{
-				DEBUGPRINT1("VSH Engine::VSHA_OnBossKillBuilding() **** Forward Invalid/Not Called ****");
-				DEBUGPRINT2("{lime}VSH Engine::VSHA_OnBossKillBuilding() **** Forward Invalid/Not Called ****");
-			}
-#endif
+			VSHA_SetVar(SmEvent,event);
+			VSHA_SetVar(EventAttacker,attacker);
+			VSHA_Private_Forward("VSHA_OnBossKillBuilding");
 		}
 	}
 	return Plugin_Continue;
