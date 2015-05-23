@@ -4,13 +4,18 @@ public void UpdateHealthBar()
 {
 	//int dohealth = 0, domaxhealth = 0, bosscount = 0;
 	int bosscount = 0;
-	iTotalBossHP = 0;
 	LoopAlivePlayers(target)
 	{
 		if ( !IsClientValid(target) || !bIsBoss[target] ) continue;
 
 		//dohealth += iBossHealth[i]-iBossMaxHealth[i];
-		//domaxhealth += iBossMaxHealth[i]; iTotalBossHP += iBossHealth[i];
+		//domaxhealth += iBossMaxHealth[i];
+
+		// Take the lowest boss health
+		if( iBossHealth[target] < iLowestBossHP)
+		{
+			iLowestBossHP = iBossHealth[target];
+		}
 		bosscount++;
 	}
 	if ( bosscount == 1 )
@@ -23,10 +28,13 @@ public void UpdateHealthBar()
 		int BossIndex = GetFirstBossIndex();
 
 		int percentage;
-		if (BossIndex>0)
+		if (ValidPlayer(BossIndex))
 		{
-			int maxHP = GetEntProp(BossIndex, Prop_Data, "m_iMaxHealth");
-			int HP = GetEntProp(BossIndex, Prop_Data, "m_iHealth");
+			//int maxHP = GetEntProp(BossIndex, Prop_Data, "m_iMaxHealth");
+			//int HP = GetEntProp(BossIndex, Prop_Data, "m_iHealth");
+
+			int HP = iBossHealth[BossIndex];
+			int maxHP = iBossMaxHealth[BossIndex];
 
 			if (HP <= 0)
 			{
