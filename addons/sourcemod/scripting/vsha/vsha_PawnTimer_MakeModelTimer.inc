@@ -5,7 +5,11 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 	int client = GetClientOfUserId(userid);
 	if ( client <= 0 || CheckRoundState() == 2 || !bIsBoss[client] ) return Plugin_Stop;
 
-	Action result = Plugin_Continue;
+	//Action result = Plugin_Continue;
+
+	int result = VSHA_CreateEvent(ModelTimer, client);
+
+	/*
 	Function FuncModelTimer = GetFunctionByName(Storage[client], "VSHA_OnModelTimer");
 	if (FuncModelTimer != nullfunc)
 	{
@@ -21,5 +25,6 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 		return result;
 	}
 	else LogError("**** VSH Engine Error: Cannot find 'VSHA_OnModelTimer' Function ****");
-	return Plugin_Continue;
+	*/
+	return view_as<Action>result;
 }
