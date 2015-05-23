@@ -76,7 +76,6 @@ enum VSHAError
 #include "vsha/vsha_PlayerHUD.inc"
 #include "vsha/vsha_BossHUD.inc"
 #include "vsha/vsha_UpdateHealthBar.inc"
-#include "vsha/vsha_Events.sp"
 //#include "vsha/"
 //#include "vsha/"
 
@@ -139,8 +138,8 @@ enum VSHAError
 //#include "vsha/"
 #include "vsha/vsha_TF2Items_OnGiveNamedItem.inc"
 
-
-//#include "vsha/"
+// may or may not use in future
+//#include "vsha/vsha_Events.inc"
 
 #include "vsha/vsha_misc_functions.inc"
 #include "vsha/vsha_UnUsed_Functions.inc"
@@ -266,6 +265,45 @@ public int FindNextBoss(bool[] array) //why force specs to Boss? They're prob AF
 	return inBoss;
 }
 
+public Action VSHA_Private_Forward(const char[] EventString)
+{
+	Handle TempStorage[PLYR];
+	int TmpNum = 0;
+	bool found = false;
+	int iTmp;
+	Action result = Plugin_Continue;
+
+	// Loop thru all active boss sub plugins
+	LoopActiveBosses(BossID)
+	{
+		// Make sure we don't call the same boss twice
+		found = false;
+		for ( iTmp = 0; iTmp < PLYR; iTmp++ )
+		{
+			if(Storage[BossID] == Storage[TempStorage[iTmp]])
+			{
+				found = true;
+				break;
+			}
+		}
+		if(found)
+		{
+			continue;
+		}
+
+		TempStorage[TmpNum] = Storage[BossID];
+		TmpNum++;
+
+		Function FuncBossKillToy = GetFunctionByName(Storage[BossID], EventString);
+		if (FuncBossKillToy != nullfunc)
+		{
+			Call_StartFunction(Storage[BossID], FuncBossKillToy);
+			Call_Finish(result);
+		}
+	}
+	return result;
+}
+
 
 //===================================================================================================================================
 
@@ -367,7 +405,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHA_GetVar",Native_VSHA_GetVar);
 	CreateNative("VSHA_SetVar",Native_VSHA_SetVar);
 
-	vsha_Events_AskPluginLoad2();
+	// may use in future.. depends
+	//vsha_Events_AskPluginLoad2();
 
 	//===========================================================================================================================
 
