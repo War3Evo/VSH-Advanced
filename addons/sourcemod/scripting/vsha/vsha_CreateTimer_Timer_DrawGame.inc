@@ -2,7 +2,7 @@
 
 public Action Timer_DrawGame(Handle timer)
 {
-	if (iTotalBossHP < CountDownHealthLimit.IntValue || CheckRoundState() != 1) return Plugin_Stop;
+	if (iLowestBossHP < CountDownHealthLimit.IntValue || CheckRoundState() != 1) return Plugin_Stop;
 
 	int time = timeleft;
 	timeleft--;
