@@ -38,7 +38,7 @@ enum VSHAError
 
 #include "vsha/vsha_SDKHooks_OnPreThink.inc"
 #include "vsha/vsha_SDKHooks_OnEntityCreated.inc"
-//#include "vsha/"
+#include "vsha/vsha_SDKHooks_OnGetMaxHealth.inc"
 //#include "vsha/"
 //#include "vsha/"
 //#include "vsha/"
@@ -258,9 +258,22 @@ public int GetFirstBossIndex() //purpose is for the Storage client Handle
 public int FindNextBoss(bool[] array) //why force specs to Boss? They're prob AFK...
 {
 	int inBoss = -1;
-	for (int i = 1; i <= MaxClients; i++)
+	//LoopIngameClients(i) // no bots for now
+	LoopIngamePlayers(i)
 	{
-		if ( IsValidClient(i) && GetClientTeam(i) > view_as<int>(TFTeam_Spectator) && GetClientQueuePoints(i) >= GetClientQueuePoints(inBoss) && !array[i] ) inBoss = i;
+		if ( IsValidClient(i) )
+		{
+			if ( IsOnBlueOrRedTeam(i) )
+			{
+				if (GetClientQueuePoints(i) >= GetClientQueuePoints(inBoss))
+				{
+					if( !array[i] )
+					{
+						inBoss = i;
+					}
+				}
+			 }
+		 }
 	}
 	return inBoss;
 }
