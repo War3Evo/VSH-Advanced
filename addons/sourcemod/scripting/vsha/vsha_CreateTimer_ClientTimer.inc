@@ -61,9 +61,9 @@ public Action ClientTimer(Handle hTimer)
 			continue;
 		}
 		bool EnableCrits[2] = {false, false}; //0 - minicrits, 1 - full crits
-		for (int e = 1; e <= MaxClients; e++)
+		LoopAlivePlayers(e)
 		{
-			if ( (0 < e && e <= MaxClients) && IsPlayerAlive(e) && GetHealingTarget(e) == i )
+			if ( (0 < e && e <= MaxClients) && GetHealingTarget(e) == i )
 			{
 				EnableCrits[0] = true;
 				break;
