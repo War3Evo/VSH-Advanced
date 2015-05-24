@@ -13,7 +13,7 @@ public Plugin myinfo =
 	url 			= "http://wiki.teamfortress.com/wiki/Saxton_Hale"
 }
 
-#define HALE_JUMPCHARGETIME		1
+#define HALE_JUMPCHARGETIME		4
 #define HALE_JUMPCHARGE			(25 * HALE_JUMPCHARGETIME)
 
 #define HaleModel			"models/player/saxton_hale/saxton_hale.mdl"
@@ -155,7 +155,7 @@ public void VSHA_AddToDownloads()
 	Format(s, PATHX, "sound/%s", HaleKSpree);
 	PrecacheSound(HaleKSpree, true);
 	AddFileToDownloadsTable(s);
-
+/* temporary removed ... i dont have a copy yet
 	Format(s, PATHX, "sound/%s", HaleTheme1);
 	AddFileToDownloadsTable(s);
 	PrecacheSound(HaleTheme1, true);
@@ -164,7 +164,7 @@ public void VSHA_AddToDownloads()
 	PrecacheSound(HaleTheme2, true);
 	Format(s, PATHX, "sound/%s", HaleTheme3);
 	AddFileToDownloadsTable(s);
-	PrecacheSound(HaleTheme3, true);
+	PrecacheSound(HaleTheme3, true);*/
 	for (i = 1; i <= 4; i++)
 	{
 		Format(s, PATHX, "%s0%i.wav", HaleLastB, i);
@@ -537,12 +537,15 @@ public Action VSHA_OnBossTimer()
 		if (!(buttons & IN_SCORE))
 		{
 			SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", HaleCharge);
+			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", (-HaleCharge/5));
 		}
 	}
 	else
 	{
-		if ( HaleCharge > 1 && SuperJump(iClient, view_as<float>(HaleCharge), -15.0, HaleCharge, -120) ) //put convar/cvar for jump sensitivity here!
+		// 5 * 60 = 300
+		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
+		// 300 = 1 minute wait
+		if ( HaleCharge > 1 && SuperJump(iClient, view_as<float>(HaleCharge), -15.0, HaleCharge, -600) ) //put convar/cvar for jump sensitivity here!
 		{
 			strcopy(playsound, PLATFORM_MAX_PATH, "");
 			Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", GetRandomInt(0, 1) ? HaleJump : HaleJump132, GetRandomInt(1, 2));
@@ -624,6 +627,7 @@ public Action VSHA_OnMusic()
 	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnMusic() **** Forward Responded ****");
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnMusic() **** Forward Responded ****");
 #endif
+	return Plugin_Continue;
 }
 /*
 public Action OnVSHAEvent(VSHA_EVENT event, int client)
