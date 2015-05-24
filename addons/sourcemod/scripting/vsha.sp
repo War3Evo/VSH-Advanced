@@ -76,6 +76,10 @@ enum VSHAError
 #include "vsha/vsha_PlayerHUD.inc"
 #include "vsha/vsha_BossHUD.inc"
 #include "vsha/vsha_UpdateHealthBar.inc"
+#include "vsha/vsha_Engine_SubPlugin_Configuration_File.inc"
+//#include "vsha/"
+//#include "vsha/"
+//#include "vsha/"
 //#include "vsha/"
 //#include "vsha/"
 
@@ -349,6 +353,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	//===========================================================================================================================
 
 	// N A T I V E S ============================================================================================================
+	CreateNative("VSHA_LoadConfiguration", Native_LoadConfigurationSubplugin);
+
 	CreateNative("VSHA_RegisterBoss", Native_RegisterBossSubplugin);
 	CreateNative("VSHA_UnRegisterBoss", Native_UnRegisterBossSubplugin);
 
@@ -434,6 +440,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	MarkNativeAsOptional("Steam_SetGameDescription");
 #endif
 	return APLRes_Success;
+}
+
+public int Native_LoadConfigurationSubplugin(Handle plugin, int numParams)
+{
+	char cFileName[64];
+	GetNativeString(1, STRING(cFileName));
+	return VSHA_Load_Configuration(plugin, cFileName);
 }
 
 public int Native_RegisterBossSubplugin(Handle plugin, int numParams)

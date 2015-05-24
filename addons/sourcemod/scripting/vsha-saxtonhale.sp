@@ -13,18 +13,58 @@ public Plugin myinfo =
 	url 			= "http://wiki.teamfortress.com/wiki/Saxton_Hale"
 }
 
+char HaleModel[PATHX];
+char HaleModelPrefix[PATHX];
+
+
+char HaleTheme1[PATHX];
+char HaleTheme2[PATHX];
+char HaleTheme3[PATHX];
+
 #define HALE_JUMPCHARGETIME		4
 #define HALE_JUMPCHARGE			(25 * HALE_JUMPCHARGETIME)
 
-#define HaleModel			"models/player/saxton_hale/saxton_hale.mdl"
-#define HaleModelPrefix			"models/player/saxton_hale/saxton_hale"
+//#define HaleModel			"models/player/saxton_hale/saxton_hale.mdl"
+//#define HaleModelPrefix			"models/player/saxton_hale/saxton_hale"
 
 // ?? i need to find these, as i dont have them - El Diablo
-#define HaleTheme1			"saxton_hale/saxtonhale.mp3"
-#define HaleTheme2			"saxton_hale/haletheme2.mp3"
-#define HaleTheme3			"saxton_hale/haletheme3.mp3"
+//#define HaleTheme1			"saxton_hale/saxtonhale.mp3"
+//#define HaleTheme2			"saxton_hale/haletheme2.mp3"
+//#define HaleTheme3			"saxton_hale/haletheme3.mp3"
+
+char HaleComicArmsFallSound[PATHX];
+char HaleLastB[PATHX];
+char HaleKSpree[PATHX];
+char HaleKSpree2[PATHX];
+char HaleRoundStart[PATHX];
+char HaleJump[PATHX];
+char HaleRageSound[PATHX];
+char HaleKillMedic[PATHX];
+char HaleKillSniper1[PATHX];
+char HaleKillSniper2[PATHX];
+char HaleKillSpy1[PATHX];
+char HaleKillSpy2[PATHX];
+char HaleKillEngie1[PATHX];
+char HaleKillEngie2[PATHX];
+char HaleKSpreeNew[PATHX];
+char HaleWin[PATHX];
+char HaleLastMan[PATHX];
+char HaleFail[PATHX];
+char HaleJump132[PATHX];
+char HaleStart132[PATHX];
+char HaleKillDemo132[PATHX];
+char HaleKillEngie132[PATHX];
+char HaleKillHeavy132[PATHX];
+char HaleKillScout132[PATHX];
+char HaleKillSpy132[PATHX];
+char HaleKillPyro132[PATHX];
+char HaleSappinMahSentry132[PATHX];
+char HaleKillKSpree132[PATHX];
+char HaleKillLast132[PATHX];
+char HaleStubbed132[PATHX];
 
 //Saxton Hale voicelines
+/*
 #define HaleComicArmsFallSound		"saxton_hale/saxton_hale_responce_2.wav"
 #define HaleLastB			"vo/announcer_am_lastmanalive"
 #define HaleKSpree			"saxton_hale/saxton_hale_responce_3.wav"
@@ -55,6 +95,7 @@ public Plugin myinfo =
 #define HaleKillKSpree132		"saxton_hale/saxton_hale_132_kspree_"    //1-2
 #define HaleKillLast132			"saxton_hale/saxton_hale_132_last.wav"
 #define HaleStubbed132			"saxton_hale/saxton_hale_132_stub_"  //1-4
+*/
 
 Handle ThisPluginHandle = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDING DATA.
 
@@ -85,6 +126,8 @@ public void OnAllPluginsLoaded()
 	else DEBUGPRINT1("VSHA SaxtonHale::OnAllPluginsLoaded() **** ThisPluginHandle is OK and SaxtonHale is Registered! ****");
 #endif
 	HookEvent("player_changeclass", ChangeClass);
+
+	VSHA_LoadConfiguration("configs/vsha/saxtonhale.cfg");
 }
 public void OnPluginEnd()
 {
@@ -119,6 +162,11 @@ public Action ChangeClass(Event event, const char[] name, bool dontBroadcast)
 	}
 	return Plugin_Continue;
 }
+
+// If You Prefer to use VSHA_AddToDownloads instead of loading a configuration file,
+// That is your choice.
+// This is here for your reference
+/*
 public void VSHA_AddToDownloads()
 {
 	char s[PATHX];
@@ -155,7 +203,6 @@ public void VSHA_AddToDownloads()
 	Format(s, PATHX, "sound/%s", HaleKSpree);
 	PrecacheSound(HaleKSpree, true);
 	AddFileToDownloadsTable(s);
-/* temporary removed ... i dont have a copy yet
 	Format(s, PATHX, "sound/%s", HaleTheme1);
 	AddFileToDownloadsTable(s);
 	PrecacheSound(HaleTheme1, true);
@@ -164,7 +211,7 @@ public void VSHA_AddToDownloads()
 	PrecacheSound(HaleTheme2, true);
 	Format(s, PATHX, "sound/%s", HaleTheme3);
 	AddFileToDownloadsTable(s);
-	PrecacheSound(HaleTheme3, true);*/
+	PrecacheSound(HaleTheme3, true);
 	for (i = 1; i <= 4; i++)
 	{
 		Format(s, PATHX, "%s0%i.wav", HaleLastB, i);
@@ -278,7 +325,8 @@ public void VSHA_AddToDownloads()
 #if defined DEBUG
 	DEBUGPRINT1("VSH SaxtonHale::VSHA_AddToDownloads() **** Forward Responded ****");
 #endif
-}
+}*/
+
 public Action VSHA_OnPlayerKilledByBoss()
 {
 	int iiBoss = VSHA_GetVar(EventBoss);
@@ -655,7 +703,7 @@ public Action VSHA_OnModelTimer()
 {
 	int iClient = VSHA_GetVar(EventModelTimer);
 
-	char modelpath[64];
+	char modelpath[PATHX];
 
 	//DP("VSHA_OnModelTimer");
 	if (iClient != Hale)
@@ -1199,3 +1247,272 @@ stock bool OnlyScoutsLeft()
 	}
 	return false;
 }
+
+// LOAD CONFIGURATION
+public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+{
+	// AutoLoad is not attached to any variable
+	if(StrEqual(skey, "AutoLoad"))
+	{
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleTheme1"))
+	{
+		strcopy(STRING(HaleTheme1), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleTheme2"))
+	{
+		strcopy(STRING(HaleTheme2), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleTheme3"))
+	{
+		strcopy(STRING(HaleTheme3), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleComicArmsFallSound"))
+	{
+		strcopy(STRING(HaleComicArmsFallSound), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleLastB"))
+	{
+		strcopy(STRING(HaleLastB), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKSpree"))
+	{
+		strcopy(STRING(HaleKSpree), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKSpree2"))
+	{
+		strcopy(STRING(HaleKSpree2), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleRoundStart"))
+	{
+		strcopy(STRING(HaleRoundStart), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleJump"))
+	{
+		strcopy(STRING(HaleJump), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleRageSound"))
+	{
+		strcopy(STRING(HaleRageSound), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillMedic"))
+	{
+		strcopy(STRING(HaleKillMedic), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillSniper1"))
+	{
+		strcopy(STRING(HaleKillSniper1), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillSniper2"))
+	{
+		strcopy(STRING(HaleKillSniper2), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillSpy1"))
+	{
+		strcopy(STRING(HaleKillSpy1), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillSpy2"))
+	{
+		strcopy(STRING(HaleKillSpy2), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillEngie1"))
+	{
+		strcopy(STRING(HaleKillEngie1), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillEngie2"))
+	{
+		strcopy(STRING(HaleKillEngie2), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKSpreeNew"))
+	{
+		strcopy(STRING(HaleKSpreeNew), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleWin"))
+	{
+		strcopy(STRING(HaleWin), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleLastMan"))
+	{
+		strcopy(STRING(HaleLastMan), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleFail"))
+	{
+		strcopy(STRING(HaleFail), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleJump132"))
+	{
+		strcopy(STRING(HaleJump132), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleStart132"))
+	{
+		strcopy(STRING(HaleStart132), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillDemo132"))
+	{
+		strcopy(STRING(HaleKillDemo132), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillEngie132"))
+	{
+		strcopy(STRING(HaleKillEngie132), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillHeavy132"))
+	{
+		strcopy(STRING(HaleKillHeavy132), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillScout132"))
+	{
+		strcopy(STRING(HaleKillScout132), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillSpy132"))
+	{
+		strcopy(STRING(HaleKillSpy132), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillPyro132"))
+	{
+		strcopy(STRING(HaleKillPyro132), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleSappinMahSentry132"))
+	{
+		strcopy(STRING(HaleSappinMahSentry132), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillKSpree132"))
+	{
+		strcopy(STRING(HaleKillKSpree132), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleKillLast132"))
+	{
+		strcopy(STRING(HaleKillLast132), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleStubbed132"))
+	{
+		strcopy(STRING(HaleStubbed132), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+
+	if(bPreCacheFile || bAddFileToDownloadsTable)
+	{
+		PrintToServer("Loading Sounds %s = %s",skey,value);
+	}
+}
+public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
+{
+	if(StrEqual(skey, "MaterialPrefix"))
+	{
+		char s[PATHX];
+		char extensionsb[][] = { ".vtf", ".vmt" };
+
+		for (int i = 0; i < sizeof(extensionsb); i++)
+		{
+			Format(s, PATHX, "%s%s", value, extensionsb[i]);
+			if ( FileExists(s, true) )
+			{
+				AddFileToDownloadsTable(s);
+
+				PrintToServer("Loading Materials %s",s);
+			}
+		}
+	}
+}
+public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
+{
+	if(StrEqual(skey, "HaleModel"))
+	{
+		strcopy(STRING(HaleModel), value);
+		bPreCacheModel = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "HaleModelPrefix"))
+	{
+		char s[PATHX];
+		char extensions[][] = { ".mdl", ".dx80.vtx", ".dx90.vtx", ".sw.vtx", ".vvd", ".phy" };
+
+		for (int i = 0; i < sizeof(extensions); i++)
+		{
+			Format(s, PATHX, "%s%s", HaleModelPrefix, extensions[i]);
+			if ( FileExists(s, true) )
+			{
+				AddFileToDownloadsTable(s);
+				PrintToServer("Loading Model %s = %s",skey,value);
+			}
+		}
+	}
+	if(bPreCacheModel || bAddFileToDownloadsTable)
+	{
+		PrintToServer("Loading Model %s = %s",skey,value);
+	}
+}
+// Just in case you want to have extra configurations for your sub plugin.
+// This makes loading configurations easier for you.
+// Keeping all your configurations for your sub plugin in one location!
+/*
+public void VSHA_OnConfiguration_Load_Misc(char[] skey, char[] value)
+{
+}
+*/
