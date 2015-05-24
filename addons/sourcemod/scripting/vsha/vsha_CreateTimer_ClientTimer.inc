@@ -2,7 +2,7 @@
 
 public Action ClientTimer(Handle hTimer)
 {
-	if (CheckRoundState() > 1 || CheckRoundState() == -1) return Plugin_Stop;
+	if (CheckRoundState() == ROUNDSTATE_ROUND_END || CheckRoundState() == ROUNDSTATE_INVALID) return Plugin_Stop;
 	LoopAlivePlayers(iClient)
 	{
 		if (IsValidClient(iClient) && !bIsBoss[iClient] && GetClientTeam(iClient) == OtherTeam) continue;
