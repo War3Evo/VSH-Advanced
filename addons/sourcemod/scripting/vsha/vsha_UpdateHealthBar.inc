@@ -27,8 +27,8 @@ public void UpdateHealthBar()
 		}
 		int BossIndex = GetFirstBossIndex();
 
-		int percentage;
-		if (ValidPlayer(BossIndex))
+		int percentage = 1;
+		if (ValidPlayer(BossIndex,true))
 		{
 			//int maxHP = GetEntProp(BossIndex, Prop_Data, "m_iMaxHealth");
 			//int HP = GetEntProp(BossIndex, Prop_Data, "m_iHealth");
@@ -38,15 +38,19 @@ public void UpdateHealthBar()
 
 			if (HP <= 0)
 			{
-				percentage = 0;
+				percentage = 1;
 			}
 			else
 			{
-				float fHP = view_as<float>(HP);
-				float fmaxHP = view_as<float>(maxHP);
-				float fHEALTHBAR = view_as<float>(HEALTHBAR_MAX);
+				float fHP = float(HP);
+				float fmaxHP = float(maxHP);
+				float fHEALTHBAR = float(HEALTHBAR_MAX);
 
-				percentage = RoundToCeil(FloatMul(FloatDiv(fHP,fmaxHP),fHEALTHBAR));
+				//PrintToChatAll("fHP %f fmaxHP %f fHEALTHBAR %f",fHP,fmaxHP,fHEALTHBAR);
+				//percentage = RoundToCeil(FloatMul(FloatDiv(fHP,fmaxHP),fHEALTHBAR));
+				percentage = RoundToCeil((fHP / fmaxHP) * fHEALTHBAR);
+
+				//PrintToChatAll("percentage %d",percentage);
 
 				if(percentage>HEALTHBAR_MAX)
 				{
@@ -56,7 +60,7 @@ public void UpdateHealthBar()
 		}
 		else
 		{
-			percentage = 0;
+			percentage = 1;
 		}
 		SetEntProp(iHealthBar, Prop_Send, HEALTHBAR_PROPERTY, percentage);
 
@@ -65,6 +69,8 @@ public void UpdateHealthBar()
 		if (percenthp > 255) percenthp = 255;
 		else if (percenthp <= 0) percenthp = 1;
 		SetEntProp(iHealthBar, Prop_Send, "m_iBossHealthPercentageByte", percenthp);*/
+
+		//DP("UPDATE HEALTH BAR %i",percentage);
 	}
 	else if ( bosscount > 1 && iHealthBar != -1)
 	{
