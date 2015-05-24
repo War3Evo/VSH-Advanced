@@ -158,7 +158,7 @@ stock bool ValidPlayer(int client, bool check_alive = false,bool alivecheckbyhea
 	}
 }*/
 
-stock bool SuperJump(int client, float &charge, float JumpAngle, float subtractCharge)
+stock bool SuperJump(int client, float charge, float JumpAngle, int &changecharge, int subtractCharge)
 {
 	float ang[3]; GetClientEyeAngles(client, ang);
         if ( ang[0] <= JumpAngle) // JumpAngle = -45.0
@@ -169,7 +169,7 @@ stock bool SuperJump(int client, float &charge, float JumpAngle, float subtractC
 		vel[0] *= (1+Sine(charge * FLOAT_PI / 50));
 		vel[1] *= (1+Sine(charge * FLOAT_PI / 50));
 		TeleportEntity(client, nullvec, nullvec, vel);
-		charge = subtractCharge;
+		changecharge = subtractCharge;
 		return true;
 	}
 	return false;

@@ -528,7 +528,7 @@ public Action VSHA_OnBossTimer()
 		if (!(buttons & IN_SCORE))
 		{
 			SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Jump Charge: %i%", HaleCharge*4);
+			ShowHudText(iClient, -1, "Jump Charge: %i%", HaleCharge);
 		}
 	}
 	else if (HaleCharge < 0)
@@ -536,13 +536,13 @@ public Action VSHA_OnBossTimer()
 		HaleCharge += 5;
 		if (!(buttons & IN_SCORE))
 		{
-			SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", -HaleCharge/20);
+			SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
+			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", HaleCharge);
 		}
 	}
 	else
 	{
-		if ( HaleCharge > 1 && SuperJump(iClient, view_as<float>(HaleCharge), -15.0, -120.0) ) //put convar/cvar for jump sensitivity here!
+		if ( HaleCharge > 1 && SuperJump(iClient, view_as<float>(HaleCharge), -15.0, HaleCharge, -120) ) //put convar/cvar for jump sensitivity here!
 		{
 			strcopy(playsound, PLATFORM_MAX_PATH, "");
 			Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", GetRandomInt(0, 1) ? HaleJump : HaleJump132, GetRandomInt(1, 2));
