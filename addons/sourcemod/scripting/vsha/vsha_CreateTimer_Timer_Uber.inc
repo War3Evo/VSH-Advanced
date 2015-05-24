@@ -17,26 +17,9 @@ public Action Timer_Uber(Handle timer, any medigunid)
 					TF2_AddCondition(target, TFCond_HalloweenCritCandy, 0.5);
 					iUberedTarget[medic] = target;
 
-					int boss = GetFirstBossIndex();
-					Function FuncHitUber = GetFunctionByName(Storage[boss], "VSHA_OnUberTimer");
-					if (FuncHitUber != nullfunc)
-					{
-#if defined DEBUG
-						DEBUGPRINT1("VSH Engine::VSHA_OnUberTimer() **** Forward Called ****");
-						DEBUGPRINT2("{lime}VSH Engine::VSHA_OnUberTimer() **** Forward Called ****");
-#endif
-						Call_StartFunction(Storage[boss], FuncHitUber);
-						Call_PushCell(medic);
-						Call_PushCell(target);
-						Call_Finish();
-					}
-#if defined DEBUG
-					else
-					{
-						DEBUGPRINT1("VSH Engine::VSHA_OnUberTimer() **** Forward Invalid/Not Called ****");
-						DEBUGPRINT2("{lime}VSH Engine::VSHA_OnUberTimer() **** Forward Invalid/Not Called ****");
-					}
-#endif
+					VSHA_SetVar(EventClient,medic);
+					VSHA_SetVar(EventTarget,target);
+					VSHA_Private_Forward("VSHA_OnUberTimer");
 				}
 				else iUberedTarget[medic] = -1;
 			}
