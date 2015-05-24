@@ -22,6 +22,8 @@
 #define nullfunc			INVALID_FUNCTION
 #define nullvec				NULL_VECTOR
 
+#define HudTextScreenHoldTime 0.22
+
 #define HEALTHBAR_CLASS "monster_resource"
 #define HEALTHBAR_PROPERTY "m_iBossHealthPercentageByte"
 #define HEALTHBAR_MAX 255
