@@ -146,6 +146,10 @@ enum VSHAError
 //#include "vsha/"
 //#include "vsha/"
 //#include "vsha/"
+
+#include "vsha/vsha_ClearVariables.inc"
+//#include "vsha/"
+//#include "vsha/"
 //#include "vsha/"
 
 public Handle PickBossSpecial(int &select)
@@ -280,6 +284,8 @@ public int FindNextBoss(bool[] array) //why force specs to Boss? They're prob AF
 
 public Action VSHA_Private_Forward(const char[] EventString)
 {
+	if(InternalPause) return Plugin_Continue;
+
 	Handle TempStorage[PLYR];
 	int TmpNum = 0;
 	bool found = false;
@@ -734,6 +740,8 @@ public Handle RegisterBoss(Handle pluginhndl, const char[] name, VSHAError &erro
 	hArrayBossSubplugins.Push(BossSubplug); //PushArrayCell(hArrayBossSubplugins, BossSubplug);
 	SetTrieValueCaseInsensitive(hTrieBossSubplugins, name, BossSubplug);
 
+	PrintToChatAll("Loaded %s",name);
+
 	error = Error_None;
 	return pluginhndl;
 }
@@ -746,18 +754,27 @@ public void UnRegisterBoss(Handle pluginhndl, const char[] name)
 		return;
 	}
 	int BossID = FindBossBySubPluginByID(pluginhndl);
-	if (BossID > -1 && FindBossName(name) != null)
+	if ((BossID > -1) && (FindBossName(name) != null))
 	{
 		// Create the trie to hold the data about the boss
-		StringMap BossSubplug = new StringMap(); //CreateTrie();
+		//StringMap BossSubplug = new StringMap(); //CreateTrie();
 
-		BossSubplug.SetValue("Subplugin", pluginhndl); //SetTrieValue(BossSubplug, "Subplugin", pluginhndl);
-		BossSubplug.SetString("BossName", name); //SetTrieString(BossSubplug, "BossName", name);
+		//BossSubplug.SetValue("Subplugin", pluginhndl); //SetTrieValue(BossSubplug, "Subplugin", pluginhndl);
+		//BossSubplug.SetString("BossName", name); //SetTrieString(BossSubplug, "BossName", name);
 
 		// Then push it to the global array and trie
 		// Don't forget to convert the string to lower cases!
+		InternalPause = true;
+		LoopAlivePlayers(target)
+		{
+			ForcePlayerSuicide(target);
+			PrintToChatAll("Unloaded %s",name);
+		}
+		ClearVariables();
 		hArrayBossSubplugins.Erase(BossID); //PushArrayCell(hArrayBossSubplugins, BossSubplug);
 		RemoveFromTrie(hTrieBossSubplugins, name);
+		ClearVariables();
+		InternalPause = false;
 		return;
 	}
 	return;
