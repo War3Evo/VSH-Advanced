@@ -1,9 +1,12 @@
 // vsha_CreateTimer_BossTimer.inc
 
+// 0.2 Second Timer
 public Action BossTimer(Handle timer)
 {
-	if ( !Enabled || CheckRoundState() == 2 ) return Plugin_Stop;
-	for ( int client = 1; client <= MaxClients; client++ )
+	if (InternalPause) return Plugin_Stop;
+
+	if ( !Enabled || CheckRoundState() == ROUNDSTATE_ROUND_END ) return Plugin_Stop;
+	LoopActiveBosses(client)
 	{
 		if ( IsValidClient(client) && IsPlayerAlive(client) && bIsBoss[client] )
 		{
@@ -24,25 +27,5 @@ public void ZeroPointTwoSecondThink(int client)
 	VSHA_SetVar(EventClient,client);
 	VSHA_Private_Forward("VSHA_OnBossTimer");
 
-	Function FuncBossTimer = GetFunctionByName(Storage[client], "VSHA_OnBossTimer");
-	if (FuncBossTimer != nullfunc)
-	{
-#if defined DEBUG
-		DEBUGPRINT1("VSH Engine::VSHA_OnBossTimer() **** Forward Called ****");
-		DEBUGPRINT2("{lime}VSH Engine::VSHA_OnBossTimer() **** Forward Called ****");
-		DEBUGPRINT3("VSH Engine::VSHA_OnBossTimer() **** Forward Called ****");
-#endif
-		Call_StartFunction(Storage[client], FuncBossTimer);
-		Call_PushCell(client);
-		Call_Finish();
-	}
-#if defined DEBUG
-	else
-	{
-		DEBUGPRINT1("VSH Engine::VSHA_OnBossTimer() **** Forward Invalid/Not Called ****");
-		DEBUGPRINT2("{lime}VSH Engine::VSHA_OnBossTimer() **** Forward Invalid/Not Called ****");
-		DEBUGPRINT3("VSH Engine::VSHA_OnBossTimer() **** Forward Invalid/Not Called ****");
-	}
-#endif
 	return;
 }
