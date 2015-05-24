@@ -22,7 +22,7 @@
 #define nullfunc			INVALID_FUNCTION
 #define nullvec				NULL_VECTOR
 
-#define HudTextScreenHoldTime 0.22
+#define HudTextScreenHoldTime 0.21
 
 #define HEALTHBAR_CLASS "monster_resource"
 #define HEALTHBAR_PROPERTY "m_iBossHealthPercentageByte"
@@ -40,6 +40,8 @@
 #endif
 
 #define STRING(%1) %1, sizeof(%1)
+
+#define LoopMaxPLYR(%1) for(int %1=0;%1<PLYR;++%1)
 
 #define LoopMaxClients(%1) for(int %1=1;%1<=MaxClients;++%1)
 
@@ -59,7 +61,8 @@
 								if(IsClientConnected(%1) && IsClientAuthorized(%1))
 
 #define LoopAlivePlayers(%1) for(int %1=1;%1<=MaxClients;++%1)\
-								if(IsClientInGame(%1) && IsPlayerAlive(%1))
+								if(IsClientInGame(%1))\
+								if(IsPlayerAlive(%1))
 
 #define LoopTeamPlayers(%1,%2) for(int %2=1;%2<=MaxClients;++%2)\
 								if(IsClientInGame(%2) && IsPlayerAlive(%2) && (GetClientTeam(%1)==GetClientTeam(%2)))
@@ -97,6 +100,7 @@ enum VSHA_Var
 	EventModel,
 	EventBoss,
 	EventClient,
+	EventTarget,
 	EventAttacker,
 	EventVictim,
 	EventArg1, //generic vsha event arguments
