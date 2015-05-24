@@ -2,6 +2,8 @@
 
 public void PlayerHUD(int client)
 {
+	if(bIsBoss[client]) return;
+
 	if(!ValidPlayer(client,true)) return;
 
 	if (GetClientButtons(client) & IN_SCORE) return;
@@ -20,17 +22,17 @@ public void PlayerHUD(int client)
 					{
 						case 1:
 						{
-							SetHudTextParams(-1.0, 0.83, 0.35, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
+							SetHudTextParams(-1.0, 0.83, HudTextScreenHoldTime, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
 							Format(s, sizeof(s), "Status: Feign-Death Ready");
 						}
 						case 2:
 						{
-							SetHudTextParams(-1.0, 0.83, 0.35, 255, 64, 64, 255, 0, 0.0, 0.0, 0.0);
+							SetHudTextParams(-1.0, 0.83, HudTextScreenHoldTime, 255, 64, 64, 255, 0, 0.0, 0.0, 0.0);
 							Format(s, sizeof(s), "Status: Dead-Ringered");
 						}
 						default:
 						{
-							SetHudTextParams(-1.0, 0.83, 0.35, 255, 255, 255, 255, 0, 0.0, 0.0, 0.0);
+							SetHudTextParams(-1.0, 0.83, HudTextScreenHoldTime, 255, 255, 255, 255, 0, 0.0, 0.0, 0.0);
 							Format(s, sizeof(s), "Status: Inactive");
 						}
 					}
@@ -42,7 +44,7 @@ public void PlayerHUD(int client)
 				int medigun = GetPlayerWeaponSlot(client, TFWeaponSlot_Secondary);
 				if (GetItemQuality(medigun) == 10)
 				{
-					SetHudTextParams(-1.0, 0.83, 0.35, 255, 255, 255, 255, 0, 0.2, 0.0, 0.1);
+					SetHudTextParams(-1.0, 0.83, HudTextScreenHoldTime, 255, 255, 255, 255, 0, 0.2, 0.0, 0.1);
 					int charge = RoundToFloor(GetEntPropFloat(medigun, Prop_Send, "m_flChargeLevel")*100);
 					ShowSyncHudText(client, MiscHUD, "ÃœberCharge: %i%", charge);
 				}
@@ -51,20 +53,26 @@ public void PlayerHUD(int client)
 			{
 				if (GetIndexOfWeaponSlot(client, TFWeaponSlot_Primary) == 1104)
 				{
-					SetHudTextParams(-1.0, 0.83, 0.35, 255, 255, 255, 255, 0, 0.2, 0.0, 0.1);
+					SetHudTextParams(-1.0, 0.83, HudTextScreenHoldTime, 255, 255, 255, 255, 0, 0.2, 0.0, 0.1);
 					ShowSyncHudText(client, MiscHUD, "Air-Strike Damage: %i", iAirDamage[client]);
 				}
 			}
 		}
-		SetHudTextParams(-1.0, 0.88, 1.0, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
+		SetHudTextParams(-1.0, 0.88, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
 		ShowSyncHudText(client, hPlayerHUD, "[Damage]: {%i}", iDamage[client]);
 	}
 	else if ( IsClientObserver(client) || !IsPlayerAlive(client) )
 	{
-		SetHudTextParams(-1.0, 0.88, 1.0, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
+		SetHudTextParams(-1.0, 0.88, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
 		int spec = GetEntPropEnt(client, Prop_Send, "m_hObserverTarget");
-		if (IsValidClient(spec)) ShowSyncHudText(client, hPlayerHUD, "[Damage]: {%i} | [%N's Damage]: {%i}", iDamage[client], spec, iDamage[spec]);
-		else ShowSyncHudText(client, hPlayerHUD, "[Damage]: {%i}", iDamage[client]);
+		if (IsValidClient(spec))
+		{
+			ShowSyncHudText(client, hPlayerHUD, "[Damage]: {%i} | [%N's Damage]: {%i}", iDamage[client], spec, iDamage[spec]);
+		}
+		else
+		{
+			ShowSyncHudText(client, hPlayerHUD, "[Damage]: {%i}", iDamage[client]);
+		}
 	}
 }
 
