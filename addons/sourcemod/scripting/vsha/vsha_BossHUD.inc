@@ -8,13 +8,22 @@ public void BossHUD(int client)
 		if (IsPlayerAlive(client) )
 		{
 			ClampCharge(flCharge[client]); //automatically clamp the rage charge so it never goes over in subplugins :>
-			if (flCharge[client] == 100.0) ShowSyncHudText(client, hBossHUD, "[Health]: {%i/%i} | [Charge]: FULL", iBossHealth[client], iBossMaxHealth[client]);
-			else ShowSyncHudText(client, hBossHUD, "[Health]: {%i/%i} | [Charge]: %i%", iBossHealth[client], iBossMaxHealth[client], RoundFloat(flCharge[client]));
+			if (flCharge[client] == 100.0)
+			{
+				ShowSyncHudText(client, hBossHUD, "[Health]: {%i/%i} | [Charge]: FULL", iBossHealth[client], iBossMaxHealth[client]);
+			}
+			else
+			{
+				ShowSyncHudText(client, hBossHUD, "[Health]: {%i/%i} | [Charge]: %i%", iBossHealth[client], iBossMaxHealth[client], RoundFloat(flCharge[client]));
+			}
 		}
 		else
 		{
 			int spec = GetEntPropEnt(client, Prop_Send, "m_hObserverTarget");
-			if (IsValidClient(spec) && bIsBoss[spec]) ShowSyncHudText(client, hBossHUD, "[Health]: {%i/%i} | [Charge]: %i", iBossHealth[spec], iBossMaxHealth[spec], RoundFloat(flCharge[spec]));
+			if (IsValidClient(spec) && bIsBoss[spec])
+			{
+				ShowSyncHudText(client, hBossHUD, "[Health]: {%i/%i} | [Charge]: %i", iBossHealth[spec], iBossMaxHealth[spec], RoundFloat(flCharge[spec]));
+			}
 		}
 	}
 	return;

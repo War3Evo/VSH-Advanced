@@ -409,7 +409,7 @@ public Action VSHA_OnBossKillBuilding()
 }
 public Action VSHA_MessageTimer()
 {
-	SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
+	//SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
 	char text[PATHX];
 	int client;
 	for (client = 1; client <= MaxClients; client++)
@@ -423,7 +423,11 @@ public Action VSHA_MessageTimer()
 	}
 	for (client = 1; client <= MaxClients; client++)
 	{
-		if ( IsValidClient(client) ) ShowHudText(client, -1, text);
+		if ( IsValidClient(client) )
+		{
+			SetHudTextParams(-1.0, 0.60, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
+			ShowHudText(client, -1, text);
+		}
 	}
 #if defined DEBUG
 	DEBUGPRINT1("VSH SaxtonHale::VSHA_MessageTimer() **** Forward Responded ****");
@@ -523,13 +527,18 @@ public Action VSHA_OnBossTimer()
 		else HaleCharge = HALE_JUMPCHARGE;
 		if (!(buttons & IN_SCORE))
 		{
+			SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
 			ShowHudText(iClient, -1, "Jump Charge: %i%", HaleCharge*4);
 		}
 	}
 	else if (HaleCharge < 0)
 	{
 		HaleCharge += 5;
-		if (!(buttons & IN_SCORE)) ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", -HaleCharge/20);
+		if (!(buttons & IN_SCORE))
+		{
+			SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
+			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", -HaleCharge/20);
+		}
 	}
 	else
 	{
