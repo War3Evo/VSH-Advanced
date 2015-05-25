@@ -12,6 +12,5 @@ public void OnMapEnd()
 #if defined _steamtools_included
 		if (steamtools) Steam_SetGameDescription("Team Fortress");
 #endif
-		ClearVariables();
 	}
 }
