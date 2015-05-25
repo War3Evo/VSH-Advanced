@@ -1,9 +1,21 @@
 // vsha_ClearVariables.inc
 
+public void ClearVariablesRoundStart(int client)
+{
+	Storage[client] = null;
+	iBoss[client] = -1;
+	bIsBoss[client] = false;
+	iDamage[client] = 0;
+	iHits[client] = 0;
+	bNoTaunt[client] = false;
+	iModelRetrys[client] = 25;
+}
+
 public void ClearVariables()
 {
 	LoopMaxPLYR(player)
 	{
+		iModelRetrys[player] = 25;
 		iPresetBoss[player]=0;
 		Storage[player] = null;
 		iBoss[player] = -1;
@@ -26,4 +38,5 @@ public void ClearVariables()
 		flGlowTimer[player] = 0.0;
 		bInJump[player] = false;
 	}
+	RetryCounter = 10;
 }

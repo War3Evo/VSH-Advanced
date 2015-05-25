@@ -2,15 +2,32 @@
 
 public void MakeBoss(int userid)
 {
+	//DP("MakeBoss");
 	int iClient = GetClientOfUserId(userid);
+
+	if(iClient > 0)
+	{
+		//DP("MakeBoss MakeModelTimer PawnTimer");
+		//PawnTimer(MakeModelTimer, 0.1, iBossUserID[iClient]); //CreateTimer(0.2, MakeModelTimer, iBossUserID[iClient]);
+		CreateTimer(0.0, MakeModelTimer, userid);
+	}
+
 	if ( iClient <= 0 || !IsClientInGame(iClient) || !bIsBoss[iClient] ) return;
 
-	if (GetClientTeam(iClient) != HaleTeam) ForceTeamChange(iClient, HaleTeam);
+	ForceTeamChange(iClient, HaleTeam);
+
+	//DP("MakeBoss ForceTeamChange");
+
 	if ( !IsPlayerAlive(iClient) )
 	{
 		if ( CheckRoundState() == 0 ) TF2_RespawnPlayer(iClient);
 		else return;
 	}
+
+	//DP("MakeBoss MakeModelTimer");
+
+	CreateTimer(10.0, MakeModelTimer, iBossUserID[iClient], TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+
 	int ent = -1, index = -1;
 	while ((ent = FindEntityByClassname2(ent, "tf_wearable")) != -1)
 	{
@@ -34,8 +51,8 @@ public void MakeBoss(int userid)
 	{
 		if (GetOwner(ent) == iClient) TF2_RemoveWearable(iClient, ent);
 	}
-	TF2_RemoveAllWeapons2(iClient);
-	TF2_RemovePlayerDisguise(iClient);
+	//TF2_RemoveAllWeapons2(iClient);
+	//TF2_RemovePlayerDisguise(iClient);
 
 	SDKHook(iClient, SDKHook_GetMaxHealth, OnGetMaxHealth);
 
@@ -43,7 +60,5 @@ public void MakeBoss(int userid)
 	VSHA_Private_Forward("VSHA_OnPrepBoss");
 
 	PawnTimer(CleanScreen, 0.2, iBossUserID[iClient]); //CreateTimer(0.0, CleanScreen, iBossUserID[iClient]);
-	PawnTimer(MakeModelTimer, 0.2, iBossUserID[iClient]); //CreateTimer(0.2, MakeModelTimer, iBossUserID[iClient]);
-	CreateTimer(10.0, MakeModelTimer, iBossUserID[iClient], TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	return;
 }

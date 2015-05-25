@@ -59,7 +59,7 @@ public void OnPluginStart()
 
 	PointCookie = RegClientCookie("vshe_queuepoints", "Amount of VSH Engine Queue points, the player has", CookieAccess_Protected);
 	//LoadSubPlugins();
-	AutoExecConfig(true, "VSH-Engine");
+	//AutoExecConfig(true, "VSH-Engine");
 
 	for (int i = 1; i <= MaxClients; i++)
 	{

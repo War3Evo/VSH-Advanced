@@ -102,7 +102,7 @@ Handle ThisPluginHandle = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDIN
 //make defines, handles, variables heer lololol
 int HaleCharge;
 
-int Hale;
+int Hale[PLYR];
 
 float WeighDownTimer = 0.0;
 float RageDist = 800.0;
@@ -139,23 +139,24 @@ public void OnPluginEnd()
 
 public void OnClientDisconnect(int client)
 {
-	if (client == Hale)
+	if (client == Hale[client])
 	{
+		Hale[client] = 0;
 		bool see[PLYR];
-		see[Hale] = true;
+		see[Hale[client]] = true;
 		int tHale;
 		if (VSHA_GetPresetBossPlayer() > 0) tHale = VSHA_GetPresetBossPlayer();
 		else tHale = VSHA_FindNextBoss( see, sizeof(see) );
 		if (IsValidClient(tHale))
 		{
-			if (GetClientTeam(tHale) != 3) ForceTeamChange(Hale, 3);
+			if (GetClientTeam(tHale) != 3) ForceTeamChange(Hale[client], 3);
 		}
 	}
 }
 public Action ChangeClass(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId( event.GetInt("userid") );
-	if (client == Hale)
+	if (client == Hale[client])
 	{
 		if (TF2_GetPlayerClass(client) != TFClass_Soldier) TF2_SetPlayerClass(client, TFClass_Soldier, _, false);
 		TF2_RemovePlayerDisguise(client);
@@ -332,7 +333,7 @@ public Action VSHA_OnPlayerKilledByBoss()
 	int iiBoss = VSHA_GetVar(EventBoss);
 	int attacker = VSHA_GetVar(EventAttacker);
 
-	if(Hale != iiBoss) return Plugin_Continue;
+	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
 
 	if (!GetRandomInt(0, 2) && VSHA_GetAliveRedPlayers() != 1)
 	{
@@ -378,7 +379,7 @@ public Action VSHA_OnKillingSpreeByBoss()
 	int iiBoss = VSHA_GetVar(EventBoss);
 	int attacker = VSHA_GetVar(EventAttacker);
 
-	if(Hale != iiBoss) return Plugin_Continue;
+	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
 
 	int see = GetRandomInt(0, 7);
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
@@ -399,7 +400,7 @@ public Action VSHA_OnBossKilled() //victim is boss
 	int iiBoss = VSHA_GetVar(EventBoss);
 	//int attacker = VSHA_GetVar(EventAttacker);
 
-	if(Hale != iiBoss) return Plugin_Continue;
+	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
 
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
 	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleFail, GetRandomInt(1, 3));
@@ -416,7 +417,7 @@ public Action VSHA_OnBossWin()
 	//VSHA_GetVar(SmEvent,event);
 	int iiBoss = VSHA_GetVar(EventBoss);
 
-	if(Hale != iiBoss) return Plugin_Continue;
+	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
 
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
 	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleWin, GetRandomInt(1, 2));
@@ -432,7 +433,7 @@ public Action VSHA_OnBossWin()
 	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossWin() **** Forward Responded ****");
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossWin() **** Forward Responded ****");
 #endif
-	SDKUnhook(Hale, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKUnhook(Hale[iiBoss], SDKHook_OnTakeDamage, OnTakeDamage);
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossKillBuilding()
@@ -441,7 +442,7 @@ public Action VSHA_OnBossKillBuilding()
 	//int building = event.GetInt("index");
 	int attacker = VSHA_GetVar(EventAttacker);
 
-	if (attacker != Hale) return Plugin_Continue;
+	if (attacker != Hale[attacker]) return Plugin_Continue;
 	if ( !GetRandomInt(0, 4) )
 	{
 		strcopy(playsound, PLATFORM_MAX_PATH, "");
@@ -463,7 +464,7 @@ public Action VSHA_MessageTimer()
 	for (client = 1; client <= MaxClients; client++)
 	{
 		if ( !IsValidClient(client) ) continue;
-		if ( client == Hale )
+		if ( client == Hale[client] )
 		{
 			Format( text, sizeof(text), "%N became Saxton Hale with %i HP", client, VSHA_GetBossMaxHealth(client) );
 			break;
@@ -488,11 +489,11 @@ public Action VSHA_OnBossAirblasted()
 	int iiBoss = VSHA_GetVar(EventBoss);
 	//int airblaster = VSHA_GetVar(EventAttacker);
 
-	if (iiBoss != Hale) return Plugin_Continue;
+	if (iiBoss != Hale[iiBoss]) return Plugin_Continue;
 	//float rage = 0.04*RageDMG;
 	//HaleRage += RoundToCeil(rage);
 	//if (HaleRage > RageDMG) HaleRage = RageDMG;
-	VSHA_SetBossRage(Hale, VSHA_GetBossRage(Hale)+4.0); //make this a convar/cvar!
+	VSHA_SetBossRage(Hale[iiBoss], VSHA_GetBossRage(Hale[iiBoss])+4.0); //make this a convar/cvar!
 #if defined DEBUG
 	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossAirblasted() **** Forward Responded ****");
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossAirblasted() **** Forward Responded ****");
@@ -502,10 +503,11 @@ public Action VSHA_OnBossAirblasted()
 public Action VSHA_OnBossSelected()
 {
 	int iiBoss = VSHA_GetVar(EventClient);
-	if (VSHA_IsBossPlayer(iiBoss)) Hale = iiBoss;
-	if ( iiBoss != Hale && VSHA_IsBossPlayer(iiBoss) )
+	if (VSHA_IsBossPlayer(iiBoss)) Hale[iiBoss] = iiBoss;
+	if ( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )
 	{
-		VSHA_SetIsBossPlayer(iiBoss, false);
+		VSHA_SetIsBossPlayer(Hale[iiBoss], false);
+		Hale[iiBoss] = 0;
 		ForceTeamChange(iiBoss, 3);
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -531,9 +533,9 @@ public Action VSHA_OnBossIntroTalk()
 public Action VSHA_OnBossSetHP()
 {
 	int iClient = VSHA_GetVar(EventClient);
-	if (iClient != Hale) return Plugin_Continue;
+	if (iClient != Hale[iClient]) return Plugin_Continue;
 	int BossMax = HealthCalc( 760.8, view_as<float>( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
-	VSHA_SetBossMaxHealth(Hale, BossMax);
+	VSHA_SetBossMaxHealth(Hale[iClient], BossMax);
 #if defined DEBUG
 	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossSetHP() **** Forward Responded ****");
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossSetHP() **** Forward Responded ****");
@@ -562,7 +564,7 @@ public Action VSHA_OnLastSurvivor()
 public Action VSHA_OnBossTimer()
 {
 	int iClient = VSHA_GetVar(EventClient);
-	if (iClient != Hale) return Plugin_Continue;
+	if (iClient != Hale[iClient]) return Plugin_Continue;
 	float speed;
 	int curHealth = VSHA_GetBossHealth(iClient), curMaxHp = VSHA_GetBossMaxHealth(iClient);
 	if (curHealth <= curMaxHp) speed = 340.0 + 0.7 * (100-curHealth*100/curMaxHp); //convar/cvar for speed here!
@@ -593,7 +595,7 @@ public Action VSHA_OnBossTimer()
 		// 5 * 60 = 300
 		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
 		// 300 = 1 minute wait
-		if ( HaleCharge > 1 && SuperJump(iClient, view_as<float>(HaleCharge), -15.0, HaleCharge, -600) ) //put convar/cvar for jump sensitivity here!
+		if ( HaleCharge > 1 && SuperJump(iClient, view_as<float>(HaleCharge), -15.0, HaleCharge, -300) ) //put convar/cvar for jump sensitivity here!
 		{
 			strcopy(playsound, PLATFORM_MAX_PATH, "");
 			Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", GetRandomInt(0, 1) ? HaleJump : HaleJump132, GetRandomInt(1, 2));
@@ -622,9 +624,12 @@ public Action VSHA_OnPrepBoss()
 {
 	int iClient = VSHA_GetVar(EventOnPrepBoss);
 
-	if (iClient != Hale) return Plugin_Continue;
+	if (iClient != Hale[iClient]) return Plugin_Continue;
 	TF2_SetPlayerClass(iClient, TFClass_Soldier, _, false);
 	HaleCharge = 0;
+
+	TF2_RemoveAllWeapons2(iClient);
+	TF2_RemovePlayerDisguise(iClient);
 
 	bool pri = IsValidEntity(GetPlayerWeaponSlot(iClient, TFWeaponSlot_Primary));
 	bool sec = IsValidEntity(GetPlayerWeaponSlot(iClient, TFWeaponSlot_Secondary));
@@ -706,7 +711,7 @@ public Action VSHA_OnModelTimer()
 	char modelpath[PATHX];
 
 	//DP("VSHA_OnModelTimer");
-	if (iClient != Hale)
+	if (iClient != Hale[iClient])
 	{
 		SetVariantString("");
 		AcceptEntityInput(iClient, "SetCustomModel");
@@ -733,7 +738,7 @@ public Action VSHA_OnBossRage()
 {
 	int iClient = VSHA_GetVar(EventBoss);
 
-	if (iClient != Hale) return Plugin_Continue;
+	if (iClient != Hale[iClient]) return Plugin_Continue;
 	float pos[3];
 	GetEntPropVector(iClient, Prop_Send, "m_vecOrigin", pos);
 	pos[2] += 20.0;
@@ -751,7 +756,7 @@ public Action VSHA_OnBossRage()
 }
 public void TF2_OnConditionAdded(int client, TFCond condition)
 {
-	if (client != Hale) return;
+	if (client != Hale[client]) return;
 	switch (condition)
 	{
 		case TFCond_Jarated:
@@ -760,8 +765,8 @@ public void TF2_OnConditionAdded(int client, TFCond condition)
 			DEBUGPRINT1("VSH SaxtonHale::TF2_OnConditionAdded() **** Hale was Jarated ****");
 			DEBUGPRINT2("{lime}VSH SaxtonHale::TF2_OnConditionAdded() **** Hale was Jarated ****");
 #endif
-			VSHA_SetBossRage(Hale, VSHA_GetBossRage(client)-8.0);
-			TF2_RemoveCondition(Hale, condition);
+			VSHA_SetBossRage(Hale[client], VSHA_GetBossRage(client)-8.0);
+			TF2_RemoveCondition(Hale[client], condition);
 		}
 		case TFCond_MarkedForDeath:
 		{
@@ -769,23 +774,24 @@ public void TF2_OnConditionAdded(int client, TFCond condition)
 			DEBUGPRINT1("VSH SaxtonHale::TF2_OnConditionAdded() **** Hale was MarkedForDeath ****");
 			DEBUGPRINT2("{lime}VSH SaxtonHale::TF2_OnConditionAdded() **** Hale was MarkedForDeath ****");
 #endif
-			VSHA_SetBossRage(Hale, VSHA_GetBossRage(client)-5.0);
-			TF2_RemoveCondition(Hale, condition);
+			VSHA_SetBossRage(Hale[client], VSHA_GetBossRage(client)-5.0);
+			TF2_RemoveCondition(Hale[client], condition);
 		}
-		case TFCond_Disguised: TF2_RemoveCondition(Hale, condition);
+		case TFCond_Disguised: TF2_RemoveCondition(Hale[client], condition);
 	}
-	if (TF2_IsPlayerInCondition(Hale, view_as<TFCond>(42)) && TF2_IsPlayerInCondition(Hale, TFCond_Dazed)) TF2_RemoveCondition(Hale, TFCond_Dazed);
+	if (TF2_IsPlayerInCondition(Hale[client], view_as<TFCond>(42))
+		&& TF2_IsPlayerInCondition(Hale[client], TFCond_Dazed)) TF2_RemoveCondition(Hale[client], TFCond_Dazed);
 }
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if (victim == Hale) return Plugin_Continue;
+	if (victim == Hale[victim]) return Plugin_Continue;
 
-	if ( CheckRoundState() == 0 && victim == Hale )
+	if ( CheckRoundState() == 0 && victim == Hale[victim] )
 	{
 		damage *= 0.0;
 		return Plugin_Changed;
 	}
-	if (!attacker && (damagetype & DMG_FALL) && victim == Hale)
+	if (!attacker && (damagetype & DMG_FALL) && victim == Hale[victim])
 	{
 		damage = (VSHA_GetBossHealth(victim) > 100) ? 10.0 : 100.0; //please don't fuck with this.
 		return Plugin_Changed;
@@ -801,7 +807,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 	float AttackerPos[3];
 	GetEntPropVector(attacker, Prop_Send, "m_vecOrigin", AttackerPos); //Spot of attacker
-	if (attacker == Hale)
+	if (attacker == Hale[attacker])
 	{
 		if (TF2_IsPlayerInCondition(victim, TFCond_DefenseBuffed))
 		{
@@ -863,7 +869,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			}
 		}
 	}
-	else if (Hale == victim && Hale != attacker)
+	else if (Hale[victim] == victim && Hale[attacker] != attacker)
 	{
 		if (attacker <= MaxClients && attacker > 0)
 		{

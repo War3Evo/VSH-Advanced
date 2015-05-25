@@ -6,7 +6,8 @@
 Handle Storage[PLYR];
 
 //ints
-int iBossUserID[PLYR],		//USERID NUM OVER CLIENT INT
+int iModelRetrys[PLYR],
+	iBossUserID[PLYR],		//USERID NUM OVER CLIENT INT
 	iBoss[PLYR],		//THIS IS NOT THE USER, IT'S THE SPECIAL BOSS IDs
 	iDifficulty[PLYR],
 	iPresetBoss[PLYR],
@@ -91,3 +92,6 @@ Handle AddToDownloads;
 any VSHA_VarArr[VSHA_Var];
 
 bool InternalPause = false;
+
+int RetryCounter = 10;
+

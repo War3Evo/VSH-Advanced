@@ -5,12 +5,13 @@ public void BossStart()
 	iPlaying = 0;
 	LoopIngameClients(iClient) //loop iClients first for health calculation
 	{
-		if ( !IsClientValid(iClient) || !IsPlayerAlive(iClient) || !bIsBoss[iClient]) continue;
-
-		iPlaying++;
-		SetEntityMoveType(iClient, MOVETYPE_WALK); // >_>
-		PawnTimer(EquipPlayers, 0.2, GetClientUserId(iClient)); //SUIT UP!
-		//CreateTimer(0.1, TimerEquipPlayers, GetClientUserId(iClient));
+		if ( IsClientValid(iClient) && IsPlayerAlive(iClient) && !bIsBoss[iClient])
+		{
+			iPlaying++;
+			SetEntityMoveType(iClient, MOVETYPE_WALK); // >_>
+			PawnTimer(EquipPlayers, 0.2, GetClientUserId(iClient)); //SUIT UP!
+			//CreateTimer(0.1, TimerEquipPlayers, GetClientUserId(iClient));
+		}
 	}
 #if defined DEBUG
 	DEBUGPRINT1("VSH Engine::BossStart() **** non-Boss Player loop finished ****");
@@ -25,12 +26,19 @@ public void BossStart()
 		SetEntityMoveType(iClient, MOVETYPE_WALK);
 
 		VSHA_SetVar(EventClient,iClient);
+		VSHA_SetVar(EventHitPoints,2500);
 		VSHA_Private_Forward("VSHA_OnBossSetHP");
+		int MaxBossHP = VSHA_GetVar(EventHitPoints);
+
+		if(MaxBossHP <= 0)
+		{
+			MaxBossHP = 2500;
+		}
 
 		//GetTrieString(GetArrayCell(hArrayBossSubplugins, iBoss[iClient]), "BossName", charBossName, sizeof(charBossName));
 		//if (iBossMaxHealth[iClient] <= 0) iBossMaxHealth[iClient] = HealthCalc(760.8, float(iPlaying), 1.0, 1.0341, 2046.0);
 
-		if (iBossMaxHealth[iClient] < 2500) iBossMaxHealth[iClient] = 2500; //fallback incase accident
+		if (iBossMaxHealth[iClient] < MaxBossHP) iBossMaxHealth[iClient] = MaxBossHP; //fallback incase accident
 		iBossHealth[iClient] = iBossMaxHealth[iClient];
 
 		int maxhp = GetEntProp(iClient, Prop_Data, "m_iMaxHealth");
