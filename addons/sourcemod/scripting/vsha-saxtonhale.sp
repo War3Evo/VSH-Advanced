@@ -100,7 +100,7 @@ char HaleStubbed132[PATHX];
 Handle ThisPluginHandle = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDING DATA.
 
 //make defines, handles, variables heer lololol
-int HaleCharge;
+int HaleCharge[PLYR];
 
 int Hale[PLYR];
 
@@ -133,7 +133,18 @@ public void OnPluginEnd()
 {
 	if(ThisPluginHandle != null)
 	{
-		VSHA_UnRegisterBoss("saxtonhale");
+		//VSHA_UnRegisterBoss("saxtonhale");
+	}
+}
+public void OnMapEnd()
+{
+	WeighDownTimer = 0.0;
+	RageDist = 800.0;
+
+	LoopMaxPLYR(player)
+	{
+		Hale[player] = 0;
+		HaleCharge[player] = 0;
 	}
 }
 
@@ -149,7 +160,11 @@ public void OnClientDisconnect(int client)
 		else tHale = VSHA_FindNextBoss( see, sizeof(see) );
 		if (IsValidClient(tHale))
 		{
-			if (GetClientTeam(tHale) != 3) ForceTeamChange(Hale[client], 3);
+			if (GetClientTeam(tHale) != 3)
+			{
+				ForceTeamChange(Hale[client], 3);
+				//DP("vsha-saxtonhale 166 ForceTeamChange(i, 3)");
+			}
 		}
 	}
 }
@@ -509,6 +524,7 @@ public Action VSHA_OnBossSelected()
 		VSHA_SetIsBossPlayer(Hale[iiBoss], false);
 		Hale[iiBoss] = 0;
 		ForceTeamChange(iiBoss, 3);
+		//DP("vsha-saxtonhale 526 ForceTeamChange(iiBoss, 3)");
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 #if defined DEBUG
@@ -571,23 +587,23 @@ public Action VSHA_OnBossTimer()
 	SetEntPropFloat(iClient, Prop_Send, "m_flMaxspeed", speed);
 
 	int buttons = GetClientButtons(iClient);
-	if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge >= 0 )
+	if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iClient] >= 0 )
 	{
-		if (HaleCharge + 5 < HALE_JUMPCHARGE) HaleCharge += 5;
-		else HaleCharge = HALE_JUMPCHARGE;
+		if (HaleCharge[iClient] + 5 < HALE_JUMPCHARGE) HaleCharge[iClient] += 5;
+		else HaleCharge[iClient] = HALE_JUMPCHARGE;
 		if (!(buttons & IN_SCORE))
 		{
 			SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Jump Charge: %i%", HaleCharge);
+			ShowHudText(iClient, -1, "Jump Charge: %i%", HaleCharge[iClient]);
 		}
 	}
-	else if (HaleCharge < 0)
+	else if (HaleCharge[iClient] < 0)
 	{
-		HaleCharge += 5;
+		HaleCharge[iClient] += 5;
 		if (!(buttons & IN_SCORE))
 		{
 			SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", (-HaleCharge/5));
+			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", (-HaleCharge[iClient]/5));
 		}
 	}
 	else
@@ -595,8 +611,8 @@ public Action VSHA_OnBossTimer()
 		// 5 * 60 = 300
 		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
 		// 300 = 1 minute wait
-		float ExtraBoost = float(HaleCharge) * 2;
-		if ( HaleCharge > 1 && SuperJump(iClient, ExtraBoost, -15.0, HaleCharge, -300) ) //put convar/cvar for jump sensitivity here!
+		float ExtraBoost = float(HaleCharge[iClient]) * 2;
+		if ( HaleCharge[iClient] > 1 && SuperJump(iClient, ExtraBoost, -15.0, HaleCharge[iClient], -300) ) //put convar/cvar for jump sensitivity here!
 		{
 			strcopy(playsound, PLATFORM_MAX_PATH, "");
 			Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", GetRandomInt(0, 1) ? HaleJump : HaleJump132, GetRandomInt(1, 2));
@@ -627,7 +643,7 @@ public Action VSHA_OnPrepBoss()
 
 	if (iClient != Hale[iClient]) return Plugin_Continue;
 	TF2_SetPlayerClass(iClient, TFClass_Soldier, _, false);
-	HaleCharge = 0;
+	HaleCharge[iClient] = 0;
 
 	TF2_RemoveAllWeapons2(iClient);
 	TF2_RemovePlayerDisguise(iClient);
