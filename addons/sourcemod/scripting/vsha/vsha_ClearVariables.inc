@@ -2,21 +2,35 @@
 
 public void ClearVariablesRoundStart(int client)
 {
-	Storage[client] = null;
-	iBoss[client] = -1;
 	bIsBoss[client] = false;
 	iDamage[client] = 0;
-	iHits[client] = 0;
-	bNoTaunt[client] = false;
 	iModelRetrys[client] = 25;
 }
 
-public void ClearVariables()
+public void ClearAllVariables()
 {
+	Enabled = false;
+	bTenSecStart[0] = false;
+	bTenSecStart[1] = false;
+
+	PointReady = false;
+	flHPTime = 0.0;
+	timeleft = 0;
+	RoundCount = 0;
+	TeamRoundCounter = 0;
+	iPlaying = 0;
+	iRedAlivePlayers = 0;
+	iBluAlivePlayers = 0;
+	iHealthBar = -1;
+	iLowestBossHP = 0;
+	iNextBossPlayer = 0;
+
 	LoopMaxPLYR(player)
 	{
+		iBossHealth[player]=0;
+		iBossMaxHealth[player]=0;
+		iBossUserID[player]=0;
 		iModelRetrys[player] = 25;
-		iPresetBoss[player]=0;
 		Storage[player] = null;
 		iBoss[player] = -1;
 		iPresetBoss[player] = -1;

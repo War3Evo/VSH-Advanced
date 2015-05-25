@@ -15,6 +15,7 @@ public void MakeBoss(int userid)
 	if ( iClient <= 0 || !IsClientInGame(iClient) || !bIsBoss[iClient] ) return;
 
 	ForceTeamChange(iClient, HaleTeam);
+	//DP("vsha_PawnTimer_MakeBoss 18 ForceTeamChange(i, HaleTeam)");
 
 	//DP("MakeBoss ForceTeamChange");
 
