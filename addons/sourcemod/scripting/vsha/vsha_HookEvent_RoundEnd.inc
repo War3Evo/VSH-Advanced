@@ -36,7 +36,7 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 				if (GetClientTeam(i) != HaleTeam)
 				{
 					ForceTeamChange(i, HaleTeam);
-					DP("vsha_HookEvent_RoundEnd 39 ForceTeamChange(i, HaleTeam)");
+					//DP("vsha_HookEvent_RoundEnd 39 ForceTeamChange(i, HaleTeam)");
 				}
 			}
 			bIsBoss[i] = false;
