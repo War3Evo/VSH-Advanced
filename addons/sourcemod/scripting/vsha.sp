@@ -77,7 +77,7 @@ enum VSHAError
 #include "vsha/vsha_BossHUD.inc"
 #include "vsha/vsha_UpdateHealthBar.inc"
 #include "vsha/vsha_Engine_SubPlugin_Configuration_File.inc"
-//#include "vsha/"
+#include "vsha/vsha_CreateTimer_WatchGameMode.inc"
 //#include "vsha/"
 //#include "vsha/"
 //#include "vsha/"
@@ -782,10 +782,10 @@ public void UnRegisterBoss(Handle pluginhndl, const char[] name)
 			ForcePlayerSuicide(target);
 			PrintToChatAll("Unloaded %s",name);
 		}
-		ClearVariables();
+		ClearAllVariables();
 		hArrayBossSubplugins.Erase(BossID); //PushArrayCell(hArrayBossSubplugins, BossSubplug);
 		RemoveFromTrie(hTrieBossSubplugins, name);
-		ClearVariables();
+		ClearAllVariables();
 		InternalPause = false;
 		return;
 	}
