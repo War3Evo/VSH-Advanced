@@ -16,7 +16,11 @@ public void CalcScores()
 			aevent.SetInt("points", j);
 			aevent.Fire();
 
-			if ( bIsBoss[i] ) SetClientQueuePoints(i, 0);
+			if ( bIsBoss[i] )
+			{
+				SetClientQueuePoints(i, 0);
+				CPrintToChat(i, "{olive}[VSH Engine]{default} You now have %i+ queue points.", GetClientQueuePoints(i));
+			}
 			else
 			{
 				CPrintToChat(i, "{olive}[VSH Engine]{default} You get %i+ queue points.", QueueIncrement.IntValue); //GetConVarInt(QueueIncrement));
