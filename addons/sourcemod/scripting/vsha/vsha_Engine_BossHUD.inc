@@ -1,4 +1,4 @@
-// vsha_BossHUD.inc
+// vsha_Engine_BossHUD.inc
 
 public void BossHUD(int client)
 {
