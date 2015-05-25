@@ -11,6 +11,7 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 #endif
 		return Plugin_Continue;
 	}
+	CalcScores();
 	TeamRoundCounter++;
 	RoundCount++;
 	int i;
@@ -104,7 +105,7 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 			ShowHudText(i, -1, "Most Damage Dealt By:\n1)%i - %s\n2)%i - %s\n3)%i - %s\n\nDamage Dealt: %i\nScore for this round: %i", iDamage[top[0]], first, iDamage[top[1]], second, iDamage[top[2]], third, iDamage[i], RoundFloat(iDamage[i]/600.0));
 		}
         }
-	PawnTimer( CalcScores, 3.0, TIMER_FLAG_NO_MAPCHANGE );
+	//PawnTimer( CalcScores, 3.0, TIMER_FLAG_NO_MAPCHANGE );
 	//CreateTimer(3.0, TimerCalcScores, _, TIMER_FLAG_NO_MAPCHANGE);
 	return Plugin_Continue;
 }
