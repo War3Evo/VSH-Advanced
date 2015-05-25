@@ -22,6 +22,9 @@
 #define nullfunc			INVALID_FUNCTION
 #define nullvec				NULL_VECTOR
 
+#define LifeState_Alive 0
+#define LifeState_Dead 2
+
 #define HudTextScreenHoldTime 0.21
 
 #define HEALTHBAR_CLASS "monster_resource"
@@ -29,6 +32,8 @@
 #define HEALTHBAR_MAX 255
 
 #define TEAM_SPEC 1
+#define TEAM_RED 2
+#define TEAM_BLUE 3
 
 //#define DEBUG				0
 
@@ -103,6 +108,7 @@ enum VSHA_Var
 	EventTarget,
 	EventAttacker,
 	EventVictim,
+	EventHitPoints,
 	EventArg1, //generic vsha event arguments
 	EventArg2,
 	EventArg3,
@@ -714,12 +720,21 @@ stock void ClearTimer(Handle &Timer)
 		Timer = null;
 	}
 }
-stock void ForceTeamChange(int client, int iTeam)
+stock int GetEntityTeamNum(int iEnt)
 {
-	SetEntProp(client, Prop_Send, "m_lifeState", 2);
-	ChangeClientTeam(client, iTeam);
-	SetEntProp(client, Prop_Send, "m_lifeState", 0);
-	TF2_RespawnPlayer(client);
+	return GetEntProp(iEnt, Prop_Send, "m_iTeamNum");
+}
+stock void ForceTeamChange(int iClient, int iTeam)
+{
+	int iOldTeam = GetEntityTeamNum(iClient);
+
+	if (iOldTeam != iTeam && iOldTeam >= TEAM_RED)
+	{
+		SetEntProp(iClient, Prop_Send, "m_lifeState", LifeState_Dead);
+		ChangeClientTeam(iClient, iTeam);
+		SetEntProp(iClient, Prop_Send, "m_lifeState", LifeState_Alive);
+		TF2_RespawnPlayer(iClient);
+	}
 }
 stock int GetTeamPlayerCount(int team)
 {

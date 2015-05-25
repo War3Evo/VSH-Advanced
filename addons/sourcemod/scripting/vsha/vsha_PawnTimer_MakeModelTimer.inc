@@ -2,8 +2,28 @@
 
 public Action MakeModelTimer(Handle hTimer, any userid)
 {
+	//DP("Action MakeModelTimer");
 	int iClient = GetClientOfUserId(userid);
-	if ( iClient <= 0 || CheckRoundState() == 2 || !bIsBoss[iClient] ) return Plugin_Stop;
+	//if ( iClient <= 0 || CheckRoundState() = ROUNDSTATE_INVALID  || CheckRoundState() = ROUNDSTATE_ROUND_END || !bIsBoss[iClient] ) return Plugin_Stop;
+
+	if ( !bIsBoss[iClient] )
+	{
+		//DP("MakeModelTimer ValidPlayer");
+
+		//DP("iModelRetrys %d",iModelRetrys[iClient]);
+
+		if(iModelRetrys[iClient] > 0)
+		{
+			//DP("MakeModelTimer PawnTimer");
+			iModelRetrys[iClient]--;
+			//PawnTimer(MakeModelTimer, 0.2, GetClientUserId(iClient));
+			CreateTimer(0.2, MakeModelTimer, GetClientUserId(iClient));
+			return Plugin_Continue;
+		}
+		return Plugin_Stop;
+	}
+
+	//DP("Loading Private Forward");
 
 	char model[PATH];
 	StringMap ModelMap = new StringMap();
@@ -14,11 +34,17 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 	Action result = VSHA_Private_Forward("VSHA_OnModelTimer");
 	if(result != Plugin_Stop)
 	{
+		//DP("VSHA_Private_Forward");
+
 		ModelMap = VSHA_GetVar(EventModel);
 		ModelMap.GetString("Model",STRING(model));
 		SetVariantString(model);
 		AcceptEntityInput(iClient, "SetCustomModel");
 		SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
+	}
+	else
+	{
+		iModelRetrys[iClient]=0;
 	}
 
 	/*

@@ -1,8 +1,18 @@
 // vsha_HookEvent_RoundStart.inc
 
+public void ForceRoundStartCheckTimer()
+{
+	RoundStartFunction();
+}
 
 public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
+	return RoundStartFunction();
+}
+
+public Action RoundStartFunction()
+{
+	//DP("RoundStart");
 	bool MakeEnabled = false;
 	if (!bEnabled.BoolValue)
 	{
@@ -35,9 +45,10 @@ public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		if (IsValidClient(i) && IsOnBlueOrRedTeam(i))
 		{
+			ClearVariablesRoundStart(i);
 			//ForceTeamChange(i, OtherTeam);
-			iDamage[i] = 0;
-			bIsBoss[i] = false;
+			//iDamage[i] = 0;
+			//bIsBoss[i] = false;
 			iPlaying++;
 		}
 	}
@@ -46,11 +57,31 @@ public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 #endif
 	if (GetClientCount() <= 1 || iPlaying < 2)
 	{
-		CPrintToChatAll("{olive}[VSH Engine]{default} Need more players to begin");
-		Enabled = false;
-		SetControlPoint(true);
+		if(RetryCounter>0)
+		{
+			int entityTimer = FindEntityByClassname(-1, "team_round_timer");
+			if (entityTimer > -1)
+			{
+				SetVariantInt(5);
+				AcceptEntityInput(entityTimer, "AddTime");
+				RetryCounter=10;
+			}
+			else
+			{
+				RetryCounter--;
+			}
+			PawnTimer(ForceRoundStartCheckTimer, 4.8);
+			CPrintToChatAll("{olive}[VSH Engine]{default} Waiting for more players...");
+		}
+		else
+		{
+			CPrintToChatAll("{olive}[VSH Engine]{default} Need more players to begin!");
+			Enabled = false;
+			SetControlPoint(true);
+		}
 		return Plugin_Continue;
 	}
+	RetryCounter = 10;
 	if (hArrayBossSubplugins.Length < 1) //if (GetArraySize(hArrayBossSubplugins) < 1)
 	{
 		LogMessage("VSH Engine::RoundStart() **** No Boss Subplugins Loaded ****");
@@ -87,13 +118,20 @@ public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 		{
 			if ( IsValidClient(i) && IsOnBlueOrRedTeam(i) )
 			{
-				if (bIsBoss[i]) ForceTeamChange(i, HaleTeam);
-				else ForceTeamChange(i, OtherTeam);
+				if (bIsBoss[i])
+				{
+					ForceTeamChange(i, HaleTeam);
+				}
+				else
+				{
+					ForceTeamChange(i, OtherTeam);
+				}
 			}
 		}
 	}
 
-	bTenSecStart[0] = true; bTenSecStart[1] = true;
+	bTenSecStart[0] = true;
+	bTenSecStart[1] = true;
 
 	PawnTimer(tTenSecStart, 29.1, 0);
 	PawnTimer(tTenSecStart, 60.1, 1);
@@ -126,5 +164,6 @@ public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 		}
 	}
 	SearchForItemPacks();
+
 	return Plugin_Continue;
 }

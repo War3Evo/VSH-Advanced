@@ -4,13 +4,20 @@ public Action PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!Enabled) return Plugin_Continue;
 	int client = GetClientOfUserId( event.GetInt("userid") );
-	if ( client && IsClientInGame(client) && (CheckRoundState() > -1 && CheckRoundState() < 2) )
+	//if ( client && IsClientInGame(client) && (CheckRoundState() == ROUNDSTATE_EVENT_ROUND_START || CheckRoundState() == ROUNDSTATE_START_ROUND_TIMER) )
+	if ( ValidPlayer(client) )
 	{
-		SetVariantString("");
-		AcceptEntityInput(client, "SetCustomModel");
-		if ( bIsBoss[client] ) PawnTimer(MakeBoss, 0.2, GetClientUserId(client)); //CreateTimer(0.1, MakeBoss, GetClientUserId(client));
+		if ( bIsBoss[client] )
+		{
+			iModelRetrys[client] = 25;
+			//DP("Player Spawn MakeBoss");
+			PawnTimer(MakeBoss, 0.5, GetClientUserId(client)); //CreateTimer(0.1, MakeBoss, GetClientUserId(client));
+		}
 		else
 		{
+			SetVariantString("");
+			AcceptEntityInput(client, "SetCustomModel");
+
 			TF2_RemoveAllWeapons2(client);
 			TF2_RegeneratePlayer(client);
 			PawnTimer(EquipPlayers, 0.2, GetClientUserId(client)); //CreateTimer(0.1, EquipPlayers, GetClientUserId(client));
