@@ -57,7 +57,7 @@ public void OnPluginStart()
 	TimeLeftHUD = CreateHudSynchronizer();
 	MiscHUD = CreateHudSynchronizer();
 
-	PointCookie = RegClientCookie("vshe_queuepoints", "Amount of VSH Engine Queue points, the player has", CookieAccess_Protected);
+	PointCookie = RegClientCookie("vsha_queuepoints", "Amount of VSH Engine Queue points, the player has", CookieAccess_Protected);
 	//LoadSubPlugins();
 	//AutoExecConfig(true, "VSH-Engine");
 
