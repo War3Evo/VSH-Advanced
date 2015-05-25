@@ -69,6 +69,9 @@
 								if(IsClientInGame(%1))\
 								if(IsPlayerAlive(%1))
 
+#define LoopIsInTeam(%1,%2) for(int %2=1;%2<=MaxClients;++%2)\
+								if(IsClientInGame(%2) && IsPlayerAlive(%2) && (%1==GetClientTeam(%2)))
+
 #define LoopTeamPlayers(%1,%2) for(int %2=1;%2<=MaxClients;++%2)\
 								if(IsClientInGame(%2) && IsPlayerAlive(%2) && (GetClientTeam(%1)==GetClientTeam(%2)))
 
