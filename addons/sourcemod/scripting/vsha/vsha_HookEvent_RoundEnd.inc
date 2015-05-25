@@ -33,7 +33,11 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 			if ( IsPlayerAlive(i) ) CPrintToChatAll("{olive}[VSH Engine]{default} %N had %i of %i", i, iBossHealth[i], iBossMaxHealth[i]);
 			else
 			{
-				if (GetClientTeam(i) != HaleTeam) ForceTeamChange(i, HaleTeam);
+				if (GetClientTeam(i) != HaleTeam)
+				{
+					ForceTeamChange(i, HaleTeam);
+					DP("vsha_HookEvent_RoundEnd 39 ForceTeamChange(i, HaleTeam)");
+				}
 			}
 			bIsBoss[i] = false;
 		}

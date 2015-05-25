@@ -37,7 +37,9 @@ public Action RoundStartFunction()
 #endif
 		return Plugin_Continue;
 	}
-	ClearTimer(MusicTimer);
+	// We do this on round end, why need it on round start?
+	// commenting this out to try and defeat a bug
+	//ClearTimer(MusicTimer);
 	CheckArena();
 	int i;
 	iPlaying = 0;
@@ -120,10 +122,12 @@ public Action RoundStartFunction()
 			{
 				if (bIsBoss[i])
 				{
+					//DP("HookEvent_RoundStart 123 ForceTeamChange(i, HaleTeam)");
 					ForceTeamChange(i, HaleTeam);
 				}
 				else
 				{
+					//DP("HookEvent_RoundStart 123 ForceTeamChange(i, OtherTeam)");
 					ForceTeamChange(i, OtherTeam);
 				}
 			}

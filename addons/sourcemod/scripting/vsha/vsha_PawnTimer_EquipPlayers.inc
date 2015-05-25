@@ -9,6 +9,7 @@ public void EquipPlayers(int iClientid)
 	if (GetClientTeam(iClient) != OtherTeam)
 	{
 		ForceTeamChange(iClient, OtherTeam);
+		DP("vsha_PawnTimer_EquipPlayers 12 ForceTeamChange(i, OtherTeam)");
 		TF2_RegeneratePlayer(iClient); // Added fix by Chdata to correct team colors
 	}
 	int weapon = GetPlayerWeaponSlot(iClient, TFWeaponSlot_Primary);

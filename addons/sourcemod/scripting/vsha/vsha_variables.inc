@@ -22,8 +22,8 @@ int iModelRetrys[PLYR],
 	iUberedTarget[PLYR],
 	iLives[PLYR],		//lives can work for BOTH Bosses & for players, get creative!
 	iHits[PLYR],		//How many times a player has been hit lol
-	AmmoTable[2049],
-	ClipTable[2049],
+	AmmoTable[2049], // currenly in OnWeaponSpawned.inc, but not used for anything
+	ClipTable[2049], // currenly in OnWeaponSpawned.inc, but not used for anything
 	HaleTeam = 3,
 	OtherTeam = 2,
 	iNextBossPlayer,
@@ -48,7 +48,7 @@ bool Enabled,
 	bInJump[PLYR],
 	bNoTaunt[PLYR],
 	bTenSecStart[2],
-	PointType,
+	PointType, // It's being used, but not set anywhere
 	PointReady,
 	steamtools;
 
