@@ -595,7 +595,8 @@ public Action VSHA_OnBossTimer()
 		// 5 * 60 = 300
 		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
 		// 300 = 1 minute wait
-		if ( HaleCharge > 1 && SuperJump(iClient, view_as<float>(HaleCharge), -15.0, HaleCharge, -300) ) //put convar/cvar for jump sensitivity here!
+		float ExtraBoost = float(HaleCharge) * 2;
+		if ( HaleCharge > 1 && SuperJump(iClient, ExtraBoost, -15.0, HaleCharge, -300) ) //put convar/cvar for jump sensitivity here!
 		{
 			strcopy(playsound, PLATFORM_MAX_PATH, "");
 			Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", GetRandomInt(0, 1) ? HaleJump : HaleJump132, GetRandomInt(1, 2));
