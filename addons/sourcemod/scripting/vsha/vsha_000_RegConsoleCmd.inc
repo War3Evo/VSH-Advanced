@@ -1,4 +1,4 @@
-// vsha_RegConsoleCmd.inc
+// vsha_000_RegConsoleCmd.inc
 
 public Action CommandMakeNextSpecial(int client, int args)
 {
