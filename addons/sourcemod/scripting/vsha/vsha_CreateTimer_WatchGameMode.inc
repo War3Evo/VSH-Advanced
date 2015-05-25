@@ -63,7 +63,7 @@ public Action WatchGameModeTimer(Handle hTimer)
 	}
 	else if(BossCount > 0)
 	{
-		CPrintToChatAll("{lightgreen}Bosses in the House!\nStarting Next Round!");
+		CPrintToChatAll("{lightgreen}Bosses in the House!\nStarting Round!");
 		LoopAlivePlayers(iTarget)
 		{
 			ForcePlayerSuicide(iTarget);
