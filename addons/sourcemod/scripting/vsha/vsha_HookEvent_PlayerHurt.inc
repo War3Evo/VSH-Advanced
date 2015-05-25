@@ -44,7 +44,7 @@ public Action PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 					else iDamage[iHealers[target]] += damage/(iHealerCount+1);
 				}
 			}
-			if ((ValidPlayer(attacker) && TF2_GetPlayerClass(attacker) == TFClass_Soldier && GetIndexOfWeaponSlot(attacker, TFWeaponSlot_Primary) == 1104)
+			if (ValidPlayer(attacker) && TF2_GetPlayerClass(attacker) == TFClass_Soldier && GetIndexOfWeaponSlot(attacker, TFWeaponSlot_Primary) == 1104)
 			{
 				iAirDamage[attacker] += damage;
 				SetEntProp(attacker, Prop_Send, "m_iDecapitations", iAirDamage[attacker]/200);
