@@ -19,9 +19,19 @@ public void EquipPlayers(int iClientid)
 	Action result = Plugin_Continue;
 
 	VSHA_SetVar(EventClient,iClient);
-	result = VSHA_Registered_Global_Forward("VSHA_OnEquipPlayer");
+	result = VSHA_Registered_Global_Forward("VSHA_OnEquipPlayer_Pre");
 
-	if(result != Plugin_Continue) return;
+	if(result == Plugin_Stop)
+	{
+		return;
+	}
+	else if(result != Plugin_Continue)
+	{
+		VSHA_SetVar(EventClient,iClient);
+		result = VSHA_Registered_Global_Forward("VSHA_OnEquipPlayer_Post");
+
+		return;
+	}
 
 	int weapon = GetPlayerWeaponSlot(iClient, TFWeaponSlot_Primary);
 	int index = -1;
@@ -135,6 +145,9 @@ public void EquipPlayers(int iClientid)
 		}
 		default: TF2Attrib_SetByDefIndex( iClient, 57, float(GetClientHealth(iClient)/50) ); //make by cvar
 	}
+
+	VSHA_SetVar(EventClient,iClient);
+	result = VSHA_Registered_Global_Forward("VSHA_OnEquipPlayer_Post");
 
 	return;
 }

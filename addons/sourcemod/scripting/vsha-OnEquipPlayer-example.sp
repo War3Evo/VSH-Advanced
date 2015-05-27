@@ -29,7 +29,7 @@ public void OnPluginEnd()
 	}
 }
 
-public Action VSHA_OnEquipPlayer()
+public Action VSHA_OnEquipPlayer_Pre()
 {
 	if(ThisPluginHandle == null) return Plugin_Continue;
 
