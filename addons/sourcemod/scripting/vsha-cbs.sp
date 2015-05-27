@@ -45,18 +45,12 @@ public void OnPluginStart()
 {
 	//ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("saxtonhale") );
 	//AutoExecConfig(true, "VSHA-Boss-SaxtonHale");
-#if defined DEBUG
-	DEBUGPRINT1("VSH Engine::OnPluginStart() **** loaded VSHA Subplugin ****");
-#endif
 }
 
 public void OnAllPluginsLoaded()
 {
 	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("christianbrutalsniper") );
-#if defined DEBUG
-	if (ThisPluginHandle == null) DEBUGPRINT1("VSHA ChristianBrutalSniper::OnAllPluginsLoaded() **** ThisPluginHandle is NULL ****");
-	else DEBUGPRINT1("VSHA ChristianBrutalSniper::OnAllPluginsLoaded() **** ThisPluginHandle is OK and ChristianBrutalSniper is Registered! ****");
-#endif
+
 	HookEvent("player_changeclass", ChangeClass);
 
 	VSHA_LoadConfiguration("configs/vsha/cbs.cfg");
@@ -173,10 +167,6 @@ public Action VSHA_OnPlayerKilledByBoss()
 		}
 		if (!StrEqual(playsound, "")) EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	}*/
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnPlayerKilled() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnPlayerKilled() **** Forward Responded ****");
-#endif
 	return Plugin_Continue;
 }
 public Action VSHA_OnKillingSpreeByBoss()
@@ -195,10 +185,7 @@ public Action VSHA_OnKillingSpreeByBoss()
 
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnKillingSpree() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnKillingSpree() **** Forward Responded ****");
-#endif
+
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossKilled() //victim is boss
@@ -214,10 +201,7 @@ public Action VSHA_OnBossKilled() //victim is boss
 	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleFail, GetRandomInt(1, 3));
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	*/
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnBossKilled() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossKilled() **** Forward Responded ****");
-#endif
+
 	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 	return Plugin_Continue;
 }
@@ -239,10 +223,7 @@ public Action VSHA_OnBossWin()
 		if (!IsClientValid(i)) continue;
 		StopSound(i, SNDCHAN_AUTO, CBSTheme);
 	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnBossWin() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossWin() **** Forward Responded ****");
-#endif
+
 	SDKUnhook(Hale[iiBoss], SDKHook_OnTakeDamage, OnTakeDamage);
 	return Plugin_Continue;
 }
@@ -268,10 +249,7 @@ public Action VSHA_MessageTimer()
 			ShowHudText(client, -1, text);
 		}
 	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_MessageTimer() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_MessageTimer() **** Forward Responded ****");
-#endif
+
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossAirblasted()
@@ -284,10 +262,7 @@ public Action VSHA_OnBossAirblasted()
 	//HaleRage += RoundToCeil(rage);
 	//if (HaleRage > RageDMG) HaleRage = RageDMG;
 	VSHA_SetBossRage(Hale[iiBoss], VSHA_GetBossRage(Hale[iiBoss])+4.0); //make this a convar/cvar!
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnBossAirblasted() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossAirblasted() **** Forward Responded ****");
-#endif
+
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossSelected()
@@ -302,10 +277,7 @@ public Action VSHA_OnBossSelected()
 		//DP("vsha-cbs 526 ForceTeamChange(iiBoss, 3)");
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnBossSelected() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossSelected() **** Forward Responded ****");
-#endif
+
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossIntroTalk()
@@ -313,10 +285,7 @@ public Action VSHA_OnBossIntroTalk()
 	strcopy(playsound, PLATFORM_MAX_PATH, CBS0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnBossIntroTalk() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossIntroTalk() **** Forward Responded ****");
-#endif
+
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossSetHP()
@@ -325,10 +294,7 @@ public Action VSHA_OnBossSetHP()
 	if (iClient != Hale[iClient]) return Plugin_Continue;
 	int BossMax = HealthCalc( 760.8, view_as<float>( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
 	VSHA_SetBossMaxHealth(Hale[iClient], BossMax);
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnBossSetHP() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossSetHP() **** Forward Responded ****");
-#endif
+
 	return Plugin_Continue;
 }
 public Action VSHA_OnLastSurvivor()
@@ -342,10 +308,7 @@ public Action VSHA_OnLastSurvivor()
 
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnLastSurvivor() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnLastSurvivor() **** Forward Responded ****");
-#endif
+
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossTimer()
@@ -402,10 +365,7 @@ public Action VSHA_OnBossTimer()
 		//CPrintToChat(client, "{olive}[VSHE]{default} You just used your weighdown!");
 		//all this just to do a cprint? It's not like weighdown has a limit...
 	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnBossTimer() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossTimer() **** Forward Responded ****");
-#endif
+
 	return Plugin_Continue;
 }
 public Action VSHA_OnPrepBoss()
@@ -431,10 +391,7 @@ public Action VSHA_OnPrepBoss()
 		int CBSWeapon = SpawnWeapon(iClient, "tf_weapon_club", 171, 100, 4, attribs);
 		SetEntPropEnt(iClient, Prop_Send, "m_hActiveWeapon", CBSWeapon);
 	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnPrepBoss() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnPrepBoss() **** Forward Responded ****");
-#endif
+
 	return Plugin_Continue;
 }
 public Action VSHA_OnMusic()
@@ -448,10 +405,7 @@ public Action VSHA_OnMusic()
 	SoundMap.SetString("Sound", BossTheme);
 	VSHA_SetVar(EventSound, SoundMap);
 	VSHA_SetVar(EventTime, time);
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnMusic() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnMusic() **** Forward Responded ****");
-#endif
+
 	return Plugin_Continue;
 }
 /*
@@ -499,10 +453,6 @@ public Action VSHA_OnModelTimer()
 	AcceptEntityInput(iClient, "SetCustomModel");
 	SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
 
-#if defined DEBUG
-	//DEBUGPRINT1("VSH SaxtonHale::VSHA_OnModelTimer() **** Forward Responded ****");
-	//DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnModelTimer() **** Forward Responded ****");
-#endif
 	return Plugin_Continue;
 }
 
@@ -526,10 +476,7 @@ public Action VSHA_OnBossRage()
 	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
 	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
 	CreateTimer(0.6, UseRage, iClient);
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnBossRage() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossRage() **** Forward Responded ****");
-#endif
+
 	return Plugin_Continue;
 }
 public void TF2_OnConditionAdded(int client, TFCond condition)
@@ -539,19 +486,11 @@ public void TF2_OnConditionAdded(int client, TFCond condition)
 	{
 		case TFCond_Jarated:
 		{
-#if defined DEBUG
-			DEBUGPRINT1("VSH ChristianBrutalSniper::TF2_OnConditionAdded() **** Hale was Jarated ****");
-			DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::TF2_OnConditionAdded() **** Hale was Jarated ****");
-#endif
 			VSHA_SetBossRage(Hale[client], VSHA_GetBossRage(client)-8.0);
 			TF2_RemoveCondition(Hale[client], condition);
 		}
 		case TFCond_MarkedForDeath:
 		{
-#if defined DEBUG
-			DEBUGPRINT1("VSH ChristianBrutalSniper::TF2_OnConditionAdded() **** Hale was MarkedForDeath ****");
-			DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::TF2_OnConditionAdded() **** Hale was MarkedForDeath ****");
-#endif
 			VSHA_SetBossRage(Hale[client], VSHA_GetBossRage(client)-5.0);
 			TF2_RemoveCondition(Hale[client], condition);
 		}
@@ -669,10 +608,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					damage = 1.0;
 					return Plugin_Changed;
 				}
-#if defined DEBUG
-				DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnBossTeleFragd() **** Forward Responded ****");
-				DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossTeleFragd() **** Forward Responded ****");
-#endif
 				damage = view_as<float>( VSHA_GetBossHealth(victim) ); //(HaleHealth > 9001 ? 15.0:float(GetEntProp(Hale, Prop_Send, "m_iHealth")) + 90.0);
 				int teleowner = FindTeleOwner(attacker);
 				if (IsValidClient(teleowner) && teleowner != attacker)
@@ -897,11 +832,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 				PrintCenterText(attacker, "You Tickled The Boss!");
 				PrintCenterText(victim, "You Were Just Tickled!");
-
-#if defined DEBUG
-				DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnBossStabbed() **** Forward Responded ****");
-				DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossStabbed() **** Forward Responded ****");
-#endif
 
 				int pistol = GetIndexOfWeaponSlot(attacker, TFWeaponSlot_Primary);
 				if (pistol == 525) //Diamondback gives 3 crits on backstab
