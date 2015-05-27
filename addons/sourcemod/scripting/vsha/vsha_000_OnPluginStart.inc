@@ -3,6 +3,7 @@
 public void OnPluginStart()
 {
 	hArrayBossSubplugins = new ArrayList();	//CreateArray();
+	hArrayNonBossSubplugins = new ArrayList();	//CreateArray();
 	hTrieBossSubplugins = new StringMap();	//CreateTrie();
 
 	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);
