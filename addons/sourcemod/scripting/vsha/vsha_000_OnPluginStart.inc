@@ -48,6 +48,7 @@ public void OnPluginStart()
 
 	RegAdminCmd("sm_forceboss", Command_forceboss, ADMFLAG_ROOT, "sm_forceboss");
 
+	RegConsoleCmd("sm_pickhale", PickBossMenu);
 	RegConsoleCmd("sm_setboss", PickBossMenu);
 	RegConsoleCmd("sm_haleboss", PickBossMenu);
 	RegConsoleCmd("sm_vshaboss", PickBossMenu);
