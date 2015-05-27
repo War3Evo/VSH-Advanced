@@ -33,6 +33,8 @@ char VagineerRageSound2[PATHX];		//	1-2
 char VagineerKSpreeNew[PATHX];		//	1-5
 char VagineerFail[PATHX];			//	1-2
 
+char VagineerTheme[PATHX];
+
 Handle ThisPluginHandle = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDING DATA.
 
 //make defines, handles, variables heer lololol
@@ -564,13 +566,12 @@ public Action VSHA_OnPrepBoss()
 #endif
 	return Plugin_Continue;
 }
-/*public Action VSHA_OnMusic()
+public Action VSHA_OnMusic()
 {
-	char BossTheme[256];
-	float time;
+	float time = 199.0;
 
 	StringMap SoundMap = new StringMap();
-	SoundMap.SetString("Sound", BossTheme);
+	SoundMap.SetString("Sound", VagineerTheme);
 	VSHA_SetVar(EventSound,SoundMap);
 	VSHA_SetVar(EventTime,time);
 #if defined DEBUG
@@ -578,7 +579,7 @@ public Action VSHA_OnPrepBoss()
 	DEBUGPRINT2("{lime}VSH Vagineer::VSHA_OnMusic() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
-}*/
+}
 /*
 public Action OnVSHAEvent(VSHA_EVENT event, int client)
 {
@@ -1221,6 +1222,12 @@ public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bP
 	else if(StrEqual(skey, "VagineerFail"))
 	{
 		strcopy(STRING(VagineerFail), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "VagineerTheme"))
+	{
+		strcopy(STRING(VagineerTheme), value);
 		bPreCacheFile = true;
 		bAddFileToDownloadsTable = true;
 	}
