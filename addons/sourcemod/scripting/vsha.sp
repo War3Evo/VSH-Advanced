@@ -19,6 +19,9 @@ public Plugin myinfo = {
 	url = "https://github.com/War3Evo/VSH-Advanced"
 };
 
+ArrayList hArrayNonBossSubplugins = null;	// List <Subplugin Addon> Not a boss addon, just an external extra
+
+
 ArrayList hArrayBossSubplugins = null;	// List <Subplugin>
 StringMap hTrieBossSubplugins = null;	// Map <Boss Name, Subplugin Handle>
 
@@ -316,17 +319,49 @@ public Action VSHA_Private_Forward(const char[] EventString)
 		TempStorage[TmpNum] = Storage[BossID];
 		TmpNum++;
 
-		Function FuncBossKillToy = GetFunctionByName(Storage[BossID], EventString);
-		if (FuncBossKillToy != nullfunc)
+		if(Storage[BossID] != null)
 		{
-			Call_StartFunction(Storage[BossID], FuncBossKillToy);
-			Call_Finish(result);
+			Function FuncBossKillToy = GetFunctionByName(Storage[BossID], EventString);
+			if (FuncBossKillToy != nullfunc)
+			{
+				Call_StartFunction(Storage[BossID], FuncBossKillToy);
+				Call_Finish(result);
+			}
 		}
 	}
 	return result;
 }
 
+public Action VSHA_Registered_Global_Forward(const char[] EventString)
+{
+	if(InternalPause) return Plugin_Continue;
 
+	Action result = Plugin_Continue;
+
+	if(hArrayNonBossSubplugins != null)
+	{
+		int count = hArrayNonBossSubplugins.Length; //GetArraySize(hMyArray);
+		Handle MyPlugin = null;
+		Function FuncRegisteredGlobal = nullfunc;
+		for (int i = 0; i < count; i++)
+		{
+			MyPlugin = hArrayNonBossSubplugins.Get(i);
+
+			if(MyPlugin != null)
+			{
+				FuncRegisteredGlobal = GetFunctionByName(MyPlugin, EventString);
+				if (FuncRegisteredGlobal != nullfunc)
+				{
+					Call_StartFunction(MyPlugin, FuncRegisteredGlobal);
+					Call_Finish(result);
+					if(result == Plugin_Stop) break;
+				}
+			}
+		}
+	}
+
+	return result;
+}
 //===================================================================================================================================
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -353,6 +388,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	// N A T I V E S ============================================================================================================
 	CreateNative("VSHA_LoadConfiguration", Native_LoadConfigurationSubplugin);
+
+	CreateNative("VSHA_RegisterNonBossAddon", Native_RegisterNonBossAddon);
+	CreateNative("VSHA_UnRegisterNonBossAddon", Native_UnRegisterNonBossAddon);
 
 	CreateNative("VSHA_RegisterBoss", Native_RegisterBossSubplugin);
 	CreateNative("VSHA_UnRegisterBoss", Native_UnRegisterBossSubplugin);
@@ -446,6 +484,18 @@ public int Native_LoadConfigurationSubplugin(Handle plugin, int numParams)
 	char cFileName[64];
 	GetNativeString(1, STRING(cFileName));
 	return VSHA_Load_Configuration(plugin, cFileName);
+}
+
+
+public int Native_RegisterNonBossAddon(Handle plugin, int numParams)
+{
+	Handle BossHandle = RegisterNonBossAddon( plugin );
+	return view_as<int>( BossHandle );
+}
+public int Native_UnRegisterNonBossAddon(Handle plugin, int numParams)
+{
+	UnRegisterNonBossAddon( plugin );
+	return 0;
 }
 
 public int Native_RegisterBossSubplugin(Handle plugin, int numParams)
@@ -693,31 +743,76 @@ public int Native_GetPlayerCount(Handle plugin, int numParams)
 {
 	return iPlaying;
 }
-public int FindBossBySubPluginByID(Handle plugin)
+public int FindByBossSubPluginByID(Handle plugin)
 {
 	int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
 	for (int i = 0; i < count; i++)
 	{
-		StringMap bossub = hArrayBossSubplugins.Get(i);
-		if (GetBossSubPlugin(bossub) == plugin) return i;
+		StringMap MyStringMap = hArrayBossSubplugins.Get(i);
+		if (GetBossSubPlugin(MyStringMap) == plugin) return i;
 	}
 	return -1;
 }
-public Handle FindBossBySubPlugin(Handle plugin)
+public Handle FindByBossSubPlugin(Handle plugin)
 {
-	int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
+	int count = hArrayBossSubplugins.Length; //GetArraySize(hMyArray);
 	for (int i = 0; i < count; i++)
 	{
-		StringMap bossub = hArrayBossSubplugins.Get(i);
-		if (GetBossSubPlugin(bossub) == plugin) return bossub;
+		StringMap MyStringMap = hArrayBossSubplugins.Get(i);
+		if (GetBossSubPlugin(MyStringMap) == plugin) return MyStringMap;
 	}
 	return null;
+}
+public Handle FindByNonBossSubPlugin(Handle plugin)
+{
+	int count = hArrayNonBossSubplugins.Length; //GetArraySize(hMyArray);
+	Handle MyPlugin = null;
+	for (int i = 0; i < count; i++)
+	{
+		MyPlugin = hArrayNonBossSubplugins.Get(i);
+		if (MyPlugin == plugin) return MyPlugin;
+	}
+	return null;
+}
+public int FindByNonBossSubPluginByID(Handle plugin)
+{
+	for (int i = 0; i < hArrayNonBossSubplugins.Length; i++)
+	{
+		if (hArrayNonBossSubplugins.Get(i) == plugin) return i;
+	}
+	return -1;
 }
 public Handle FindBossName(const char[] name)
 {
 	Handle GotBossName;
 	if ( GetTrieValueCaseInsensitive(hTrieBossSubplugins, name, GotBossName) ) return GotBossName;
 	return null;
+}
+public Handle RegisterNonBossAddon(Handle pluginhndl)
+{
+	Handle MyPluginHandle = FindByNonBossSubPlugin(pluginhndl);
+
+	if (MyPluginHandle != null)
+	{
+		LogError("**** RegisterNonBossAddon - Non-Boss Subplugin Already Registered / Returned current handle ****");
+		return MyPluginHandle;
+	}
+
+	hArrayNonBossSubplugins.Push(pluginhndl);
+
+	return pluginhndl;
+}
+public void UnRegisterNonBossAddon(Handle pluginhndl)
+{
+	int iPlugin = FindByNonBossSubPluginByID(pluginhndl);
+
+	if (iPlugin == -1)
+	{
+		LogError("**** UnRegisterNonBossAddon - Unable to unregister ****");
+		return;
+	}
+
+	hArrayNonBossSubplugins.Erase(iPlugin);
 }
 public Handle RegisterBoss(Handle pluginhndl, const char[] name, VSHAError &error)
 {
@@ -727,7 +822,7 @@ public Handle RegisterBoss(Handle pluginhndl, const char[] name, VSHAError &erro
 		error = Error_InvalidName;
 		return null;
 	}
-	if (FindBossBySubPlugin(pluginhndl) != null)
+	if (FindByBossSubPlugin(pluginhndl) != null)
 	{
 		LogError("**** RegisterBoss - Boss Subplugin Already Registered ****");
 		error = Error_SubpluginAlreadyRegistered;
@@ -765,7 +860,7 @@ public void UnRegisterBoss(Handle pluginhndl, const char[] name)
 		LogError("**** UnRegisterBoss - Invalid Name ****");
 		return;
 	}
-	int BossID = FindBossBySubPluginByID(pluginhndl);
+	int BossID = FindByBossSubPluginByID(pluginhndl);
 	if ((BossID > -1) && (FindBossName(name) != null))
 	{
 		// Create the trie to hold the data about the boss
