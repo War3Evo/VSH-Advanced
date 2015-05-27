@@ -1027,6 +1027,155 @@ native void VSHA_SetVar(VSHA_Var variabletoretrieve, any value);
 
 forward void VSHA_AddToDownloads(); /* called during OnMapStart(); NOTICE: THIS IS A GLOBAL FORWARD */
 /*
+ *
+ *
+ *
+forward Action VSHA_OnBossIntroTalk() {}; //play boss intro response sound clip in this forward
+
+forward Action VSHA_OnLastSurvivor() {}; //when CheckAlivePlayers counts only 1 player left, called once.
+
+forward VSHA_MessageTimer() {}; //called when a round begins.
+
+
+EXAMPLES ON HOW TO USE SOME OF THESE PRIVATE FORWARDS:
+
+//when a boss kills a player
+public Action VSHA_OnPlayerKilledByBoss()
+{
+	int iiBoss = VSHA_GetVar(EventBoss);
+	int attacker = VSHA_GetVar(EventAttacker);
+};
+
+//when boss has killed certain amount of players in a certain amount of time, conveniently gets the killed player who triggered this forward
+public Action VSHA_OnKillingSpreeByBoss()
+{
+	int iiBoss = VSHA_GetVar(EventBoss);
+	int attacker = VSHA_GetVar(EventAttacker);
+};
+
+//when a boss is killed, conveniently gets the player who killed the boss too, give the lucky sob a medal :3
+public Action VSHA_OnBossKilled() //victim is boss
+{
+	int iiBoss = VSHA_GetVar(EventBoss);
+	int attacker = VSHA_GetVar(EventAttacker);
+}
+
+// self explanatory lol
+public Action VSHA_OnBossWin()
+{
+	//Event event = VSHA_GetVar(SmEvent);
+	int iiBoss = VSHA_GetVar(EventBoss);
+}
+
+// also self explanatory
+public Action VSHA_OnBossKillBuilding()
+{
+	Event event = VSHA_GetVar(SmEvent);
+	int building = event.GetInt("index");
+	int attacker = VSHA_GetVar(EventAttacker);
+}
+
+//when boss is airblasted, client is the airblasted boss
+public Action VSHA_OnBossAirblasted()
+{
+	int iiBoss = VSHA_GetVar(EventBoss);
+	int airblaster = VSHA_GetVar(EventAttacker);
+}
+
+//when a boss is selected, the client is the player that is assigned to be the boss
+public Action VSHA_OnBossSelected()
+{
+	int iiBoss = VSHA_GetVar(EventClient);
+}
+
+//self explanatory, when boss has their hp set and client is the individual boss
+public Action VSHA_OnBossSetHP()
+{
+	int iClient = VSHA_GetVar(EventClient);
+}
+
+//called every 0.2 seconds on each boss, health is set automatically though
+public Action VSHA_OnBossTimer()
+{
+	int iClient = VSHA_GetVar(EventClient);
+}
+
+//called during MakeBoss timer; in this forward, the boss is disarmed and stripped of all equipment. Equip them or whatever in this forward ok?
+public Action VSHA_OnPrepBoss()
+{
+	int iClient = VSHA_GetVar(EventOnPrepBoss);
+}
+
+//sets the boss theme music, no shitty earrape music ok?
+public Action VSHA_OnMusic()
+{
+	char BossTheme[256];
+	float time;
+
+	switch ( GetRandomInt(0, 2) )
+	{
+	case 0:
+	{
+		BossTheme = HaleTheme1;
+		time = 150.0;
+	}
+	case 1:
+	{
+		BossTheme = HaleTheme2;
+		time = 150.0;
+	}
+	case 2:
+	{
+		BossTheme = HaleTheme3;
+		time = 220.0;
+	}
+	}
+	StringMap SoundMap = new StringMap();
+	SoundMap.SetString("Sound", BossTheme);
+	VSHA_SetVar(EventSound,SoundMap);
+	VSHA_SetVar(EventTime,time);
+
+	return Plugin_Continue;
+}
+
+//YOU NEED THIS TIMER FOR EVERY BOSS + MINION OR ELSE PLUGIN WILL BITCH @ U
+public Action VSHA_OnModelTimer()
+{
+	int iClient = VSHA_GetVar(EventModelTimer);
+
+	char modelpath[PATHX];
+
+	//DP("VSHA_OnModelTimer");
+	if (iClient != Hale[iClient])
+	{
+		SetVariantString("");
+		AcceptEntityInput(iClient, "SetCustomModel");
+		return Plugin_Stop;
+	}
+	modelpath = HaleModel;
+
+	StringMap ModelMap = new StringMap();
+	ModelMap.SetString("Model", modelpath);
+	VSHA_SetVar(EventModel,ModelMap);
+
+	SetVariantString(modelpath);
+	AcceptEntityInput(iClient, "SetCustomModel");
+	SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
+
+	return Plugin_Continue;
+}
+
+//when boss does taunt or medic call rage
+public Action VSHA_OnBossRage()
+{
+	int iClient = VSHA_GetVar(EventBoss);
+}
+
+
+OUT DATED FORWARD INFORMATION!
+OUT DATED FORWARD INFORMATION!
+OUT DATED FORWARD INFORMATION!
+
 forward void VSHA_OnPlayerKilled(int attacker, int client); //when a boss kills a player
 
 forward void VSHA_OnKillingSpree(int attacker, int client); //when boss has killed certain amount of players in a certain amount of time, conveniently gets the killed player who triggered this forward
