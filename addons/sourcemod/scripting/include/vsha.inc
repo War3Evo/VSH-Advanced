@@ -929,6 +929,9 @@ stock Handle GetBossSubPlugin(StringMap StrMapHndl)
 
 native bool VSHA_LoadConfiguration(char[] cFileName); // Load Subplugin Configuration file
 
+native Handle VSHA_RegisterNonBossAddon();
+native void VSHA_UnRegisterNonBossAddon();
+
 native Handle VSHA_RegisterBoss(char[] BossName); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
 native void VSHA_UnRegisterBoss(char[] BossName); //YOU SHOULD PUT THIS OnPluginEnd() !! So you can reload your boss plugin for development
 
