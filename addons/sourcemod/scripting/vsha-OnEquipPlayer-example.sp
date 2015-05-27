@@ -3,7 +3,7 @@
 #include <vsha>
 
 public Plugin myinfo = {
-	name = "Versus Saxton Hale Addon",
+	name = "Versus Saxton Hale OnEquipPlayer Addon",
 	author = "Diablo",
 	description = "OnEquipPlayer External Example",
 	version = "1.0",
