@@ -1,5 +1,8 @@
 // vsha_PawnTimer_EquipPlayers.inc
 
+
+// OnEquipPlayers(int iClient,
+
 public void EquipPlayers(int iClientid)
 {
 	int iClient = GetClientOfUserId(iClientid);
@@ -12,6 +15,14 @@ public void EquipPlayers(int iClientid)
 		//DP("vsha_PawnTimer_EquipPlayers 12 ForceTeamChange(i, OtherTeam)");
 		TF2_RegeneratePlayer(iClient); // Added fix by Chdata to correct team colors
 	}
+
+	Action result = Plugin_Continue;
+
+	VSHA_SetVar(EventClient,iClient);
+	result = VSHA_Registered_Global_Forward("VSHA_OnEquipPlayer");
+
+	if(result != Plugin_Continue) return;
+
 	int weapon = GetPlayerWeaponSlot(iClient, TFWeaponSlot_Primary);
 	int index = -1;
 	if (IsValidEdict(weapon) && IsValidEntity(weapon))
@@ -61,7 +72,7 @@ public void EquipPlayers(int iClientid)
 			{
 				TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Secondary);
 				weapon = SpawnWeapon(iClient, "tf_weapon_handgun_scout_secondary", 23, 5, 10, "280 ; 5 ; 6 ; 0.7 ; 2 ; 0.66 ; 4 ; 4.167 ; 78 ; 8.333 ; 137 ; 6.0");
-				SetWeaponAmmo(weapon, (GetMaxAmmo(iClient, 0)*200/GetMaxAmmo(iClient, 0)));
+				SetWeaponAmmo(weapon, (GetMaxAmmo(iClient, 0)*200/GetMaxAmmo(iClient, 0))); // WTF up with this math?
 			}
 			case 39, 351, 1081:
 			{
@@ -71,11 +82,13 @@ public void EquipPlayers(int iClientid)
 			}
 		}
 	}
+
 	if (IsValidEntity(FindPlayerBack(iClient, { 57 , 231 }, 2)))
 	{
 		RemovePlayerBack(iClient, { 57 , 231 }, 2);
 		weapon = SpawnWeapon(iClient, "tf_weapon_smg", 16, 1, 0, "");
 	}
+
 	weapon = GetPlayerWeaponSlot(iClient, TFWeaponSlot_Melee);
 	if (IsValidEdict(weapon) && IsValidEntity(weapon))
 	{
@@ -87,6 +100,7 @@ public void EquipPlayers(int iClientid)
 				TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Melee);
 				weapon = SpawnWeapon(iClient, "tf_weapon_fists", 195, 1, 6, "");
 			}
+			// Requires Special Setup
 			case 357: CreateTimer(1.0, Timer_RemoveHonorBound, GetClientUserId(iClient), TIMER_FLAG_NO_MAPCHANGE);
 			case 589:
 			{
@@ -115,11 +129,12 @@ public void EquipPlayers(int iClientid)
 			{
 				TF2_RemoveWeaponSlot2(iClient, TFWeaponSlot_Secondary);
 				weapon = SpawnWeapon(iClient, "tf_weapon_medigun", 998, 5, 10, "18 ; 0.0 ; 10 ; 1.25 ; 178 ; 0.75 ; 144 ; 2.0");
-//200 ; 1 for area of effect healing  ; 178 ; 0.75 Faster switch-to ; 14 ; 0.0 perm overheal
+				//200 ; 1 for area of effect healing  ; 178 ; 0.75 Faster switch-to ; 14 ; 0.0 perm overheal
 				SetMediCharge(weapon, 0.41);
 			}
 		}
 		default: TF2Attrib_SetByDefIndex( iClient, 57, float(GetClientHealth(iClient)/50) ); //make by cvar
 	}
+
 	return;
 }
