@@ -117,7 +117,7 @@ public Action VSHA_OnPlayerKilledByBoss()
 	int attacker = VSHA_GetVar(EventAttacker);
 
 	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
-	
+
 	if (GetEntPropEnt(attacker, Prop_Send, "m_hActiveWeapon") == GetPlayerWeaponSlot(attacker, TFWeaponSlot_Melee))
 	{
 		TF2_RemoveWeaponSlot(attacker, TFWeaponSlot_Melee);
@@ -137,7 +137,9 @@ public Action VSHA_OnPlayerKilledByBoss()
 		}
 		SetEntPropEnt(attacker, Prop_Data, "m_hActiveWeapon", weapon);
 	}
-
+// im not sure if CBS copies hale sounds or not?
+// i'll have to look at this later
+/*
 	if (!GetRandomInt(0, 2) && VSHA_GetAliveRedPlayers() != 1)
 	{
 		strcopy(playsound, PLATFORM_MAX_PATH, "");
@@ -170,7 +172,7 @@ public Action VSHA_OnPlayerKilledByBoss()
 			}
 		}
 		if (!StrEqual(playsound, "")) EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-	}
+	}*/
 #if defined DEBUG
 	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnPlayerKilled() **** Forward Responded ****");
 	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnPlayerKilled() **** Forward Responded ****");
@@ -184,11 +186,12 @@ public Action VSHA_OnKillingSpreeByBoss()
 
 	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
 
-	int see = GetRandomInt(0, 7);
-	strcopy(playsound, PLATFORM_MAX_PATH, "");
-	if (!see || see == 1) strcopy(playsound, PLATFORM_MAX_PATH, HaleKSpree);
-	else if (see < 5 && see > 1) Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleKSpreeNew, GetRandomInt(1, 5));
-	else Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleKillKSpree132, GetRandomInt(1, 2));
+	if (!GetRandomInt(0, 3))
+		Format(playsound, PLATFORM_MAX_PATH, CBS0);
+	else if (!GetRandomInt(0, 3))
+		Format(playsound, PLATFORM_MAX_PATH, CBS1);
+	else
+		Format(playsound, PLATFORM_MAX_PATH, "%s%02i.mp3", CBS2, GetRandomInt(1, 9));
 
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
@@ -205,9 +208,12 @@ public Action VSHA_OnBossKilled() //victim is boss
 
 	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
 
+	// As far as I can see, there is no fail sound for cbs
+	/*
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
 	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleFail, GetRandomInt(1, 3));
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
+	*/
 #if defined DEBUG
 	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnBossKilled() **** Forward Responded ****");
 	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossKilled() **** Forward Responded ****");
@@ -222,9 +228,12 @@ public Action VSHA_OnBossWin()
 
 	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
 
+// no win sounds for cbs
+/*
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
 	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleWin, GetRandomInt(1, 2));
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
+*/
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		if (!IsClientValid(i)) continue;
@@ -235,26 +244,6 @@ public Action VSHA_OnBossWin()
 	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossWin() **** Forward Responded ****");
 #endif
 	SDKUnhook(Hale[iiBoss], SDKHook_OnTakeDamage, OnTakeDamage);
-	return Plugin_Continue;
-}
-public Action VSHA_OnBossKillBuilding()
-{
-	//Event event = VSHA_GetVar(SmEvent);
-	//int building = event.GetInt("index");
-	int attacker = VSHA_GetVar(EventAttacker);
-
-	if (attacker != Hale[attacker]) return Plugin_Continue;
-	if ( !GetRandomInt(0, 4) )
-	{
-		strcopy(playsound, PLATFORM_MAX_PATH, "");
-		strcopy(playsound, PLATFORM_MAX_PATH, HaleSappinMahSentry132);
-		EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-		EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH ChristianBrutalSniper::VSHA_OnBossKillBuilding() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH ChristianBrutalSniper::VSHA_OnBossKillBuilding() **** Forward Responded ****");
-#endif
 	return Plugin_Continue;
 }
 public Action VSHA_MessageTimer()
@@ -321,9 +310,7 @@ public Action VSHA_OnBossSelected()
 }
 public Action VSHA_OnBossIntroTalk()
 {
-	strcopy(playsound, PLATFORM_MAX_PATH, "");
-	if (!GetRandomInt(0, 1)) Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleRoundStart, GetRandomInt(1, 5));
-	else Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleStart132, GetRandomInt(1, 5));
+	strcopy(playsound, PLATFORM_MAX_PATH, CBS0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 #if defined DEBUG
@@ -346,12 +333,13 @@ public Action VSHA_OnBossSetHP()
 }
 public Action VSHA_OnLastSurvivor()
 {
-	strcopy(playsound, PLATFORM_MAX_PATH, "");
-	int see = GetRandomInt(0, 5);
-	//switch (see)
-	//{
-		//default:
-	//}
+	if (!GetRandomInt(0, 2))
+		Format(playsound, PLATFORM_MAX_PATH, "%s", CBS0);
+	else
+	{
+		Format(playsound, PLATFORM_MAX_PATH, "%s%02i.mp3", CBS4, GetRandomInt(1, 25));
+	}
+
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 #if defined DEBUG
@@ -527,8 +515,14 @@ public Action VSHA_OnBossRage()
 	GetEntPropVector(iClient, Prop_Send, "m_vecOrigin", pos);
 	pos[2] += 20.0;
 	TF2_AddCondition(iClient, view_as<TFCond>(42), 4.0);
-	strcopy(playsound, PLATFORM_MAX_PATH, "");
-	strcopy(playsound, PLATFORM_MAX_PATH, "");
+	if (GetRandomInt(0, 1))
+	{
+		Format(playsound, PLATFORM_MAX_PATH, "%s", CBS1);
+	}
+	else
+	{
+		Format(playsound, PLATFORM_MAX_PATH, "%s", CBS3);
+	}
 	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
 	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
 	CreateTimer(0.6, UseRage, iClient);
@@ -924,11 +918,13 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 				if (weapindex == 461) SetEntPropFloat(attacker, Prop_Send, "m_flCloakMeter", 100.0); //Big Earner gives full cloak on backstab
 
+// no stab sounds for cbs
+/*
 				strcopy(playsound, PLATFORM_MAX_PATH, "");
 				Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleStubbed132, GetRandomInt(1, 4));
 				EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, victim, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 				EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, victim, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-
+*/
 				if (stabamounts < 4) VSHA_SetBossStabs(victim, VSHA_GetBossStabs(victim)+1);
 				return Plugin_Changed;
 			}
@@ -1060,39 +1056,39 @@ public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bP
 	}
 	else if(StrEqual(skey, "CBS0"))
 	{
-		strcopy(STRING(CBSTheme), value);
+		strcopy(STRING(CBS0), value);
 		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
+		bAddFileToDownloadsTable = false;
 	}
 	else if(StrEqual(skey, "CBS1"))
 	{
-		strcopy(STRING(CBSTheme), value);
+		strcopy(STRING(CBS1), value);
 		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
+		bAddFileToDownloadsTable = false;
 	}
 	else if(StrEqual(skey, "CBS2"))
 	{
-		strcopy(STRING(CBSTheme), value);
+		strcopy(STRING(CBS2), value);
 		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
+		bAddFileToDownloadsTable = false;
 	}
 	else if(StrEqual(skey, "CBS3"))
 	{
-		strcopy(STRING(CBSTheme), value);
+		strcopy(STRING(CBS3), value);
 		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
+		bAddFileToDownloadsTable = false;
 	}
 	else if(StrEqual(skey, "CBS4"))
 	{
-		strcopy(STRING(CBSTheme), value);
+		strcopy(STRING(CBS4), value);
 		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
+		bAddFileToDownloadsTable = false;
 	}
 	else if(StrEqual(skey, "CBSJump1"))
 	{
-		strcopy(STRING(CBSTheme), value);
+		strcopy(STRING(CBSJump1), value);
 		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
+		bAddFileToDownloadsTable = false;
 	}
 
 	if(bPreCacheFile || bAddFileToDownloadsTable)
