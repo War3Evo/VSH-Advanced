@@ -408,27 +408,6 @@ public Action VSHA_OnMusic()
 
 	return Plugin_Continue;
 }
-/*
-public Action OnVSHAEvent(VSHA_EVENT event, int client)
-{
-	switch(event)
-	{
-		case ModelTimer:
-		{
-			if (client != Hale)
-			{
-				SetVariantString("");
-				AcceptEntityInput(client, "SetCustomModel");
-				return Plugin_Stop;
-			}
-
-			SetVariantString(HaleModel);
-			AcceptEntityInput(client, "SetCustomModel");
-			SetEntProp(client, Prop_Send, "m_bUseClassAnimations", 1);
-		}
-	}
-	return Plugin_Continue;
-}*/
 
 public Action VSHA_OnModelTimer()
 {
