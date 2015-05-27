@@ -2,7 +2,11 @@
 
 public void MusicPlay()
 {
-	if (CheckRoundState() != 1) return;
+	if (CheckRoundState() != ROUNDSTATE_START_ROUND_TIMER)
+	{
+		//PrintToChatAll("CheckRoundState != ROUNDSTATE_START_ROUND_TIMER, there for stopped MusicPlay");
+		return;
+	}
 	char sound[PATHX];
 	float time = -1.0;
 	ClearTimer(MusicTimer);
@@ -17,7 +21,9 @@ public void MusicPlay()
 	VSHA_Private_Forward("VSHA_OnMusic");
 
 	SoundMap = VSHA_GetVar(EventSound);
-	time = VSHA_GetVar(EventTime);
+	time = view_as<float>(VSHA_GetVar(EventTime));
+
+	//PrintToChatAll("Music Time %.2f",time);
 
 	SoundMap.GetString("Sound",STRING(sound));
 
@@ -26,11 +32,14 @@ public void MusicPlay()
 	//      Format(sound, sizeof(sound), "#%s", sound);
 		EmitSoundToAll(sound, _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, nullvec, nullvec, false, 0.0);
 	}
-	if ( time != -1.0 )
+	if ( time > 0.0 )
 	{
-		DataPack pack = new DataPack();
-		pack.WriteString(sound);
-		MusicTimer = CreateDataTimer(time, TimerMusicTheme, pack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		//PrintToChatAll("Started CreateDataTimer for MusicPlay");
+
+		DataPack SndPack = new DataPack();
+		SndPack.WriteString(sound);
+		SndPack.WriteFloat(time);
+		MusicTimer = CreateTimer(time, TimerMusicTheme, SndPack, TIMER_DATA_HNDL_CLOSE);
 	}
 	return;
 }
