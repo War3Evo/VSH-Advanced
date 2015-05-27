@@ -47,7 +47,8 @@ public void BossStart()
 		SetEntityHealth( iClient, GetEntProp(iClient, Prop_Data, "m_iMaxHealth") );
 
 		TF2Attrib_SetByDefIndex( iClient, 26, float(iBossMaxHealth[iClient]-maxhp) );
-		SetEntityHealth( iClient, iBossHealth[iClient] );
+		//commenting this out, as OnGetMaxHealth handles this every frame.
+		//SetEntityHealth( iClient, iBossHealth[iClient] );
 	}
 #if defined DEBUG
 	DEBUGPRINT1("VSH Engine::TimerBossStart() **** Boss Player loop finished ****");
