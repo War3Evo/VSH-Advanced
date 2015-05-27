@@ -548,7 +548,7 @@ public Action VSHA_OnBossIntroTalk()
 }
 public Action VSHA_OnBossSetHP()
 {
-	int iClient = VSHA_GetVar(EventClient);
+	int iClient = VSHA_GetVar(EventBoss);
 	if (iClient != Hale[iClient]) return Plugin_Continue;
 	int BossMax = HealthCalc( 760.8, view_as<float>( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
 	VSHA_SetBossMaxHealth(Hale[iClient], BossMax);
