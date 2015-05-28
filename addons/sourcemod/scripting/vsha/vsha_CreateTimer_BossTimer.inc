@@ -10,8 +10,7 @@ public Action BossTimer(Handle timer)
 	{
 		if ( IsValidClient(client) && IsPlayerAlive(client) && bIsBoss[client] )
 		{
-			//commenting this out, as OnGetMaxHealth handles this every frame.
-			//SetEntityHealth(client, iBossHealth[client]);
+			SetEntityHealth(client, iBossHealth[client]);
 			ZeroPointTwoSecondThink(client);
 			BossHUD(client);
 			SetClientGlow(client, -0.2, _, flGlowTimer[client]);
