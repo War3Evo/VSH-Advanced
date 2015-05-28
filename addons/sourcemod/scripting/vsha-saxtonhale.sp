@@ -3,6 +3,7 @@
 #include <sdkhooks>
 #include <morecolors>
 #include <vsha>
+#include <vsha_stocks>
 
 public Plugin myinfo =
 {

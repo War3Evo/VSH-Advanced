@@ -8,6 +8,7 @@
 #include <morecolors>
 #include <sdkhooks>
 #include <vsha>
+#include <vsha_stocks>
 
 #define PLUGIN_VERSION			"1.0"
 
@@ -467,6 +468,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHA_GetVar",Native_VSHA_GetVar);
 	CreateNative("VSHA_SetVar",Native_VSHA_SetVar);
 
+	CreateNative("VSHA_CallModelTimer",Native_CallModelTimer);
+
 	// may use in future.. depends
 	//vsha_Events_AskPluginLoad2();
 
@@ -743,6 +746,7 @@ public int Native_GetPlayerCount(Handle plugin, int numParams)
 {
 	return iPlaying;
 }
+
 public int FindByBossSubPluginByID(Handle plugin)
 {
 	int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
@@ -897,3 +901,13 @@ public int Native_VSHA_SetVar(Handle plugin, int numParams)
 	VSHA_VarArr[GetNativeCell(1)] = GetNativeCell(2);
 	return 0;
 }
+
+public int Native_CallModelTimer(Handle plugin, int numParams)
+{
+	float time = view_as<float>(GetNativeCell(1));
+	int userid = GetNativeCell(2);
+
+	CreateTimer(time, MakeModelTimer, userid);
+	return 0;
+}
+

@@ -1,6 +1,7 @@
 
 #include <tf2attributes>
 #include <vsha>
+#include <vsha_stocks>
 
 public Plugin myinfo = {
 	name = "Versus Saxton Hale OnEquipPlayer Addon",

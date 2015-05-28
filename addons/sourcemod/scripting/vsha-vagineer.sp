@@ -3,6 +3,7 @@
 #include <sdkhooks>
 #include <morecolors>
 #include <vsha>
+#include <vsha_stocks>
 
 public Plugin myinfo =
 {
@@ -612,7 +613,7 @@ public Action VSHA_OnModelTimer()
 
 	char modelpath[PATHX];
 
-	//DP("VSHA_OnModelTimer");
+	DP("VSHA_OnModelTimer");
 	if (iClient != Hale[iClient])
 	{
 		SetVariantString("");
@@ -676,8 +677,7 @@ public Action UseUberRage(Handle hTimer, int userid)
 		{
 			TF2_RemoveCondition(Hale[iClient], TFCond_Taunting);
 
-			VSHA_SetVar(EventModelTimer,Hale[iClient]);
-			VSHA_OnModelTimer(); // should reset Hale's animation
+			VSHA_CallModelTimer(0.0,Hale[iClient]);
 
 			//MakeModelTimer(INVALID_HANDLE); // should reset Hale's animation
 		}
