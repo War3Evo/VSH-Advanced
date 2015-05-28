@@ -144,7 +144,7 @@ native bool VSHA_LoadConfiguration(char[] cFileName); // Load Subplugin Configur
 native Handle VSHA_RegisterNonBossAddon();
 native void VSHA_UnRegisterNonBossAddon();
 
-native Handle VSHA_RegisterBoss(char[] BossName); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
+native Handle VSHA_RegisterBoss(char BossShortName[16], char BossLongName[32]); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
 native void VSHA_UnRegisterBoss(char[] BossName); //YOU SHOULD PUT THIS OnPluginEnd() !! So you can reload your boss plugin for development
 
 native int VSHA_GetBossUserID(int client); //gets boss' userid

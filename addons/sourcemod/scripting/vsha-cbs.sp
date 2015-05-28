@@ -50,7 +50,7 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("Christian Brutal Sniper") );
+	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("cbs","Christian Brutal Sniper") );
 
 	HookEvent("player_changeclass", ChangeClass);
 

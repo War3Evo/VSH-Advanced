@@ -63,7 +63,7 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("Vagineer") );
+	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("Vagineer","Vagineer") );
 #if defined DEBUG
 	if (ThisPluginHandle == null) DEBUGPRINT1("VSHA Vagineer::OnAllPluginsLoaded() **** ThisPluginHandle is NULL ****");
 	else DEBUGPRINT1("VSHA Vagineer::OnAllPluginsLoaded() **** ThisPluginHandle is OK and Vagineer is Registered! ****");

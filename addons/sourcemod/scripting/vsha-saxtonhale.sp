@@ -121,7 +121,7 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("saxtonhale") );
+	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("saxtonhale","Saxton Hale") );
 #if defined DEBUG
 	if (ThisPluginHandle == null) DEBUGPRINT1("VSHA SaxtonHale::OnAllPluginsLoaded() **** ThisPluginHandle is NULL ****");
 	else DEBUGPRINT1("VSHA SaxtonHale::OnAllPluginsLoaded() **** ThisPluginHandle is OK and SaxtonHale is Registered! ****");

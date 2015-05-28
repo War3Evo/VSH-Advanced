@@ -503,10 +503,12 @@ public int Native_UnRegisterNonBossAddon(Handle plugin, int numParams)
 
 public int Native_RegisterBossSubplugin(Handle plugin, int numParams)
 {
+	char ShortBossSubPluginName[16];
+	GetNativeString(1, ShortBossSubPluginName, sizeof(ShortBossSubPluginName));
 	char BossSubPluginName[32];
-	GetNativeString(1, BossSubPluginName, sizeof(BossSubPluginName));
+	GetNativeString(2, BossSubPluginName, sizeof(BossSubPluginName));
 	VSHAError erroar;
-	Handle BossHandle = RegisterBoss( plugin, BossSubPluginName, erroar ); //ALL PROPS TO COOKIES.NET AKA COOKIES.IO
+	Handle BossHandle = RegisterBoss( plugin, ShortBossSubPluginName, BossSubPluginName, erroar ); //ALL PROPS TO COOKIES.NET AKA COOKIES.IO
 	return view_as<int>( BossHandle );
 }
 public int Native_UnRegisterBossSubplugin(Handle plugin, int numParams)
@@ -818,9 +820,9 @@ public void UnRegisterNonBossAddon(Handle pluginhndl)
 
 	hArrayNonBossSubplugins.Erase(iPlugin);
 }
-public Handle RegisterBoss(Handle pluginhndl, const char[] name, VSHAError &error)
+public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const char longname[32], VSHAError &error)
 {
-	if (!ValidateName(name))
+	if (!ValidateName(shortname))
 	{
 		LogError("**** RegisterBoss - Invalid Name ****");
 		error = Error_InvalidName;
@@ -832,7 +834,7 @@ public Handle RegisterBoss(Handle pluginhndl, const char[] name, VSHAError &erro
 		error = Error_SubpluginAlreadyRegistered;
 		return null;
 	}
-	if (FindBossName(name) != null)
+	if (FindBossName(shortname) != null)
 	{
 		LogError("**** RegisterBoss - Boss Name Already Exists ****");
 		error = Error_AlreadyExists;
@@ -844,14 +846,15 @@ public Handle RegisterBoss(Handle pluginhndl, const char[] name, VSHAError &erro
 	if (BossSubplug == null) DEBUGPRINT1("VSH Engine::RegisterBoss() **** BossSubplug StringMap Trie is Null ****");
 #endif
 	BossSubplug.SetValue("Subplugin", pluginhndl); //SetTrieValue(BossSubplug, "Subplugin", pluginhndl);
-	BossSubplug.SetString("BossName", name); //SetTrieString(BossSubplug, "BossName", name);
+	BossSubplug.SetString("BossShortName", shortname); //SetTrieString(BossSubplug, "BossName", name);
+	BossSubplug.SetString("BossLongName", longname);
 
 	// Then push it to the global array and trie
 	// Don't forget to convert the string to lower cases!
 	hArrayBossSubplugins.Push(BossSubplug); //PushArrayCell(hArrayBossSubplugins, BossSubplug);
-	SetTrieValueCaseInsensitive(hTrieBossSubplugins, name, BossSubplug);
+	SetTrieValueCaseInsensitive(hTrieBossSubplugins, shortname, BossSubplug);
 
-	PrintToChatAll("Loaded %s",name);
+	PrintToChatAll("Loaded %s",longname);
 
 	error = Error_None;
 	return pluginhndl;

@@ -14,7 +14,7 @@ public Action CommandMakeNextSpecial(int client, int args)
 	for (int i = 0; i < count; i++)
 	{
 		//GetTrieString(GetArrayCell(hArrayBossSubplugins, i), "BossName", name, sizeof(name));
-		GetTrieString(hArrayBossSubplugins.Get(i), "BossName", name, sizeof(name));
+		GetTrieString(hArrayBossSubplugins.Get(i), "BossShortName", name, sizeof(name));
 		if (StrContains(arg, name, false) != -1)
 		{
 			iPresetBoss[FindNextBoss(bIsBoss)] = i;
@@ -36,7 +36,7 @@ public Action PickBossMenu(int client, int args)
 		{
 			//GetTrieString(GetArrayCell(hArrayBossSubplugins, i), "BossName", bossnameholder, sizeof(bossnameholder));
 			char bossnameholder[32];
-			GetTrieString(hArrayBossSubplugins.Get(i), "BossName", bossnameholder, sizeof(bossnameholder));
+			GetTrieString(hArrayBossSubplugins.Get(i), "BossLongName", bossnameholder, sizeof(bossnameholder));
 			pickboss.AddItem("pickclass", bossnameholder);
 		}
 		pickboss.Display(client, MENU_TIME_FOREVER);
@@ -50,7 +50,7 @@ public int MenuHandler_PickBoss(Menu menu, MenuAction action, int client, int se
 	if (action == MenuAction_Select)
         {
 		char bossnameholder[32];
-		GetTrieString(hArrayBossSubplugins.Get(selection), "BossName", bossnameholder, sizeof(bossnameholder));
+		GetTrieString(hArrayBossSubplugins.Get(selection), "BossLongName", bossnameholder, sizeof(bossnameholder));
 		ReplyToCommand(client, "[VSH Engine] You selected %s as your boss!", bossnameholder);
 		iPresetBoss[client] = selection;
         }
@@ -69,7 +69,7 @@ public Action Command_forceboss(int client, int args)
 		{
 			//GetTrieString(GetArrayCell(hArrayBossSubplugins, i), "BossName", bossnameholder, sizeof(bossnameholder));
 			char bossnameholder[32];
-			GetTrieString(hArrayBossSubplugins.Get(i), "BossName", bossnameholder, sizeof(bossnameholder));
+			GetTrieString(hArrayBossSubplugins.Get(i), "BossLongName", bossnameholder, sizeof(bossnameholder));
 			pickboss.AddItem("pickclass", bossnameholder);
 		}
 		pickboss.Display(client, MENU_TIME_FOREVER);
@@ -83,7 +83,7 @@ public int MenuHandler_ForceBoss(Menu menu, MenuAction action, int client, int s
 	if (action == MenuAction_Select)
 	{
 		char bossnameholder[32];
-		GetTrieString(hArrayBossSubplugins.Get(selection), "BossName", bossnameholder, sizeof(bossnameholder));
+		GetTrieString(hArrayBossSubplugins.Get(selection), "BossLongName", bossnameholder, sizeof(bossnameholder));
 		ReplyToCommand(client, "[VSH Engine] You selected %s as your boss!", bossnameholder);
 		iPresetBoss[client] = selection;
 
