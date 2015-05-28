@@ -42,6 +42,10 @@ int HaleCharge[PLYR];
 
 int Hale[PLYR];
 
+float UberRageCount[PLYR];
+
+int defaulttakedamagetype[PLYR];
+
 float WeighDownTimer = 0.0;
 float RageDist = 800.0;
 
@@ -77,7 +81,7 @@ public void OnPluginEnd()
 public void OnMapEnd()
 {
 	WeighDownTimer = 0.0;
-	RageDist = 800.0;
+	//gDist = 800.0;
 
 	LoopMaxPLYR(player)
 	{
@@ -648,11 +652,56 @@ public Action VSHA_OnBossRage()
 		Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", VagineerRageSound2, GetRandomInt(1, 2));
 	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
 	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
+
+	TF2_AddCondition(iClient, TFCond_Ubercharged, 99.0);
+	UberRageCount[iClient] = 0.0;
+
 	CreateTimer(0.6, UseRage, iClient);
+	CreateTimer(0.1, UseUberRage, GetClientUserId(iClient), TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 #if defined DEBUG
 	DEBUGPRINT1("VSH Vagineer::VSHA_OnBossRage() **** Forward Responded ****");
 	DEBUGPRINT2("{lime}VSH Vagineer::VSHA_OnBossRage() **** Forward Responded ****");
 #endif
+	return Plugin_Continue;
+}
+public Action UseUberRage(Handle hTimer, int userid)
+{
+	int iClient = GetClientOfUserId(userid);
+
+	if (!IsValidClient(Hale[iClient]))
+		return Plugin_Stop;
+	if (UberRageCount[iClient] == 1)
+	{
+		if (!GetEntProp(Hale[iClient], Prop_Send, "m_bIsReadyToHighFive") && !IsValidEntity(GetEntPropEnt(Hale[iClient], Prop_Send, "m_hHighFivePartner")))
+		{
+			TF2_RemoveCondition(Hale[iClient], TFCond_Taunting);
+
+			VSHA_SetVar(EventModelTimer,Hale[iClient]);
+			VSHA_OnModelTimer(); // should reset Hale's animation
+
+			//MakeModelTimer(INVALID_HANDLE); // should reset Hale's animation
+		}
+//      TF2_StunPlayer(Hale, 0.0, _, TF_STUNFLAG_NOSOUNDOREFFECT);
+	}
+	else if (UberRageCount[iClient] >= 100)
+	{
+		if (defaulttakedamagetype[iClient] == 0) defaulttakedamagetype[iClient] = 2;
+		SetEntProp(Hale[iClient], Prop_Data, "m_takedamage", defaulttakedamagetype[iClient]);
+		defaulttakedamagetype[iClient] = 0;
+		TF2_RemoveCondition(Hale[iClient], TFCond_Ubercharged);
+		return Plugin_Stop;
+	}
+	else if (UberRageCount[iClient] >= 85 && !TF2_IsPlayerInCondition(Hale[iClient], TFCond_UberchargeFading))
+	{
+		TF2_AddCondition(Hale[iClient], TFCond_UberchargeFading, 3.0);
+	}
+	if (!defaulttakedamagetype[iClient])
+	{
+		defaulttakedamagetype[iClient] = GetEntProp(Hale[iClient], Prop_Data, "m_takedamage");
+		if (defaulttakedamagetype[iClient] == 0) defaulttakedamagetype[iClient] = 2;
+	}
+	SetEntProp(Hale[iClient], Prop_Data, "m_takedamage", 0);
+	UberRageCount[iClient] += 1.0;
 	return Plugin_Continue;
 }
 public void TF2_OnConditionAdded(int client, TFCond condition)
