@@ -657,7 +657,7 @@ public Action VSHA_OnBossRage()
 	TF2_AddCondition(iClient, TFCond_Ubercharged, 99.0);
 	UberRageCount[iClient] = 0.0;
 
-	CreateTimer(0.6, UseRage, iClient);
+	CreateTimer(0.6, UseRage, GetClientUserId(iClient));
 	CreateTimer(0.1, UseUberRage, GetClientUserId(iClient), TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 #if defined DEBUG
 	DEBUGPRINT1("VSH Vagineer::VSHA_OnBossRage() **** Forward Responded ****");
@@ -1126,20 +1126,21 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public Action UseRage(Handle hTimer, any client)
+public Action UseRage(Handle hTimer, int userid)
 {
+	int iClient = GetClientOfUserId(userid);
 	float pos[3], pos2[3];
 	int i;
 	float distance;
-	if (!IsValidClient(client)) return Plugin_Continue;
-	if (!GetEntProp(client, Prop_Send, "m_bIsReadyToHighFive") && !IsValidEntity(GetEntPropEnt(client, Prop_Send, "m_hHighFivePartner")))
+	if (!IsValidClient(iClient)) return Plugin_Continue;
+	if (!GetEntProp(iClient, Prop_Send, "m_bIsReadyToHighFive") && !IsValidEntity(GetEntPropEnt(iClient, Prop_Send, "m_hHighFivePartner")))
 	{
-		TF2_RemoveCondition(client, TFCond_Taunting);
+		TF2_RemoveCondition(iClient, TFCond_Taunting);
 	}
-	GetEntPropVector(client, Prop_Send, "m_vecOrigin", pos);
+	GetEntPropVector(iClient, Prop_Send, "m_vecOrigin", pos);
 	for (i = 1; i <= MaxClients; i++)
 	{
-		if (IsValidClient(i) && IsPlayerAlive(i) && i != client)
+		if (IsValidClient(i) && IsPlayerAlive(i) && i != iClient)
 		{
 			GetEntPropVector(i, Prop_Send, "m_vecOrigin", pos2);
 			distance = GetVectorDistance(pos, pos2);
@@ -1148,11 +1149,11 @@ public Action UseRage(Handle hTimer, any client)
 				int flags = TF_STUNFLAGS_GHOSTSCARE;
 				flags |= TF_STUNFLAG_NOSOUNDOREFFECT;
 				PawnTimer(RemoveEnt, 5.0, EntIndexToEntRef(AttachParticle(i, "yikes_fx", 75.0)));
-				if (CheckRoundState() != 0) TF2_StunPlayer(i, 5.0, _, flags, client);
+				if (CheckRoundState() != 0) TF2_StunPlayer(i, 5.0, _, flags, iClient);
 			}
 		}
 	}
-	StunSentry(client, RageDist, 6.0, GetEntProp(i, Prop_Send, "m_iHealth"));
+	StunSentry(iClient, RageDist, 6.0, GetEntProp(i, Prop_Send, "m_iHealth"));
 	i = -1;
 	while ((i = FindEntityByClassname2(i, "obj_dispenser")) != -1)
 	{
@@ -1175,7 +1176,6 @@ public Action UseRage(Handle hTimer, any client)
 			AcceptEntityInput(i, "RemoveHealth");
 		}
 	}
-	TF2_AddCondition(client, TFCond_Ubercharged, 10.0);
 	return Plugin_Continue;
 }
 public Action Timer_StopTickle(Handle timer, any userid)
