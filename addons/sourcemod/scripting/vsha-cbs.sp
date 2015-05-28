@@ -50,7 +50,7 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("christianbrutalsniper") );
+	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("Christian Brutal Sniper") );
 
 	HookEvent("player_changeclass", ChangeClass);
 
@@ -60,7 +60,7 @@ public void OnPluginEnd()
 {
 	if(ThisPluginHandle != null)
 	{
-		//VSHA_UnRegisterBoss("christianbrutalsniper");
+		//VSHA_UnRegisterBoss("Christian Brutal Sniper");
 	}
 }
 public void OnMapEnd()
