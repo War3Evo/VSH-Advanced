@@ -613,7 +613,7 @@ public Action VSHA_OnModelTimer()
 
 	char modelpath[PATHX];
 
-	DP("VSHA_OnModelTimer");
+	//DP("VSHA_OnModelTimer");
 	if (iClient != Hale[iClient])
 	{
 		SetVariantString("");
