@@ -526,6 +526,7 @@ public Action VSHA_OnBossSelected()
 		Hale[iiBoss] = 0;
 		ForceTeamChange(iiBoss, 3);
 		//DP("vsha-saxtonhale 526 ForceTeamChange(iiBoss, 3)");
+		return Plugin_Stop;
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 #if defined DEBUG
@@ -604,7 +605,7 @@ public Action VSHA_OnBossTimer()
 		if (!(buttons & IN_SCORE))
 		{
 			SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", (-HaleCharge[iClient]/5));
+			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", (-HaleCharge[iClient]/10));
 		}
 	}
 	else
@@ -613,7 +614,7 @@ public Action VSHA_OnBossTimer()
 		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
 		// 300 = 1 minute wait
 		float ExtraBoost = float(HaleCharge[iClient]) * 2;
-		if ( HaleCharge[iClient] > 1 && SuperJump(iClient, ExtraBoost, -15.0, HaleCharge[iClient], -300) ) //put convar/cvar for jump sensitivity here!
+		if ( HaleCharge[iClient] > 1 && SuperJump(iClient, ExtraBoost, -15.0, HaleCharge[iClient], -150) ) //put convar/cvar for jump sensitivity here!
 		{
 			strcopy(playsound, PLATFORM_MAX_PATH, "");
 			Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", GetRandomInt(0, 1) ? HaleJump : HaleJump132, GetRandomInt(1, 2));
@@ -802,17 +803,30 @@ public void TF2_OnConditionAdded(int client, TFCond condition)
 }
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if (victim == Hale[victim]) return Plugin_Continue;
+	if(!IsValidEdict(attacker)) return Plugin_Continue;
+	//DP("attacker = %d, victim = %d, hale[victim] = %d",attacker,victim,Hale[victim]);
+	//if((attacker <= 0) && (victim == Hale[victim])) return Plugin_Continue;
 
-	if ( CheckRoundState() == 0 && victim == Hale[victim] )
+	// removed the = sign because we need to detect when hale takes damage from falls,
+	// so we can remove that damage.
+
+	if(TF2_IsPlayerInCondition(victim, TFCond_Ubercharged)) return Plugin_Continue;
+
+	if ( CheckRoundState() == 0 && (victim == Hale[victim] || (victim != attacker && attacker != Hale[attacker])) )
 	{
 		damage *= 0.0;
 		return Plugin_Changed;
 	}
-	if (!attacker && (damagetype & DMG_FALL) && victim == Hale[victim])
+	if ((damagetype & DMG_FALL) && victim == Hale[victim])
 	{
-		damage = (VSHA_GetBossHealth(victim) > 100) ? 10.0 : 100.0; //please don't fuck with this.
-		return Plugin_Changed;
+		//DP("DMG_FALL victim = %d, hale[victim] = %d",victim,Hale[victim]);
+		if(GetEntityFlags(victim) & FL_ONGROUND)
+		{
+			//DP("Hale Fall Damage");
+			damage = (VSHA_GetBossHealth(Hale[victim]) > 100) ? 10.0 : 100.0; //please don't fuck with this.
+			//damage = 0.0;
+			return Plugin_Changed;
+		}
 	}
 	switch (damagecustom)
 	{
