@@ -855,8 +855,16 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 			if(ReloadPlayer[plyrBoss])
 			{
 				pluginupdated = true;
-				Storage[plyrBoss] = pluginhndl;
 				ReloadPlayer[plyrBoss] = false;
+				if(ValidPlayer(plyrBoss,true))
+				{
+					Storage[plyrBoss] = pluginhndl;
+
+					VSHA_SetVar(EventClient,plyrBoss);
+					VSHA_Private_Forward("VSHA_OnBossSelected");
+
+					CreateTimer(0.2, MakeModelTimer, GetClientUserId(plyrBoss));
+				}
 			}
 		}
 	}
