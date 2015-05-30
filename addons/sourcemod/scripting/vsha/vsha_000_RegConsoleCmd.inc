@@ -1,4 +1,14 @@
 // vsha_000_RegConsoleCmd.inc
+public void vsha_000_RegConsoleCmd_OnPluginStart()
+{
+	RegConsoleCmd("sm_vsha_special", CommandMakeNextSpecial);
+
+	RegConsoleCmd("sm_pickhale", PickBossMenu);
+	RegConsoleCmd("sm_setboss", PickBossMenu);
+	RegConsoleCmd("sm_haleboss", PickBossMenu);
+	RegConsoleCmd("sm_vshaboss", PickBossMenu);
+	RegConsoleCmd("sm_vsheboss", PickBossMenu);
+}
 
 public Action CommandMakeNextSpecial(int client, int args)
 {
@@ -54,40 +64,5 @@ public int MenuHandler_PickBoss(Menu menu, MenuAction action, int client, int se
 		ReplyToCommand(client, "[VSH Engine] You selected %s as your boss!", bossnameholder);
 		iPresetBoss[client] = selection;
         }
-	else if (action == MenuAction_End) delete menu;
-}
-
-public Action Command_forceboss(int client, int args)
-{
-	if (Enabled && IsClientInGame(client))
-	{
-		Menu pickboss = new Menu(MenuHandler_ForceBoss);
-		//Handle MainMenu = CreateMenu(MenuHandler_Perks);
-		pickboss.SetTitle("[VSH Engine] Choose A Boss");
-		int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
-		for (int i = 0; i < count; i++)
-		{
-			//GetTrieString(GetArrayCell(hArrayBossSubplugins, i), "BossName", bossnameholder, sizeof(bossnameholder));
-			char bossnameholder[32];
-			GetTrieString(hArrayBossSubplugins.Get(i), "BossLongName", bossnameholder, sizeof(bossnameholder));
-			pickboss.AddItem("pickclass", bossnameholder);
-		}
-		pickboss.Display(client, MENU_TIME_FOREVER);
-	}
-	return Plugin_Handled;
-}
-public int MenuHandler_ForceBoss(Menu menu, MenuAction action, int client, int selection)
-{
-	char blahblah[32];
-	menu.GetItem(selection, blahblah, sizeof(blahblah));
-	if (action == MenuAction_Select)
-	{
-		char bossnameholder[32];
-		GetTrieString(hArrayBossSubplugins.Get(selection), "BossLongName", bossnameholder, sizeof(bossnameholder));
-		ReplyToCommand(client, "[VSH Engine] You selected %s as your boss!", bossnameholder);
-		iPresetBoss[client] = selection;
-
-		SetClientQueuePoints(client, 99999);
-	}
 	else if (action == MenuAction_End) delete menu;
 }

@@ -44,15 +44,8 @@ public void OnPluginStart()
 	HookEvent("object_deflected", Deflected, EventHookMode_Pre);
 	//HookEvent("player_changeclass", ChangeClass);
 
-	RegConsoleCmd("sm_vsha_special", CommandMakeNextSpecial);
-
-	RegAdminCmd("sm_forceboss", Command_forceboss, ADMFLAG_ROOT, "sm_forceboss");
-
-	RegConsoleCmd("sm_pickhale", PickBossMenu);
-	RegConsoleCmd("sm_setboss", PickBossMenu);
-	RegConsoleCmd("sm_haleboss", PickBossMenu);
-	RegConsoleCmd("sm_vshaboss", PickBossMenu);
-	RegConsoleCmd("sm_vsheboss", PickBossMenu);
+	vsha_000_RegConsoleCmd_OnPluginStart();
+	vsha_000_RegAdminCmd_OnPluginStart();
 
 	hBossHUD = CreateHudSynchronizer();
 	hPlayerHUD = CreateHudSynchronizer();
