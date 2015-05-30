@@ -18,9 +18,10 @@ public void BossStart()
 	DEBUGPRINT2("{lime}VSH Engine::BossStart() **** non-Boss Player loop finished ****");
 	DEBUGPRINT3("VSH Engine::BossStart() **** non-Boss Player loop finished ****");
 #endif
-	LoopIngameClients(iClient)
+	LoopActiveBosses(iClient)
 	{
-		if ( !IsClientValid(iClient) || !bIsBoss[iClient] ) continue;
+		// LoopActiveBosses takes care of this:
+		//if ( !IsClientValid(iClient) || !bIsBoss[iClient] ) continue;
 
 		if ( !IsPlayerAlive(iClient) ) TF2_RespawnPlayer(iClient);
 		SetEntityMoveType(iClient, MOVETYPE_WALK);
@@ -55,7 +56,7 @@ public void BossStart()
 	DEBUGPRINT3("VSH Engine::TimerBossStart() **** Boss Player loop finished ****");
 #endif
 	PawnTimer(CheckAlivePlayers, 0.2); //CreateTimer(0.2, CheckAlivePlayers);
-	CreateTimer(0.2, ClientTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(0.2, HaleTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	CreateTimer(0.2, BossTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 
 #if defined DEBUG

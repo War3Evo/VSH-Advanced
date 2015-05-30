@@ -3,6 +3,7 @@
 #include <sdkhooks>
 #include <morecolors>
 #include <vsha>
+#include <vsha_stocks>
 
 public Plugin myinfo =
 {
@@ -33,12 +34,18 @@ char VagineerRageSound2[PATHX];		//	1-2
 char VagineerKSpreeNew[PATHX];		//	1-5
 char VagineerFail[PATHX];			//	1-2
 
+char VagineerTheme[PATHX];
+
 Handle ThisPluginHandle = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDING DATA.
 
 //make defines, handles, variables heer lololol
 int HaleCharge[PLYR];
 
 int Hale[PLYR];
+
+float UberRageCount[PLYR];
+
+int defaulttakedamagetype[PLYR];
 
 float WeighDownTimer = 0.0;
 float RageDist = 800.0;
@@ -56,7 +63,7 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("Vagineer") );
+	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("Vagineer","Vagineer") );
 #if defined DEBUG
 	if (ThisPluginHandle == null) DEBUGPRINT1("VSHA Vagineer::OnAllPluginsLoaded() **** ThisPluginHandle is NULL ****");
 	else DEBUGPRINT1("VSHA Vagineer::OnAllPluginsLoaded() **** ThisPluginHandle is OK and Vagineer is Registered! ****");
@@ -75,7 +82,7 @@ public void OnPluginEnd()
 public void OnMapEnd()
 {
 	WeighDownTimer = 0.0;
-	RageDist = 800.0;
+	//gDist = 800.0;
 
 	LoopMaxPLYR(player)
 	{
@@ -426,6 +433,7 @@ public Action VSHA_OnBossSelected()
 		Hale[iiBoss] = 0;
 		ForceTeamChange(iiBoss, 3);
 		//DP("vsha-Vagineer 526 ForceTeamChange(iiBoss, 3)");
+		return Plugin_Stop;
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 #if defined DEBUG
@@ -499,7 +507,7 @@ public Action VSHA_OnBossTimer()
 		if (!(buttons & IN_SCORE))
 		{
 			SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", (-HaleCharge[iClient]/5));
+			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", (-HaleCharge[iClient]/10));
 		}
 	}
 	else
@@ -508,7 +516,7 @@ public Action VSHA_OnBossTimer()
 		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
 		// 300 = 1 minute wait
 		float ExtraBoost = float(HaleCharge[iClient]) * 2;
-		if ( HaleCharge[iClient] > 1 && SuperJump(iClient, ExtraBoost, -15.0, HaleCharge[iClient], -300) ) //put convar/cvar for jump sensitivity here!
+		if ( HaleCharge[iClient] > 1 && SuperJump(iClient, ExtraBoost, -15.0, HaleCharge[iClient], -150) ) //put convar/cvar for jump sensitivity here!
 		{
 			strcopy(playsound, PLATFORM_MAX_PATH, "");
 			Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", VagineerJump, GetRandomInt(1, 2));
@@ -564,13 +572,12 @@ public Action VSHA_OnPrepBoss()
 #endif
 	return Plugin_Continue;
 }
-/*public Action VSHA_OnMusic()
+public Action VSHA_OnMusic()
 {
-	char BossTheme[256];
-	float time;
+	float time = 199.0;
 
 	StringMap SoundMap = new StringMap();
-	SoundMap.SetString("Sound", BossTheme);
+	SoundMap.SetString("Sound", VagineerTheme);
 	VSHA_SetVar(EventSound,SoundMap);
 	VSHA_SetVar(EventTime,time);
 #if defined DEBUG
@@ -578,7 +585,7 @@ public Action VSHA_OnPrepBoss()
 	DEBUGPRINT2("{lime}VSH Vagineer::VSHA_OnMusic() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
-}*/
+}
 /*
 public Action OnVSHAEvent(VSHA_EVENT event, int client)
 {
@@ -647,11 +654,55 @@ public Action VSHA_OnBossRage()
 		Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", VagineerRageSound2, GetRandomInt(1, 2));
 	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
 	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
-	CreateTimer(0.6, UseRage, iClient);
+
+	TF2_AddCondition(iClient, TFCond_Ubercharged, 99.0);
+	UberRageCount[iClient] = 0.0;
+
+	CreateTimer(0.6, UseRage, GetClientUserId(iClient));
+	CreateTimer(0.1, UseUberRage, GetClientUserId(iClient), TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 #if defined DEBUG
 	DEBUGPRINT1("VSH Vagineer::VSHA_OnBossRage() **** Forward Responded ****");
 	DEBUGPRINT2("{lime}VSH Vagineer::VSHA_OnBossRage() **** Forward Responded ****");
 #endif
+	return Plugin_Continue;
+}
+public Action UseUberRage(Handle hTimer, int userid)
+{
+	int iClient = GetClientOfUserId(userid);
+
+	if (!IsValidClient(Hale[iClient]))
+		return Plugin_Stop;
+	if (UberRageCount[iClient] == 1)
+	{
+		if (!GetEntProp(Hale[iClient], Prop_Send, "m_bIsReadyToHighFive") && !IsValidEntity(GetEntPropEnt(Hale[iClient], Prop_Send, "m_hHighFivePartner")))
+		{
+			TF2_RemoveCondition(Hale[iClient], TFCond_Taunting);
+
+			VSHA_CallModelTimer(0.0,Hale[iClient]);
+
+			//MakeModelTimer(INVALID_HANDLE); // should reset Hale's animation
+		}
+//      TF2_StunPlayer(Hale, 0.0, _, TF_STUNFLAG_NOSOUNDOREFFECT);
+	}
+	else if (UberRageCount[iClient] >= 100)
+	{
+		if (defaulttakedamagetype[iClient] == 0) defaulttakedamagetype[iClient] = 2;
+		SetEntProp(Hale[iClient], Prop_Data, "m_takedamage", defaulttakedamagetype[iClient]);
+		defaulttakedamagetype[iClient] = 0;
+		TF2_RemoveCondition(Hale[iClient], TFCond_Ubercharged);
+		return Plugin_Stop;
+	}
+	else if (UberRageCount[iClient] >= 85 && !TF2_IsPlayerInCondition(Hale[iClient], TFCond_UberchargeFading))
+	{
+		TF2_AddCondition(Hale[iClient], TFCond_UberchargeFading, 3.0);
+	}
+	if (!defaulttakedamagetype[iClient])
+	{
+		defaulttakedamagetype[iClient] = GetEntProp(Hale[iClient], Prop_Data, "m_takedamage");
+		if (defaulttakedamagetype[iClient] == 0) defaulttakedamagetype[iClient] = 2;
+	}
+	SetEntProp(Hale[iClient], Prop_Data, "m_takedamage", 0);
+	UberRageCount[iClient] += 1.0;
 	return Plugin_Continue;
 }
 public void TF2_OnConditionAdded(int client, TFCond condition)
@@ -684,18 +735,24 @@ public void TF2_OnConditionAdded(int client, TFCond condition)
 }
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if (victim == Hale[victim]) return Plugin_Continue;
+	if(!IsValidEdict(attacker)) return Plugin_Continue;
 
-	if ( CheckRoundState() == 0 && victim == Hale[victim] )
+	if ( CheckRoundState() == 0 && (victim == Hale[victim] || (victim != attacker && attacker != Hale[attacker])) )
 	{
 		damage *= 0.0;
 		return Plugin_Changed;
 	}
-	if (!attacker && (damagetype & DMG_FALL) && victim == Hale[victim])
+	if ((damagetype & DMG_FALL) && victim == Hale[victim])
 	{
-		damage = (VSHA_GetBossHealth(victim) > 100) ? 10.0 : 100.0; //please don't fuck with this.
-		return Plugin_Changed;
+		//DP("DMG_FALL victim = %d, hale[victim] = %d",victim,Hale[victim]);
+		if(GetEntityFlags(victim) & FL_ONGROUND)
+		{
+			//DP("Hale Fall Damage");
+			damage = (VSHA_GetBossHealth(victim) > 100) ? 10.0 : 100.0; //please don't fuck with this.
+			return Plugin_Changed;
+		}
 	}
+
 	switch (damagecustom)
 	{
 		case TF_CUSTOM_TAUNT_GRAND_SLAM, TF_CUSTOM_TAUNT_FENCING, TF_CUSTOM_TAUNT_GRENADE, TF_CUSTOM_TAUNT_BARBARIAN_SWING, TF_CUSTOM_TAUNT_ENGINEER_SMASH:
@@ -1076,20 +1133,21 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public Action UseRage(Handle hTimer, any client)
+public Action UseRage(Handle hTimer, int userid)
 {
+	int iClient = GetClientOfUserId(userid);
 	float pos[3], pos2[3];
 	int i;
 	float distance;
-	if (!IsValidClient(client)) return Plugin_Continue;
-	if (!GetEntProp(client, Prop_Send, "m_bIsReadyToHighFive") && !IsValidEntity(GetEntPropEnt(client, Prop_Send, "m_hHighFivePartner")))
+	if (!IsValidClient(iClient)) return Plugin_Continue;
+	if (!GetEntProp(iClient, Prop_Send, "m_bIsReadyToHighFive") && !IsValidEntity(GetEntPropEnt(iClient, Prop_Send, "m_hHighFivePartner")))
 	{
-		TF2_RemoveCondition(client, TFCond_Taunting);
+		TF2_RemoveCondition(iClient, TFCond_Taunting);
 	}
-	GetEntPropVector(client, Prop_Send, "m_vecOrigin", pos);
+	GetEntPropVector(iClient, Prop_Send, "m_vecOrigin", pos);
 	for (i = 1; i <= MaxClients; i++)
 	{
-		if (IsValidClient(i) && IsPlayerAlive(i) && i != client)
+		if (IsValidClient(i) && IsPlayerAlive(i) && i != iClient)
 		{
 			GetEntPropVector(i, Prop_Send, "m_vecOrigin", pos2);
 			distance = GetVectorDistance(pos, pos2);
@@ -1098,11 +1156,11 @@ public Action UseRage(Handle hTimer, any client)
 				int flags = TF_STUNFLAGS_GHOSTSCARE;
 				flags |= TF_STUNFLAG_NOSOUNDOREFFECT;
 				PawnTimer(RemoveEnt, 5.0, EntIndexToEntRef(AttachParticle(i, "yikes_fx", 75.0)));
-				if (CheckRoundState() != 0) TF2_StunPlayer(i, 5.0, _, flags, client);
+				if (CheckRoundState() != 0) TF2_StunPlayer(i, 5.0, _, flags, iClient);
 			}
 		}
 	}
-	StunSentry(client, RageDist, 6.0, GetEntProp(i, Prop_Send, "m_iHealth"));
+	StunSentry(iClient, RageDist, 6.0, GetEntProp(i, Prop_Send, "m_iHealth"));
 	i = -1;
 	while ((i = FindEntityByClassname2(i, "obj_dispenser")) != -1)
 	{
@@ -1125,7 +1183,6 @@ public Action UseRage(Handle hTimer, any client)
 			AcceptEntityInput(i, "RemoveHealth");
 		}
 	}
-	TF2_AddCondition(client, TFCond_Ubercharged, 10.0);
 	return Plugin_Continue;
 }
 public Action Timer_StopTickle(Handle timer, any userid)
@@ -1221,6 +1278,12 @@ public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bP
 	else if(StrEqual(skey, "VagineerFail"))
 	{
 		strcopy(STRING(VagineerFail), value);
+		bPreCacheFile = true;
+		bAddFileToDownloadsTable = true;
+	}
+	else if(StrEqual(skey, "VagineerTheme"))
+	{
+		strcopy(STRING(VagineerTheme), value);
 		bPreCacheFile = true;
 		bAddFileToDownloadsTable = true;
 	}

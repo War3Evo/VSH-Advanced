@@ -3,6 +3,7 @@
 public void OnPluginStart()
 {
 	hArrayBossSubplugins = new ArrayList();	//CreateArray();
+	hArrayNonBossSubplugins = new ArrayList();	//CreateArray();
 	hTrieBossSubplugins = new StringMap();	//CreateTrie();
 
 	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);
@@ -43,14 +44,8 @@ public void OnPluginStart()
 	HookEvent("object_deflected", Deflected, EventHookMode_Pre);
 	//HookEvent("player_changeclass", ChangeClass);
 
-	RegConsoleCmd("sm_vsha_special", CommandMakeNextSpecial);
-
-	RegAdminCmd("sm_forceboss", Command_forceboss, ADMFLAG_ROOT, "sm_forceboss");
-
-	RegConsoleCmd("sm_setboss", PickBossMenu);
-	RegConsoleCmd("sm_haleboss", PickBossMenu);
-	RegConsoleCmd("sm_vshaboss", PickBossMenu);
-	RegConsoleCmd("sm_vsheboss", PickBossMenu);
+	vsha_000_RegConsoleCmd_OnPluginStart();
+	vsha_000_RegAdminCmd_OnPluginStart();
 
 	hBossHUD = CreateHudSynchronizer();
 	hPlayerHUD = CreateHudSynchronizer();

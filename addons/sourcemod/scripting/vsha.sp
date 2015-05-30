@@ -8,6 +8,7 @@
 #include <morecolors>
 #include <sdkhooks>
 #include <vsha>
+#include <vsha_stocks>
 
 #define PLUGIN_VERSION			"1.0"
 
@@ -18,6 +19,9 @@ public Plugin myinfo = {
 	version = PLUGIN_VERSION,
 	url = "https://github.com/War3Evo/VSH-Advanced"
 };
+
+ArrayList hArrayNonBossSubplugins = null;	// List <Subplugin Addon> Not a boss addon, just an external extra
+
 
 ArrayList hArrayBossSubplugins = null;	// List <Subplugin>
 StringMap hTrieBossSubplugins = null;	// Map <Boss Name, Subplugin Handle>
@@ -52,7 +56,7 @@ enum VSHAError
 #include "vsha/vsha_000_OnLibraryRemoved.inc"
 #include "vsha/vsha_000_OnConfigsExecuted.inc"
 #include "vsha/vsha_000_RegConsoleCmd.inc"
-//#include "vsha/"
+#include "vsha/vsha_000_RegAdminCmd.inc"
 //#include "vsha/"
 //#include "vsha/"
 //#include "vsha/"
@@ -106,7 +110,7 @@ enum VSHAError
 #include "vsha/vsha_CreateTimer_Timer_CheckDoors.inc"
 #include "vsha/vsha_CreateTimer_Timer_DrawGame.inc"
 #include "vsha/vsha_CreateTimer_Timer_SkipHalePanel.inc"
-#include "vsha/vsha_CreateTimer_ClientTimer.inc"
+#include "vsha/vsha_CreateTimer_HaleTimer.inc"
 #include "vsha/vsha_CreateTimer_Timer_Uber.inc"
 #include "vsha/vsha_CreateTimer_Timer_RemoveHonorBound.inc"
 #include "vsha/vsha_CreateTimer_BossTimer.inc"
@@ -316,17 +320,49 @@ public Action VSHA_Private_Forward(const char[] EventString)
 		TempStorage[TmpNum] = Storage[BossID];
 		TmpNum++;
 
-		Function FuncBossKillToy = GetFunctionByName(Storage[BossID], EventString);
-		if (FuncBossKillToy != nullfunc)
+		if(Storage[BossID] != null)
 		{
-			Call_StartFunction(Storage[BossID], FuncBossKillToy);
-			Call_Finish(result);
+			Function FuncBossKillToy = GetFunctionByName(Storage[BossID], EventString);
+			if (FuncBossKillToy != nullfunc)
+			{
+				Call_StartFunction(Storage[BossID], FuncBossKillToy);
+				Call_Finish(result);
+			}
 		}
 	}
 	return result;
 }
 
+public Action VSHA_Registered_Global_Forward(const char[] EventString)
+{
+	if(InternalPause) return Plugin_Continue;
 
+	Action result = Plugin_Continue;
+
+	if(hArrayNonBossSubplugins != null)
+	{
+		int count = hArrayNonBossSubplugins.Length; //GetArraySize(hMyArray);
+		Handle MyPlugin = null;
+		Function FuncRegisteredGlobal = nullfunc;
+		for (int i = 0; i < count; i++)
+		{
+			MyPlugin = hArrayNonBossSubplugins.Get(i);
+
+			if(MyPlugin != null)
+			{
+				FuncRegisteredGlobal = GetFunctionByName(MyPlugin, EventString);
+				if (FuncRegisteredGlobal != nullfunc)
+				{
+					Call_StartFunction(MyPlugin, FuncRegisteredGlobal);
+					Call_Finish(result);
+					if(result == Plugin_Stop) break;
+				}
+			}
+		}
+	}
+
+	return result;
+}
 //===================================================================================================================================
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -354,8 +390,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	// N A T I V E S ============================================================================================================
 	CreateNative("VSHA_LoadConfiguration", Native_LoadConfigurationSubplugin);
 
+	CreateNative("VSHA_RegisterNonBossAddon", Native_RegisterNonBossAddon);
+	CreateNative("VSHA_UnRegisterNonBossAddon", Native_UnRegisterNonBossAddon);
+
 	CreateNative("VSHA_RegisterBoss", Native_RegisterBossSubplugin);
-	CreateNative("VSHA_UnRegisterBoss", Native_UnRegisterBossSubplugin);
 
 	CreateNative("VSHA_GetBossUserID", Native_GetBossUserID);
 	CreateNative("VSHA_SetBossUserID", Native_SetBossUserID);
@@ -429,6 +467,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHA_GetVar",Native_VSHA_GetVar);
 	CreateNative("VSHA_SetVar",Native_VSHA_SetVar);
 
+	CreateNative("VSHA_CallModelTimer",Native_CallModelTimer);
+
 	// may use in future.. depends
 	//vsha_Events_AskPluginLoad2();
 
@@ -448,20 +488,27 @@ public int Native_LoadConfigurationSubplugin(Handle plugin, int numParams)
 	return VSHA_Load_Configuration(plugin, cFileName);
 }
 
-public int Native_RegisterBossSubplugin(Handle plugin, int numParams)
+
+public int Native_RegisterNonBossAddon(Handle plugin, int numParams)
 {
-	char BossSubPluginName[32];
-	GetNativeString(1, BossSubPluginName, sizeof(BossSubPluginName));
-	VSHAError erroar;
-	Handle BossHandle = RegisterBoss( plugin, BossSubPluginName, erroar ); //ALL PROPS TO COOKIES.NET AKA COOKIES.IO
+	Handle BossHandle = RegisterNonBossAddon( plugin );
 	return view_as<int>( BossHandle );
 }
-public int Native_UnRegisterBossSubplugin(Handle plugin, int numParams)
+public int Native_UnRegisterNonBossAddon(Handle plugin, int numParams)
 {
-	char BossSubPluginName[32];
-	GetNativeString(1, BossSubPluginName, sizeof(BossSubPluginName));
-	UnRegisterBoss( plugin, BossSubPluginName );
+	UnRegisterNonBossAddon( plugin );
 	return 0;
+}
+
+public int Native_RegisterBossSubplugin(Handle plugin, int numParams)
+{
+	char ShortBossSubPluginName[16];
+	GetNativeString(1, ShortBossSubPluginName, sizeof(ShortBossSubPluginName));
+	char BossSubPluginName[32];
+	GetNativeString(2, BossSubPluginName, sizeof(BossSubPluginName));
+	VSHAError erroar;
+	Handle BossHandle = RegisterBoss( plugin, ShortBossSubPluginName, BossSubPluginName, erroar ); //ALL PROPS TO COOKIES.NET AKA COOKIES.IO
+	return view_as<int>( BossHandle );
 }
 
 public int Native_GetBossUserID(Handle plugin, int numParams)
@@ -693,25 +740,45 @@ public int Native_GetPlayerCount(Handle plugin, int numParams)
 {
 	return iPlaying;
 }
-public int FindBossBySubPluginByID(Handle plugin)
+
+public int FindByBossSubPluginByID(Handle plugin)
 {
 	int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
 	for (int i = 0; i < count; i++)
 	{
-		StringMap bossub = hArrayBossSubplugins.Get(i);
-		if (GetBossSubPlugin(bossub) == plugin) return i;
+		StringMap MyStringMap = hArrayBossSubplugins.Get(i);
+		if (GetBossSubPlugin(MyStringMap) == plugin) return i;
 	}
 	return -1;
 }
-public Handle FindBossBySubPlugin(Handle plugin)
+public Handle FindByBossSubPlugin(Handle plugin)
 {
-	int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
+	int count = hArrayBossSubplugins.Length; //GetArraySize(hMyArray);
 	for (int i = 0; i < count; i++)
 	{
-		StringMap bossub = hArrayBossSubplugins.Get(i);
-		if (GetBossSubPlugin(bossub) == plugin) return bossub;
+		StringMap MyStringMap = hArrayBossSubplugins.Get(i);
+		if (GetBossSubPlugin(MyStringMap) == plugin) return MyStringMap;
 	}
 	return null;
+}
+public Handle FindByNonBossSubPlugin(Handle plugin)
+{
+	int count = hArrayNonBossSubplugins.Length; //GetArraySize(hMyArray);
+	Handle MyPlugin = null;
+	for (int i = 0; i < count; i++)
+	{
+		MyPlugin = hArrayNonBossSubplugins.Get(i);
+		if (MyPlugin == plugin) return MyPlugin;
+	}
+	return null;
+}
+public int FindByNonBossSubPluginByID(Handle plugin)
+{
+	for (int i = 0; i < hArrayNonBossSubplugins.Length; i++)
+	{
+		if (hArrayNonBossSubplugins.Get(i) == plugin) return i;
+	}
+	return -1;
 }
 public Handle FindBossName(const char[] name)
 {
@@ -719,21 +786,47 @@ public Handle FindBossName(const char[] name)
 	if ( GetTrieValueCaseInsensitive(hTrieBossSubplugins, name, GotBossName) ) return GotBossName;
 	return null;
 }
-public Handle RegisterBoss(Handle pluginhndl, const char[] name, VSHAError &error)
+public Handle RegisterNonBossAddon(Handle pluginhndl)
 {
-	if (!ValidateName(name))
+	Handle MyPluginHandle = FindByNonBossSubPlugin(pluginhndl);
+
+	if (MyPluginHandle != null)
+	{
+		LogError("**** RegisterNonBossAddon - Non-Boss Subplugin Already Registered / Returned current handle ****");
+		return MyPluginHandle;
+	}
+
+	hArrayNonBossSubplugins.Push(pluginhndl);
+
+	return pluginhndl;
+}
+public void UnRegisterNonBossAddon(Handle pluginhndl)
+{
+	int iPlugin = FindByNonBossSubPluginByID(pluginhndl);
+
+	if (iPlugin == -1)
+	{
+		LogError("**** UnRegisterNonBossAddon - Unable to unregister ****");
+		return;
+	}
+
+	hArrayNonBossSubplugins.Erase(iPlugin);
+}
+public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const char longname[32], VSHAError &error)
+{
+	if (!ValidateName(shortname))
 	{
 		LogError("**** RegisterBoss - Invalid Name ****");
 		error = Error_InvalidName;
 		return null;
 	}
-	if (FindBossBySubPlugin(pluginhndl) != null)
+	if (FindByBossSubPlugin(pluginhndl) != null)
 	{
 		LogError("**** RegisterBoss - Boss Subplugin Already Registered ****");
 		error = Error_SubpluginAlreadyRegistered;
 		return null;
 	}
-	if (FindBossName(name) != null)
+	if (FindBossName(shortname) != null)
 	{
 		LogError("**** RegisterBoss - Boss Name Already Exists ****");
 		error = Error_AlreadyExists;
@@ -745,51 +838,46 @@ public Handle RegisterBoss(Handle pluginhndl, const char[] name, VSHAError &erro
 	if (BossSubplug == null) DEBUGPRINT1("VSH Engine::RegisterBoss() **** BossSubplug StringMap Trie is Null ****");
 #endif
 	BossSubplug.SetValue("Subplugin", pluginhndl); //SetTrieValue(BossSubplug, "Subplugin", pluginhndl);
-	BossSubplug.SetString("BossName", name); //SetTrieString(BossSubplug, "BossName", name);
+	BossSubplug.SetString("BossShortName", shortname); //SetTrieString(BossSubplug, "BossName", name);
+	BossSubplug.SetString("BossLongName", longname);
 
 	// Then push it to the global array and trie
 	// Don't forget to convert the string to lower cases!
 	hArrayBossSubplugins.Push(BossSubplug); //PushArrayCell(hArrayBossSubplugins, BossSubplug);
-	SetTrieValueCaseInsensitive(hTrieBossSubplugins, name, BossSubplug);
+	SetTrieValueCaseInsensitive(hTrieBossSubplugins, shortname, BossSubplug);
 
-	PrintToChatAll("Loaded %s",name);
+	bool pluginupdated = false;
+
+	if(StrEqual(ReloadBossShortName,shortname))
+	{
+		LoopMaxPLYR(plyrBoss)
+		{
+			if(ReloadPlayer[plyrBoss])
+			{
+				pluginupdated = true;
+				ReloadPlayer[plyrBoss] = false;
+				if(ValidPlayer(plyrBoss,true))
+				{
+					iBossUserID[plyrBoss] = GetClientUserId(plyrBoss);
+					bIsBoss[plyrBoss] = true;
+					Storage[plyrBoss] = pluginhndl;
+
+					VSHA_SetVar(EventClient,plyrBoss);
+					VSHA_Private_Forward("VSHA_OnBossSelected");
+
+					CreateTimer(0.2, MakeModelTimer, GetClientUserId(plyrBoss));
+				}
+			}
+		}
+	}
+
+	if(pluginupdated)
+	{
+		PrintToChatAll("%s updated.",longname);
+	}
 
 	error = Error_None;
 	return pluginhndl;
-}
-
-public void UnRegisterBoss(Handle pluginhndl, const char[] name)
-{
-	if (!ValidateName(name))
-	{
-		LogError("**** UnRegisterBoss - Invalid Name ****");
-		return;
-	}
-	int BossID = FindBossBySubPluginByID(pluginhndl);
-	if ((BossID > -1) && (FindBossName(name) != null))
-	{
-		// Create the trie to hold the data about the boss
-		//StringMap BossSubplug = new StringMap(); //CreateTrie();
-
-		//BossSubplug.SetValue("Subplugin", pluginhndl); //SetTrieValue(BossSubplug, "Subplugin", pluginhndl);
-		//BossSubplug.SetString("BossName", name); //SetTrieString(BossSubplug, "BossName", name);
-
-		// Then push it to the global array and trie
-		// Don't forget to convert the string to lower cases!
-		InternalPause = true;
-		LoopAlivePlayers(target)
-		{
-			ForcePlayerSuicide(target);
-			PrintToChatAll("Unloaded %s",name);
-		}
-		ClearAllVariables();
-		hArrayBossSubplugins.Erase(BossID); //PushArrayCell(hArrayBossSubplugins, BossSubplug);
-		RemoveFromTrie(hTrieBossSubplugins, name);
-		ClearAllVariables();
-		InternalPause = false;
-		return;
-	}
-	return;
 }
 
 
@@ -802,3 +890,13 @@ public int Native_VSHA_SetVar(Handle plugin, int numParams)
 	VSHA_VarArr[GetNativeCell(1)] = GetNativeCell(2);
 	return 0;
 }
+
+public int Native_CallModelTimer(Handle plugin, int numParams)
+{
+	float time = view_as<float>(GetNativeCell(1));
+	int userid = GetNativeCell(2);
+
+	CreateTimer(time, MakeModelTimer, userid);
+	return 0;
+}
+
