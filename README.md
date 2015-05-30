@@ -10,8 +10,8 @@ when a player is finished being the boss, sometimes their boss specific variable
 
 There's not many bugs and glitches but they're major flaws that screw up the mod in general.
 
-# Goals
+# Your viewing the Master Branch
 
-- Make a working stable bug free version
-- Make more addon boss plugins
-- Make optional other plugins
+If you was looking for the most recent bleeding edge technology, you need to click on the button that says branch: master, and change it to branch: develop
+
+Currently VSHA is now working.
