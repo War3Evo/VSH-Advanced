@@ -1086,3 +1086,164 @@ public void VSHA_OnConfiguration_Load_Misc(char[] skey, char[] value)
 {
 }
 */
+
+int WaitTime[MAXPLAYERS + 1];
+#define Speed 100
+
+public void OnGameFrame()
+{
+
+	//Declare:
+	int MaxPlayers;
+
+	//Initialize:
+	MaxPlayers = GetMaxClients();
+
+	int CurrentTime = GetTime();
+
+	//Loop:
+	for(int X = 1; X < MaxPlayers; X++)
+	{
+		if(Hale[X]!=X) continue;
+
+		//Connected:
+		if(WaitTime[X] <= CurrentTime && IsClientConnected(X) && IsClientInGame(X))
+		{
+
+			//Alive:
+			if(IsPlayerAlive(X))
+			{
+
+				//Wall?
+				bool NearWall = false;
+
+				//Ceiling:
+				Handle TraceRay;
+				float startpos[3];
+				float Angles[3];
+				float endpos[3];
+				float dir[3];
+
+				//Initialize:
+				GetClientEyePosition(X, startpos);
+
+				GetClientEyeAngles(X, Angles);
+
+				Angles[0] = 0.0;
+				Angles[2] = 0.0;
+
+				GetAngleVectors(Angles, dir, NULL_VECTOR, NULL_VECTOR);
+
+				ScaleVector(dir, 25.0);
+
+				AddVectors(startpos, dir, endpos);
+
+				//ClientTracer=X;
+
+				TraceRay = TR_TraceRayFilterEx(startpos,endpos,MASK_SOLID,RayType_EndPoint,AimTargetFilter);
+
+				//Collision:
+				if(TR_DidHit(TraceRay))
+				{
+					//Declare:
+					float Distance;
+
+					TR_GetEndPosition(endpos, TraceRay);
+
+					//Distance:
+					Distance = (GetVectorDistance(startpos, endpos));
+
+					//Allowed:
+					//if(AllowWallWalking[X]) if(Distance < 25) NearWall = true;
+					if(GetClientButtons(X) & IN_ATTACK)
+					{
+						if(Distance < 50.0) NearWall = true;
+						//NearWall = true;
+					}
+				}
+
+				//Close:
+				CloseHandle(TraceRay);
+
+				//Near:
+				if(NearWall)
+				{
+
+					//Almost Zero:
+					SetEntityGravity(X, Pow(Pow(100.0, 3.0), -1.0));
+
+					//Buttons:
+					int ButtonBitsum;
+					ButtonBitsum = GetClientButtons(X);
+
+					//Origin:
+					float ClientOrigin[3];
+					GetClientAbsOrigin(X, ClientOrigin);
+
+					//Angles:
+					float ClientEyeAngles[3];
+					GetClientEyeAngles(X, ClientEyeAngles);
+
+					//Declare:
+					float VeloX, VeloY, VeloZ;
+
+					//Initialize:
+					ClientEyeAngles[0] = -89.0;
+
+					VeloX = (Speed * Cosine(DegToRad(ClientEyeAngles[1])));
+					VeloY = (Speed * Sine(DegToRad(ClientEyeAngles[1])));
+					VeloZ = (Speed * Sine(DegToRad(ClientEyeAngles[0])));
+
+
+					//Jumping:
+					if(ButtonBitsum & IN_ATTACK)
+					{
+
+						WaitTime[X] = CurrentTime + 1;
+
+						//Stop:
+						float Velocity[3] = {0.0, 0.0, 0.0};
+						Velocity[0] = VeloX;
+						Velocity[1] = VeloY;
+						Velocity[2] = (VeloZ - (VeloZ * 10));
+						TeleportEntity(X, ClientOrigin, NULL_VECTOR, Velocity);
+
+						CreateTimer(0.1,StopVelocity,X);
+					}
+
+					//Null:
+					else
+					{
+
+						//Stop:
+						float Velocity[3] = {0.0, 0.0, 0.0};
+						TeleportEntity(X, ClientOrigin, NULL_VECTOR, Velocity);
+					}
+
+				}
+
+				//Default:
+				else SetEntityGravity(X, 1.0);
+			}
+
+		}
+
+	}
+
+}
+public bool AimTargetFilter(int entity, int mask)
+{
+	return !(ValidPlayer(entity));
+}
+
+public Action StopVelocity(Handle timer,any client)
+{
+	if(client)
+	{
+		float ClientOrigin[3];
+		GetClientAbsOrigin(client, ClientOrigin);
+
+		float Velocity[3] = {0.0, 0.0, 0.0};
+		TeleportEntity(client, ClientOrigin, NULL_VECTOR, Velocity);
+	}
+}
