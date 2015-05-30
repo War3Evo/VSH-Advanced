@@ -2,19 +2,34 @@
 
 public Action TimerMusicTheme(Handle timer, DataPack pack)
 {
-	if (Enabled && CheckRoundState() == 1)
+	if (Enabled && CheckRoundState() == ROUNDSTATE_START_ROUND_TIMER)
 	{
 		char sound[PATHX];
-		if(pack.IsReadable(sizeof(sound)))
-		{
-			pack.Reset();
-			pack.ReadString( sound, sizeof(sound) );
+		float time = -1.0;
 
-			if (sound[0] != '\0') EmitSoundToAll(sound, _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, nullvec, nullvec, false, 0.0);
+		pack.Reset();
+		pack.ReadString( sound, sizeof(sound) );
+		time = pack.ReadFloat();
+
+		//PrintToChatAll("sound: %s",sound);
+
+		if (sound[0] != '\0')
+		{
+			EmitSoundToAll(sound, _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, nullvec, nullvec, false, 0.0);
+
+			if(time > 0.0)
+			{
+				DataPack SndPack = new DataPack();
+				SndPack.WriteString(sound);
+				SndPack.WriteFloat(time);
+				MusicTimer = CreateTimer(time, TimerMusicTheme, SndPack, TIMER_DATA_HNDL_CLOSE);
+			}
 		}
+		//PrintToChatAll("TimerMusicTheme datapack timer");
 	}
 	else
 	{
+		//PrintToChatAll("CheckRoundState != ROUNDSTATE_START_ROUND_TIMER, there for stopped MusicPlay");
 		ClearTimer(MusicTimer);
 		return Plugin_Stop;
 	}

@@ -95,3 +95,8 @@ bool InternalPause = false;
 
 int RetryCounter = 10;
 
+
+// Reload
+bool ReloadPlayer[PLYR];
+char ReloadBossShortName[16];
+
