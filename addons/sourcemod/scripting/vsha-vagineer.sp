@@ -433,6 +433,7 @@ public Action VSHA_OnBossSelected()
 		Hale[iiBoss] = 0;
 		ForceTeamChange(iiBoss, 3);
 		//DP("vsha-Vagineer 526 ForceTeamChange(iiBoss, 3)");
+		return Plugin_Stop;
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 #if defined DEBUG
