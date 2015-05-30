@@ -3,14 +3,15 @@
 // 0.2 Second Timer
 public Action BossTimer(Handle timer)
 {
-	if (InternalPause) return Plugin_Stop;
+	//if (InternalPause) return Plugin_Stop;
 
 	if ( !Enabled || CheckRoundState() == ROUNDSTATE_ROUND_END ) return Plugin_Stop;
 	LoopActiveBosses(client)
 	{
-		if ( IsValidClient(client) && IsPlayerAlive(client) && bIsBoss[client] )
+		if ( IsValidClient(client) && IsPlayerAlive(client) )
 		{
-			SetEntityHealth(client, iBossHealth[client]);
+			// temp remove to see if OnGetMaxHealth will handle this
+			//SetEntityHealth(client, iBossHealth[client]);
 			ZeroPointTwoSecondThink(client);
 			BossHUD(client);
 			SetClientGlow(client, -0.2, _, flGlowTimer[client]);
