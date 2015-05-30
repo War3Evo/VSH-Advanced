@@ -858,6 +858,8 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 				ReloadPlayer[plyrBoss] = false;
 				if(ValidPlayer(plyrBoss,true))
 				{
+					iBossUserID[plyrBoss] = GetClientUserId(plyrBoss);
+					bIsBoss[plyrBoss] = true;
 					Storage[plyrBoss] = pluginhndl;
 
 					VSHA_SetVar(EventClient,plyrBoss);
