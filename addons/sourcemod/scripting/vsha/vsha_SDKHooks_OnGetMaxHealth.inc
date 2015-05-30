@@ -19,6 +19,10 @@ public Action OnGetMaxHealth(int client, int &maxhealth)
 		{
 			SetEntProp(client, Prop_Data, "m_iHealth", iBossHealth[client]);
 		}
+		if(HP<iBossHealth[client])
+		{
+			SetEntProp(client, Prop_Data, "m_iHealth", iBossHealth[client]);
+		}
 		maxhealth=iBossMaxHealth[client];
 		return Plugin_Handled;
 	}
