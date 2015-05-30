@@ -1,11 +1,13 @@
-// vsha_CreateTimer_ClientTimer.inc
+// vsha_CreateTimer_HaleTimer.inc
 
-public Action ClientTimer(Handle hTimer)
+public Action HaleTimer(Handle hTimer)
 {
 	if (CheckRoundState() == ROUNDSTATE_ROUND_END || CheckRoundState() == ROUNDSTATE_INVALID) return Plugin_Stop;
-	LoopAlivePlayers(iClient)
+	LoopActiveBosses(iClient)
 	{
-		if (IsValidClient(iClient) && !bIsBoss[iClient] && GetClientTeam(iClient) == OtherTeam) continue;
+		//if (IsValidClient(iClient) && !bIsBoss[iClient] && GetClientTeam(iClient) == OtherTeam) continue;
+		if (IsValidClient(iClient) && GetClientTeam(iClient) == OtherTeam) continue;
+		if (!IsPlayerAlive(iClient)) continue;
 		char wepclassname[32];
 		//int killstreaker = iDamage[i] / 500;
 		//if (killstreaker >= 1) SetEntProp(i, Prop_Send, "m_iKillStreak", killstreaker);
