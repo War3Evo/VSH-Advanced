@@ -59,7 +59,7 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 {
 	KvRewind(kv);
 
-	bool result = false;
+	//bool result = false;
 
 	char sSectionBuffer[32];
 	char sSubKeyBuffer[32];
@@ -116,8 +116,6 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 								KvGetString(kv, NULL_STRING, sTempBuffer, sizeof(sTempBuffer));
 								if(VSHA_Load_Type == VSHA_Sounds)
 								{
-									if (FuncLoadSounds != nullfunc)
-									{
 										TrimString(sSubKeyBuffer);
 										TrimString(sTempBuffer);
 										bPreCacheFile = false;
@@ -137,12 +135,9 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 										}
 
 										found = true;
-									}
 								}
 								else if(VSHA_Load_Type == VSHA_Materials)
 								{
-									if (FuncLoadMaterials != nullfunc)
-									{
 										TrimString(sSubKeyBuffer);
 										TrimString(sTempBuffer);
 										bPreCacheFile = false;
@@ -160,12 +155,9 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 										}
 
 										found = true;
-									}
 								}
 								else if(VSHA_Load_Type == VSHA_Models)
 								{
-									if (FuncLoadModels != nullfunc)
-									{
 										TrimString(sSubKeyBuffer);
 										TrimString(sTempBuffer);
 										bPreCacheFile = false;
@@ -182,18 +174,13 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 											AddFileToDownloadsTable(sTempBuffer);
 										}
 
-
 										found = true;
-									}
 								}
 								else if(VSHA_Load_Type == VSHA_Misc)
 								{
-									if (FuncLoadMisc != nullfunc)
-									{
 										VSHA_OnConfiguration_Load_Misc(sSubKeyBuffer, sTempBuffer);
 
 										found = true;
-									}
 								}
 							}
 						} while (KvGotoNextKey(kv, false));

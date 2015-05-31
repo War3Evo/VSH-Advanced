@@ -128,8 +128,6 @@ public void OnAllPluginsLoaded()
 #endif
 	HookEvent("player_changeclass", ChangeClass);
 
-	VSHA_LoadConfiguration("configs/vsha/saxtonhale.cfg");
-
 	VSHAHook(VSHAHook_OnBossIntroTalk, OnBossIntroTalk);
 	VSHAHook(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss);
 	VSHAHook(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss);
@@ -149,6 +147,8 @@ public void OnAllPluginsLoaded()
 	VSHAHook(VSHAHook_OnConfiguration_Load_Sounds, OnConfiguration_Load_Sounds);
 	VSHAHook(VSHAHook_OnConfiguration_Load_Materials, OnConfiguration_Load_Materials);
 	VSHAHook(VSHAHook_OnConfiguration_Load_Models, OnConfiguration_Load_Models);
+
+	VSHA_LoadConfiguration("configs/vsha/saxtonhale.cfg");
 }
 public void OnPluginEnd()
 {
@@ -382,7 +382,7 @@ public void OnBossSelected(int iiBoss)
 		Hale[iiBoss] = 0;
 		ForceTeamChange(iiBoss, 3);
 		//DP("vsha-saxtonhale 526 ForceTeamChange(iiBoss, 3)");
-		return Plugin_Stop;
+		return;
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 #if defined DEBUG
@@ -393,7 +393,7 @@ public void OnBossSelected(int iiBoss)
 }
 public void OnBossIntroTalk()
 {
-	DP("VSHA_OnBossIntroTalk");
+	//DP("VSHA_OnBossIntroTalk");
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
 	if (!GetRandomInt(0, 1)) Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleRoundStart, GetRandomInt(1, 5));
 	else Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleStart132, GetRandomInt(1, 5));
@@ -435,12 +435,12 @@ public void OnLastSurvivor()
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnLastSurvivor() **** Forward Responded ****");
 #endif
 }
-public void OnBossTimer(int iClient)
+public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
 {
 	//int iClient = VSHA_GetVar(EventClient);
 	if (iClient != Hale[iClient]) return;
 	float speed;
-	int curHealth = VSHA_GetBossHealth(iClient), curMaxHp = VSHA_GetBossMaxHealth(iClient);
+	//int curHealth = VSHA_GetBossHealth(iClient), curMaxHp = VSHA_GetBossMaxHealth(iClient);
 	if (curHealth <= curMaxHp) speed = 340.0 + 0.7 * (100-curHealth*100/curMaxHp); //convar/cvar for speed here!
 	SetEntPropFloat(iClient, Prop_Send, "m_flMaxspeed", speed);
 
@@ -524,7 +524,7 @@ public void OnPrepBoss(int iClient)
 #endif
 	return;
 }
-public Action OnMusic(char &BossTheme[PATHX], float &time)
+public Action OnMusic(char BossTheme[PATHX], float &time)
 {
 	//char BossTheme[256];
 	//float time;
@@ -579,12 +579,12 @@ public Action OnVSHAEvent(VSHA_EVENT event, int client)
 	return Plugin_Continue;
 }*/
 
-public Action OnModelTimer(int iClient, char &modelpath[PATHX])
+public Action OnModelTimer(int iClient, char modelpath[PATHX])
 {
 	//int iClient = VSHA_GetVar(EventModelTimer);
 	//char modelpath[PATHX];
 
-	//DP("VSHA_OnModelTimer");
+	//DP("saxtonhale OnModelTimer");
 	if (iClient != Hale[iClient])
 	{
 		//SetVariantString("");
@@ -593,15 +593,21 @@ public Action OnModelTimer(int iClient, char &modelpath[PATHX])
 		// is not thisboss, continue looking
 		return Plugin_Continue;
 	}
-	modelpath = HaleModel;
+	//modelpath = HaleModel;
+
+	strcopy(STRING(modelpath), HaleModel);
+
+	//PrintToChatAll("modelpath %s",modelpath);
+
+	//DP("saxtonhale OnModelTimer changed");
 
 	//StringMap ModelMap = new StringMap();
 	//ModelMap.SetString("Model", modelpath);
 	//VSHA_SetVar(EventModel,ModelMap);
 
-	SetVariantString(modelpath);
-	AcceptEntityInput(iClient, "SetCustomModel");
-	SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
+	//SetVariantString(modelpath);
+	//AcceptEntityInput(iClient, "SetCustomModel");
+	//SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
 
 #if defined DEBUG
 	//DEBUGPRINT1("VSH SaxtonHale::VSHA_OnModelTimer() **** Forward Responded ****");

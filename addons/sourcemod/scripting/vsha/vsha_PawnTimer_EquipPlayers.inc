@@ -18,15 +18,13 @@ public void EquipPlayers(int iClientid)
 
 	Action result = Plugin_Continue;
 
-	VSHA_SetVar(EventClient,iClient);
-	result = VSHA_Registered_Global_Forward("VSHA_OnEquipPlayer_Pre");
+	result = VSHA_OnEquipPlayer_Pre(iClient);
 
 	if(result == Plugin_Stop)
 	{
 		if(!VSHHelped[iClient])
 		{
-			VSHA_SetVar(EventClient,iClient);
-			VSHA_Registered_Global_Forward("VSHA_ShowPlayerHelpMenu");
+			VSHA_ShowPlayerHelpMenu(iClient);
 			VSHHelped[iClient] = true;
 		}
 
@@ -34,13 +32,11 @@ public void EquipPlayers(int iClientid)
 	}
 	else if(result != Plugin_Continue)
 	{
-		VSHA_SetVar(EventClient,iClient);
-		result = VSHA_Registered_Global_Forward("VSHA_OnEquipPlayer_Post");
+		VSHA_OnEquipPlayer_Post(iClient);
 
 		if(!VSHHelped[iClient])
 		{
-			VSHA_SetVar(EventClient,iClient);
-			VSHA_Registered_Global_Forward("VSHA_ShowPlayerHelpMenu");
+			VSHA_ShowPlayerHelpMenu(iClient);
 			VSHHelped[iClient] = true;
 		}
 
@@ -160,13 +156,11 @@ public void EquipPlayers(int iClientid)
 		default: TF2Attrib_SetByDefIndex( iClient, 57, float(GetClientHealth(iClient)/50) ); //make by cvar
 	}
 
-	VSHA_SetVar(EventClient,iClient);
-	result = VSHA_Registered_Global_Forward("VSHA_OnEquipPlayer_Post");
+	VSHA_OnEquipPlayer_Post(iClient);
 
 	if(!VSHHelped[iClient])
 	{
-		VSHA_SetVar(EventClient,iClient);
-		VSHA_Registered_Global_Forward("VSHA_ShowPlayerHelpMenu");
+		VSHA_ShowPlayerHelpMenu(iClient);
 		VSHHelped[iClient] = true;
 	}
 

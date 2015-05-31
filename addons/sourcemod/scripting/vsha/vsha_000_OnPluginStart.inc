@@ -7,14 +7,14 @@ public void OnPluginStart()
 	hTrieBossSubplugins = new StringMap();	//CreateTrie();
 
 	// VSHAHook
-	g_OnBossIntroTalk = CreateForward(ET_Ignore);
-	g_AddToDownloads = CreateForward(ET_Ignore);
+	p_OnBossIntroTalk = CreateForward(ET_Ignore);
+	p_AddToDownloads = CreateForward(ET_Ignore);
 
-	g_OnPlayerKilledByBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
-	g_OnKillingSpreeByBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
-	g_OnBossKilled = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	p_OnPlayerKilledByBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	p_OnKillingSpreeByBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	p_OnBossKilled = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
-	g_OnBossWin = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	p_OnBossWin = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 	p_OnBossKillBuilding = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
 	p_OnMessageTimer = CreateForward(ET_Ignore);
@@ -27,7 +27,7 @@ public void OnPluginStart()
 
 	p_OnLastSurvivor = CreateForward(ET_Ignore);
 
-	p_OnBossTimer = CreateForward(ET_Ignore, Param_Cell);
+	p_OnBossTimer = CreateForward(ET_Ignore, Param_Cell, Param_CellByRef, Param_CellByRef);
 
 	p_OnPrepBoss = CreateForward(ET_Ignore, Param_Cell);
 
@@ -42,6 +42,12 @@ public void OnPluginStart()
 	p_OnConfiguration_Load_Models = CreateForward(ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
 
 	p_OnConfiguration_Load_Misc =  CreateForward(ET_Ignore, Param_String, Param_String);
+
+	p_OnEquipPlayer_Pre = CreateForward(ET_Hook, Param_Cell);
+
+	p_ShowPlayerHelpMenu = CreateForward(ET_Ignore, Param_Cell);
+
+	p_OnEquipPlayer_Post = CreateForward(ET_Ignore, Param_Cell);
 
 	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);
 	bEnabled = CreateConVar("vsha_enabled", "1", "Enable the VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);

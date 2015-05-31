@@ -11,30 +11,18 @@ public Plugin myinfo = {
 	url = "https://github.com/War3Evo/VSH-Advanced"
 };
 
-Handle ThisPluginHandle;
-
 ConVar EnableEurekaEffect;
 
 public void OnAllPluginsLoaded()
 {
-	ThisPluginHandle = view_as<Handle>( VSHA_RegisterNonBossAddon() );
+	VSHAHook(VSHAHook_OnEquipPlayer_Pre, OnEquipPlayer_Pre);
 
 	EnableEurekaEffect = FindConVar("vsha_alloweureka");
 }
 
-public void OnPluginEnd()
+public Action OnEquipPlayer_Pre(int iClient)
 {
-	if(ThisPluginHandle != null)
-	{
-		VSHA_UnRegisterNonBossAddon();
-	}
-}
-
-public Action VSHA_OnEquipPlayer_Pre()
-{
-	if(ThisPluginHandle == null) return Plugin_Continue;
-
-	int iClient = VSHA_GetVar(EventClient);
+	//int iClient = VSHA_GetVar(EventClient);
 	if(ValidPlayer(iClient))
 	{
 		int weapon = GetPlayerWeaponSlot(iClient, TFWeaponSlot_Primary);

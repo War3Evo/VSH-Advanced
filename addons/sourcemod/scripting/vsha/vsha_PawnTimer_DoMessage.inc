@@ -16,7 +16,7 @@ public void DoMessage()
 	}
 
 	//VSHA_Private_Forward("VSHA_MessageTimer");
-	VSHA_MessageTimer();
+	VSHA_OnMessageTimer();
 
 	/*SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
 	char text[PATHX];

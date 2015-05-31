@@ -127,9 +127,9 @@ Handle p_OnConfiguration_Load_Sounds;
 Handle p_OnConfiguration_Load_Materials;
 Handle p_OnConfiguration_Load_Models;
 Handle p_OnConfiguration_Load_Misc;
-
-
-
+Handle p_OnEquipPlayer_Pre;
+Handle p_ShowPlayerHelpMenu;
+Handle p_OnEquipPlayer_Post;
 
 
 
