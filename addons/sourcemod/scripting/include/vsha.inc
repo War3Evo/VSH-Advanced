@@ -44,6 +44,8 @@
 #define TEAM_RED 2
 #define TEAM_BLUE 3
 
+#define VSHA_COLOR "{olive}[VSHA]{default}"
+
 #define ROUNDSTATE_INVALID						-1		/**< Invalid RoundState (VSH is disabled)*/
 #define ROUNDSTATE_EVENT_ROUND_START			0		/**< set on a StartRound Timer and On event start round (preround freeze)*/
 #define ROUNDSTATE_START_ROUND_TIMER			1		/**< Start of a timer for roundstart (during round) */
