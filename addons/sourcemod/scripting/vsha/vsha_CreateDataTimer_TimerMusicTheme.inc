@@ -2,7 +2,7 @@
 
 public Action TimerMusicTheme(Handle timer, DataPack pack)
 {
-	if (Enabled && CheckRoundState() == ROUNDSTATE_START_ROUND_TIMER)
+	if (Enabled && (CheckRoundState() == ROUNDSTATE_START_ROUND_TIMER || CheckRoundState() == ROUNDSTATE_EVENT_ROUND_START))
 	{
 		char sound[PATHX];
 		float time = -1.0;
@@ -16,6 +16,7 @@ public Action TimerMusicTheme(Handle timer, DataPack pack)
 		if (sound[0] != '\0')
 		{
 			EmitSoundToAll(sound, _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, nullvec, nullvec, false, 0.0);
+			//PrintToServer("[VSHA] Music Theme '%s' played.",sound);
 
 			if(time > 0.0)
 			{
@@ -29,7 +30,7 @@ public Action TimerMusicTheme(Handle timer, DataPack pack)
 	}
 	else
 	{
-		//PrintToChatAll("CheckRoundState != ROUNDSTATE_START_ROUND_TIMER, there for stopped MusicPlay");
+		//PrintToChatAll("vsha_CreateDataTimer_TimerMusicTheme stopped MusicPlay");
 		ClearTimer(MusicTimer);
 		return Plugin_Stop;
 	}
