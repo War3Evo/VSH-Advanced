@@ -149,5 +149,12 @@ public void EquipPlayers(int iClientid)
 	VSHA_SetVar(EventClient,iClient);
 	result = VSHA_Registered_Global_Forward("VSHA_OnEquipPlayer_Post");
 
+	if(!VSHHelped[iClient])
+	{
+		VSHA_SetVar(EventClient,iClient);
+		VSHA_Registered_Global_Forward("VSHA_ShowPlayerHelpMenu");
+		VSHHelped[iClient] = true;
+	}
+
 	return;
 }

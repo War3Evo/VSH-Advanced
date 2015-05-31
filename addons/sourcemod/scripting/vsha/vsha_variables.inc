@@ -100,3 +100,6 @@ int RetryCounter = 10;
 bool ReloadPlayer[PLYR];
 char ReloadBossShortName[16];
 
+// Help
+
+bool VSHHelped[PLYR];

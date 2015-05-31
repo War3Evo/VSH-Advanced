@@ -5,6 +5,7 @@ public void ClearVariablesRoundStart(int client)
 	bIsBoss[client] = false;
 	iDamage[client] = 0;
 	iModelRetrys[client] = 25;
+	VSHHelped[client] = false;
 }
 
 public void ClearAllVariables()
@@ -27,6 +28,7 @@ public void ClearAllVariables()
 
 	LoopMaxPLYR(player)
 	{
+		VSHHelped[player] = false;
 		iBossHealth[player]=0;
 		iBossMaxHealth[player]=0;
 		iBossUserID[player]=0;

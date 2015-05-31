@@ -49,6 +49,13 @@ public void BossStart()
 
 		TF2Attrib_SetByDefIndex( iClient, 26, float(iBossMaxHealth[iClient]-maxhp) );
 		SetEntityHealth( iClient, iBossHealth[iClient] );
+
+		if(!VSHHelped[iClient])
+		{
+			VSHA_SetVar(EventBoss,iClient);
+			VSHA_Private_Forward("VSHA_ShowBossHelpMenu");
+			VSHHelped[iClient] = true;
+		}
 	}
 #if defined DEBUG
 	DEBUGPRINT1("VSH Engine::TimerBossStart() **** Boss Player loop finished ****");
