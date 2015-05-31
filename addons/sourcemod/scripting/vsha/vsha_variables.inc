@@ -130,6 +130,7 @@ Handle p_OnConfiguration_Load_Misc;
 Handle p_OnEquipPlayer_Pre;
 Handle p_ShowPlayerHelpMenu;
 Handle p_OnEquipPlayer_Post;
-
-
+Handle p_ShowBossHelpMenu;
+Handle p_OnUberTimer;
+Handle p_OnLastSurvivorLoop;
 

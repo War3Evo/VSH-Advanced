@@ -33,21 +33,7 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 	//VSHA_SetVar(EventModelTimer,iClient);
 	//Action result = VSHA_Private_Forward("VSHA_OnModelTimer");
 	Action result = VSHA_OnModelTimer(iClient, model);
-	if(result != Plugin_Changed)
-	{
-		//DP("VSHA_OnModelTimer result == Plugin_Continue");
-
-		//ModelMap = VSHA_GetVar(EventModel);
-		//ModelMap.GetString("Model",STRING(model));
-		//SetVariantString(model);
-		//AcceptEntityInput(iClient, "SetCustomModel");
-		//SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
-
-		// If model not changed, go back to normal model.
-		SetVariantString("");
-		AcceptEntityInput(iClient, "SetCustomModel");
-	}
-	else
+	if(result == Plugin_Changed)
 	{
 		//DP("VSHA_OnModelTimer result != Plugin_Continue");
 

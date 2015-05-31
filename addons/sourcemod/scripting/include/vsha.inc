@@ -269,6 +269,9 @@ enum VSHAHookType
 	VSHAHook_OnEquipPlayer_Pre,
 	VSHAHook_ShowPlayerHelpMenu,
 	VSHAHook_OnEquipPlayer_Post,
+	VSHAHook_ShowBossHelpMenu,
+	VSHAHook_OnUberTimer,
+	VSHAHook_OnLastSurvivorLoop,
 };
 
 typeset VSHAHookCB
@@ -284,6 +287,8 @@ typeset VSHAHookCB
 	// VSHAHook_OnBossRage
 	// VSHAHook_ShowPlayerHelpMenu
 	// VSHAHook_OnEquipPlayer_Post
+	// VSHAHook_ShowBossHelpMenu
+	// VSHAHook_OnLastSurvivorLoop
 	function void (int iEntity);
 
 	// VSHAHook_OnBossTimer
@@ -295,7 +300,8 @@ typeset VSHAHookCB
 	// VSHAHook_OnPlayerKilledByBoss
 	// VSHAHook_OnKillingSpreeByBoss
 	// VSHAHook_OnBossKilled
-	function void (int BossEntity, int OtherEntity);
+	// VSHAHook_OnUberTimer
+	function void (int iEntity, int OtherEntity);
 
 	// VSHAHook_OnBossWin
 	// VSHAHook_OnBossKillBuilding

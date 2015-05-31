@@ -861,16 +861,16 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 				ReloadPlayer[plyrBoss] = false;
 				if(ValidPlayer(plyrBoss,true))
 				{
-					iBossUserID[plyrBoss] = GetClientUserId(plyrBoss);
-					bIsBoss[plyrBoss] = true;
+					//iBossUserID[plyrBoss] = GetClientUserId(plyrBoss);
 					Storage[plyrBoss] = pluginhndl;
+					//bIsBoss[plyrBoss] = true;
 
 					VSHA_OnBossSelected(plyrBoss);
-					VSHA_OnPrepBoss(plyrBoss);
+					//VSHA_OnPrepBoss(plyrBoss);
 
-					iModelRetrys[plyrBoss]=15;
+					//iModelRetrys[plyrBoss]=15;
 
-					CreateTimer(0.5, MakeModelTimer, GetClientUserId(plyrBoss));
+					CreateTimer(0.2, MakeModelTimer, GetClientUserId(plyrBoss));
 				}
 			}
 		}
@@ -1005,6 +1005,18 @@ public int Native_Hook(Handle plugin, int numParams)
 		{
 			result = AddToForward(p_OnEquipPlayer_Post, plugin, GetNativeFunction(2));
 		}
+		case VSHAHook_ShowBossHelpMenu:
+		{
+			result = AddToForward(p_ShowBossHelpMenu, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnUberTimer:
+		{
+			result = AddToForward(p_OnUberTimer, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnLastSurvivorLoop:
+		{
+			result = AddToForward(p_OnLastSurvivorLoop, plugin, GetNativeFunction(2));
+		}
 	}
 	return result;
 }
@@ -1106,6 +1118,18 @@ public int Native_Unhook(Handle plugin, int numParams)
 		case VSHAHook_OnEquipPlayer_Post:
 		{
 			result = RemoveFromForward(p_OnEquipPlayer_Post, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_ShowBossHelpMenu:
+		{
+			result = RemoveFromForward(p_ShowBossHelpMenu, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnUberTimer:
+		{
+			result = RemoveFromForward(p_OnUberTimer, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnLastSurvivorLoop:
+		{
+			result = RemoveFromForward(p_OnLastSurvivorLoop, plugin, GetNativeFunction(2));
 		}
 	}
 	return result;
@@ -1305,3 +1329,24 @@ public void VSHA_OnEquipPlayer_Post(int iEntity)
 	Call_Finish();
 }
 
+public void VSHA_ShowBossHelpMenu(int iEntity)
+{
+	Call_StartForward(p_ShowBossHelpMenu);
+	Call_PushCell(iEntity);
+	Call_Finish();
+}
+
+public void VSHA_OnUberTimer(int iMedic, int iTarget)
+{
+	Call_StartForward(p_OnUberTimer);
+	Call_PushCell(iMedic);
+	Call_PushCell(iTarget);
+	Call_Finish();
+}
+
+public void VSHA_OnLastSurvivorLoop(int iEntity)
+{
+	Call_StartForward(p_OnLastSurvivorLoop);
+	Call_PushCell(iEntity);
+	Call_Finish();
+}

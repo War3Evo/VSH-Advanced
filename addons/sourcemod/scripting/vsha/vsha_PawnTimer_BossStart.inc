@@ -56,8 +56,9 @@ public void BossStart()
 
 		if(!VSHHelped[iClient])
 		{
-			VSHA_SetVar(EventBoss,iClient);
-			VSHA_Private_Forward("VSHA_ShowBossHelpMenu");
+			//VSHA_SetVar(EventBoss,iClient);
+			//VSHA_Private_Forward("VSHA_ShowBossHelpMenu");
+			VSHA_ShowBossHelpMenu(iClient);
 			VSHHelped[iClient] = true;
 		}
 	}

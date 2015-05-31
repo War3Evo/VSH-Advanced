@@ -378,11 +378,11 @@ public void OnBossSelected(int iiBoss)
 	if (VSHA_IsBossPlayer(iiBoss)) Hale[iiBoss] = iiBoss;
 	if ( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )
 	{
-		VSHA_SetIsBossPlayer(Hale[iiBoss], false);
-		Hale[iiBoss] = 0;
+		VSHA_SetIsBossPlayer(Hale[iiBoss], true);
+		Hale[iiBoss] = iiBoss;
 		ForceTeamChange(iiBoss, 3);
 		//DP("vsha-saxtonhale 526 ForceTeamChange(iiBoss, 3)");
-		return;
+		//return;
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 #if defined DEBUG

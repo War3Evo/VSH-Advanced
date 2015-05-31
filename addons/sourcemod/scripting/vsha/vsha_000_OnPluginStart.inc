@@ -49,6 +49,12 @@ public void OnPluginStart()
 
 	p_OnEquipPlayer_Post = CreateForward(ET_Ignore, Param_Cell);
 
+	p_ShowBossHelpMenu = CreateForward(ET_Ignore, Param_Cell);
+
+	p_OnUberTimer = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+
+	p_OnLastSurvivorLoop =  CreateForward(ET_Ignore, Param_Cell);
+
 	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);
 	bEnabled = CreateConVar("vsha_enabled", "1", "Enable the VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	FirstRound = CreateConVar("vsha_firstround", "1", "Enable first round for VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
