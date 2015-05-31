@@ -123,6 +123,8 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin, Function FuncLoadS
 								{
 									if (FuncLoadSounds != nullfunc)
 									{
+										TrimString(sSubKeyBuffer);
+										TrimString(sTempBuffer);
 										result = false;
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
@@ -151,6 +153,8 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin, Function FuncLoadS
 								{
 									if (FuncLoadMaterials != nullfunc)
 									{
+										TrimString(sSubKeyBuffer);
+										TrimString(sTempBuffer);
 										result = false;
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
@@ -177,6 +181,8 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin, Function FuncLoadS
 								{
 									if (FuncLoadModels != nullfunc)
 									{
+										TrimString(sSubKeyBuffer);
+										TrimString(sTempBuffer);
 										result = false;
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
