@@ -426,6 +426,7 @@ public Action VSHA_OnBossKilled() //victim is boss
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossKilled() **** Forward Responded ****");
 #endif
 	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+	Hale[iiBoss] = 0;
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossWin()
@@ -450,6 +451,7 @@ public Action VSHA_OnBossWin()
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossWin() **** Forward Responded ****");
 #endif
 	SDKUnhook(Hale[iiBoss], SDKHook_OnTakeDamage, OnTakeDamage);
+	Hale[iiBoss] = 0;
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossKillBuilding()

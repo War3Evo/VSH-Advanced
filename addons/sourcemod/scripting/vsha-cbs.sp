@@ -204,6 +204,7 @@ public Action VSHA_OnBossKilled() //victim is boss
 	*/
 
 	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+	Hale[iiBoss] = 0;
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossWin()
@@ -226,6 +227,7 @@ public Action VSHA_OnBossWin()
 	}
 
 	SDKUnhook(Hale[iiBoss], SDKHook_OnTakeDamage, OnTakeDamage);
+	Hale[iiBoss] = 0;
 	return Plugin_Continue;
 }
 public Action VSHA_MessageTimer()
