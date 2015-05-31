@@ -23,12 +23,7 @@ public bool VSHA_Load_Configuration(Handle plugin, const char[] cFileName)
 	{
 		// VSHA_OnConfiguration_Load_*(char[] key, char[] value)
 
-		Function FuncLoadSounds = GetFunctionByName(plugin, "VSHA_OnConfiguration_Load_Sounds");
-		Function FuncLoadMaterials = GetFunctionByName(plugin, "VSHA_OnConfiguration_Load_Materials");
-		Function FuncLoadModels = GetFunctionByName(plugin, "VSHA_OnConfiguration_Load_Models");
-		Function FuncLoadMisc = GetFunctionByName(plugin, "VSHA_OnConfiguration_Load_Misc");
-
-		found = LoadConfigurationValues(kv, plugin, FuncLoadSounds,  FuncLoadMaterials, FuncLoadModels, FuncLoadMisc);
+		found = LoadConfigurationValues(kv, plugin);
 		CloseTheFile(kv);
 		return found;
 	}
@@ -60,7 +55,7 @@ public void CloseTheFile(Handle kv)
 }
 
 
-public bool LoadConfigurationValues(Handle kv, Handle plugin, Function FuncLoadSounds, Function FuncLoadMaterials, Function FuncLoadModels, Function FuncLoadMisc)
+public bool LoadConfigurationValues(Handle kv, Handle plugin)
 {
 	KvRewind(kv);
 
@@ -125,15 +120,10 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin, Function FuncLoadS
 									{
 										TrimString(sSubKeyBuffer);
 										TrimString(sTempBuffer);
-										result = false;
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
-										Call_StartFunction(plugin, FuncLoadSounds);
-										Call_PushString(sSubKeyBuffer);
-										Call_PushString(sTempBuffer);
-										Call_PushCellRef(bPreCacheFile);
-										Call_PushCellRef(bAddFileToDownloadsTable);
-										Call_Finish(result);
+
+										VSHA_OnConfiguration_Load_Sounds(sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
 
 										if(bPreCacheFile)
 										{
@@ -155,15 +145,10 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin, Function FuncLoadS
 									{
 										TrimString(sSubKeyBuffer);
 										TrimString(sTempBuffer);
-										result = false;
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
-										Call_StartFunction(plugin, FuncLoadMaterials);
-										Call_PushString(sSubKeyBuffer);
-										Call_PushString(sTempBuffer);
-										Call_PushCellRef(bPreCacheFile);
-										Call_PushCellRef(bAddFileToDownloadsTable);
-										Call_Finish(result);
+
+										VSHA_OnConfiguration_Load_Materials(sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
 
 										if(bPreCacheFile)
 										{
@@ -183,15 +168,10 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin, Function FuncLoadS
 									{
 										TrimString(sSubKeyBuffer);
 										TrimString(sTempBuffer);
-										result = false;
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
-										Call_StartFunction(plugin, FuncLoadModels);
-										Call_PushString(sSubKeyBuffer);
-										Call_PushString(sTempBuffer);
-										Call_PushCellRef(bPreCacheFile);
-										Call_PushCellRef(bAddFileToDownloadsTable);
-										Call_Finish(result);
+
+										VSHA_OnConfiguration_Load_Models(sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
 
 										if(bPreCacheFile)
 										{
@@ -210,13 +190,7 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin, Function FuncLoadS
 								{
 									if (FuncLoadMisc != nullfunc)
 									{
-										result = false;
-										bPreCacheFile = false;
-										bAddFileToDownloadsTable = false;
-										Call_StartFunction(plugin, FuncLoadMisc);
-										Call_PushString(sSubKeyBuffer);
-										Call_PushString(sTempBuffer);
-										Call_Finish(result);
+										VSHA_OnConfiguration_Load_Misc(sSubKeyBuffer, sTempBuffer);
 
 										found = true;
 									}

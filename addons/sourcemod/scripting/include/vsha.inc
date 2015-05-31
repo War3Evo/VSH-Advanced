@@ -244,6 +244,169 @@ native void VSHA_SetVar(VSHA_Var variabletoretrieve, any value);
 //forward Action OnVSHAEvent(VSHA_EVENT event, int client);
 
 forward void VSHA_AddToDownloads(); /* called during OnMapStart(); NOTICE: THIS IS A GLOBAL FORWARD */
+
+
+enum VSHAHookType
+{
+	VSHAHook_OnLastSurvivor,
+	VSHAHook_OnMessageTimer,
+	VSHAHook_OnBossIntroTalk,
+	VSHAHook_OnBossKilled,
+	VSHAHook_OnBossWin,
+	VSHAHook_OnBossKillBuilding,
+	VSHAHook_OnBossAirblasted,
+	VSHAHook_OnBossSelected,
+	VSHAHook_OnBossSetHP,
+	VSHAHook_OnBossRage,
+	VSHAHook_OnBossTimer,
+	VSHAHook_OnPlayerKilledByBoss,
+	VSHAHook_OnKillingSpreeByBoss,
+	VSHAHook_OnPrepBoss,
+	VSHAHook_OnMusic,
+	VSHAHook_OnModelTimer,
+	VSHAHook_AddToDownloads,
+	VSHAHook_OnConfiguration_Load_Sounds,
+	VSHAHook_OnConfiguration_Load_Materials,
+	VSHAHook_OnConfiguration_Load_Models,
+	VSHAHook_OnConfiguration_Load_Misc,
+};
+
+typeset VSHAHookCB
+{
+	// VSHAHook_OnBossIntroTalk
+	// VSHAHook_AddToDownloads
+	// VSHAHook_OnMessageTimer
+	// VSHAHook_OnLastSurvivor
+	function void ();
+
+	// VSHAHook_OnBossSelected
+	// VSHAHook_OnBossTimer
+	// VSHAHook_OnPrepBoss
+	// VSHAHook_OnBossRage
+	function void (int BossEntity);
+
+	// VSHAHook_OnPlayerKilledByBoss
+	// VSHAHook_OnKillingSpreeByBoss
+	// VSHAHook_OnBossKilled
+	function void (int BossEntity, int OtherEntity);
+
+	// VSHAHook_OnBossWin
+	// VSHAHook_OnBossKillBuilding
+	// VSHAHook_OnBossAirblasted
+	function void (Event smEvent, int iEntity);
+
+	// VSHAHook_OnBossSetHP
+	function Action (int BossEntity, int &BossMaxHealth);
+
+	// VSHAHook_OnMusic
+	function Action (char &BossTheme[PATHX], float &time);
+
+	// VSHAHook_OnModelTimer
+	function Action (int iClient, char &modelpath[PATHX]);
+
+	// VSHAHook_OnConfiguration_Load_Sounds
+	// VSHAHook_OnConfiguration_Load_Materials
+	// VSHAHook_OnConfiguration_Load_Models
+	function void (char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable);
+
+	// VSHAHook_OnConfiguration_Load_Misc
+	function void (char[] skey, char[] value);
+/*
+	// Spawn
+	function Action (int entity);
+
+	// GroundEntChanged
+	// SpawnPost
+	// Think/Post
+	// VPhysicsUpdate/Post
+	function void (int entity);
+
+	// EndTouch
+	// StartTouch
+	// Touch
+	// Blocked
+	function Action (int entity, int other);
+
+	// EndTouchPost
+	// StartTouchPost
+	// TouchPost
+	function void (int entity, int other);
+
+	// SetTransmit
+	function Action (int entity, int client);
+
+	// WeaponCanSwitchTo
+	// WeaponCanUse
+	// WeaponDrop
+	// WeaponEquip
+	// WeaponSwitch
+	function Action (int client, int weapon);
+
+	// WeaponCanSwitchToPost
+	// WeaponCanUsePost
+	// WeaponDropPost
+	// WeaponEquipPost
+	// WeaponSwitchPost
+	function void (int client, int weapon);
+
+	// GetMaxHealth (ep2v and later)
+	function Action (int entity, int &maxhealth);
+
+	// OnTakeDamage
+	// OnTakeDamageAlive
+	// Note: The weapon parameter is not used by all games and damage sources.
+	// Note: Force application is dependent on game and damage type(s)
+	// SDKHooks 1.0+
+	function Action (int victim, int &attacker, int &inflictor, float &damage, int &damagetype);
+	// SDKHooks 2.0+
+	function Action (int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3]);
+	// SDKHooks 2.1+  (can check for support at runtime using GetFeatureStatus on SDKHook_DmgCustomInOTD capability.
+	// DON'T attempt to access 'damagecustom' var if feature status != available
+	function Action (int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon,
+		float damageForce[3], float damagePosition[3], int damagecustom);
+
+	// OnTakeDamagePost
+	// OnTakeDamageAlivePost
+	function void (int victim, int attacker, int inflictor, float damage, int damagetype);
+	function void (int victim, int attacker, int inflictor, float damage, int damagetype, int weapon, const float damageForce[3], const float damagePosition[3]);
+	function void (int victim, int attacker, int inflictor, float damage, int damagetype, int weapon,
+		const float damageForce[3], const float damagePosition[3], int damagecustom);
+
+	// FireBulletsPost
+	function void (int client, int shots, const char[] weaponname);
+
+	// TraceAttack
+	function Action (int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup);
+
+	// TraceAttackPost
+	function void (int victim, int attacker, int inflictor, float damage, int damagetype, int ammotype, int hitbox, int hitgroup);
+
+	// ShouldCollide
+	function bool (int entity, int collisiongroup, int contentsmask, bool originalResult);
+
+	// Use
+	function Action (int entity, int activator, int caller, UseType type, float value);
+
+	// UsePost
+	function void (int entity, int activator, int caller, UseType type, float value);
+
+	// Reload
+	function Action (int weapon);
+
+	// Reload post
+	function void (int weapon, bool bSuccessful);*/
+};
+
+/**
+ * @brief Hooks for function
+ *
+ * @param		type			Type of function to hook
+ * @param		callback	Function to call when hook is called
+ */
+native bool VSHAHook(VSHAHookType type, VSHAHookCB callback);
+
+
+
 /*
  *
  *

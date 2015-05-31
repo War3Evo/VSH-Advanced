@@ -395,6 +395,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	CreateNative("VSHA_RegisterBoss", Native_RegisterBossSubplugin);
 
+	CreateNative("VSHAHook", Native_Hook);
+
 	CreateNative("VSHA_GetBossUserID", Native_GetBossUserID);
 	CreateNative("VSHA_SetBossUserID", Native_SetBossUserID);
 
@@ -899,4 +901,269 @@ public int Native_CallModelTimer(Handle plugin, int numParams)
 	CreateTimer(time, MakeModelTimer, userid);
 	return 0;
 }
+
+// Real Private Forwards
+
+public int Native_Hook(Handle plugin, int numParams)
+{
+	VSHAHookType vshaHOOKtype = GetNativeCell(1);
+	switch(vshaHOOKtype)
+	{
+		case VSHAHook_OnBossIntroTalk:
+		{
+			AddToForward(p_OnBossIntroTalk, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_AddToDownloads:
+		{
+			AddToForward(p_AddToDownloads, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnPlayerKilledByBoss:
+		{
+			AddToForward(p_OnPlayerKilledByBoss, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnKillingSpreeByBoss:
+		{
+			AddToForward(p_OnKillingSpreeByBoss, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnBossKilled:
+		{
+			AddToForward(p_OnBossKilled, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnBossKillBuilding:
+		{
+			AddToForward(p_OnBossKillBuilding, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnMessageTimer:
+		{
+			AddToForward(p_OnMessageTimer, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnBossAirblasted:
+		{
+			AddToForward(p_OnBossAirblasted, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnBossSelected:
+		{
+			AddToForward(p_OnBossSelected, plugin, GetNativeFunction(2));
+		}
+		case VSHA_OnBossSetHP:
+		{
+			AddToForward(p_OnBossSetHP, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnLastSurvivor:
+		{
+			AddToForward(p_OnLastSurvivor, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnBossTimer:
+		{
+			AddToForward(p_OnBossTimer, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnPrepBoss:
+		{
+			AddToForward(p_OnPrepBoss, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnMusic:
+		{
+			AddToForward(p_OnMusic, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnModelTimer:
+		{
+			AddToForward(p_OnModelTimer, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnBossRage:
+		{
+			AddToForward(p_OnBossRage, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnConfiguration_Load_Sounds:
+		{
+			AddToForward(p_OnConfiguration_Load_Sounds, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnConfiguration_Load_Materials:
+		{
+			AddToForward(p_OnConfiguration_Load_Materials, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnConfiguration_Load_Models:
+		{
+			AddToForward(p_OnConfiguration_Load_Models, plugin, GetNativeFunction(2));
+		}
+		case VSHAHook_OnConfiguration_Load_Misc:
+		{
+			AddToForward(p_OnConfiguration_Load_Misc, plugin, GetNativeFunction(2));
+		}
+	}
+}
+
+// Internal private forward calls
+
+public void VSHA_OnBossIntroTalk()
+{
+	Call_StartForward(p_OnBossIntroTalk);
+	Call_Finish();
+}
+
+public void VSHA_AddToDownloads()
+{
+	Call_StartForward(p_AddToDownloads);
+	Call_Finish();
+}
+
+public void VSHA_OnPlayerKilledByBoss(int iiBoss, int attacker)
+{
+	Call_StartForward(p_OnPlayerKilledByBoss);
+	Call_PushCell(iiBoss);
+	Call_PushCell(attacker);
+	Call_Finish();
+}
+
+public void VSHA_OnKillingSpreeByBoss(int iiBoss, int attacker)
+{
+	Call_StartForward(p_OnKillingSpreeByBoss);
+	Call_PushCell(iiBoss);
+	Call_PushCell(attacker);
+	Call_Finish();
+}
+
+public void VSHA_OnBossKilled(int iiBoss, int attacker)
+{
+	Call_StartForward(p_OnBossKilled);
+	Call_PushCell(iiBoss);
+	Call_PushCell(attacker);
+	Call_Finish();
+}
+
+public void VSHA_OnBossWin(Event event, int iiBoss)
+{
+	Call_StartForward(p_OnBossWin);
+	Call_PushCell(event);
+	Call_PushCell(iiBoss);
+	Call_Finish();
+}
+
+public void VSHA_OnBossKillBuilding(Event event, int iiBoss)
+{
+	Call_StartForward(p_OnBossKillBuilding);
+	Call_PushCell(event);
+	Call_PushCell(iiBoss);
+	Call_Finish();
+}
+
+public void VSHA_OnMessageTimer()
+{
+	Call_StartForward(p_OnMessageTimer);
+	Call_Finish();
+}
+
+public void VSHA_OnBossAirblasted(Event event, int attacker)
+{
+	Call_StartForward(p_OnBossAirblasted);
+	Call_PushCell(event);
+	Call_PushCell(attacker);
+	Call_Finish();
+}
+
+public void VSHA_OnBossSelected(int iiBoss)
+{
+	Call_StartForward(p_OnBossSelected);
+	Call_PushCell(iiBoss);
+	Call_Finish();
+}
+
+public Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth)
+{
+	Action result = Plugin_Continue;
+	Call_StartForward(p_OnBossSetHP);
+	Call_PushCell(BossEntity);
+	Call_PushCellRef(BossMaxHealth);
+	Call_Finish(result);
+	return result;
+}
+
+public void VSHA_OnLastSurvivor()
+{
+	Call_StartForward(p_OnLastSurvivor);
+	Call_Finish();
+}
+
+public void VSHA_OnBossTimer(int iiBoss)
+{
+	Call_StartForward(p_OnBossTimer);
+	Call_PushCell(iiBoss);
+	Call_Finish();
+}
+
+public void VSHA_OnPrepBoss(int iiBoss)
+{
+	Call_StartForward(p_OnPrepBoss);
+	Call_PushCell(iiBoss);
+	Call_Finish();
+}
+
+public Action VSHA_OnMusic(char &BossTheme[PATHX], float &time)
+{
+	Action result = Plugin_Continue;
+	Call_StartForward(p_OnMusic);
+	Call_PushStringEx(STRING(BossTheme),0, SM_PARAM_COPYBACK);
+	Param_FloatByRef(time);
+	Call_Finish(result);
+	return result;
+}
+
+public Action VSHA_OnModelTimer(int iClient, char &modelpath[PATHX])
+{
+	Action result = Plugin_Continue;
+	Call_StartForward(p_OnModelTimer);
+	Call_PushCellRef(iClient);
+	Call_PushStringEx(STRING(modelpath),0, SM_PARAM_COPYBACK);
+	Call_Finish(result);
+	return result;
+}
+
+public void VSHA_OnBossRage(int iiBoss)
+{
+	Call_StartForward(p_OnBossRage);
+	Call_PushCell(iiBoss);
+	Call_Finish();
+}
+
+public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+{
+	Call_StartForward(p_OnConfiguration_Load_Sounds);
+	Call_PushString(skey);
+	Call_PushString(value);
+	Call_PushCellRef(bPreCacheFile);
+	Call_PushCellRef(bAddFileToDownloadsTable));
+	Call_Finish();
+}
+
+public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+{
+	Call_StartForward(p_OnConfiguration_Load_Materials);
+	Call_PushString(skey);
+	Call_PushString(value);
+	Call_PushCellRef(bPreCacheFile);
+	Call_PushCellRef(bAddFileToDownloadsTable));
+	Call_Finish();
+}
+
+public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+{
+	Call_StartForward(p_OnConfiguration_Load_Models);
+	Call_PushString(skey);
+	Call_PushString(value);
+	Call_PushCellRef(bPreCacheFile);
+	Call_PushCellRef(bAddFileToDownloadsTable));
+	Call_Finish();
+}
+
+public void VSHA_OnConfiguration_Load_Misc(char[] skey, char[] value)
+{
+	Call_StartForward(p_OnConfiguration_Load_Misc);
+	Call_PushString(skey);
+	Call_PushString(value);
+	Call_Finish();
+}
+
+
+
+
+
 

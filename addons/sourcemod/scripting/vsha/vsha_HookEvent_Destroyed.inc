@@ -10,9 +10,11 @@ public Action Destroyed(Event event, const char[] name, bool dontBroadcast)
 			//int building = event.GetInt("index");
 			//VSHA_SetVar(building)
 
-			VSHA_SetVar(SmEvent,event);
-			VSHA_SetVar(EventAttacker,attacker);
-			VSHA_Private_Forward("VSHA_OnBossKillBuilding");
+			//VSHA_SetVar(SmEvent,event);
+			//VSHA_SetVar(EventAttacker,attacker);
+			//VSHA_Private_Forward("VSHA_OnBossKillBuilding");
+
+			VSHA_OnBossKillBuilding(event, attacker);
 		}
 	}
 	return Plugin_Continue;

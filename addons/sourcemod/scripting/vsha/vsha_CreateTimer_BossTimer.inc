@@ -25,8 +25,7 @@ public Action BossTimer(Handle timer)
 
 public void ZeroPointTwoSecondThink(int client)
 {
-	VSHA_SetVar(EventClient,client);
-	VSHA_Private_Forward("VSHA_OnBossTimer");
-
-	return;
+	//VSHA_SetVar(EventClient,client);
+	//VSHA_Private_Forward("VSHA_OnBossTimer");
+	VSHA_OnBossTimer(client);
 }

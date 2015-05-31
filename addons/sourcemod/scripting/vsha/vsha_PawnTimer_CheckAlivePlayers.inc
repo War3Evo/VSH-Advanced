@@ -18,7 +18,8 @@ public void CheckAlivePlayers()
 	if (iRedAlivePlayers <= 0) ForceTeamWin(HaleTeam);
 	else if (iRedAlivePlayers == 1 && iBluAlivePlayers)
 	{
-		VSHA_Private_Forward("VSHA_OnLastSurvivor");
+		//VSHA_Private_Forward("VSHA_OnLastSurvivor");
+		VSHA_OnLastSurvivor();
 
 		/*char message[PATH];
 		for (int boss = 1; bIsBoss[boss]; boss++)

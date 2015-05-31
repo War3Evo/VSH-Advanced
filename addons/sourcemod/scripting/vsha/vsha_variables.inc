@@ -103,3 +103,33 @@ char ReloadBossShortName[16];
 // Help
 
 bool VSHHelped[PLYR];
+
+
+// Private Forwards
+Handle p_OnBossIntroTalk;
+Handle p_AddToDownloads;
+Handle p_OnPlayerKilledByBoss;
+Handle p_OnKillingSpreeByBoss;
+Handle p_OnBossKilled;
+Handle p_OnBossWin;
+Handle p_OnBossKillBuilding;
+Handle p_OnMessageTimer;
+Handle p_OnBossAirblasted;
+Handle p_OnBossSelected;
+Handle p_OnBossSetHP;
+Handle p_OnLastSurvivor;
+Handle p_OnBossTimer;
+Handle p_OnPrepBoss;
+Handle p_OnMusic;
+Handle p_OnModelTimer;
+Handle p_OnBossRage;
+Handle p_OnConfiguration_Load_Sounds;
+Handle p_OnConfiguration_Load_Materials;
+Handle p_OnConfiguration_Load_Models;
+Handle p_OnConfiguration_Load_Misc;
+
+
+
+
+
+

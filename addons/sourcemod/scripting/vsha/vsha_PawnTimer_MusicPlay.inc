@@ -13,19 +13,21 @@ public void MusicPlay()
 
 	sound[0] = '\0';
 
-	StringMap SoundMap = new StringMap();
-	SoundMap.SetString("Sound", sound);
+	//StringMap SoundMap = new StringMap();
+	//SoundMap.SetString("Sound", sound);
 
-	VSHA_SetVar(EventSound,SoundMap);
-	VSHA_SetVar(EventTime,time);
-	VSHA_Private_Forward("VSHA_OnMusic");
+	//VSHA_SetVar(EventSound,SoundMap);
+	//VSHA_SetVar(EventTime,time);
+	//VSHA_Private_Forward("VSHA_OnMusic");
 
-	SoundMap = VSHA_GetVar(EventSound);
-	time = view_as<float>(VSHA_GetVar(EventTime));
+	VSHA_OnMusic(sound, time);
+
+	//SoundMap = VSHA_GetVar(EventSound);
+	//time = view_as<float>(VSHA_GetVar(EventTime));
 
 	//PrintToChatAll("Music Time %.2f",time);
 
-	SoundMap.GetString("Sound",STRING(sound));
+	//SoundMap.GetString("Sound",STRING(sound));
 
 	//PrintToChatAll("VSHA_OnMusic %s",sound);
 

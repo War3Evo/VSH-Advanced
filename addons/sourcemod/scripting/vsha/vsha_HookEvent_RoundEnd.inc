@@ -23,11 +23,13 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 		if ( bIsBoss[i] )
 		{
 			SetClientQueuePoints(i, 0);
-			if (event.GetInt("team") == HaleTeam && !playedwinsound)
+			if (event.GetInt("team") == GetClientTeam(i) && !playedwinsound)
 			{
-				VSHA_SetVar(SmEvent,event);
-				VSHA_SetVar(EventBoss,i);
-				VSHA_Private_Forward("VSHA_OnBossWin");
+				//VSHA_SetVar(SmEvent,event);
+				//VSHA_SetVar(EventBoss,i);
+				//VSHA_Private_Forward("VSHA_OnBossWin");
+
+				VSHA_OnBossWin(event, i);
 
 				playedwinsound = true;
 			}

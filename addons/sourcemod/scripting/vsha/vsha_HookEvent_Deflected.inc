@@ -6,11 +6,13 @@ public Action Deflected(Event event, const char[] name, bool dontBroadcast)
 	int client = GetClientOfUserId(event.GetInt("ownerid"));
 	if ( bIsBoss[client] )
 	{
-		int airblaster = GetClientOfUserId(event.GetInt("userid"));
+		//int airblaster = GetClientOfUserId(event.GetInt("userid"));
 
-		VSHA_SetVar(EventBoss,client);
-		VSHA_SetVar(EventAttacker,airblaster);
-		VSHA_Private_Forward("VSHA_OnBossAirblasted");
+		//VSHA_SetVar(EventBoss,client);
+		//VSHA_SetVar(EventAttacker,airblaster);
+		//VSHA_Private_Forward("VSHA_OnBossAirblasted");
+
+		VSHA_OnBossAirblasted(event, client);
 
 	}
 	return Plugin_Continue;

@@ -6,6 +6,43 @@ public void OnPluginStart()
 	hArrayNonBossSubplugins = new ArrayList();	//CreateArray();
 	hTrieBossSubplugins = new StringMap();	//CreateTrie();
 
+	// VSHAHook
+	g_OnBossIntroTalk = CreateForward(ET_Ignore);
+	g_AddToDownloads = CreateForward(ET_Ignore);
+
+	g_OnPlayerKilledByBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	g_OnKillingSpreeByBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	g_OnBossKilled = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+
+	g_OnBossWin = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	p_OnBossKillBuilding = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+
+	p_OnMessageTimer = CreateForward(ET_Ignore);
+
+	p_OnBossAirblasted = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+
+	p_OnBossSelected = CreateForward(ET_Ignore, Param_Cell);
+
+	p_OnBossSetHP = CreateForward(ET_Hook, Param_Cell, Param_CellByRef);
+
+	p_OnLastSurvivor = CreateForward(ET_Ignore);
+
+	p_OnBossTimer = CreateForward(ET_Ignore, Param_Cell);
+
+	p_OnPrepBoss = CreateForward(ET_Ignore, Param_Cell);
+
+	p_OnMusic = CreateForward(ET_Hook, Param_String, Param_FloatByRef);
+
+	p_OnModelTimer = CreateForward(ET_Hook, Param_Cell, Param_String);
+
+	p_OnBossRage = CreateForward(ET_Ignore, Param_Cell);
+
+	p_OnConfiguration_Load_Sounds = CreateForward(ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
+	p_OnConfiguration_Load_Materials = CreateForward(ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
+	p_OnConfiguration_Load_Models = CreateForward(ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
+
+	p_OnConfiguration_Load_Misc =  CreateForward(ET_Ignore, Param_String, Param_String);
+
 	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);
 	bEnabled = CreateConVar("vsha_enabled", "1", "Enable the VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	FirstRound = CreateConVar("vsha_firstround", "1", "Enable first round for VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);

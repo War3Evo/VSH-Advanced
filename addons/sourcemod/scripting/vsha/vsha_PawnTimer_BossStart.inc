@@ -26,10 +26,14 @@ public void BossStart()
 		if ( !IsPlayerAlive(iClient) ) TF2_RespawnPlayer(iClient);
 		SetEntityMoveType(iClient, MOVETYPE_WALK);
 
-		VSHA_SetVar(EventBoss,iClient);
-		VSHA_SetVar(EventHitPoints,2500);
-		VSHA_Private_Forward("VSHA_OnBossSetHP");
-		int MaxBossHP = VSHA_GetVar(EventHitPoints);
+		//VSHA_SetVar(EventBoss,iClient);
+		//VSHA_SetVar(EventHitPoints,2500);
+		//VSHA_Private_Forward("VSHA_OnBossSetHP");
+		int MaxBossHP = 2500;
+
+		VSHA_OnBossSetHP(iClient, MaxBossHP);
+
+		//int MaxBossHP = VSHA_GetVar(EventHitPoints);
 
 		if(MaxBossHP <= 0)
 		{

@@ -25,22 +25,27 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 
 	//DP("Loading Private Forward");
 
-	char model[PATH];
-	StringMap ModelMap = new StringMap();
-	ModelMap.SetString("Model", model);
+	char model[PATHX];
+	//StringMap ModelMap = new StringMap();
+	//ModelMap.SetString("Model", model);
 
-	VSHA_SetVar(EventModel,ModelMap);
-	VSHA_SetVar(EventModelTimer,iClient);
-	Action result = VSHA_Private_Forward("VSHA_OnModelTimer");
-	if(result != Plugin_Stop)
+	//VSHA_SetVar(EventModel,ModelMap);
+	//VSHA_SetVar(EventModelTimer,iClient);
+	//Action result = VSHA_Private_Forward("VSHA_OnModelTimer");
+	Action result = VSHA_OnModelTimer(iClient, model);
+	if(result != Plugin_Changed)
 	{
 		//DP("VSHA_Private_Forward");
 
-		ModelMap = VSHA_GetVar(EventModel);
-		ModelMap.GetString("Model",STRING(model));
-		SetVariantString(model);
+		//ModelMap = VSHA_GetVar(EventModel);
+		//ModelMap.GetString("Model",STRING(model));
+		//SetVariantString(model);
+		//AcceptEntityInput(iClient, "SetCustomModel");
+		//SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
+
+		// If model not changed, go back to normal model.
+		SetVariantString("");
 		AcceptEntityInput(iClient, "SetCustomModel");
-		SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
 	}
 	else
 	{
