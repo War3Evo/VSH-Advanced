@@ -11,6 +11,8 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 #endif
 		return Plugin_Continue;
 	}
+	ClearTimer(MusicTimer);
+
 	TeamRoundCounter++;
 	RoundCount++;
 	int i;
@@ -46,7 +48,6 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 		{
 		}
 	}
-	ClearTimer(MusicTimer);
 
 	int top[3];
 	iDamage[0] = 0;
