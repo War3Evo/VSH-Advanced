@@ -7,11 +7,11 @@
 
 public Plugin myinfo =
 {
-	name			= "Saxton Hale",
+	name			= "Vagineer",
 	author			= "Valve",
-	description		= "Saxton Haaaaaaaaaaaaale",
+	description		= "!pu raeg taht evom ottaG",
 	version			= "1.0",
-	url				= "http://wiki.teamfortress.com/wiki/Saxton_Hale"
+	url				= "http://tf2freakshow.wikia.com/wiki/Vagineer"
 }
 
 #define HALE_JUMPCHARGETIME		4
@@ -54,7 +54,7 @@ char playsound[PATHX];
 
 public void OnPluginStart()
 {
-	//ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("Vagineer") );
+	//ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("vagineer") );
 	//AutoExecConfig(true, "VSHA-Boss-Vagineer");
 #if defined DEBUG
 	DEBUGPRINT1("VSH Engine::OnPluginStart() **** loaded VSHA Subplugin ****");
@@ -63,20 +63,20 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("Vagineer","Vagineer") );
+	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("vagineer", "Vagineer") );
 #if defined DEBUG
 	if (ThisPluginHandle == null) DEBUGPRINT1("VSHA Vagineer::OnAllPluginsLoaded() **** ThisPluginHandle is NULL ****");
 	else DEBUGPRINT1("VSHA Vagineer::OnAllPluginsLoaded() **** ThisPluginHandle is OK and Vagineer is Registered! ****");
 #endif
 	HookEvent("player_changeclass", ChangeClass);
 
-	VSHA_LoadConfiguration("configs/vsha/Vagineer.cfg");
+	VSHA_LoadConfiguration("configs/vsha/vagineer.cfg");
 }
 public void OnPluginEnd()
 {
 	if(ThisPluginHandle != null)
 	{
-		//VSHA_UnRegisterBoss("Vagineer");
+		//VSHA_UnRegisterBoss("vagineer");
 	}
 }
 public void OnMapEnd()

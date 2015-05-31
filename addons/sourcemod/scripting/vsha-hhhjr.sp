@@ -40,7 +40,7 @@ int WaitTime[MAXPLAYERS + 1];
 
 public void OnPluginStart()
 {
-	//ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("HHHJr") );
+	//ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("hhhjr") );
 	//AutoExecConfig(true, "VSHA-Boss-HHHJr");
 #if defined DEBUG
 	DEBUGPRINT1("VSH Engine::OnPluginStart() **** loaded VSHA Subplugin ****");
@@ -49,7 +49,7 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("hhhjr") );
+	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("hhhjr", "Horseless Headless Horsemann Jr.") );
 #if defined DEBUG
 	if (ThisPluginHandle == null) DEBUGPRINT1("VSHA HHHJr::OnAllPluginsLoaded() **** ThisPluginHandle is NULL ****");
 	else DEBUGPRINT1("VSHA HHHJr::OnAllPluginsLoaded() **** ThisPluginHandle is OK and HHHJr is Registered! ****");
@@ -62,7 +62,7 @@ public void OnPluginEnd()
 {
 	if(ThisPluginHandle != null)
 	{
-		//VSHA_UnRegisterBoss("HHHJr");
+		//VSHA_UnRegisterBoss("hhhjr");
 	}
 }
 public void OnMapEnd()
