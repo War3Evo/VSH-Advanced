@@ -2,9 +2,9 @@
 
 public void MusicPlay()
 {
-	if (CheckRoundState() != ROUNDSTATE_START_ROUND_TIMER)
+	if (CheckRoundState() != ROUNDSTATE_START_ROUND_TIMER && CheckRoundState() != ROUNDSTATE_EVENT_ROUND_START)
 	{
-		//PrintToChatAll("CheckRoundState != ROUNDSTATE_START_ROUND_TIMER, there for stopped MusicPlay");
+		//PrintToChatAll("vsha_PawnTimer_MusicPlay stopped MusicPlay");
 		return;
 	}
 	char sound[PATHX];
@@ -27,10 +27,13 @@ public void MusicPlay()
 
 	SoundMap.GetString("Sound",STRING(sound));
 
+	//PrintToChatAll("VSHA_OnMusic %s",sound);
+
 	if ( sound[0] != '\0' )
 	{
 	//      Format(sound, sizeof(sound), "#%s", sound);
 		EmitSoundToAll(sound, _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, nullvec, nullvec, false, 0.0);
+		//PrintToServer("[VSHA] Music Theme '%s' played.",sound);
 	}
 	if ( time > 0.0 )
 	{
