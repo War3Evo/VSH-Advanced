@@ -128,25 +128,102 @@ public void OnAllPluginsLoaded()
 #endif
 	HookEvent("player_changeclass", ChangeClass);
 
-	VSHAHook(VSHAHook_OnBossIntroTalk, OnBossIntroTalk);
-	VSHAHook(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss);
-	VSHAHook(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss);
-	VSHAHook(VSHAHook_OnBossKilled, OnBossKilled);
-	VSHAHook(VSHAHook_OnBossWin, OnBossWin);
-	VSHAHook(VSHAHook_OnBossKillBuilding, OnBossKillBuilding);
-	VSHAHook(VSHAHook_OnMessageTimer, OnMessageTimer);
-	VSHAHook(VSHAHook_OnBossAirblasted, OnBossAirblasted);
-	VSHAHook(VSHAHook_OnBossSelected, OnBossSelected);
-	VSHAHook(VSHAHook_OnBossSetHP, OnBossSetHP);
-	VSHAHook(VSHAHook_OnLastSurvivor, OnLastSurvivor);
-	VSHAHook(VSHAHook_OnBossTimer, OnBossTimer);
-	VSHAHook(VSHAHook_OnPrepBoss, OnPrepBoss);
-	VSHAHook(VSHAHook_OnMusic, OnMusic);
-	VSHAHook(VSHAHook_OnModelTimer, OnModelTimer);
-	VSHAHook(VSHAHook_OnBossRage, OnBossRage);
-	VSHAHook(VSHAHook_OnConfiguration_Load_Sounds, OnConfiguration_Load_Sounds);
-	VSHAHook(VSHAHook_OnConfiguration_Load_Materials, OnConfiguration_Load_Materials);
-	VSHAHook(VSHAHook_OnConfiguration_Load_Models, OnConfiguration_Load_Models);
+	bool errorcode = false;
+	errorcode = VSHAHook(VSHAHook_OnBossIntroTalk, OnBossIntroTalk);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnBossIntroTalk");
+	}
+	errorcode = VSHAHook(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnPlayerKilledByBoss");
+	}
+	errorcode = VSHAHook(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnKillingSpreeByBoss");
+	}
+	errorcode = VSHAHook(VSHAHook_OnBossKilled, OnBossKilled);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnBossKilled");
+	}
+	errorcode = VSHAHook(VSHAHook_OnBossWin, OnBossWin);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnBossWin");
+	}
+	errorcode = VSHAHook(VSHAHook_OnBossKillBuilding, OnBossKillBuilding);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnBossKillBuilding");
+	}
+	errorcode = VSHAHook(VSHAHook_OnMessageTimer, OnMessageTimer);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnMessageTimer");
+	}
+	errorcode = VSHAHook(VSHAHook_OnBossAirblasted, OnBossAirblasted);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnBossAirblasted");
+	}
+	errorcode = VSHAHook(VSHAHook_OnBossSelected, OnBossSelected);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnBossSelected");
+	}
+	errorcode = VSHAHook(VSHAHook_OnBossSetHP, OnBossSetHP);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnBossSetHP");
+	}
+	errorcode = VSHAHook(VSHAHook_OnLastSurvivor, OnLastSurvivor);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnLastSurvivor");
+	}
+	errorcode = VSHAHook(VSHAHook_OnBossTimer, OnBossTimer);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnBossTimer");
+	}
+	errorcode = VSHAHook(VSHAHook_OnPrepBoss, OnPrepBoss);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnPrepBoss");
+	}
+	errorcode = VSHAHook(VSHAHook_OnMusic, OnMusic);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnMusic");
+	}
+	errorcode = VSHAHook(VSHAHook_OnModelTimer, OnModelTimer);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnModelTimer");
+	}
+	errorcode = VSHAHook(VSHAHook_OnBossRage, OnBossRage);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnBossRage");
+	}
+	errorcode = VSHAHook(VSHAHook_OnConfiguration_Load_Sounds, OnConfiguration_Load_Sounds);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnConfiguration_Load_Sounds");
+	}
+	errorcode = VSHAHook(VSHAHook_OnConfiguration_Load_Materials, OnConfiguration_Load_Materials);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnConfiguration_Load_Materials");
+	}
+	errorcode = VSHAHook(VSHAHook_OnConfiguration_Load_Models, OnConfiguration_Load_Models);
+	if(errorcode)
+	{
+		PrintToServer("Error saxtonhale VSHAHook_OnConfiguration_Load_Models");
+	}
 
 	VSHA_LoadConfiguration("configs/vsha/saxtonhale.cfg");
 }
@@ -374,6 +451,7 @@ public void OnBossAirblasted(Event event, int iiBoss)
 }
 public void OnBossSelected(int iiBoss)
 {
+	PrintToChatAll("OnBossSelected %d Hale[iiBoss] = %d",iiBoss,Hale[iiBoss]);
 	//int iiBoss = VSHA_GetVar(EventClient);
 	if (VSHA_IsBossPlayer(iiBoss)) Hale[iiBoss] = iiBoss;
 	if ( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )
@@ -383,6 +461,7 @@ public void OnBossSelected(int iiBoss)
 		ForceTeamChange(iiBoss, 3);
 		//DP("vsha-saxtonhale 526 ForceTeamChange(iiBoss, 3)");
 		//return;
+		DP("( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )");
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 #if defined DEBUG

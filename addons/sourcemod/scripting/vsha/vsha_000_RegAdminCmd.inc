@@ -26,6 +26,8 @@ public int MenuHandler_ReloadBoss(Menu menu, MenuAction action, int client, int 
 	menu.GetItem(selection, blahblah, sizeof(blahblah));
 	if (action == MenuAction_Select)
 	{
+		InternalPause = true;
+
 		char bossnameholder[16];
 		GetTrieString(hArrayBossSubplugins.Get(selection), "BossLongName", bossnameholder, sizeof(bossnameholder));
 		ReplyToCommand(client, "[VSH Engine] Reloading %s!", bossnameholder);
@@ -44,9 +46,9 @@ public int MenuHandler_ReloadBoss(Menu menu, MenuAction action, int client, int 
 		Handle plugin;
 		MyStringMap.GetValue("Subplugin", plugin);
 
-		char hPlugin[PATHX];
+		//char hPlugin[PATHX];
 
-		GetPluginFilename(plugin, STRING(hPlugin));
+		GetPluginFilename(plugin, STRING(hLoadPlugin));
 
 		LoopMaxPLYR(plyrBoss)
 		{
@@ -63,11 +65,19 @@ public int MenuHandler_ReloadBoss(Menu menu, MenuAction action, int client, int 
 
 		hArrayBossSubplugins.Erase(selection);
 
-		ServerCommand("sm plugins reload %s",hPlugin);
+		ServerCommand("sm plugins unload %s",hLoadPlugin);
 
-		ReplyToCommand(client, "[VSH Engine] reloading done.");
+		CreateTimer(5.0, LoadPluginTimer, client);
+
+		ReplyToCommand(client, "[VSH Engine] Waiting 5 seconds...");
 	}
 	else if (action == MenuAction_End) delete menu;
+}
+
+public Action LoadPluginTimer(Handle hTimer, int client)
+{
+	ServerCommand("sm plugins load %s",hLoadPlugin);
+	ReplyToCommand(client, "[VSH Engine] Reload Finished");
 }
 
 public Action Command_forceboss(int client, int args)
