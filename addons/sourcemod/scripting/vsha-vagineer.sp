@@ -7,9 +7,9 @@
 
 public Plugin myinfo =
 {
-	name			= "Saxton Hale",
+	name			= "Vagineer",
 	author			= "Valve",
-	description		= "Saxton Haaaaaaaaaaaaale",
+	description		= "Vagineer",
 	version			= "1.0",
 	url				= "http://wiki.teamfortress.com/wiki/Saxton_Hale"
 }
@@ -55,6 +55,7 @@ char playsound[PATHX];
 public void OnPluginStart()
 {
 	//ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("Vagineer") );
+	VSHA_RegisterBoss("Vagineer","Vagineer");
 	//AutoExecConfig(true, "VSHA-Boss-Vagineer");
 #if defined DEBUG
 	DEBUGPRINT1("VSH Engine::OnPluginStart() **** loaded VSHA Subplugin ****");
@@ -352,6 +353,11 @@ public Action VSHA_OnBossWin()
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
 	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", VagineerKSpreeNew, GetRandomInt(1, 5));
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if ( !IsClientValid(i) ) continue;
+		StopSound(i, SNDCHAN_AUTO, VagineerTheme);
+	}
 #if defined DEBUG
 	DEBUGPRINT1("VSH Vagineer::VSHA_OnBossWin() **** Forward Responded ****");
 	DEBUGPRINT2("{lime}VSH Vagineer::VSHA_OnBossWin() **** Forward Responded ****");
