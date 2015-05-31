@@ -23,12 +23,26 @@ public void EquipPlayers(int iClientid)
 
 	if(result == Plugin_Stop)
 	{
+		if(!VSHHelped[iClient])
+		{
+			VSHA_SetVar(EventClient,iClient);
+			VSHA_Registered_Global_Forward("VSHA_ShowPlayerHelpMenu");
+			VSHHelped[iClient] = true;
+		}
+
 		return;
 	}
 	else if(result != Plugin_Continue)
 	{
 		VSHA_SetVar(EventClient,iClient);
 		result = VSHA_Registered_Global_Forward("VSHA_OnEquipPlayer_Post");
+
+		if(!VSHHelped[iClient])
+		{
+			VSHA_SetVar(EventClient,iClient);
+			VSHA_Registered_Global_Forward("VSHA_ShowPlayerHelpMenu");
+			VSHHelped[iClient] = true;
+		}
 
 		return;
 	}
