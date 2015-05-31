@@ -3,105 +3,30 @@
 #include <sdkhooks>
 #include <morecolors>
 #include <vsha>
-#include <vsha_stocks>
 
 public Plugin myinfo =
 {
-	name 			= "Saxton Hale",
+	name 			= "Horsless Headless Horsemann Jr.",
 	author 			= "Valve",
-	description 	= "Saxton Haaaaaaaaaaaaale",
+	description 	= "Muahahahaaaa!",
 	version 		= "1.0",
-	url 			= "http://wiki.teamfortress.com/wiki/Saxton_Hale"
+	url 			= "http://wiki.teamfortress.com/wiki/Horseless_Headless_Horsemann"
 }
 
-char HaleModel[PATHX];
-char HaleModelPrefix[PATHX];
+char HHHModel[PATHX];
+char HHHModelPrefix[PATHX];
 
+char HHHTheme[PATHX];
 
-char HaleTheme1[PATHX];
-char HaleTheme2[PATHX];
-char HaleTheme3[PATHX];
-
-#define HALE_JUMPCHARGETIME		4
-#define HALE_JUMPCHARGE			(25 * HALE_JUMPCHARGETIME)
-
-//#define HaleModel			"models/player/saxton_hale/saxton_hale.mdl"
-//#define HaleModelPrefix			"models/player/saxton_hale/saxton_hale"
-
-// ?? i need to find these, as i dont have them - El Diablo
-//#define HaleTheme1			"saxton_hale/saxtonhale.mp3"
-//#define HaleTheme2			"saxton_hale/haletheme2.mp3"
-//#define HaleTheme3			"saxton_hale/haletheme3.mp3"
-
-char HaleComicArmsFallSound[PATHX];
-char HaleLastB[PATHX];
-char HaleKSpree[PATHX];
-char HaleKSpree2[PATHX];
-char HaleRoundStart[PATHX];
-char HaleJump[PATHX];
-char HaleRageSound[PATHX];
-char HaleKillMedic[PATHX];
-char HaleKillSniper1[PATHX];
-char HaleKillSniper2[PATHX];
-char HaleKillSpy1[PATHX];
-char HaleKillSpy2[PATHX];
-char HaleKillEngie1[PATHX];
-char HaleKillEngie2[PATHX];
-char HaleKSpreeNew[PATHX];
-char HaleWin[PATHX];
-char HaleLastMan[PATHX];
-char HaleFail[PATHX];
-char HaleJump132[PATHX];
-char HaleStart132[PATHX];
-char HaleKillDemo132[PATHX];
-char HaleKillEngie132[PATHX];
-char HaleKillHeavy132[PATHX];
-char HaleKillScout132[PATHX];
-char HaleKillSpy132[PATHX];
-char HaleKillPyro132[PATHX];
-char HaleSappinMahSentry132[PATHX];
-char HaleKillKSpree132[PATHX];
-char HaleKillLast132[PATHX];
-char HaleStubbed132[PATHX];
-
-//Saxton Hale voicelines
-/*
-#define HaleComicArmsFallSound		"saxton_hale/saxton_hale_responce_2.wav"
-#define HaleLastB			"vo/announcer_am_lastmanalive"
-#define HaleKSpree			"saxton_hale/saxton_hale_responce_3.wav"
-#define HaleKSpree2			"saxton_hale/saxton_hale_responce_4.wav" //this line is broken and unused
-#define HaleRoundStart			"saxton_hale/saxton_hale_responce_start" //1-5
-#define HaleJump			"saxton_hale/saxton_hale_responce_jump"            //1-2
-#define HaleRageSound			"saxton_hale/saxton_hale_responce_rage"           //1-4
-#define HaleKillMedic			"saxton_hale/saxton_hale_responce_kill_medic.wav"
-#define HaleKillSniper1			"saxton_hale/saxton_hale_responce_kill_sniper1.wav"
-#define HaleKillSniper2			"saxton_hale/saxton_hale_responce_kill_sniper2.wav"
-#define HaleKillSpy1			"saxton_hale/saxton_hale_responce_kill_spy1.wav"
-#define HaleKillSpy2			"saxton_hale/saxton_hale_responce_kill_spy2.wav"
-#define HaleKillEngie1			"saxton_hale/saxton_hale_responce_kill_eggineer1.wav"
-#define HaleKillEngie2			"saxton_hale/saxton_hale_responce_kill_eggineer2.wav"
-#define HaleKSpreeNew			"saxton_hale/saxton_hale_responce_spree"  //1-5
-#define HaleWin				"saxton_hale/saxton_hale_responce_win" //1-2
-#define HaleLastMan			"saxton_hale/saxton_hale_responce_lastman"  //1-5
-#define HaleFail			"saxton_hale/saxton_hale_responce_fail"            //1-3
-#define HaleJump132			"saxton_hale/saxton_hale_132_jump_" //1-2
-#define HaleStart132			"saxton_hale/saxton_hale_132_start_"   //1-5
-#define HaleKillDemo132			"saxton_hale/saxton_hale_132_kill_demo.wav"
-#define HaleKillEngie132		"saxton_hale/saxton_hale_132_kill_engie_" //1-2
-#define HaleKillHeavy132		"saxton_hale/saxton_hale_132_kill_heavy.wav"
-#define HaleKillScout132		"saxton_hale/saxton_hale_132_kill_scout.wav"
-#define HaleKillSpy132			"saxton_hale/saxton_hale_132_kill_spie.wav"
-#define HaleKillPyro132			"saxton_hale/saxton_hale_132_kill_w_and_m1.wav"
-#define HaleSappinMahSentry132		"saxton_hale/saxton_hale_132_kill_toy.wav"
-#define HaleKillKSpree132		"saxton_hale/saxton_hale_132_kspree_"    //1-2
-#define HaleKillLast132			"saxton_hale/saxton_hale_132_last.wav"
-#define HaleStubbed132			"saxton_hale/saxton_hale_132_stub_"  //1-4
-*/
+char HHHLaught[PATHX];
+char HHHRage[PATHX];
+char HHHRage2[PATHX];
+char HHHAttack[PATHX];
+char HHHFail[PATHX];
 
 Handle ThisPluginHandle = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDING DATA.
 
 //make defines, handles, variables heer lololol
-int HaleCharge[PLYR];
 
 int Hale[PLYR];
 
@@ -110,10 +35,13 @@ float RageDist = 800.0;
 
 char playsound[PATHX];
 
+int WaitTime[MAXPLAYERS + 1];
+#define Speed 100
+
 public void OnPluginStart()
 {
-	//ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("saxtonhale") );
-	//AutoExecConfig(true, "VSHA-Boss-SaxtonHale");
+	//ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("HHHJr") );
+	//AutoExecConfig(true, "VSHA-Boss-HHHJr");
 #if defined DEBUG
 	DEBUGPRINT1("VSH Engine::OnPluginStart() **** loaded VSHA Subplugin ****");
 #endif
@@ -121,20 +49,20 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("saxtonhale","Saxton Hale") );
+	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("hhhjr") );
 #if defined DEBUG
-	if (ThisPluginHandle == null) DEBUGPRINT1("VSHA SaxtonHale::OnAllPluginsLoaded() **** ThisPluginHandle is NULL ****");
-	else DEBUGPRINT1("VSHA SaxtonHale::OnAllPluginsLoaded() **** ThisPluginHandle is OK and SaxtonHale is Registered! ****");
+	if (ThisPluginHandle == null) DEBUGPRINT1("VSHA HHHJr::OnAllPluginsLoaded() **** ThisPluginHandle is NULL ****");
+	else DEBUGPRINT1("VSHA HHHJr::OnAllPluginsLoaded() **** ThisPluginHandle is OK and HHHJr is Registered! ****");
 #endif
 	HookEvent("player_changeclass", ChangeClass);
 
-	VSHA_LoadConfiguration("configs/vsha/saxtonhale.cfg");
+	VSHA_LoadConfiguration("configs/vsha/hhhjr.cfg");
 }
 public void OnPluginEnd()
 {
 	if(ThisPluginHandle != null)
 	{
-		//VSHA_UnRegisterBoss("saxtonhale");
+		//VSHA_UnRegisterBoss("HHHJr");
 	}
 }
 public void OnMapEnd()
@@ -145,7 +73,6 @@ public void OnMapEnd()
 	LoopMaxPLYR(player)
 	{
 		Hale[player] = 0;
-		HaleCharge[player] = 0;
 	}
 }
 
@@ -164,7 +91,7 @@ public void OnClientDisconnect(int client)
 			if (GetClientTeam(tHale) != 3)
 			{
 				ForceTeamChange(Hale[client], 3);
-				//DP("vsha-saxtonhale 166 ForceTeamChange(i, 3)");
+				//DP("vsha-HHHJr 166 ForceTeamChange(i, 3)");
 			}
 		}
 	}
@@ -174,7 +101,7 @@ public Action ChangeClass(Event event, const char[] name, bool dontBroadcast)
 	int client = GetClientOfUserId( event.GetInt("userid") );
 	if (client == Hale[client])
 	{
-		if (TF2_GetPlayerClass(client) != TFClass_Soldier) TF2_SetPlayerClass(client, TFClass_Soldier, _, false);
+		if (TF2_GetPlayerClass(client) != TFClass_DemoMan) TF2_SetPlayerClass(client, TFClass_DemoMan, _, false);
 		TF2_RemovePlayerDisguise(client);
 	}
 	return Plugin_Continue;
@@ -340,7 +267,7 @@ public void VSHA_AddToDownloads()
 		AddFileToDownloadsTable(s);
 	}
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_AddToDownloads() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_AddToDownloads() **** Forward Responded ****");
 #endif
 }*/
 
@@ -351,42 +278,15 @@ public Action VSHA_OnPlayerKilledByBoss()
 
 	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
 
-	if (!GetRandomInt(0, 2) && VSHA_GetAliveRedPlayers() != 1)
+	if (VSHA_GetAliveRedPlayers() != 1)
 	{
 		strcopy(playsound, PLATFORM_MAX_PATH, "");
-		TFClassType playerclass = TF2_GetPlayerClass(iiBoss);
-		switch (playerclass)
-		{
-			case TFClass_Scout:     strcopy(playsound, PLATFORM_MAX_PATH, HaleKillScout132);
-			case TFClass_Pyro:      strcopy(playsound, PLATFORM_MAX_PATH, HaleKillPyro132);
-			case TFClass_DemoMan:   strcopy(playsound, PLATFORM_MAX_PATH, HaleKillDemo132);
-			case TFClass_Heavy:     strcopy(playsound, PLATFORM_MAX_PATH, HaleKillHeavy132);
-			case TFClass_Medic:     strcopy(playsound, PLATFORM_MAX_PATH, HaleKillMedic);
-			case TFClass_Sniper:
-			{
-				if (GetRandomInt(0, 1)) strcopy(playsound, PLATFORM_MAX_PATH, HaleKillSniper1);
-				else strcopy(playsound, PLATFORM_MAX_PATH, HaleKillSniper2);
-			}
-			case TFClass_Spy:
-			{
-				int see = GetRandomInt(0, 2);
-				if (!see) strcopy(playsound, PLATFORM_MAX_PATH, HaleKillSpy1);
-				else if (see == 1) strcopy(playsound, PLATFORM_MAX_PATH, HaleKillSpy2);
-				else strcopy(playsound, PLATFORM_MAX_PATH, HaleKillSpy132);
-			}
-			case TFClass_Engineer:
-			{
-				int see = GetRandomInt(0, 3);
-				if (!see) strcopy(playsound, PLATFORM_MAX_PATH, HaleKillEngie1);
-				else if (see == 1) strcopy(playsound, PLATFORM_MAX_PATH, HaleKillEngie2);
-				else Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleKillEngie132, GetRandomInt(1, 2));
-			}
-		}
+		Format()
 		if ( !StrEqual(playsound, "") ) EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	}
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnPlayerKilled() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnPlayerKilled() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_OnPlayerKilled() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnPlayerKilled() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
 }
@@ -397,17 +297,14 @@ public Action VSHA_OnKillingSpreeByBoss()
 
 	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
 
-	int see = GetRandomInt(0, 7);
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
-	if (!see || see == 1) strcopy(playsound, PLATFORM_MAX_PATH, HaleKSpree);
-	else if (see < 5 && see > 1) Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleKSpreeNew, GetRandomInt(1, 5));
-	else Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleKillKSpree132, GetRandomInt(1, 2));
+	Format(playsound, PLATFORM_MAX_PATH, "%s%i.mp3", HHHLaught, GetRandomInt(1, 4));
 
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnKillingSpree() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnKillingSpree() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_OnKillingSpree() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnKillingSpree() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
 }
@@ -419,14 +316,13 @@ public Action VSHA_OnBossKilled() //victim is boss
 	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
 
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
-	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleFail, GetRandomInt(1, 3));
+	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HHHFail, GetRandomInt(1, 2));
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossKilled() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossKilled() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_OnBossKilled() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnBossKilled() **** Forward Responded ****");
 #endif
 	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
-	Hale[iiBoss] = 0;
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossWin()
@@ -437,41 +333,18 @@ public Action VSHA_OnBossWin()
 	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
 
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
-	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleWin, GetRandomInt(1, 2));
+	Format(playsound, PLATFORM_MAX_PATH, "%s%i.mp3", HHHLaught, GetRandomInt(1, 4));
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		if ( !IsClientValid(i) ) continue;
-		StopSound(i, SNDCHAN_AUTO, HaleTheme1);
-		StopSound(i, SNDCHAN_AUTO, HaleTheme2);
-		StopSound(i, SNDCHAN_AUTO, HaleTheme3);
+		StopSound(i, SNDCHAN_AUTO, HHHTheme);
 	}
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossWin() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossWin() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_OnBossWin() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnBossWin() **** Forward Responded ****");
 #endif
 	SDKUnhook(Hale[iiBoss], SDKHook_OnTakeDamage, OnTakeDamage);
-	Hale[iiBoss] = 0;
-	return Plugin_Continue;
-}
-public Action VSHA_OnBossKillBuilding()
-{
-	//Event event = VSHA_GetVar(SmEvent);
-	//int building = event.GetInt("index");
-	int attacker = VSHA_GetVar(EventAttacker);
-
-	if (attacker != Hale[attacker]) return Plugin_Continue;
-	if ( !GetRandomInt(0, 4) )
-	{
-		strcopy(playsound, PLATFORM_MAX_PATH, "");
-		strcopy(playsound, PLATFORM_MAX_PATH, HaleSappinMahSentry132);
-		EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-		EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossKillBuilding() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossKillBuilding() **** Forward Responded ****");
-#endif
 	return Plugin_Continue;
 }
 public Action VSHA_MessageTimer()
@@ -484,7 +357,7 @@ public Action VSHA_MessageTimer()
 		if ( !IsValidClient(client) ) continue;
 		if ( client == Hale[client] )
 		{
-			Format( text, sizeof(text), "%N became Saxton Hale with %i HP", client, VSHA_GetBossMaxHealth(client) );
+			Format( text, sizeof(text), "%N became Horseless Headless Horsemann Jr.  with %i HP", client, VSHA_GetBossMaxHealth(client) );
 			break;
 		}
 	}
@@ -497,8 +370,8 @@ public Action VSHA_MessageTimer()
 		}
 	}
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_MessageTimer() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_MessageTimer() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_MessageTimer() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_MessageTimer() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
 }
@@ -513,8 +386,8 @@ public Action VSHA_OnBossAirblasted()
 	//if (HaleRage > RageDMG) HaleRage = RageDMG;
 	VSHA_SetBossRage(Hale[iiBoss], VSHA_GetBossRage(Hale[iiBoss])+4.0); //make this a convar/cvar!
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossAirblasted() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossAirblasted() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_OnBossAirblasted() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnBossAirblasted() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
 }
@@ -527,26 +400,24 @@ public Action VSHA_OnBossSelected()
 		VSHA_SetIsBossPlayer(Hale[iiBoss], false);
 		Hale[iiBoss] = 0;
 		ForceTeamChange(iiBoss, 3);
-		//DP("vsha-saxtonhale 526 ForceTeamChange(iiBoss, 3)");
-		return Plugin_Stop;
+		//DP("vsha-HHHJr 526 ForceTeamChange(iiBoss, 3)");
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossSelected() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossSelected() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_OnBossSelected() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnBossSelected() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
 }
 public Action VSHA_OnBossIntroTalk()
 {
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
-	if (!GetRandomInt(0, 1)) Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleRoundStart, GetRandomInt(1, 5));
-	else Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleStart132, GetRandomInt(1, 5));
+	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleRoundStart, GetRandomInt(1, 5));
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossIntroTalk() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossIntroTalk() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_OnBossIntroTalk() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnBossIntroTalk() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
 }
@@ -557,87 +428,19 @@ public Action VSHA_OnBossSetHP()
 	int BossMax = HealthCalc( 760.8, view_as<float>( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
 	VSHA_SetBossMaxHealth(Hale[iClient], BossMax);
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossSetHP() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossSetHP() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_OnBossSetHP() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnBossSetHP() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
 }
 public Action VSHA_OnLastSurvivor()
 {
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
-	int see = GetRandomInt(0, 5);
-	switch (see)
-	{
-		case 0:		strcopy(playsound, PLATFORM_MAX_PATH, HaleComicArmsFallSound);
-		case 1:		Format(playsound, PLATFORM_MAX_PATH, "%s0%i.wav", HaleLastB, GetRandomInt(1, 4));
-		case 2:		strcopy(playsound, PLATFORM_MAX_PATH, HaleKillLast132);
-		default:	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleLastMan, GetRandomInt(1, 5));
-	}
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnLastSurvivor() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnLastSurvivor() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
-}
-public Action VSHA_OnBossTimer()
-{
-	int iClient = VSHA_GetVar(EventClient);
-	if (iClient != Hale[iClient]) return Plugin_Continue;
-	float speed;
-	int curHealth = VSHA_GetBossHealth(iClient), curMaxHp = VSHA_GetBossMaxHealth(iClient);
-	if (curHealth <= curMaxHp) speed = 340.0 + 0.7 * (100-curHealth*100/curMaxHp); //convar/cvar for speed here!
-	SetEntPropFloat(iClient, Prop_Send, "m_flMaxspeed", speed);
-
-	int buttons = GetClientButtons(iClient);
-	if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iClient] >= 0 )
-	{
-		if (HaleCharge[iClient] + 5 < HALE_JUMPCHARGE) HaleCharge[iClient] += 5;
-		else HaleCharge[iClient] = HALE_JUMPCHARGE;
-		if (!(buttons & IN_SCORE))
-		{
-			SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Jump Charge: %i%", HaleCharge[iClient]);
-		}
-	}
-	else if (HaleCharge[iClient] < 0)
-	{
-		HaleCharge[iClient] += 5;
-		if (!(buttons & IN_SCORE))
-		{
-			SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", (-HaleCharge[iClient]/10));
-		}
-	}
-	else
-	{
-		// 5 * 60 = 300
-		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
-		// 300 = 1 minute wait
-		float ExtraBoost = float(HaleCharge[iClient]) * 2;
-		if ( HaleCharge[iClient] > 1 && SuperJump(iClient, ExtraBoost, -15.0, HaleCharge[iClient], -150) ) //put convar/cvar for jump sensitivity here!
-		{
-			strcopy(playsound, PLATFORM_MAX_PATH, "");
-			Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", GetRandomInt(0, 1) ? HaleJump : HaleJump132, GetRandomInt(1, 2));
-			EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-		}
-	}
-
-	if (VSHA_GetAliveRedPlayers() == 1) PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
-	if ( OnlyScoutsLeft() ) VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.5);
-
-	if ( !(GetEntityFlags(iClient) & FL_ONGROUND) ) WeighDownTimer += 0.2;
-	else WeighDownTimer = 0.0;
-
-	if ( (buttons & IN_DUCK) && Weighdown(iClient, WeighDownTimer, 60.0, 0.0) )
-	{
-		//CPrintToChat(client, "{olive}[VSHE]{default} You just used your weighdown!");
-		//all this just to do a cprint? It's not like weighdown has a limit...
-	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossTimer() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossTimer() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_OnLastSurvivor() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnLastSurvivor() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
 }
@@ -646,8 +449,7 @@ public Action VSHA_OnPrepBoss()
 	int iClient = VSHA_GetVar(EventOnPrepBoss);
 
 	if (iClient != Hale[iClient]) return Plugin_Continue;
-	TF2_SetPlayerClass(iClient, TFClass_Soldier, _, false);
-	HaleCharge[iClient] = 0;
+	TF2_SetPlayerClass(iClient, TFClass_DemoMan, _, false);
 
 	TF2_RemoveAllWeapons2(iClient);
 	TF2_RemovePlayerDisguise(iClient);
@@ -660,71 +462,29 @@ public Action VSHA_OnPrepBoss()
 	{
 		TF2_RemoveAllWeapons2(iClient);
 		char attribs[PATH];
-		Format(attribs, sizeof(attribs), "68 ; 2.0 ; 2 ; 3.0 ; 259 ; 1.0 ; 252 ; 0.6 ; 214 ; %d", GetRandomInt(999, 9999));
-		int SaxtonWeapon = SpawnWeapon(iClient, "tf_weapon_shovel", 5, 100, 4, attribs);
-		SetEntPropEnt(iClient, Prop_Send, "m_hActiveWeapon", SaxtonWeapon);
+		Format(attribs, sizeof(attribs), "68 ; 2.0 ; 2 ; 3.1 ; 259 ; 1.0 ; 252 ; 0.6 ; 551 ; 1 ; 214 ; %d", GetRandomInt(999, 9999));
+		int HHHWeapon = SpawnWeapon(iClient, "tf_weapon_sword", 266, 100, 4, attribs);
+		SetEntPropEnt(iClient, Prop_Send, "m_hActiveWeapon", HHHWeapon);
 	}
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnPrepBoss() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnPrepBoss() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_OnPrepBoss() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnPrepBoss() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
 }
 public Action VSHA_OnMusic()
 {
-	char BossTheme[256];
 	float time;
-
-	switch ( GetRandomInt(0, 2) )
-	{
-		case 0:
-		{
-			BossTheme = HaleTheme1;
-			time = 150.0;
-		}
-		case 1:
-		{
-			BossTheme = HaleTheme2;
-			time = 150.0;
-		}
-		case 2:
-		{
-			BossTheme = HaleTheme3;
-			time = 220.0;
-		}
-	}
 	StringMap SoundMap = new StringMap();
-	SoundMap.SetString("Sound", BossTheme);
+	SoundMap.SetString("Sound", HHHTheme);
 	VSHA_SetVar(EventSound,SoundMap);
 	VSHA_SetVar(EventTime,time);
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnMusic() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnMusic() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_OnMusic() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnMusic() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
 }
-/*
-public Action OnVSHAEvent(VSHA_EVENT event, int client)
-{
-	switch(event)
-	{
-		case ModelTimer:
-		{
-			if (client != Hale)
-			{
-				SetVariantString("");
-				AcceptEntityInput(client, "SetCustomModel");
-				return Plugin_Stop;
-			}
-
-			SetVariantString(HaleModel);
-			AcceptEntityInput(client, "SetCustomModel");
-			SetEntProp(client, Prop_Send, "m_bUseClassAnimations", 1);
-		}
-	}
-	return Plugin_Continue;
-}*/
-
 public Action VSHA_OnModelTimer()
 {
 	int iClient = VSHA_GetVar(EventModelTimer);
@@ -738,19 +498,19 @@ public Action VSHA_OnModelTimer()
 		AcceptEntityInput(iClient, "SetCustomModel");
 		return Plugin_Stop;
 	}
-	modelpath = HaleModel;
+	modelpath = HHHModel;
 
 	StringMap ModelMap = new StringMap();
 	ModelMap.SetString("Model", modelpath);
-	VSHA_SetVar(EventModel,ModelMap);
+	VSHA_SetVar(EventModel, ModelMap);
 
 	SetVariantString(modelpath);
 	AcceptEntityInput(iClient, "SetCustomModel");
 	SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
 
 #if defined DEBUG
-	//DEBUGPRINT1("VSH SaxtonHale::VSHA_OnModelTimer() **** Forward Responded ****");
-	//DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnModelTimer() **** Forward Responded ****");
+	//DEBUGPRINT1("VSH HHHJr::VSHA_OnModelTimer() **** Forward Responded ****");
+	//DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnModelTimer() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
 }
@@ -770,8 +530,8 @@ public Action VSHA_OnBossRage()
 	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
 	CreateTimer(0.6, UseRage, iClient);
 #if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossRage() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossRage() **** Forward Responded ****");
+	DEBUGPRINT1("VSH HHHJr::VSHA_OnBossRage() **** Forward Responded ****");
+	DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnBossRage() **** Forward Responded ****");
 #endif
 	return Plugin_Continue;
 }
@@ -783,8 +543,8 @@ public void TF2_OnConditionAdded(int client, TFCond condition)
 		case TFCond_Jarated:
 		{
 #if defined DEBUG
-			DEBUGPRINT1("VSH SaxtonHale::TF2_OnConditionAdded() **** Hale was Jarated ****");
-			DEBUGPRINT2("{lime}VSH SaxtonHale::TF2_OnConditionAdded() **** Hale was Jarated ****");
+			DEBUGPRINT1("VSH HHHJr::TF2_OnConditionAdded() **** Hale was Jarated ****");
+			DEBUGPRINT2("{lime}VSH HHHJr::TF2_OnConditionAdded() **** Hale was Jarated ****");
 #endif
 			VSHA_SetBossRage(Hale[client], VSHA_GetBossRage(client)-8.0);
 			TF2_RemoveCondition(Hale[client], condition);
@@ -792,8 +552,8 @@ public void TF2_OnConditionAdded(int client, TFCond condition)
 		case TFCond_MarkedForDeath:
 		{
 #if defined DEBUG
-			DEBUGPRINT1("VSH SaxtonHale::TF2_OnConditionAdded() **** Hale was MarkedForDeath ****");
-			DEBUGPRINT2("{lime}VSH SaxtonHale::TF2_OnConditionAdded() **** Hale was MarkedForDeath ****");
+			DEBUGPRINT1("VSH HHHJr::TF2_OnConditionAdded() **** Hale was MarkedForDeath ****");
+			DEBUGPRINT2("{lime}VSH HHHJr::TF2_OnConditionAdded() **** Hale was MarkedForDeath ****");
 #endif
 			VSHA_SetBossRage(Hale[client], VSHA_GetBossRage(client)-5.0);
 			TF2_RemoveCondition(Hale[client], condition);
@@ -805,30 +565,17 @@ public void TF2_OnConditionAdded(int client, TFCond condition)
 }
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if(!IsValidEdict(attacker)) return Plugin_Continue;
-	//DP("attacker = %d, victim = %d, hale[victim] = %d",attacker,victim,Hale[victim]);
-	//if((attacker <= 0) && (victim == Hale[victim])) return Plugin_Continue;
+	if (victim == Hale[victim]) return Plugin_Continue;
 
-	// removed the = sign because we need to detect when hale takes damage from falls,
-	// so we can remove that damage.
-
-	if(TF2_IsPlayerInCondition(victim, TFCond_Ubercharged)) return Plugin_Continue;
-
-	if ( CheckRoundState() == 0 && (victim == Hale[victim] || (victim != attacker && attacker != Hale[attacker])) )
+	if ( CheckRoundState() == 0 && victim == Hale[victim] )
 	{
 		damage *= 0.0;
 		return Plugin_Changed;
 	}
-	if ((damagetype & DMG_FALL) && victim == Hale[victim])
+	if (!attacker && (damagetype & DMG_FALL) && victim == Hale[victim])
 	{
-		//DP("DMG_FALL victim = %d, hale[victim] = %d",victim,Hale[victim]);
-		if(GetEntityFlags(victim) & FL_ONGROUND)
-		{
-			//DP("Hale Fall Damage");
-			damage = (VSHA_GetBossHealth(Hale[victim]) > 100) ? 10.0 : 100.0; //please don't fuck with this.
-			//damage = 0.0;
-			return Plugin_Changed;
-		}
+		damage = (VSHA_GetBossHealth(victim) > 100) ? 10.0 : 100.0; //please don't fuck with this.
+		return Plugin_Changed;
 	}
 	switch (damagecustom)
 	{
@@ -926,8 +673,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					return Plugin_Changed;
 				}
 #if defined DEBUG
-				DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossTeleFragd() **** Forward Responded ****");
-				DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossTeleFragd() **** Forward Responded ****");
+				DEBUGPRINT1("VSH HHHJr::VSHA_OnBossTeleFragd() **** Forward Responded ****");
+				DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnBossTeleFragd() **** Forward Responded ****");
 #endif
 				damage = view_as<float>( VSHA_GetBossHealth(victim) ); //(HaleHealth > 9001 ? 15.0:float(GetEntProp(Hale, Prop_Send, "m_iHealth")) + 90.0);
 				int teleowner = FindTeleOwner(attacker);
@@ -1155,8 +902,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				PrintCenterText(victim, "You Were Just Tickled!");
 
 #if defined DEBUG
-				DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossStabbed() **** Forward Responded ****");
-				DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossStabbed() **** Forward Responded ****");
+				DEBUGPRINT1("VSH HHHJr::VSHA_OnBossStabbed() **** Forward Responded ****");
+				DEBUGPRINT2("{lime}VSH HHHJr::VSHA_OnBossStabbed() **** Forward Responded ****");
 #endif
 
 				int pistol = GetIndexOfWeaponSlot(attacker, TFWeaponSlot_Primary);
@@ -1297,201 +1044,39 @@ public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bP
 		bPreCacheFile = true;
 		bAddFileToDownloadsTable = true;
 	}
-	else if(StrEqual(skey, "HaleTheme1"))
+	else if(StrEqual(skey, "HHHTheme"))
 	{
-		strcopy(STRING(HaleTheme1), value);
+		strcopy(STRING(HHHTheme), value);
 		bPreCacheFile = true;
 		bAddFileToDownloadsTable = true;
 	}
-	else if(StrEqual(skey, "HaleTheme2"))
+	else if(StrEqual(skey, "HHHLaught"))
 	{
-		strcopy(STRING(HaleTheme2), value);
+		strcopy(STRING(HHHLaught), value);
 		bPreCacheFile = true;
 		bAddFileToDownloadsTable = true;
 	}
-	else if(StrEqual(skey, "HaleTheme3"))
+	else if(StrEqual(skey, "HHHRage"))
 	{
-		strcopy(STRING(HaleTheme3), value);
+		strcopy(STRING(HHHRage), value);
 		bPreCacheFile = true;
 		bAddFileToDownloadsTable = true;
 	}
-	else if(StrEqual(skey, "HaleComicArmsFallSound"))
+	else if(StrEqual(skey, "HHHRage2"))
 	{
-		strcopy(STRING(HaleComicArmsFallSound), value);
+		strcopy(STRING(HHHRage2), value);
 		bPreCacheFile = true;
 		bAddFileToDownloadsTable = true;
 	}
-	else if(StrEqual(skey, "HaleLastB"))
+	else if(StrEqual(skey, "HHHAttack"))
 	{
-		strcopy(STRING(HaleLastB), value);
+		strcopy(STRING(HHHAttack), value);
 		bPreCacheFile = true;
 		bAddFileToDownloadsTable = true;
 	}
-	else if(StrEqual(skey, "HaleKSpree"))
+	else if(StrEqual(skey, "HHHFail"))
 	{
-		strcopy(STRING(HaleKSpree), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKSpree2"))
-	{
-		strcopy(STRING(HaleKSpree2), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleRoundStart"))
-	{
-		strcopy(STRING(HaleRoundStart), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleJump"))
-	{
-		strcopy(STRING(HaleJump), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleRageSound"))
-	{
-		strcopy(STRING(HaleRageSound), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillMedic"))
-	{
-		strcopy(STRING(HaleKillMedic), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillSniper1"))
-	{
-		strcopy(STRING(HaleKillSniper1), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillSniper2"))
-	{
-		strcopy(STRING(HaleKillSniper2), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillSpy1"))
-	{
-		strcopy(STRING(HaleKillSpy1), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillSpy2"))
-	{
-		strcopy(STRING(HaleKillSpy2), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillEngie1"))
-	{
-		strcopy(STRING(HaleKillEngie1), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillEngie2"))
-	{
-		strcopy(STRING(HaleKillEngie2), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKSpreeNew"))
-	{
-		strcopy(STRING(HaleKSpreeNew), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleWin"))
-	{
-		strcopy(STRING(HaleWin), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleLastMan"))
-	{
-		strcopy(STRING(HaleLastMan), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleFail"))
-	{
-		strcopy(STRING(HaleFail), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleJump132"))
-	{
-		strcopy(STRING(HaleJump132), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleStart132"))
-	{
-		strcopy(STRING(HaleStart132), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillDemo132"))
-	{
-		strcopy(STRING(HaleKillDemo132), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillEngie132"))
-	{
-		strcopy(STRING(HaleKillEngie132), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillHeavy132"))
-	{
-		strcopy(STRING(HaleKillHeavy132), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillScout132"))
-	{
-		strcopy(STRING(HaleKillScout132), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillSpy132"))
-	{
-		strcopy(STRING(HaleKillSpy132), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillPyro132"))
-	{
-		strcopy(STRING(HaleKillPyro132), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleSappinMahSentry132"))
-	{
-		strcopy(STRING(HaleSappinMahSentry132), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillKSpree132"))
-	{
-		strcopy(STRING(HaleKillKSpree132), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleKillLast132"))
-	{
-		strcopy(STRING(HaleKillLast132), value);
-		bPreCacheFile = true;
-		bAddFileToDownloadsTable = true;
-	}
-	else if(StrEqual(skey, "HaleStubbed132"))
-	{
-		strcopy(STRING(HaleStubbed132), value);
+		strcopy(STRING(HHHFail), value);
 		bPreCacheFile = true;
 		bAddFileToDownloadsTable = true;
 	}
@@ -1522,20 +1107,20 @@ public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool 
 }
 public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
 {
-	if(StrEqual(skey, "HaleModel"))
+	if(StrEqual(skey, "HHHModel"))
 	{
-		strcopy(STRING(HaleModel), value);
+		strcopy(STRING(HHHeModel), value);
 		bPreCacheModel = true;
 		bAddFileToDownloadsTable = true;
 	}
-	else if(StrEqual(skey, "HaleModelPrefix"))
+	else if(StrEqual(skey, "HHHModelPrefix"))
 	{
 		char s[PATHX];
 		char extensions[][] = { ".mdl", ".dx80.vtx", ".dx90.vtx", ".sw.vtx", ".vvd", ".phy" };
 
 		for (int i = 0; i < sizeof(extensions); i++)
 		{
-			Format(s, PATHX, "%s%s", HaleModelPrefix, extensions[i]);
+			Format(s, PATHX, "%s%s", HHHModelPrefix, extensions[i]);
 			if ( FileExists(s, true) )
 			{
 				AddFileToDownloadsTable(s);
@@ -1546,6 +1131,121 @@ public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bP
 	if(bPreCacheModel || bAddFileToDownloadsTable)
 	{
 		PrintToServer("Loading Model %s = %s",skey,value);
+	}
+}
+
+public void OnGameFrame()
+{
+	int MaxPlayers;
+	MaxPlayers = GetMaxClients();
+	int CurrentTime = GetTime();
+
+	for(int X = 1; X < MaxPlayers; X++)
+	{
+		if(Hale[X]!=X) continue;
+		if(WaitTime[X] <= CurrentTime && IsClientConnected(X) && IsClientInGame(X))
+		{
+			if(IsPlayerAlive(X))
+			{
+				bool NearWall = false;
+				Handle TraceRay;
+				float startpos[3];
+				float Angles[3];
+				float endpos[3];
+				float dir[3];
+
+				GetClientEyePosition(X, startpos);
+
+				GetClientEyeAngles(X, Angles);
+
+				Angles[0] = 0.0;
+				Angles[2] = 0.0;
+
+				GetAngleVectors(Angles, dir, NULL_VECTOR, NULL_VECTOR);
+
+				ScaleVector(dir, 25.0);
+
+				AddVectors(startpos, dir, endpos);
+
+				//ClientTracer=X;
+
+				TraceRay = TR_TraceRayFilterEx(startpos,endpos,MASK_SOLID,RayType_EndPoint,AimTargetFilter);
+				if(TR_DidHit(TraceRay))
+				{
+					float Distance;
+
+					TR_GetEndPosition(endpos, TraceRay);
+					Distance = (GetVectorDistance(startpos, endpos));
+					//if(AllowWallWalking[X]) if(Distance < 25) NearWall = true;
+					if(GetClientButtons(X) & IN_ATTACK)
+					{
+						if(Distance < 50.0) NearWall = true;
+						//NearWall = true;
+					}
+				}
+				CloseHandle(TraceRay);
+				if(NearWall)
+				{
+					SetEntityGravity(X, Pow(Pow(100.0, 3.0), -1.0));
+
+					int ButtonBitsum;
+					ButtonBitsum = GetClientButtons(X);
+
+					float ClientOrigin[3];
+					GetClientAbsOrigin(X, ClientOrigin);
+
+					float ClientEyeAngles[3];
+					GetClientEyeAngles(X, ClientEyeAngles);
+
+					float VeloX, VeloY, VeloZ;
+					ClientEyeAngles[0] = -89.0;
+
+					VeloX = (Speed * Cosine(DegToRad(ClientEyeAngles[1])));
+					VeloY = (Speed * Sine(DegToRad(ClientEyeAngles[1])));
+					VeloZ = (Speed * Sine(DegToRad(ClientEyeAngles[0])));
+
+					if(ButtonBitsum & IN_ATTACK)
+					{
+
+						WaitTime[X] = CurrentTime + 1;
+
+						float Velocity[3] = {0.0, 0.0, 0.0};
+						Velocity[0] = VeloX;
+						Velocity[1] = VeloY;
+						Velocity[2] = (VeloZ - (VeloZ * 10));
+						TeleportEntity(X, ClientOrigin, NULL_VECTOR, Velocity);
+
+						CreateTimer(0.1,StopVelocity,X);
+					}
+					else
+					{
+						float Velocity[3] = {0.0, 0.0, 0.0};
+						TeleportEntity(X, ClientOrigin, NULL_VECTOR, Velocity);
+					}
+
+				}
+				else SetEntityGravity(X, 1.0);
+			}
+
+		}
+
+	}
+
+}
+public bool AimTargetFilter(int entity, int mask)
+{
+	return !(ValidPlayer(entity));
+}
+
+public Action StopVelocity(Handle timer,any client)
+{
+	if(client)
+	{
+		float ClientOrigin[3];
+		GetClientAbsOrigin(client, ClientOrigin);
+
+		float Velocity[3] = {0.0, 0.0, 0.0};
+		TeleportEntity(client, ClientOrigin, NULL_VECTOR, Velocity);
 	}
 }
 // Just in case you want to have extra configurations for your sub plugin.
