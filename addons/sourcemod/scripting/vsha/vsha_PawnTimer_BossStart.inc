@@ -31,7 +31,7 @@ public void BossStart()
 		//VSHA_Private_Forward("VSHA_OnBossSetHP");
 		int MaxBossHP = 2500;
 
-		INTERNAL_VSHA_OnBossSetHP(iClient, MaxBossHP);
+		VSHA_OnBossSetHP(iClient, MaxBossHP);
 
 		//int MaxBossHP = VSHA_GetVar(EventHitPoints);
 
@@ -56,7 +56,9 @@ public void BossStart()
 
 		if(!VSHHelped[iClient])
 		{
-			INTERNAL_VSHA_ShowBossHelpMenu(iClient);
+			//VSHA_SetVar(EventBoss,iClient);
+			//VSHA_Private_Forward("VSHA_ShowBossHelpMenu");
+			VSHA_ShowBossHelpMenu(iClient);
 			VSHHelped[iClient] = true;
 		}
 	}

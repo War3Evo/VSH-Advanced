@@ -20,7 +20,7 @@ public void MusicPlay()
 	//VSHA_SetVar(EventTime,time);
 	//VSHA_Private_Forward("VSHA_OnMusic");
 
-	INTERNAL_VSHA_OnMusic(sound, time);
+	VSHA_OnMusic(sound, time);
 
 	//SoundMap = VSHA_GetVar(EventSound);
 	//time = view_as<float>(VSHA_GetVar(EventTime));

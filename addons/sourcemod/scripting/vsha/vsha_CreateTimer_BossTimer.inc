@@ -27,5 +27,5 @@ public void ZeroPointTwoSecondThink(int client)
 {
 	//VSHA_SetVar(EventClient,client);
 	//VSHA_Private_Forward("VSHA_OnBossTimer");
-	INTERNAL_VSHA_OnBossTimer(client);
+	VSHA_OnBossTimer(client);
 }

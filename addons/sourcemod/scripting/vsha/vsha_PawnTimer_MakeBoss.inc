@@ -57,7 +57,7 @@ public void MakeBoss(int userid)
 
 	SDKHook(iClient, SDKHook_GetMaxHealth, OnGetMaxHealth);
 
-	INTERNAL_VSHA_OnPrepBoss(iClient);
+	VSHA_OnPrepBoss(iClient);
 
 	PawnTimer(CleanScreen, 0.2, iBossUserID[iClient]); //CreateTimer(0.0, CleanScreen, iBossUserID[iClient]);
 	return;

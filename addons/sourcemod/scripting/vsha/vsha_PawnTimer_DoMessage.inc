@@ -15,7 +15,8 @@ public void DoMessage()
 		hdoorchecktimer = CreateTimer(5.0, Timer_CheckDoors, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 
-	INTERNAL_VSHA_OnMessageTimer();
+	//VSHA_Private_Forward("VSHA_MessageTimer");
+	VSHA_OnMessageTimer();
 
 	/*SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
 	char text[PATHX];

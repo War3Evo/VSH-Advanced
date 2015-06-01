@@ -22,11 +22,19 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 			if ( GetGameTime() <= flKillStreak[attacker] ) iPlayerKilled[attacker][1]++;
 			else iPlayerKilled[attacker][1] = 0;
 
-			INTERNAL_VSHA_OnPlayerKilledByBoss(victim,attacker);
+			//VSHA_SetVar(EventBoss,victim);
+			//VSHA_SetVar(EventAttacker,attacker);
+			//VSHA_Private_Forward("VSHA_OnPlayerKilledByBoss");
+
+			VSHA_OnPlayerKilledByBoss(victim,attacker);
 
 			if ( iPlayerKilled[attacker][1] >= GetRandomInt(2, 3) )
 			{
-				INTERNAL_VSHA_OnKillingSpreeByBoss(victim, attacker);
+				//VSHA_SetVar(EventBoss,victim);
+				//VSHA_SetVar(EventAttacker,attacker);
+				//VSHA_Private_Forward("VSHA_OnKillingSpreeByBoss");
+
+				VSHA_OnKillingSpreeByBoss(victim, attacker);
 
 				iPlayerKilled[attacker][1] = 0;
 			}
@@ -55,7 +63,11 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 		iBossesKilled[attacker]++;
 		if ( iBossHealth[victim] < 0 ) iBossHealth[victim] = 0;
 
-		INTERNAL_VSHA_OnBossKilled(victim, attacker);
+		//VSHA_SetVar(EventBoss,victim);
+		//VSHA_SetVar(EventAttacker,attacker);
+		//VSHA_Private_Forward("VSHA_OnBossKilled");
+
+		VSHA_OnBossKilled(victim, attacker);
 
 		SDKUnhook(victim, SDKHook_GetMaxHealth, OnGetMaxHealth);
 

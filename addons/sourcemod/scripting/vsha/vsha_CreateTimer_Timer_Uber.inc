@@ -20,7 +20,7 @@ public Action Timer_Uber(Handle timer, any medigunid)
 					//VSHA_SetVar(EventClient,medic);
 					//VSHA_SetVar(EventTarget,target);
 					//VSHA_Private_Forward("VSHA_OnUberTimer");
-					INTERNAL_VSHA_OnUberTimer(medic, target);
+					VSHA_OnUberTimer(medic, target);
 				}
 				else iUberedTarget[medic] = -1;
 			}

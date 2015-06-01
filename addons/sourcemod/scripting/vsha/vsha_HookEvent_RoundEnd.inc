@@ -25,7 +25,11 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 			SetClientQueuePoints(i, 0);
 			if (event.GetInt("team") == GetClientTeam(i) && !playedwinsound)
 			{
-				INTERNAL_VSHA_OnBossWin(event, i);
+				//VSHA_SetVar(SmEvent,event);
+				//VSHA_SetVar(EventBoss,i);
+				//VSHA_Private_Forward("VSHA_OnBossWin");
+
+				VSHA_OnBossWin(event, i);
 
 				playedwinsound = true;
 			}

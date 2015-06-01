@@ -121,7 +121,7 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
 
-										INTERNAL_VSHA_OnConfiguration_Load_Sounds(sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
+										VSHA_OnConfiguration_Load_Sounds(sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
 
 										if(bPreCacheFile)
 										{
@@ -143,7 +143,7 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
 
-										INTERNAL_VSHA_OnConfiguration_Load_Materials(sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
+										VSHA_OnConfiguration_Load_Materials(sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
 
 										if(bPreCacheFile)
 										{
@@ -163,7 +163,7 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
 
-										INTERNAL_VSHA_OnConfiguration_Load_Models(sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
+										VSHA_OnConfiguration_Load_Models(sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
 
 										if(bPreCacheFile)
 										{
@@ -178,7 +178,7 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 								}
 								else if(VSHA_Load_Type == VSHA_Misc)
 								{
-										INTERNAL_VSHA_OnConfiguration_Load_Misc(sSubKeyBuffer, sTempBuffer);
+										VSHA_OnConfiguration_Load_Misc(sSubKeyBuffer, sTempBuffer);
 
 										found = true;
 								}

@@ -33,7 +33,7 @@ public Action HaleTimer(Handle hTimer)
 
 			//VSHA_SetVar(EventClient,iClient);
 			//VSHA_Private_Forward("VSHA_OnLastSurvivorLoop");
-			INTERNAL_VSHA_OnLastSurvivorLoop(iClient);
+			VSHA_OnLastSurvivorLoop(iClient);
 
 			//if (bAllowSuperWeap && HaleHealth >= 7000) PickSuperWeapon(i, -1); later
 			continue;

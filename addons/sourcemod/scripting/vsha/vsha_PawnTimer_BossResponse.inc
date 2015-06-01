@@ -2,7 +2,7 @@
 
 public void BossResponse()
 {
-	INTERNAL_VSHA_OnBossIntroTalk();
+	VSHA_OnBossIntroTalk();
 
 	return;
 }

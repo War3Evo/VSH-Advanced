@@ -7,53 +7,53 @@ public void OnPluginStart()
 	hTrieBossSubplugins = new StringMap();	//CreateTrie();
 
 	// VSHAHook
-	p_OnBossIntroTalk = CreateGlobalForward("VSHA_OnBossIntroTalk",ET_Ignore);
-	p_AddToDownloads = CreateGlobalForward("VSHA_AddToDownloads",ET_Ignore);
+	p_OnBossIntroTalk = CreateForward(ET_Ignore);
+	p_AddToDownloads = CreateForward(ET_Ignore);
 
-	p_OnPlayerKilledByBoss = CreateGlobalForward("VSHA_OnPlayerKilledByBoss",ET_Ignore, Param_Cell, Param_Cell);
-	p_OnKillingSpreeByBoss = CreateGlobalForward("VSHA_OnKillingSpreeByBoss",ET_Ignore, Param_Cell, Param_Cell);
-	p_OnBossKilled = CreateGlobalForward("VSHA_OnBossKilled",ET_Ignore, Param_Cell, Param_Cell);
+	p_OnPlayerKilledByBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	p_OnKillingSpreeByBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	p_OnBossKilled = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
-	p_OnBossWin = CreateGlobalForward("VSHA_OnBossWin",ET_Ignore, Param_Cell, Param_Cell);
-	p_OnBossKillBuilding = CreateGlobalForward("VSHA_OnBossKillBuilding",ET_Ignore, Param_Cell, Param_Cell);
+	p_OnBossWin = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	p_OnBossKillBuilding = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
-	p_OnMessageTimer = CreateGlobalForward("VSHA_OnMessageTimer",ET_Ignore);
+	p_OnMessageTimer = CreateForward(ET_Ignore);
 
-	p_OnBossAirblasted = CreateGlobalForward("VSHA_OnBossAirblasted",ET_Ignore, Param_Cell, Param_Cell);
+	p_OnBossAirblasted = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
-	p_OnBossSelected = CreateGlobalForward("VSHA_OnBossSelected",ET_Ignore, Param_Cell);
+	p_OnBossSelected = CreateForward(ET_Ignore, Param_Cell);
 
-	p_OnBossSetHP = CreateGlobalForward("VSHA_OnBossSetHP",ET_Hook, Param_Cell, Param_CellByRef);
+	p_OnBossSetHP = CreateForward(ET_Hook, Param_Cell, Param_CellByRef);
 
-	p_OnLastSurvivor = CreateGlobalForward("VSHA_OnLastSurvivor",ET_Ignore);
+	p_OnLastSurvivor = CreateForward(ET_Ignore);
 
-	p_OnBossTimer = CreateGlobalForward("VSHA_OnBossTimer",ET_Ignore, Param_Cell, Param_CellByRef, Param_CellByRef);
+	p_OnBossTimer = CreateForward(ET_Ignore, Param_Cell, Param_CellByRef, Param_CellByRef);
 
-	p_OnPrepBoss = CreateGlobalForward("VSHA_OnPrepBoss",ET_Ignore, Param_Cell);
+	p_OnPrepBoss = CreateForward(ET_Ignore, Param_Cell);
 
-	p_OnMusic = CreateGlobalForward("VSHA_OnMusic",ET_Hook, Param_String, Param_FloatByRef);
+	p_OnMusic = CreateForward(ET_Hook, Param_String, Param_FloatByRef);
 
-	p_OnModelTimer = CreateGlobalForward("VSHA_OnModelTimer",ET_Hook, Param_Cell, Param_String);
+	p_OnModelTimer = CreateForward(ET_Hook, Param_Cell, Param_String);
 
-	p_OnBossRage = CreateGlobalForward("VSHA_OnBossRage",ET_Ignore, Param_Cell);
+	p_OnBossRage = CreateForward(ET_Ignore, Param_Cell);
 
-	p_OnConfiguration_Load_Sounds = CreateGlobalForward("VSHA_OnConfiguration_Load_Sounds",ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
-	p_OnConfiguration_Load_Materials = CreateGlobalForward("VSHA_OnConfiguration_Load_Materials",ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
-	p_OnConfiguration_Load_Models = CreateGlobalForward("VSHA_OnConfiguration_Load_Models",ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
+	p_OnConfiguration_Load_Sounds = CreateForward(ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
+	p_OnConfiguration_Load_Materials = CreateForward(ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
+	p_OnConfiguration_Load_Models = CreateForward(ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
 
-	p_OnConfiguration_Load_Misc =  CreateGlobalForward("VSHA_OnConfiguration_Load_Misc",ET_Ignore, Param_String, Param_String);
+	p_OnConfiguration_Load_Misc =  CreateForward(ET_Ignore, Param_String, Param_String);
 
-	p_OnEquipPlayer_Pre = CreateGlobalForward("VSHA_OnEquipPlayer_Pre",ET_Hook, Param_Cell);
+	p_OnEquipPlayer_Pre = CreateForward(ET_Hook, Param_Cell);
 
-	p_ShowPlayerHelpMenu = CreateGlobalForward("VSHA_ShowPlayerHelpMenu",ET_Ignore, Param_Cell);
+	p_ShowPlayerHelpMenu = CreateForward(ET_Ignore, Param_Cell);
 
-	p_OnEquipPlayer_Post = CreateGlobalForward("VSHA_OnEquipPlayer_Post",ET_Ignore, Param_Cell);
+	p_OnEquipPlayer_Post = CreateForward(ET_Ignore, Param_Cell);
 
-	p_ShowBossHelpMenu = CreateGlobalForward("VSHA_ShowBossHelpMenu",ET_Ignore, Param_Cell);
+	p_ShowBossHelpMenu = CreateForward(ET_Ignore, Param_Cell);
 
-	p_OnUberTimer = CreateGlobalForward("VSHA_OnUberTimer",ET_Ignore, Param_Cell, Param_Cell);
+	p_OnUberTimer = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
-	p_OnLastSurvivorLoop =  CreateGlobalForward("VSHA_OnLastSurvivorLoop",ET_Ignore, Param_Cell);
+	p_OnLastSurvivorLoop =  CreateForward(ET_Ignore, Param_Cell);
 
 	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);
 	bEnabled = CreateConVar("vsha_enabled", "1", "Enable the VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
