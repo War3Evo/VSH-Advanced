@@ -14,6 +14,8 @@ public Plugin myinfo =
 	url 			= "http://wiki.teamfortress.com/wiki/Saxton_Hale"
 }
 
+#define ThisConfigurationFile "configs/vsha/saxtonhale.cfg"
+
 char HaleModel[PATHX];
 char HaleModelPrefix[PATHX];
 
@@ -128,7 +130,7 @@ public void OnAllPluginsLoaded()
 #endif
 	HookEvent("player_changeclass", ChangeClass);
 
-	VSHA_LoadConfiguration("configs/vsha/saxtonhale.cfg");
+	VSHA_LoadConfiguration(ThisConfigurationFile);
 }
 public void OnPluginEnd()
 {
@@ -345,24 +347,17 @@ public void VSHA_OnBossSelected(Handle hBoss, int iiBoss)
 		//DP("( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )");
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossSelected() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossSelected() **** Forward Responded ****");
-#endif
 	return;
 }
-public void VSHA_OnBossIntroTalk()
+public void VSHA_OnBossIntroTalk(Handle hPluginHndl)
 {
+	if(hThisBoss != hPluginHndl) return;
 	//DP("VSHA_OnBossIntroTalk");
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
 	if (!GetRandomInt(0, 1)) Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleRoundStart, GetRandomInt(1, 5));
 	else Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleStart132, GetRandomInt(1, 5));
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossIntroTalk() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossIntroTalk() **** Forward Responded ****");
-#endif
 	return;
 }
 public Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth)
@@ -448,10 +443,6 @@ public void VSHA_OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
 		//CPrintToChat(client, "{olive}[VSHE]{default} You just used your weighdown!");
 		//all this just to do a cprint? It's not like weighdown has a limit...
 	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossTimer() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossTimer() **** Forward Responded ****");
-#endif
 	return;
 }
 public void VSHA_OnPrepBoss(int iClient)
@@ -481,8 +472,9 @@ public void VSHA_OnPrepBoss(int iClient)
 #endif
 	return;
 }
-public Action VSHA_OnMusic(char BossTheme[PATHX], float &time)
+public Action VSHA_OnMusic(Handle hPluginHndl, char BossTheme[PATHX], float &time)
 {
+	if(hThisBoss != hPluginHndl) return Plugin_Continue;
 	switch ( GetRandomInt(0, 2) )
 	{
 		case 0:
@@ -1064,8 +1056,10 @@ stock bool OnlyScoutsLeft()
 }
 
 // LOAD CONFIGURATION
-public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+public Action VSHA_OnConfiguration_Load_Sounds(const char[] cfile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
+	if(!StrEqual(cfile, ThisConfigurationFile)) return Plugin_Continue;
+
 	// AutoLoad is not attached to any variable
 	if(StrEqual(skey, "AutoLoad"))
 	{
@@ -1274,10 +1268,14 @@ public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bP
 	if(bPreCacheFile || bAddFileToDownloadsTable)
 	{
 		PrintToServer("Loading Sounds %s = %s",skey,value);
+		return Plugin_Stop;
 	}
+	return Plugin_Continue;
 }
-public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
+public Action VSHA_OnConfiguration_Load_Materials(const char[] cfile, char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
 {
+	if(!StrEqual(cfile, ThisConfigurationFile)) return Plugin_Continue;
+
 	if(StrEqual(skey, "MaterialPrefix"))
 	{
 		char s[PATHX];
@@ -1293,10 +1291,14 @@ public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool 
 				PrintToServer("Loading Materials %s",s);
 			}
 		}
+		return Plugin_Stop;
 	}
+	return Plugin_Continue;
 }
-public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
+public Action VSHA_OnConfiguration_Load_Models(const char[] cfile, char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
 {
+	if(!StrEqual(cfile, ThisConfigurationFile)) return Plugin_Continue;
+
 	if(StrEqual(skey, "HaleModel"))
 	{
 		strcopy(STRING(HaleModel), value);
@@ -1321,7 +1323,9 @@ public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bP
 	if(bPreCacheModel || bAddFileToDownloadsTable)
 	{
 		PrintToServer("Loading Model %s = %s",skey,value);
+		return Plugin_Stop;
 	}
+	return Plugin_Continue;
 }
 // Just in case you want to have extra configurations for your sub plugin.
 // This makes loading configurations easier for you.

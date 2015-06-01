@@ -141,7 +141,7 @@ public Action RoundStartFunction()
 
 	PawnTimer(BossStart, 9.1); //CreateTimer(9.1, TimerBossStart);
 	PawnTimer(InitBoss, 0.2); //CreateTimer(0.1, TimerInitBoss);
-	PawnTimer(BossResponse, 3.5); //CreateTimer(3.5, TimerBossResponse);
+	CreateTimer(3.5, TimerBossResponse); //CreateTimer(3.5, TimerBossResponse);
 	PawnTimer(DoMessage, 9.6); //CreateTimer(9.6, MessageTimer);
 	PointReady = false;
 

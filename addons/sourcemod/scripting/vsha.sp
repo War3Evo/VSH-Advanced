@@ -91,13 +91,11 @@ enum VSHAError
 #include "vsha/vsha_PawnTimer_MakeModelTimer.inc"
 #include "vsha/vsha_PawnTimer_BossStart.inc"
 #include "vsha/vsha_PawnTimer_InitBoss.inc"
-#include "vsha/vsha_PawnTimer_BossResponse.inc"
 #include "vsha/vsha_PawnTimer_DoMessage.inc"
 #include "vsha/vsha_PawnTimer_CheckAlivePlayers.inc"
 #include "vsha/vsha_PawnTimer_MakeBoss.inc"
 #include "vsha/vsha_PawnTimer_EquipPlayers.inc"
 #include "vsha/vsha_PawnTimer_CalcScores.inc"
-#include "vsha/vsha_PawnTimer_MusicPlay.inc"
 #include "vsha/vsha_PawnTimer_tTenSecStart.inc"
 #include "vsha/vsha_PawnTimer_TimerNineThousand.inc"
 #include "vsha/vsha_PawnTimer_ResetUberCharge.inc"
@@ -115,8 +113,8 @@ enum VSHAError
 #include "vsha/vsha_CreateTimer_Timer_RemoveHonorBound.inc"
 #include "vsha/vsha_CreateTimer_BossTimer.inc"
 #include "vsha/vsha_CreateTimer_WatchGameMode.inc"
-//#include "vsha/"
-//#include "vsha/"
+#include "vsha/vsha_CreateTimer_MusicPlay.inc"
+#include "vsha/vsha_CreateTimer_TimerBossResponse.inc"
 //#include "vsha/"
 //#include "vsha/"
 
@@ -901,9 +899,10 @@ public int Native_CallModelTimer(Handle plugin, int numParams)
 
 // Global Forwards
 
-public void INTERNAL_VSHA_OnBossIntroTalk()
+public void INTERNAL_VSHA_OnBossIntroTalk(Handle hThisBoss)
 {
 	Call_StartForward(p_OnBossIntroTalk);
+	Call_PushCell(hThisBoss);
 	Call_Finish();
 }
 
@@ -1007,10 +1006,11 @@ public void INTERNAL_VSHA_OnPrepBoss(int iiBoss)
 	Call_Finish();
 }
 
-public Action INTERNAL_VSHA_OnMusic(char BossTheme[PATHX], float &time)
+public Action INTERNAL_VSHA_OnMusic(Handle hPluginHndl, char BossTheme[PATHX], float &time)
 {
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnMusic);
+	Call_PushCell(hPluginHndl);
 	Call_PushStringEx(STRING(BossTheme),0, SM_PARAM_COPYBACK);
 	Call_PushFloatRef(time);
 	Call_Finish(result);
@@ -1034,9 +1034,10 @@ public void INTERNAL_VSHA_OnBossRage(int iiBoss)
 	Call_Finish();
 }
 
-public void INTERNAL_VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+public void INTERNAL_VSHA_OnConfiguration_Load_Sounds(char[] cfile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
 	Call_StartForward(p_OnConfiguration_Load_Sounds);
+	Call_PushString(cfile);
 	Call_PushString(skey);
 	Call_PushString(value);
 	Call_PushCellRef(bPreCacheFile);
@@ -1044,9 +1045,10 @@ public void INTERNAL_VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value,
 	Call_Finish();
 }
 
-public void INTERNAL_VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+public void INTERNAL_VSHA_OnConfiguration_Load_Materials(char[] cfile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
 	Call_StartForward(p_OnConfiguration_Load_Materials);
+	Call_PushString(cfile);
 	Call_PushString(skey);
 	Call_PushString(value);
 	Call_PushCellRef(bPreCacheFile);
@@ -1054,9 +1056,10 @@ public void INTERNAL_VSHA_OnConfiguration_Load_Materials(char[] skey, char[] val
 	Call_Finish();
 }
 
-public void INTERNAL_VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+public void INTERNAL_VSHA_OnConfiguration_Load_Models(char[] cfile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
 	Call_StartForward(p_OnConfiguration_Load_Models);
+	Call_PushString(cfile);
 	Call_PushString(skey);
 	Call_PushString(value);
 	Call_PushCellRef(bPreCacheFile);
@@ -1064,9 +1067,10 @@ public void INTERNAL_VSHA_OnConfiguration_Load_Models(char[] skey, char[] value,
 	Call_Finish();
 }
 
-public void INTERNAL_VSHA_OnConfiguration_Load_Misc(char[] skey, char[] value)
+public void INTERNAL_VSHA_OnConfiguration_Load_Misc(char[] cfile, char[] skey, char[] value)
 {
 	Call_StartForward(p_OnConfiguration_Load_Misc);
+	Call_PushString(cfile);
 	Call_PushString(skey);
 	Call_PushString(value);
 	Call_Finish();

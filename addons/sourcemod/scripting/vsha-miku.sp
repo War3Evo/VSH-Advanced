@@ -14,6 +14,8 @@ public Plugin myinfo =
 	url 			= "http://en.wikipedia.org/wiki/Hatsune_Miku"
 }
 
+#define ThisConfigurationFile "configs/vsha/miku.cfg"
+
 char MikuModel[PATHX];
 char MikuModelPrefix[PATHX];
 
@@ -227,10 +229,6 @@ public void OnPluginStart()
 
 	//RegConsoleCmd("+ability",VSHA_AbilityCommand);
 	//RegConsoleCmd("-ability",VSHA_AbilityCommand);
-
-#if defined DEBUG
-	DEBUGPRINT1("VSH Engine::OnPluginStart() **** loaded VSHA Subplugin ****");
-#endif
 }
 /*
 bool HaleAbilityPressed[PLYR];
@@ -259,7 +257,7 @@ public void OnAllPluginsLoaded()
 
 	HookEvent("player_changeclass", ChangeClass);
 
-	VSHA_LoadConfiguration("configs/vsha/miku.cfg");
+	VSHA_LoadConfiguration(ThisConfigurationFile);
 }
 
 public void OnMapEnd()
@@ -299,6 +297,7 @@ public Action ChangeClass(Event event, const char[] name, bool dontBroadcast)
 	int client = GetClientOfUserId( event.GetInt("userid") );
 	if (client == Hale[client])
 	{
+		DP("MIKU ChangeClass");
 		if (TF2_GetPlayerClass(client) != TFClass_Scout) TF2_SetPlayerClass(client, TFClass_Scout, _, false);
 		TF2_RemovePlayerDisguise(client);
 	}
@@ -391,6 +390,7 @@ public void VSHA_OnBossAirblasted(Event event, int iiBoss)
 public void VSHA_OnBossSelected(Handle hBoss, int iiBoss)
 {
 	if(hThisBoss != hBoss) return;
+	DP("MIKU VSHA_OnBossSelected");
 	if (VSHA_IsBossPlayer(iiBoss)) Hale[iiBoss] = iiBoss;
 	if ( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )
 	{
@@ -400,16 +400,21 @@ public void VSHA_OnBossSelected(Handle hBoss, int iiBoss)
 		//DP("vsha-saxtonhale 526 ForceTeamChange(iiBoss, 3)");
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+	return;
 }
-public void VSHA_OnBossIntroTalk()
+public void VSHA_OnBossIntroTalk(Handle hPluginHndl)
 {
+	if(hThisBoss != hPluginHndl) return;
+	DP("MIKU VSHA_OnBossIntroTalk");
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuStart[GetRandomInt(0, sizeof(MikuStart)-1)]);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
+	return;
 }
 public Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth)
 {
 	if (BossEntity != Hale[BossEntity]) return Plugin_Continue;
+	DP("MIKU VSHA_OnBossSetHP");
 	BossMaxHealth = HealthCalc( 760.8, view_as<float>( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
 	VSHA_SetBossMaxHealth(Hale[BossEntity], BossMaxHealth);
 
@@ -417,6 +422,7 @@ public Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth)
 }
 public void VSHA_OnLastSurvivor()
 {
+	DP("MIKU VSHA_OnLastSurvivor");
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuLast[GetRandomInt(0, sizeof(MikuLast)-1)]);
 
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
@@ -493,6 +499,7 @@ public void VSHA_OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
 public void VSHA_OnPrepBoss(int iClient)
 {
 	if (iClient != Hale[iClient]) return;
+	DP("MIKU VSHA_OnPrepBoss");
 	TF2_SetPlayerClass(iClient, TFClass_Scout, _, false);
 	HaleCharge[iClient] = 0;
 
@@ -512,9 +519,10 @@ public void VSHA_OnPrepBoss(int iClient)
 		SetEntPropEnt(iClient, Prop_Send, "m_hActiveWeapon", SaxtonWeapon);
 	}
 }
-public Action VSHA_OnMusic(char BossTheme[PATHX], float &time)
+public Action VSHA_OnMusic(Handle hPluginHndl, char BossTheme[PATHX], float &time)
 {
-	//PrintToChatAll("MIKUTheme OnMusic %s",MIKUTheme);
+	if(hThisBoss != hPluginHndl) return Plugin_Continue;
+	PrintToChatAll("MIKUTheme OnMusic %s",MIKUTheme);
 
 	time = 210.0;
 	BossTheme = MIKUTheme;
@@ -533,6 +541,7 @@ public Action VSHA_OnModelTimer(int iClient, char modelpath[PATHX])
 	{
 		return Plugin_Continue;
 	}
+	DP("MIKU VSHA_OnModelTimer");
 	modelpath = MikuModel;
 	return Plugin_Changed;
 }
@@ -1058,8 +1067,10 @@ stock bool OnlyScoutsLeft()
 }
 
 // LOAD CONFIGURATION
-public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+public Action VSHA_OnConfiguration_Load_Sounds(const char[] cfile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
+	if(!StrEqual(cfile, ThisConfigurationFile)) return Plugin_Continue;
+
 	if(StrEqual(skey, "MIKUTheme"))
 	{
 		strcopy(STRING(MIKUTheme), value);
@@ -1076,11 +1087,15 @@ public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bP
 	if(bPreCacheFile || bAddFileToDownloadsTable)
 	{
 		PrintToServer("Loading Sounds %s = '%s'",skey,value);
+		return Plugin_Stop;
 	}
+	return Plugin_Continue;
 }
-public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
+public Action VSHA_OnConfiguration_Load_Materials(const char[] cfile, char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
 {
-	if(StrEqual(skey, "MaterialPrefix"))
+	if(!StrEqual(cfile, ThisConfigurationFile)) return Plugin_Continue;
+
+	if(StrEqual(skey, "MikuMaterialPrefix"))
 	{
 		char s[PATHX];
 		char extensionsb[][] = { ".vtf", ".vmt" };
@@ -1095,10 +1110,14 @@ public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool 
 				PrintToServer("Loading Materials %s",s);
 			}
 		}
+		return Plugin_Stop;
 	}
+	return Plugin_Continue;
 }
-public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
+public Action VSHA_OnConfiguration_Load_Models(const char[] cfile, char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
 {
+	if(!StrEqual(cfile, ThisConfigurationFile)) return Plugin_Continue;
+
 	if(StrEqual(skey, "MikuModel"))
 	{
 		strcopy(STRING(MikuModel), value);
@@ -1123,13 +1142,15 @@ public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bP
 	if(bPreCacheModel || bAddFileToDownloadsTable)
 	{
 		PrintToServer("Loading Model %s = %s",skey,value);
+		return Plugin_Stop;
 	}
+	return Plugin_Continue;
 }
 // Just in case you want to have extra configurations for your sub plugin.
 // This makes loading configurations easier for you.
 // Keeping all your configurations for your sub plugin in one location!
 /*
-public void VSHA_OnConfiguration_Load_Misc(char[] skey, char[] value)
+public Action VSHA_OnConfiguration_Load_Misc(const char[] cfile, char[] skey, char[] value)
 {
 }
 */
