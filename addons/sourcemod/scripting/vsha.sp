@@ -291,7 +291,7 @@ public int FindNextBoss(bool[] array) //why force specs to Boss? They're prob AF
 
 public Action VSHA_Private_Forward(const char[] EventString)
 {
-	if(InternalPause) return Plugin_Continue;
+	//if(InternalPause) return Plugin_Continue;
 
 	Handle TempStorage[PLYR];
 	int TmpNum = 0;
@@ -335,7 +335,7 @@ public Action VSHA_Private_Forward(const char[] EventString)
 
 public Action VSHA_Registered_Global_Forward(const char[] EventString)
 {
-	if(InternalPause) return Plugin_Continue;
+	//if(InternalPause) return Plugin_Continue;
 
 	Action result = Plugin_Continue;
 
@@ -851,7 +851,7 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 
 	bool pluginupdated = false;
 
-	InternalPause = false;
+	//InternalPause = false;
 
 	if(StrEqual(ReloadBossShortName,shortname))
 	{
@@ -863,11 +863,16 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 				ReloadPlayer[plyrBoss] = false;
 				if(ValidPlayer(plyrBoss,true))
 				{
-					//iBossUserID[plyrBoss] = GetClientUserId(plyrBoss);
+					iBossUserID[plyrBoss] = GetClientUserId(plyrBoss);
+					bIsBoss[plyrBoss] = true;
 					Storage[plyrBoss] = pluginhndl;
-					//bIsBoss[plyrBoss] = true;
 
-					VSHA_OnBossSelected(plyrBoss);
+					//VSHA_OnBossSelected(plyrBoss);
+
+					CreateTimer(1.0, LoadPluginTimer, plyrBoss);
+					//PrintToChatAll("Loading boss selection...");
+
+					//PrintToChatAll("VSHA_OnBossSelected %d",plyrBoss);
 					//VSHA_OnPrepBoss(plyrBoss);
 
 					//iModelRetrys[plyrBoss]=15;
@@ -878,6 +883,13 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 		}
 	}
 
+	char sClientName[256];
+	LoopIngameClients(iClient)
+	{
+		GetClientName(iClient,STRING(sClientName));
+		PrintToChatAll("[client id] %s %d",sClientName,iClient);
+	}
+
 	if(pluginupdated)
 	{
 		PrintToChatAll("%s updated.",longname);
@@ -886,7 +898,13 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 	error = Error_None;
 	return pluginhndl;
 }
-
+public Action LoadPluginTimer(Handle hTimer, int plyrBoss)
+{
+	VSHA_OnBossSelected(plyrBoss);
+	//PrintToChatAll("VSHA_OnBossSelected %d",plyrBoss);
+	//ReplyToCommand(client, "[VSH Engine] Reload Finished");
+	return Plugin_Continue;
+}
 
 public int Native_VSHA_GetVar(Handle plugin, int numParams)
 {
@@ -951,7 +969,7 @@ public int Native_Hook(Handle plugin, int numParams)
 		{
 			result = AddToForward(p_OnBossSelected, plugin, GetNativeFunction(2));
 		}
-		case VSHA_OnBossSetHP:
+		case VSHAHook_OnBossSetHP:
 		{
 			result = AddToForward(p_OnBossSetHP, plugin, GetNativeFunction(2));
 		}
@@ -1019,6 +1037,10 @@ public int Native_Hook(Handle plugin, int numParams)
 		{
 			result = AddToForward(p_OnLastSurvivorLoop, plugin, GetNativeFunction(2));
 		}
+		case VSHAHook_OnBossWin:
+		{
+			result = AddToForward(p_OnBossWin, plugin, GetNativeFunction(2));
+		}
 	}
 	return result;
 }
@@ -1065,7 +1087,7 @@ public int Native_Unhook(Handle plugin, int numParams)
 		{
 			result = RemoveFromForward(p_OnBossSelected, plugin, GetNativeFunction(2));
 		}
-		case VSHA_OnBossSetHP:
+		case VSHAHook_OnBossSetHP:
 		{
 			result = RemoveFromForward(p_OnBossSetHP, plugin, GetNativeFunction(2));
 		}
@@ -1133,6 +1155,10 @@ public int Native_Unhook(Handle plugin, int numParams)
 		{
 			result = RemoveFromForward(p_OnLastSurvivorLoop, plugin, GetNativeFunction(2));
 		}
+		case VSHAHook_OnBossWin:
+		{
+			result = RemoveFromForward(p_OnBossWin, plugin, GetNativeFunction(2));
+		}
 	}
 	return result;
 }
@@ -1140,24 +1166,18 @@ public int Native_Unhook(Handle plugin, int numParams)
 
 public void VSHA_OnBossIntroTalk()
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnBossIntroTalk);
 	Call_Finish();
 }
 
 public void VSHA_AddToDownloads()
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_AddToDownloads);
 	Call_Finish();
 }
 
 public void VSHA_OnPlayerKilledByBoss(int iiBoss, int attacker)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnPlayerKilledByBoss);
 	Call_PushCell(iiBoss);
 	Call_PushCell(attacker);
@@ -1166,8 +1186,6 @@ public void VSHA_OnPlayerKilledByBoss(int iiBoss, int attacker)
 
 public void VSHA_OnKillingSpreeByBoss(int iiBoss, int attacker)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnKillingSpreeByBoss);
 	Call_PushCell(iiBoss);
 	Call_PushCell(attacker);
@@ -1176,8 +1194,6 @@ public void VSHA_OnKillingSpreeByBoss(int iiBoss, int attacker)
 
 public void VSHA_OnBossKilled(int iiBoss, int attacker)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnBossKilled);
 	Call_PushCell(iiBoss);
 	Call_PushCell(attacker);
@@ -1186,8 +1202,6 @@ public void VSHA_OnBossKilled(int iiBoss, int attacker)
 
 public void VSHA_OnBossWin(Event event, int iiBoss)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnBossWin);
 	Call_PushCell(event);
 	Call_PushCell(iiBoss);
@@ -1196,8 +1210,6 @@ public void VSHA_OnBossWin(Event event, int iiBoss)
 
 public void VSHA_OnBossKillBuilding(Event event, int iiBoss)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnBossKillBuilding);
 	Call_PushCell(event);
 	Call_PushCell(iiBoss);
@@ -1206,16 +1218,12 @@ public void VSHA_OnBossKillBuilding(Event event, int iiBoss)
 
 public void VSHA_OnMessageTimer()
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnMessageTimer);
 	Call_Finish();
 }
 
 public void VSHA_OnBossAirblasted(Event event, int attacker)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnBossAirblasted);
 	Call_PushCell(event);
 	Call_PushCell(attacker);
@@ -1224,8 +1232,6 @@ public void VSHA_OnBossAirblasted(Event event, int attacker)
 
 public void VSHA_OnBossSelected(int iiBoss)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnBossSelected);
 	Call_PushCell(iiBoss);
 	Call_Finish();
@@ -1233,8 +1239,6 @@ public void VSHA_OnBossSelected(int iiBoss)
 
 public Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth)
 {
-	if(InternalPause) return Plugin_Continue;
-
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnBossSetHP);
 	Call_PushCell(BossEntity);
@@ -1245,16 +1249,12 @@ public Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth)
 
 public void VSHA_OnLastSurvivor()
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnLastSurvivor);
 	Call_Finish();
 }
 
 public void VSHA_OnBossTimer (int iiBoss)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnBossTimer);
 	Call_PushCell(iiBoss);
 	Call_PushCellRef(iBossHealth[iiBoss]);
@@ -1264,8 +1264,6 @@ public void VSHA_OnBossTimer (int iiBoss)
 
 public void VSHA_OnPrepBoss(int iiBoss)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnPrepBoss);
 	Call_PushCell(iiBoss);
 	Call_Finish();
@@ -1273,8 +1271,6 @@ public void VSHA_OnPrepBoss(int iiBoss)
 
 public Action VSHA_OnMusic(char BossTheme[PATHX], float &time)
 {
-	if(InternalPause) return Plugin_Continue;
-
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnMusic);
 	Call_PushStringEx(STRING(BossTheme),0, SM_PARAM_COPYBACK);
@@ -1285,8 +1281,6 @@ public Action VSHA_OnMusic(char BossTheme[PATHX], float &time)
 
 public Action VSHA_OnModelTimer(int iClient, char modelpath[PATHX])
 {
-	if(InternalPause) return Plugin_Continue;
-
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnModelTimer);
 	Call_PushCell(iClient);
@@ -1297,8 +1291,6 @@ public Action VSHA_OnModelTimer(int iClient, char modelpath[PATHX])
 
 public void VSHA_OnBossRage(int iiBoss)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnBossRage);
 	Call_PushCell(iiBoss);
 	Call_Finish();
@@ -1306,8 +1298,6 @@ public void VSHA_OnBossRage(int iiBoss)
 
 public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnConfiguration_Load_Sounds);
 	Call_PushString(skey);
 	Call_PushString(value);
@@ -1318,8 +1308,6 @@ public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bP
 
 public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnConfiguration_Load_Materials);
 	Call_PushString(skey);
 	Call_PushString(value);
@@ -1330,8 +1318,6 @@ public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool 
 
 public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnConfiguration_Load_Models);
 	Call_PushString(skey);
 	Call_PushString(value);
@@ -1342,8 +1328,6 @@ public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bP
 
 public void VSHA_OnConfiguration_Load_Misc(char[] skey, char[] value)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnConfiguration_Load_Misc);
 	Call_PushString(skey);
 	Call_PushString(value);
@@ -1352,8 +1336,6 @@ public void VSHA_OnConfiguration_Load_Misc(char[] skey, char[] value)
 
 public Action VSHA_OnEquipPlayer_Pre(int iEntity)
 {
-	if(InternalPause) return Plugin_Continue;
-
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnEquipPlayer_Pre);
 	Call_PushCell(iEntity);
@@ -1363,8 +1345,6 @@ public Action VSHA_OnEquipPlayer_Pre(int iEntity)
 
 public void VSHA_ShowPlayerHelpMenu(int iEntity)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_ShowPlayerHelpMenu);
 	Call_PushCell(iEntity);
 	Call_Finish();
@@ -1372,8 +1352,6 @@ public void VSHA_ShowPlayerHelpMenu(int iEntity)
 
 public void VSHA_OnEquipPlayer_Post(int iEntity)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnEquipPlayer_Post);
 	Call_PushCell(iEntity);
 	Call_Finish();
@@ -1381,8 +1359,6 @@ public void VSHA_OnEquipPlayer_Post(int iEntity)
 
 public void VSHA_ShowBossHelpMenu(int iEntity)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_ShowBossHelpMenu);
 	Call_PushCell(iEntity);
 	Call_Finish();
@@ -1390,8 +1366,6 @@ public void VSHA_ShowBossHelpMenu(int iEntity)
 
 public void VSHA_OnUberTimer(int iMedic, int iTarget)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnUberTimer);
 	Call_PushCell(iMedic);
 	Call_PushCell(iTarget);
@@ -1400,8 +1374,6 @@ public void VSHA_OnUberTimer(int iMedic, int iTarget)
 
 public void VSHA_OnLastSurvivorLoop(int iEntity)
 {
-	if(InternalPause) return;
-
 	Call_StartForward(p_OnLastSurvivorLoop);
 	Call_PushCell(iEntity);
 	Call_Finish();

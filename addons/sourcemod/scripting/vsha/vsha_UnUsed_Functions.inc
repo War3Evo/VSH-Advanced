@@ -2,6 +2,8 @@
 
 public Action CommandQueuePoints(int client, int args)
 {
+	//if(InternalPause) return Plugin_Continue;
+
 	if ( !Enabled ) return Plugin_Continue;
 	if (args != 2)
 	{

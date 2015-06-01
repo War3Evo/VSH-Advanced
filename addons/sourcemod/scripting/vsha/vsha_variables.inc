@@ -91,7 +91,7 @@ Handle AddToDownloads;
 //Handle g_VSHA_GlobalEventFH;
 any VSHA_VarArr[VSHA_Var];
 
-bool InternalPause = false;
+//bool InternalPause = false;
 
 int RetryCounter = 10;
 

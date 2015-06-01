@@ -12,6 +12,8 @@ public void vsha_000_RegConsoleCmd_OnPluginStart()
 
 public Action CommandMakeNextSpecial(int client, int args)
 {
+	//if(InternalPause) return Plugin_Continue;
+
 	char arg[32], name[64];
 	if (args < 1)
 	{

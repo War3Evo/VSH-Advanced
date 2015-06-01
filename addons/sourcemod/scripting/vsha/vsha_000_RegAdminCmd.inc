@@ -20,13 +20,16 @@ public Action Command_ReloadBoss(int client, int args)
 	}
 	pickboss.Display(client, MENU_TIME_FOREVER);
 }
+
+//int InternalCounter;
+
 public int MenuHandler_ReloadBoss(Menu menu, MenuAction action, int client, int selection)
 {
 	char blahblah[32];
 	menu.GetItem(selection, blahblah, sizeof(blahblah));
 	if (action == MenuAction_Select)
 	{
-		InternalPause = true;
+		//InternalPause = true;
 
 		char bossnameholder[16];
 		GetTrieString(hArrayBossSubplugins.Get(selection), "BossLongName", bossnameholder, sizeof(bossnameholder));
@@ -56,6 +59,7 @@ public int MenuHandler_ReloadBoss(Menu menu, MenuAction action, int client, int 
 			{
 				Storage[plyrBoss] = null;
 				ReloadPlayer[plyrBoss] = true;
+				PrintToChatAll("ReloadPlayer %d",plyrBoss);
 			}
 			else
 			{
@@ -65,20 +69,30 @@ public int MenuHandler_ReloadBoss(Menu menu, MenuAction action, int client, int 
 
 		hArrayBossSubplugins.Erase(selection);
 
-		ServerCommand("sm plugins unload %s",hLoadPlugin);
+		ServerCommand("sm plugins reload %s",hLoadPlugin);
 
-		CreateTimer(5.0, LoadPluginTimer, client);
+		ReplyToCommand(client, "[VSH Engine] reload of %s ...",bossnameholder);
 
-		ReplyToCommand(client, "[VSH Engine] Waiting 5 seconds...");
+		//CreateTimer(1.0, LoadPluginTimer, client);
+		//InternalCounter = 10;
+		//ReplyToCommand(client, "[VSH Engine] Waiting %d seconds...",InternalCounter);
 	}
 	else if (action == MenuAction_End) delete menu;
 }
-
+/*
 public Action LoadPluginTimer(Handle hTimer, int client)
 {
+	--InternalCounter;
+	if(InternalCounter>0)
+	{
+		ReplyToCommand(client, "[VSH Engine] Waiting %d seconds...",InternalCounter);
+		CreateTimer(1.0, LoadPluginTimer, client);
+		return Plugin_Continue;
+	}
 	ServerCommand("sm plugins load %s",hLoadPlugin);
 	ReplyToCommand(client, "[VSH Engine] Reload Finished");
-}
+	return Plugin_Continue;
+}*/
 
 public Action Command_forceboss(int client, int args)
 {
