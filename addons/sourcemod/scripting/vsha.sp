@@ -10,7 +10,7 @@
 #include <vsha>
 #include <vsha_stocks>
 
-#define PLUGIN_VERSION			"1.0"
+#define PLUGIN_VERSION			"0.1"
 
 public Plugin myinfo = {
 	name = "Versus Saxton Hale Engine",
@@ -862,7 +862,7 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 				{
 					Storage[plyrBoss] = pluginhndl;
 
-					INTERNAL_VSHA_OnBossSelected(plyrBoss);
+					INTERNAL_VSHA_OnBossSelected(Storage[plyrBoss], plyrBoss);
 
 					CreateTimer(0.2, MakeModelTimer, GetClientUserId(plyrBoss));
 				}
@@ -967,9 +967,10 @@ public void INTERNAL_VSHA_OnBossAirblasted(Event event, int attacker)
 	Call_Finish();
 }
 
-public void INTERNAL_VSHA_OnBossSelected(int iiBoss)
+public void INTERNAL_VSHA_OnBossSelected(Handle hThisBoss, int iiBoss)
 {
 	Call_StartForward(p_OnBossSelected);
+	Call_PushCell(hThisBoss);
 	Call_PushCell(iiBoss);
 	Call_Finish();
 }
