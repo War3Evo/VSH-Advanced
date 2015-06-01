@@ -243,297 +243,56 @@ native void VSHA_SetVar(VSHA_Var variabletoretrieve, any value);
 // may add in the future?
 //forward Action OnVSHAEvent(VSHA_EVENT event, int client);
 
-enum VSHAHookType
-{
-	VSHAHook_OnLastSurvivor,
-	VSHAHook_OnMessageTimer,
-	VSHAHook_OnBossIntroTalk,
-	VSHAHook_OnBossKilled,
-	VSHAHook_OnBossWin,
-	VSHAHook_OnBossKillBuilding,
-	VSHAHook_OnBossAirblasted,
-	VSHAHook_OnBossSelected,
-	VSHAHook_OnBossSetHP,
-	VSHAHook_OnBossRage,
-	VSHAHook_OnBossTimer,
-	VSHAHook_OnPlayerKilledByBoss,
-	VSHAHook_OnKillingSpreeByBoss,
-	VSHAHook_OnPrepBoss,
-	VSHAHook_OnMusic,
-	VSHAHook_OnModelTimer,
-	VSHAHook_AddToDownloads,
-	VSHAHook_OnConfiguration_Load_Sounds,
-	VSHAHook_OnConfiguration_Load_Materials,
-	VSHAHook_OnConfiguration_Load_Models,
-	VSHAHook_OnConfiguration_Load_Misc,
-	VSHAHook_OnEquipPlayer_Pre,
-	VSHAHook_ShowPlayerHelpMenu,
-	VSHAHook_OnEquipPlayer_Post,
-	VSHAHook_ShowBossHelpMenu,
-	VSHAHook_OnUberTimer,
-	VSHAHook_OnLastSurvivorLoop,
-};
+forward void VSHA_AddToDownloads();
 
-typeset VSHAHookCB
-{
-	// VSHAHook_OnBossIntroTalk
-	// VSHAHook_AddToDownloads
-	// VSHAHook_OnMessageTimer
-	// VSHAHook_OnLastSurvivor
-	function void ();
+forward void VSHA_OnPlayerKilledByBoss(int iiBoss, int attacker);
 
-	// VSHAHook_OnBossSelected
-	// VSHAHook_OnPrepBoss
-	// VSHAHook_OnBossRage
-	// VSHAHook_ShowPlayerHelpMenu
-	// VSHAHook_OnEquipPlayer_Post
-	// VSHAHook_ShowBossHelpMenu
-	// VSHAHook_OnLastSurvivorLoop
-	function void (int iEntity);
+forward void VSHA_OnBossKilled(int iiBoss, int attacker);
 
-	// VSHAHook_OnBossTimer
-	function void (int iEntity, int &iiBossHealth, int &iiBossMaxHealth);
+forward void VSHA_OnBossWin(Event event, int iiBoss);
 
-	// VSHAHook_OnEquipPlayer_Pre
-	function Action (int iEntity);
+forward void VSHA_OnBossKillBuilding(Event event, int iiBoss);
 
-	// VSHAHook_OnPlayerKilledByBoss
-	// VSHAHook_OnKillingSpreeByBoss
-	// VSHAHook_OnBossKilled
-	// VSHAHook_OnUberTimer
-	function void (int iEntity, int OtherEntity);
+forward void VSHA_OnMessageTimer();
 
-	// VSHAHook_OnBossWin
-	// VSHAHook_OnBossKillBuilding
-	// VSHAHook_OnBossAirblasted
-	function void (Event smEvent, int iEntity);
+forward void VSHA_OnBossAirblasted(Event event, int iiBoss);
 
-	// VSHAHook_OnBossSetHP
-	function Action (int BossEntity, int &BossMaxHealth);
+forward void VSHA_OnBossSelected(int iiBoss);
 
-	// VSHAHook_OnMusic
-	function Action (char BossTheme[PATHX], float &time);
+forward Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth);
 
-	// VSHAHook_OnModelTimer
-	function Action (int iClient, char modelpath[PATHX]);
+forward void VSHA_OnLastSurvivor();
 
-	// VSHAHook_OnConfiguration_Load_Sounds
-	// VSHAHook_OnConfiguration_Load_Materials
-	// VSHAHook_OnConfiguration_Load_Models
-	function void (char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable);
+forward void VSHA_OnBossTimer(int iClient, int &curHealth, int &curMaxHp);
 
-	// VSHAHook_OnConfiguration_Load_Misc
-	function void (char[] skey, char[] value);
-};
+forward void VSHA_OnPrepBoss(int iClient);
 
-/**
- * @brief Hooks for function
- *
- * @param		type		Type of function to hook
- * @param		callback	Function to call when hook is called
- * @return		returns		true if successful
- */
-native bool VSHAHook(VSHAHookType type, VSHAHookCB callback);
+forward Action VSHA_OnMusic(char BossTheme[PATHX], float &time);
 
-/**
- * @brief Unhooks a function
- *
- * @param		type		Type of function to unhook
- * @param		callback	Callback function to unhook
- * @return		returns		true if successful
- */
-native bool VSHAUnhook(VSHAHookType type, VSHAHookCB callback);
+forward Action VSHA_OnModelTimer(int iClient, char modelpath[PATHX]);
 
+forward void VSHA_OnBossRage(int iClient);
 
+forward void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable);
 
-/*
- *
- *
- *
-forward Action VSHA_OnBossIntroTalk() {}; //play boss intro response sound clip in this forward
+forward void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable);
 
-forward Action VSHA_OnLastSurvivor() {}; //when CheckAlivePlayers counts only 1 player left, called once.
+forward void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable);
 
-forward VSHA_MessageTimer() {}; //called when a round begins.
+forward void VSHA_OnConfiguration_Load_Misc(char[] skey, char[] value);
 
+forward Action VSHA_OnEquipPlayer_Pre(int iEntity);
 
-EXAMPLES ON HOW TO USE SOME OF THESE PRIVATE FORWARDS:
+forward void VSHA_ShowPlayerHelpMenu(int iEntity);
 
-//when a boss kills a player
-public Action VSHA_OnPlayerKilledByBoss()
-{
-	int iiBoss = VSHA_GetVar(EventBoss);
-	int attacker = VSHA_GetVar(EventAttacker);
-};
+forward void VSHA_OnEquipPlayer_Post(int iEntity);
 
-//when boss has killed certain amount of players in a certain amount of time, conveniently gets the killed player who triggered this forward
-public Action VSHA_OnKillingSpreeByBoss()
-{
-	int iiBoss = VSHA_GetVar(EventBoss);
-	int attacker = VSHA_GetVar(EventAttacker);
-};
+forward void VSHA_ShowBossHelpMenu(int iEntity);
 
-//when a boss is killed, conveniently gets the player who killed the boss too, give the lucky sob a medal :3
-public Action VSHA_OnBossKilled() //victim is boss
-{
-	int iiBoss = VSHA_GetVar(EventBoss);
-	int attacker = VSHA_GetVar(EventAttacker);
-}
+forward void VSHA_OnUberTimer(int iMedic, int iTarget);
 
-// self explanatory lol
-public Action VSHA_OnBossWin()
-{
-	//Event event = VSHA_GetVar(SmEvent);
-	int iiBoss = VSHA_GetVar(EventBoss);
-}
+forward void VSHA_OnLastSurvivorLoop(int iEntity);
 
-// also self explanatory
-public Action VSHA_OnBossKillBuilding()
-{
-	Event event = VSHA_GetVar(SmEvent);
-	int building = event.GetInt("index");
-	int attacker = VSHA_GetVar(EventAttacker);
-}
-
-//when boss is airblasted, client is the airblasted boss
-public Action VSHA_OnBossAirblasted()
-{
-	int iiBoss = VSHA_GetVar(EventBoss);
-	int airblaster = VSHA_GetVar(EventAttacker);
-}
-
-//when a boss is selected, the client is the player that is assigned to be the boss
-public Action VSHA_OnBossSelected()
-{
-	int iiBoss = VSHA_GetVar(EventClient);
-}
-
-//self explanatory, when boss has their hp set and client is the individual boss
-public Action VSHA_OnBossSetHP()
-{
-	int iClient = VSHA_GetVar(EventClient);
-}
-
-//called every 0.2 seconds on each boss, health is set automatically though
-public Action VSHA_OnBossTimer()
-{
-	int iClient = VSHA_GetVar(EventClient);
-}
-
-//called during MakeBoss timer; in this forward, the boss is disarmed and stripped of all equipment. Equip them or whatever in this forward ok?
-public Action VSHA_OnPrepBoss()
-{
-	int iClient = VSHA_GetVar(EventOnPrepBoss);
-}
-
-//sets the boss theme music, no shitty earrape music ok?
-public Action VSHA_OnMusic()
-{
-	char BossTheme[256];
-	float time;
-
-	switch ( GetRandomInt(0, 2) )
-	{
-	case 0:
-	{
-		BossTheme = HaleTheme1;
-		time = 150.0;
-	}
-	case 1:
-	{
-		BossTheme = HaleTheme2;
-		time = 150.0;
-	}
-	case 2:
-	{
-		BossTheme = HaleTheme3;
-		time = 220.0;
-	}
-	}
-	StringMap SoundMap = new StringMap();
-	SoundMap.SetString("Sound", BossTheme);
-	VSHA_SetVar(EventSound,SoundMap);
-	VSHA_SetVar(EventTime,time);
-
-	return Plugin_Continue;
-}
-
-//YOU NEED THIS TIMER FOR EVERY BOSS + MINION OR ELSE PLUGIN WILL BITCH @ U
-public Action VSHA_OnModelTimer()
-{
-	int iClient = VSHA_GetVar(EventModelTimer);
-
-	char modelpath[PATHX];
-
-	//DP("VSHA_OnModelTimer");
-	if (iClient != Hale[iClient])
-	{
-		SetVariantString("");
-		AcceptEntityInput(iClient, "SetCustomModel");
-		return Plugin_Stop;
-	}
-	modelpath = HaleModel;
-
-	StringMap ModelMap = new StringMap();
-	ModelMap.SetString("Model", modelpath);
-	VSHA_SetVar(EventModel,ModelMap);
-
-	SetVariantString(modelpath);
-	AcceptEntityInput(iClient, "SetCustomModel");
-	SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
-
-	return Plugin_Continue;
-}
-
-//when boss does taunt or medic call rage
-public Action VSHA_OnBossRage()
-{
-	int iClient = VSHA_GetVar(EventBoss);
-}
-
-
-OUT DATED FORWARD INFORMATION!
-OUT DATED FORWARD INFORMATION!
-OUT DATED FORWARD INFORMATION!
-
-forward void VSHA_OnPlayerKilled(int attacker, int client); //when a boss kills a player
-
-forward void VSHA_OnKillingSpree(int attacker, int client); //when boss has killed certain amount of players in a certain amount of time, conveniently gets the killed player who triggered this forward
-
-forward void VSHA_OnBossKilled(int client, int attacker); //when a boss is killed, conveniently gets the player who killed the boss too, give the lucky sob a medal :3
-
-forward void VSHA_OnBossWin(); // self explanatory lol
-
-forward void VSHA_OnBossKillBuilding(int attacker, int building); // also self explanatory
-
-forward void VSHA_OnBossAirblasted(int client, int airblaster); //when boss is airblasted, client is the airblasted boss
-
-forward void VSHA_OnBossSelected(int client); //when a boss is selected, the client is the player that is assigned to be the boss
-
-forward void VSHA_OnBossIntroTalk(); //play boss intro response sound clip in this forward
-
-forward void VSHA_OnBossSetHP(int client); //self explanatory, when boss has their hp set and client is the individual boss
-
-forward void VSHA_OnLastSurvivorLoop(int target); //target = lucky survivor
-
-forward void VSHA_OnLastSurvivor(); //when CheckAlivePlayers counts only 1 player left, called once.
-
-forward void VSHA_OnBossTimer(int client); //called every 0.2 seconds on each boss, health is set automatically though
-
-forward void VSHA_OnPrepBoss(int client); //called during MakeBoss timer; in this forward, the boss is disarmed and stripped of all equipment. Equip them or whatever in this forward ok?
-
-forward void VSHA_OnMusic(char BossTheme[256], float &time); //sets the boss theme music, no shitty earrape music ok?
-
-forward Action VSHA_OnModelTimer(int client, char modelpath[64]); //YOU NEED THIS TIMER FOR EVERY BOSS + MINION OR ELSE PLUGIN WILL BITCH @ U
-
-forward void VSHA_OnBossRage(int client); //when boss does taunt or medic call rage
-
-//public void VSHA_OnBossConditionAdded(int client, TFCond condition); //when condition like jarate is added
-
-forward void VSHA_OnUberTimer(int medic, int target); //called every 0.4 seconds
-
-forward void VSHA_MessageTimer(); //called when a round begins.
-*/
 //=================================================================================================================================
 
 public SharedPlugin __pl_vsha =
@@ -550,9 +309,6 @@ public SharedPlugin __pl_vsha =
 #if !defined REQUIRE_PLUGIN
 public __pl_vsha_SetNTVOptional()
 {
-	MarkNativeAsOptional("VSHAHook");
-	MarkNativeAsOptional("VSHAUnhook");
-
 	MarkNativeAsOptional("VSHA_RegisterBoss");
 	MarkNativeAsOptional("VSHA_UnRegisterBoss");
 

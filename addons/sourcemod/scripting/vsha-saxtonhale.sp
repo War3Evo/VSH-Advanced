@@ -128,103 +128,6 @@ public void OnAllPluginsLoaded()
 #endif
 	HookEvent("player_changeclass", ChangeClass);
 
-	bool errorcode = false;
-	errorcode = VSHAHook(VSHAHook_OnBossIntroTalk, OnBossIntroTalk);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossIntroTalk");
-	}
-	errorcode = VSHAHook(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnPlayerKilledByBoss");
-	}
-	errorcode = VSHAHook(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnKillingSpreeByBoss");
-	}
-	errorcode = VSHAHook(VSHAHook_OnBossKilled, OnBossKilled);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossKilled");
-	}
-	errorcode = VSHAHook(VSHAHook_OnBossWin, OnBossWin);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossWin");
-	}
-	errorcode = VSHAHook(VSHAHook_OnBossKillBuilding, OnBossKillBuilding);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossKillBuilding");
-	}
-	errorcode = VSHAHook(VSHAHook_OnMessageTimer, OnMessageTimer);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnMessageTimer");
-	}
-	errorcode = VSHAHook(VSHAHook_OnBossAirblasted, OnBossAirblasted);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossAirblasted");
-	}
-	errorcode = VSHAHook(VSHAHook_OnBossSelected, OnBossSelected);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossSelected");
-	}
-	errorcode = VSHAHook(VSHAHook_OnBossSetHP, OnBossSetHP);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossSetHP");
-	}
-	errorcode = VSHAHook(VSHAHook_OnLastSurvivor, OnLastSurvivor);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnLastSurvivor");
-	}
-	errorcode = VSHAHook(VSHAHook_OnBossTimer, OnBossTimer);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossTimer");
-	}
-	errorcode = VSHAHook(VSHAHook_OnPrepBoss, OnPrepBoss);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnPrepBoss");
-	}
-	errorcode = VSHAHook(VSHAHook_OnMusic, OnMusic);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnMusic");
-	}
-	errorcode = VSHAHook(VSHAHook_OnModelTimer, OnModelTimer);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnModelTimer");
-	}
-	errorcode = VSHAHook(VSHAHook_OnBossRage, OnBossRage);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossRage");
-	}
-	errorcode = VSHAHook(VSHAHook_OnConfiguration_Load_Sounds, OnConfiguration_Load_Sounds);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnConfiguration_Load_Sounds");
-	}
-	errorcode = VSHAHook(VSHAHook_OnConfiguration_Load_Materials, OnConfiguration_Load_Materials);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnConfiguration_Load_Materials");
-	}
-	errorcode = VSHAHook(VSHAHook_OnConfiguration_Load_Models, OnConfiguration_Load_Models);
-	if(errorcode)
-	{
-		PrintToServer("Error saxtonhale VSHAHook_OnConfiguration_Load_Models");
-	}
-
 	VSHA_LoadConfiguration("configs/vsha/saxtonhale.cfg");
 }
 public void OnPluginEnd()
@@ -277,7 +180,7 @@ public Action ChangeClass(Event event, const char[] name, bool dontBroadcast)
 	return Plugin_Continue;
 }
 
-public void OnPlayerKilledByBoss(int iiBoss, int attacker)
+public void VSHA_OnPlayerKilledByBoss(int iiBoss, int attacker)
 {
 	//int iiBoss = VSHA_GetVar(EventBoss);
 	//int attacker = VSHA_GetVar(EventAttacker);
@@ -322,7 +225,7 @@ public void OnPlayerKilledByBoss(int iiBoss, int attacker)
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnPlayerKilled() **** Forward Responded ****");
 #endif
 }
-public void OnKillingSpreeByBoss()
+public void VSHA_OnKillingSpreeByBoss()
 {
 	int iiBoss = VSHA_GetVar(EventBoss);
 	int attacker = VSHA_GetVar(EventAttacker);
@@ -342,7 +245,7 @@ public void OnKillingSpreeByBoss()
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnKillingSpree() **** Forward Responded ****");
 #endif
 }
-public void OnBossKilled(int iiBoss, int attacker) //victim is boss
+public void VSHA_OnBossKilled(int iiBoss, int attacker) //victim is boss
 {
 	//int iiBoss = VSHA_GetVar(EventBoss);
 	//int attacker = VSHA_GetVar(EventAttacker);
@@ -360,7 +263,7 @@ public void OnBossKilled(int iiBoss, int attacker) //victim is boss
 	Hale[iiBoss] = 0;
 	return;
 }
-public void OnBossWin(Event event, int iiBoss)
+public void VSHA_OnBossWin(Event event, int iiBoss)
 {
 	//VSHA_GetVar(SmEvent,event);
 	//int iiBoss = VSHA_GetVar(EventBoss);
@@ -385,7 +288,7 @@ public void OnBossWin(Event event, int iiBoss)
 	Hale[iiBoss] = 0;
 	return;
 }
-public void OnBossKillBuilding(Event event, int iiBoss)
+public void VSHA_OnBossKillBuilding(Event event, int iiBoss)
 {
 	//Event event = VSHA_GetVar(SmEvent);
 	//int building = event.GetInt("index");
@@ -405,7 +308,7 @@ public void OnBossKillBuilding(Event event, int iiBoss)
 #endif
 	return;
 }
-public void OnMessageTimer()
+public void VSHA_OnMessageTimer()
 {
 	//SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
 	char text[PATHX];
@@ -433,7 +336,7 @@ public void OnMessageTimer()
 #endif
 	return;
 }
-public void OnBossAirblasted(Event event, int iiBoss)
+public void VSHA_OnBossAirblasted(Event event, int iiBoss)
 {
 	//int iiBoss = VSHA_GetVar(EventBoss);
 	//int airblaster = VSHA_GetVar(EventAttacker);
@@ -449,9 +352,9 @@ public void OnBossAirblasted(Event event, int iiBoss)
 #endif
 	return;
 }
-public void OnBossSelected(int iiBoss)
+public void VSHA_OnBossSelected(int iiBoss)
 {
-	PrintToChatAll("OnBossSelected %d Hale[iiBoss] = %d",iiBoss,Hale[iiBoss]);
+	//PrintToChatAll("OnBossSelected %d Hale[iiBoss] = %d",iiBoss,Hale[iiBoss]);
 	//int iiBoss = VSHA_GetVar(EventClient);
 	if (VSHA_IsBossPlayer(iiBoss)) Hale[iiBoss] = iiBoss;
 	if ( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )
@@ -461,7 +364,7 @@ public void OnBossSelected(int iiBoss)
 		ForceTeamChange(iiBoss, 3);
 		//DP("vsha-saxtonhale 526 ForceTeamChange(iiBoss, 3)");
 		//return;
-		DP("( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )");
+		//DP("( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )");
 	}
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 #if defined DEBUG
@@ -470,7 +373,7 @@ public void OnBossSelected(int iiBoss)
 #endif
 	return;
 }
-public void OnBossIntroTalk()
+public void VSHA_OnBossIntroTalk()
 {
 	//DP("VSHA_OnBossIntroTalk");
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
@@ -484,7 +387,7 @@ public void OnBossIntroTalk()
 #endif
 	return;
 }
-public Action OnBossSetHP(int BossEntity, int &BossMaxHealth)
+public Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth)
 {
 	//int iClient = VSHA_GetVar(EventBoss);
 	if (BossEntity != Hale[BossEntity]) return Plugin_Continue;
@@ -496,7 +399,7 @@ public Action OnBossSetHP(int BossEntity, int &BossMaxHealth)
 #endif
 	return Plugin_Changed;
 }
-public void OnLastSurvivor()
+public void VSHA_OnLastSurvivor()
 {
 	strcopy(playsound, PLATFORM_MAX_PATH, "");
 	int see = GetRandomInt(0, 5);
@@ -514,7 +417,7 @@ public void OnLastSurvivor()
 	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnLastSurvivor() **** Forward Responded ****");
 #endif
 }
-public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
+public void VSHA_OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
 {
 	//int iClient = VSHA_GetVar(EventClient);
 	if (iClient != Hale[iClient]) return;
@@ -574,7 +477,7 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
 #endif
 	return;
 }
-public void OnPrepBoss(int iClient)
+public void VSHA_OnPrepBoss(int iClient)
 {
 	//int iClient = VSHA_GetVar(EventOnPrepBoss);
 
@@ -603,7 +506,7 @@ public void OnPrepBoss(int iClient)
 #endif
 	return;
 }
-public Action OnMusic(char BossTheme[PATHX], float &time)
+public Action VSHA_OnMusic(char BossTheme[PATHX], float &time)
 {
 	//char BossTheme[256];
 	//float time;
@@ -658,7 +561,7 @@ public Action OnVSHAEvent(VSHA_EVENT event, int client)
 	return Plugin_Continue;
 }*/
 
-public Action OnModelTimer(int iClient, char modelpath[PATHX])
+public Action VSHA_OnModelTimer(int iClient, char modelpath[PATHX])
 {
 	//int iClient = VSHA_GetVar(EventModelTimer);
 	//char modelpath[PATHX];
@@ -695,7 +598,7 @@ public Action OnModelTimer(int iClient, char modelpath[PATHX])
 	return Plugin_Changed;
 }
 
-public void OnBossRage(int iClient)
+public void VSHA_OnBossRage(int iClient)
 {
 	//int iClient = VSHA_GetVar(EventBoss);
 
@@ -1229,7 +1132,7 @@ stock bool OnlyScoutsLeft()
 }
 
 // LOAD CONFIGURATION
-public void OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
 	// AutoLoad is not attached to any variable
 	if(StrEqual(skey, "AutoLoad"))
@@ -1441,7 +1344,7 @@ public void OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCac
 		PrintToServer("Loading Sounds %s = %s",skey,value);
 	}
 }
-public void OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
+public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
 {
 	if(StrEqual(skey, "MaterialPrefix"))
 	{
@@ -1460,7 +1363,7 @@ public void OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPre
 		}
 	}
 }
-public void OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
+public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
 {
 	if(StrEqual(skey, "HaleModel"))
 	{

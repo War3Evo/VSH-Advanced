@@ -99,14 +99,13 @@ int RetryCounter = 10;
 // Reload
 bool ReloadPlayer[PLYR];
 char ReloadBossShortName[16];
-char hLoadPlugin[PATHX];
 
 // Help
 
 bool VSHHelped[PLYR];
 
 
-// Private Forwards
+// Global Forwards
 Handle p_OnBossIntroTalk;
 Handle p_AddToDownloads;
 Handle p_OnPlayerKilledByBoss;
