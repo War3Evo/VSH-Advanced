@@ -111,7 +111,7 @@ public Action RoundStartFunction()
 	DEBUGPRINT3("VSH Engine::PickBossSpecial() **** Boss subplugin has been chosen and player is set ****");
 #endif
 
-	INTERNAL_VSHA_OnBossSelected(Storage[boss], boss);
+	INTERNAL_VSHA_OnBossSelected(boss);
 
 	if ( GetTeamPlayerCount(HaleTeam) <= 0 || GetTeamPlayerCount(OtherTeam) <= 0 )
 	{

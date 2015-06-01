@@ -21,7 +21,7 @@ public void OnPluginStart()
 
 	p_OnBossAirblasted = CreateGlobalForward("VSHA_OnBossAirblasted",ET_Ignore, Param_Cell, Param_Cell);
 
-	p_OnBossSelected = CreateGlobalForward("VSHA_OnBossSelected",ET_Ignore, Param_Cell, Param_Cell);
+	p_OnBossSelected = CreateGlobalForward("VSHA_OnBossSelected",ET_Ignore, Param_Cell);
 
 	p_OnBossSetHP = CreateGlobalForward("VSHA_OnBossSetHP",ET_Hook, Param_Cell, Param_CellByRef);
 
@@ -54,8 +54,6 @@ public void OnPluginStart()
 	p_OnUberTimer = CreateGlobalForward("VSHA_OnUberTimer",ET_Ignore, Param_Cell, Param_Cell);
 
 	p_OnLastSurvivorLoop =  CreateGlobalForward("VSHA_OnLastSurvivorLoop",ET_Ignore, Param_Cell);
-
-	CreateConVar("vsha_version", PLUGIN_VERSION, "VSHA Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
 	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);
 	bEnabled = CreateConVar("vsha_enabled", "1", "Enable the VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);

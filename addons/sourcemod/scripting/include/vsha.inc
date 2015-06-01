@@ -247,8 +247,6 @@ forward void VSHA_AddToDownloads();
 
 forward void VSHA_OnPlayerKilledByBoss(int iiBoss, int attacker);
 
-forward void VSHA_OnKillingSpreeByBoss(int iiBoss, int attacker);
-
 forward void VSHA_OnBossKilled(int iiBoss, int attacker);
 
 forward void VSHA_OnBossWin(Event event, int iiBoss);
@@ -259,7 +257,7 @@ forward void VSHA_OnMessageTimer();
 
 forward void VSHA_OnBossAirblasted(Event event, int iiBoss);
 
-forward void VSHA_OnBossSelected(Handle hBoss, int iiBoss);
+forward void VSHA_OnBossSelected(int iiBoss);
 
 forward Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth);
 
