@@ -7,7 +7,7 @@ public void OnPluginStart()
 	hTrieBossSubplugins = new StringMap();	//CreateTrie();
 
 	// VSHAHook
-	p_OnBossIntroTalk = CreateGlobalForward("VSHA_OnBossIntroTalk",ET_Ignore, Param_Cell);
+	p_OnBossIntroTalk = CreateGlobalForward("VSHA_OnBossIntroTalk",ET_Ignore);
 	p_AddToDownloads = CreateGlobalForward("VSHA_AddToDownloads",ET_Ignore);
 
 	p_OnPlayerKilledByBoss = CreateGlobalForward("VSHA_OnPlayerKilledByBoss",ET_Ignore, Param_Cell, Param_Cell);
@@ -31,16 +31,17 @@ public void OnPluginStart()
 
 	p_OnPrepBoss = CreateGlobalForward("VSHA_OnPrepBoss",ET_Ignore, Param_Cell);
 
-	p_OnMusic = CreateGlobalForward("VSHA_OnMusic",ET_Hook, Param_Cell, Param_String, Param_FloatByRef);
+	p_OnMusic = CreateGlobalForward("VSHA_OnMusic",ET_Hook, Param_String, Param_FloatByRef);
 
 	p_OnModelTimer = CreateGlobalForward("VSHA_OnModelTimer",ET_Hook, Param_Cell, Param_String);
 
 	p_OnBossRage = CreateGlobalForward("VSHA_OnBossRage",ET_Ignore, Param_Cell);
 
-	p_OnConfiguration_Load_Sounds = CreateGlobalForward("VSHA_OnConfiguration_Load_Sounds",ET_Hook, Param_String, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
-	p_OnConfiguration_Load_Materials = CreateGlobalForward("VSHA_OnConfiguration_Load_Materials",ET_Hook, Param_String, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
-	p_OnConfiguration_Load_Models = CreateGlobalForward("VSHA_OnConfiguration_Load_Models",ET_Hook, Param_String, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
-	p_OnConfiguration_Load_Misc =  CreateGlobalForward("VSHA_OnConfiguration_Load_Misc",ET_Hook, Param_String, Param_String, Param_String);
+	p_OnConfiguration_Load_Sounds = CreateGlobalForward("VSHA_OnConfiguration_Load_Sounds",ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
+	p_OnConfiguration_Load_Materials = CreateGlobalForward("VSHA_OnConfiguration_Load_Materials",ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
+	p_OnConfiguration_Load_Models = CreateGlobalForward("VSHA_OnConfiguration_Load_Models",ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
+
+	p_OnConfiguration_Load_Misc =  CreateGlobalForward("VSHA_OnConfiguration_Load_Misc",ET_Ignore, Param_String, Param_String);
 
 	p_OnEquipPlayer_Pre = CreateGlobalForward("VSHA_OnEquipPlayer_Pre",ET_Hook, Param_Cell);
 

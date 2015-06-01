@@ -245,8 +245,6 @@ native void VSHA_SetVar(VSHA_Var variabletoretrieve, any value);
 
 forward void VSHA_AddToDownloads();
 
-forward void VSHA_OnBossIntroTalk(Handle hPluginHndl);
-
 forward void VSHA_OnPlayerKilledByBoss(int iiBoss, int attacker);
 
 forward void VSHA_OnKillingSpreeByBoss(int iiBoss, int attacker);
@@ -271,19 +269,19 @@ forward void VSHA_OnBossTimer(int iClient, int &curHealth, int &curMaxHp);
 
 forward void VSHA_OnPrepBoss(int iClient);
 
-forward Action VSHA_OnMusic(Handle hPluginHndl, char BossTheme[PATHX], float &time);
+forward Action VSHA_OnMusic(char BossTheme[PATHX], float &time);
 
 forward Action VSHA_OnModelTimer(int iClient, char modelpath[PATHX]);
 
 forward void VSHA_OnBossRage(int iClient);
 
-forward Action VSHA_OnConfiguration_Load_Sounds(const char[] cfile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable);
+forward void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable);
 
-forward Action VSHA_OnConfiguration_Load_Materials(const char[] cfile, char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable);
+forward void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable);
 
-forward Action VSHA_OnConfiguration_Load_Models(const char[] cfile, char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable);
+forward void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable);
 
-forward Action VSHA_OnConfiguration_Load_Misc(const char[] cfile, char[] skey, char[] value);
+forward void VSHA_OnConfiguration_Load_Misc(char[] skey, char[] value);
 
 forward Action VSHA_OnEquipPlayer_Pre(int iEntity);
 

@@ -4,11 +4,7 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 {
 	//DP("Action MakeModelTimer");
 	int iClient = GetClientOfUserId(userid);
-	//if ( iClient <= 0 || CheckRoundState() = ROUNDSTATE_INVALID  || CheckRoundState() = ROUNDSTATE_ROUND_END || !bIsBoss[iClient] )
-	if ( iClient <= 0 )
-	{
-		return Plugin_Stop;
-	}
+	//if ( iClient <= 0 || CheckRoundState() = ROUNDSTATE_INVALID  || CheckRoundState() = ROUNDSTATE_ROUND_END || !bIsBoss[iClient] ) return Plugin_Stop;
 
 	if ( !bIsBoss[iClient] )
 	{
@@ -32,8 +28,6 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 	char model[PATHX];
 	//StringMap ModelMap = new StringMap();
 	//ModelMap.SetString("Model", model);
-
-	strcopy(STRING(model), "");
 
 	//VSHA_SetVar(EventModel,ModelMap);
 	//VSHA_SetVar(EventModelTimer,iClient);
