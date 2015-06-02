@@ -6,7 +6,7 @@ public void OnPluginStart()
 	hArrayNonBossSubplugins = new ArrayList();	//CreateArray();
 	hTrieBossSubplugins = new StringMap();	//CreateTrie();
 
-	hArrayAutomaticHooking = new ArrayList();
+	//hArrayAutomaticHooking = new ArrayList();
 
 	// VSHAHook
 	p_OnBossIntroTalk = CreateForward(ET_Ignore);

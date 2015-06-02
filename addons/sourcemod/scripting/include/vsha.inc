@@ -89,6 +89,9 @@
 #define LoopActiveBosses(%1) for(int %1=1;%1<=MaxClients;++%1)\
 								if(IsClientInGame(%1) && bIsBoss[%1])
 
+#define LoopInActiveBosses(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientInGame(%1) && !bIsBoss[%1])
+
 #define Toggle(%1) %1=%1?false:true
 
 
@@ -147,6 +150,8 @@ native Handle VSHA_RegisterNonBossAddon();
 native void VSHA_UnRegisterNonBossAddon();
 
 native Handle VSHA_RegisterBoss(char BossShortName[16], char BossLongName[32]); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
+
+native Handle VSHA_GetBossHandle(int client);
 
 native int VSHA_GetBossUserID(int client); //gets boss' userid
 native void VSHA_SetBossUserID(int client, int userid);
@@ -247,10 +252,10 @@ enum VSHAHookType
 {
 	VSHAHook_None,
 	VSHAHook_OnLastSurvivor,
-	VSHAHook_OnMessageTimer,
+	VSHAHook_OnMessageTimer,		// Best Place to unhook your functions
 	VSHAHook_OnBossIntroTalk,
 	VSHAHook_OnBossKilled,
-	VSHAHook_OnBossWin,
+	VSHAHook_OnBossWin,				// Best Place to rehook your functions
 	VSHAHook_OnBossKillBuilding,
 	VSHAHook_OnBossAirblasted,
 	VSHAHook_OnBossSelected,
@@ -337,7 +342,9 @@ typeset VSHAHookCB
  * 										plugin, and rehook at round end.
  * @return		returns					nothing
  */
-native void VSHAHook(VSHAHookType type, VSHAHookCB callback, bool AllowAutomaticHooking = true);
+// possible future if sourcemod allows storing of functions:
+//native void VSHAHook(VSHAHookType type, VSHAHookCB callback, bool AllowAutomaticHooking = true);
+native void VSHAHook(VSHAHookType type, VSHAHookCB callback);
 
 /**
  * @brief Hooks for function
@@ -349,7 +356,9 @@ native void VSHAHook(VSHAHookType type, VSHAHookCB callback, bool AllowAutomatic
  * 										plugin, and rehook at round end.
  * @return		returns					true if successful
  */
-native bool VSHAHookEx(VSHAHookType type, VSHAHookCB callback, bool AllowAutomaticHooking = true);
+// possible future if sourcemod allows storing of functions:
+//native bool VSHAHookEx(VSHAHookType type, VSHAHookCB callback, bool AllowAutomaticHooking = true);
+native bool VSHAHookEx(VSHAHookType type, VSHAHookCB callback);
 
 /**
  * @brief Unhooks a function
@@ -649,5 +658,7 @@ public __pl_vsha_SetNTVOptional()
 	MarkNativeAsOptional("VSHA_GetPlayerCount");
 
 	MarkNativeAsOptional("VSHA_CallModelTimer");
+
+	MarkNativeAsOptional("VSHA_GetBossHandle");
 }
 #endif

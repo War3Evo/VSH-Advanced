@@ -2,7 +2,7 @@
 
 // V A R I A B L E S =========================================================================
 
-ArrayList hArrayAutomaticHooking = null;
+//ArrayList hArrayAutomaticHooking = null; // saved for when sourcemod allows saving functions to stringmaps
 
 ArrayList hArrayNonBossSubplugins = null;	// List <Subplugin Addon> Not a boss addon, just an external extra
 

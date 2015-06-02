@@ -10,7 +10,7 @@
 #include <vsha>
 #include <vsha_stocks>
 
-#define PLUGIN_VERSION			"1.0"
+#define PLUGIN_VERSION			"0.1"
 
 public Plugin myinfo = {
 	name = "Versus Saxton Hale Engine",
@@ -389,6 +389,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	CreateNative("VSHA_RegisterBoss", Native_RegisterBossSubplugin);
 
+	CreateNative("VSHA_GetBossHandle", Native_GetBossHandle);
+
 	CreateNative("VSHAHook", Native_Hook);
 	CreateNative("VSHAHookEx", Native_HookEx);
 	CreateNative("VSHAUnhook", Native_Unhook);
@@ -508,6 +510,11 @@ public int Native_RegisterBossSubplugin(Handle plugin, int numParams)
 	VSHAError erroar;
 	Handle BossHandle = RegisterBoss( plugin, ShortBossSubPluginName, BossSubPluginName, erroar ); //ALL PROPS TO COOKIES.NET AKA COOKIES.IO
 	return view_as<int>( BossHandle );
+}
+
+public int Native_GetBossHandle(Handle plugin, int numParams)
+{
+	return view_as<int>(Storage[GetNativeCell(1)]);
 }
 
 public int Native_GetBossUserID(Handle plugin, int numParams)
@@ -1038,21 +1045,51 @@ stock Handle GetVSHAHookType(VSHAHookType vshaHOOKtype)
 	}
 	return null;
 }
-
-public bool HasAutomaticHooking(Handle plugin)
+/*
+public Function HasAutomaticHooking(Handle plugin, VSHAHookType vshaHOOKtype)
 {
+	Handle STORplugin;
+	VSHAHookType STORvshaHOOKtype;
+	Function myFunction;
 	StringMap MapHooking = new StringMap();
 	int count = hArrayAutomaticHooking.Length;
 	for (int i = 0; i < count; i++)
 	{
 		MapHooking = hArrayAutomaticHooking.Get(i);
 
-		if(MapHooking.GetValue("Plugin", plugin))
+		if(MapHooking.GetValue("Plugin", STORplugin) && MapHooking.GetValue("VSHAHookType", STORvshaHOOKtype))
 		{
-			return true;
+			if(STORplugin == plugin && STORvshaHOOKtype == vshaHOOKtype)
+			{
+				MapHooking.GetValue("Function", myFunction)
+				return myFunction;
+			}
 		}
 	}
-	return false;
+	return null;
+}
+
+ *
+ * code safed for when sourcemod will allow us to
+ * save functions into stringmaps.
+ *
+ * for now we can not save functions into stringmaps.
+ * // Force Coercions.. ?? safe ?? not sure
+ * #define FORCE_COERCIONS
+
+public void UnHookAutomaticHooks(Handle plugin)
+{
+	Handle FwdHandle = GetVSHAHookType(vshaHOOKtype);
+	int AutomaticHook = HasAutomaticHooking(plugin,VSHAHook_OnBossIntroTalk);
+	if(AutomaticHook > -1)
+	{
+		FwdHandle = GetVSHAHookType(VSHAHook_OnBossIntroTalk);
+
+		if(FwdHandle != null)
+		{
+			RemoveFromForward(FwdHandle, plugin, GetNativeFunction(2));
+		}
+	}
 }
 
 public void RemoveAutomaticHooking(Handle plugin)
@@ -1070,7 +1107,7 @@ public void RemoveAutomaticHooking(Handle plugin)
 			break;
 		}
 	}
-}
+}*/
 
 public int Native_Hook(Handle plugin, int numParams)
 {
@@ -1081,6 +1118,7 @@ public int Native_Hook(Handle plugin, int numParams)
 
 	if(FwdHandle != null)
 	{
+		/*
 		if(GetNativeCell(3))
 		{
 			// if true to automatic hooking
@@ -1090,10 +1128,11 @@ public int Native_Hook(Handle plugin, int numParams)
 			MapHooking.SetValue("VSHAHookType", vshaHOOKtype);
 
 			hArrayAutomaticHooking.Push(MapHooking);
-		}
+		}*/
 		AddToForward(FwdHandle, plugin, Func);
 	}
 }
+
 public int Native_HookEx(Handle plugin, int numParams)
 {
 	VSHAHookType vshaHOOKtype = GetNativeCell(1);
@@ -1103,16 +1142,17 @@ public int Native_HookEx(Handle plugin, int numParams)
 
 	if(FwdHandle != null)
 	{
+		/*
 		if(GetNativeCell(3))
 		{
 			// if true to automatic hooking
-
 			StringMap MapHooking = new StringMap();
 			MapHooking.SetValue("Plugin", plugin);
 			MapHooking.SetValue("VSHAHookType", vshaHOOKtype);
+			MapHooking.SetValue("Function", Func);
 
 			hArrayAutomaticHooking.Push(MapHooking);
-		}
+		}*/
 		return AddToForward(FwdHandle, plugin, Func);
 	}
 	return 0;
@@ -1126,7 +1166,7 @@ public int Native_Unhook(Handle plugin, int numParams)
 
 	if(FwdHandle != null)
 	{
-		RemoveAutomaticHooking(plugin);
+		//RemoveAutomaticHooking(plugin);
 		RemoveFromForward(FwdHandle, plugin, GetNativeFunction(2));
 	}
 }
@@ -1138,7 +1178,7 @@ public int Native_UnhookEx(Handle plugin, int numParams)
 
 	if(FwdHandle != null)
 	{
-		RemoveAutomaticHooking(plugin);
+		//RemoveAutomaticHooking(plugin);
 		return RemoveFromForward(FwdHandle, plugin, GetNativeFunction(2));
 	}
 	return 0;
