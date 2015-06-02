@@ -7,7 +7,8 @@ public void InitBoss()
 		if (IsValidClient(i) && bIsBoss[i])
 		{
 			bNoTaunt[i] = false;
-			PawnTimer(MakeBoss, 0.2, iBossUserID[i]); //CreateTimer(0.2, MakeBoss, iBossUserID[i]);
+			//PawnTimer(MakeBoss, 0.2, iBossUserID[i]); //CreateTimer(0.2, MakeBoss, iBossUserID[i]);
+			CreateTimer(0.2, MakeBoss, iBossUserID[i]);
 		}
 	}
 #if defined DEBUG

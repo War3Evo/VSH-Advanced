@@ -11,7 +11,8 @@ public Action PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 		{
 			iModelRetrys[client] = 25;
 			//DP("Player Spawn MakeBoss");
-			PawnTimer(MakeBoss, 0.5, GetClientUserId(client)); //CreateTimer(0.1, MakeBoss, GetClientUserId(client));
+			//PawnTimer(MakeBoss, 0.5, GetClientUserId(client)); //CreateTimer(0.1, MakeBoss, GetClientUserId(client));
+			CreateTimer(0.2, MakeBoss, GetClientUserId(client));
 		}
 		else
 		{
