@@ -88,7 +88,6 @@ enum VSHAError
 #include "vsha/vsha_PawnTimer_BossResponse.inc"
 #include "vsha/vsha_PawnTimer_DoMessage.inc"
 #include "vsha/vsha_PawnTimer_CheckAlivePlayers.inc"
-#include "vsha/vsha_PawnTimer_MakeBoss.inc"
 #include "vsha/vsha_PawnTimer_EquipPlayers.inc"
 #include "vsha/vsha_PawnTimer_CalcScores.inc"
 #include "vsha/vsha_PawnTimer_tTenSecStart.inc"
@@ -109,7 +108,7 @@ enum VSHAError
 #include "vsha/vsha_CreateTimer_BossTimer.inc"
 #include "vsha/vsha_CreateTimer_WatchGameMode.inc"
 #include "vsha/vsha_CreateTimer_MusicPlay.inc"
-//#include "vsha/"
+#include "vsha/vsha_CreateTimer_MakeBoss.inc"
 //#include "vsha/"
 //#include "vsha/"
 
