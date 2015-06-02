@@ -223,6 +223,8 @@ int m_vecVelocity_0;
 
 public void OnPluginStart()
 {
+	CreateConVar("vsha_miku_version", "1.0", "VSHA Miku Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+
 	m_vecVelocity_0 = FindSendPropOffs("CBasePlayer","m_vecVelocity[0]");
 
 	//RegConsoleCmd("+ability",VSHA_AbilityCommand);
