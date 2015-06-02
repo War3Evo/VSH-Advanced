@@ -61,6 +61,11 @@ public void BossStart()
 			VSHA_ShowBossHelpMenu(iClient);
 			VSHHelped[iClient] = true;
 		}
+
+		if(AllowMusic)
+		{
+			if ( CheckRoundState() == 0 ) CreateTimer(2.0, MusicPlay, GetClientUserId(iClient), TIMER_FLAG_NO_MAPCHANGE);
+		}
 	}
 #if defined DEBUG
 	DEBUGPRINT1("VSH Engine::TimerBossStart() **** Boss Player loop finished ****");
@@ -76,5 +81,4 @@ public void BossStart()
 	DEBUGPRINT2("{lime}VSH Engine::TimerBossStart() **** Boss & Client Loop Timers created ****");
 #endif
 	if ( !PointType && iPlaying > AliveToEnable.IntValue ) SetControlPoint(false); //GetConVarInt(AliveToEnable)
-	if ( CheckRoundState() == 0 ) PawnTimer(MusicPlay, 2.0); //CreateTimer(2.0, MusicPlay, _, TIMER_FLAG_NO_MAPCHANGE);
 }

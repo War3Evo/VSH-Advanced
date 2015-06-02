@@ -4,6 +4,11 @@ public Action WatchGameModeTimer(Handle hTimer)
 {
 	if(!bEnabled.BoolValue) return Plugin_Continue;
 
+	if(VSHA_OnGameMode_WatchGameModeTimer() != Plugin_Continue)
+	{
+		return Plugin_Continue;
+	}
+
 	int BossCount = 0;
 	LoopActiveBosses(iBossNum)
 	{
@@ -34,6 +39,8 @@ public Action WatchGameModeTimer(Handle hTimer)
 			bIsBoss[boss] = true;
 			Storage[boss] = PickBossSpecial(iPresetBoss[boss]);
 
+			//DP("vsha_CreateTimer_WatchGameMode ForceTeamChange(boss,TEAM_BLUE)");
+
 			ForceTeamChange(boss,TEAM_BLUE);
 			return Plugin_Continue;
 		}
@@ -56,6 +63,8 @@ public Action WatchGameModeTimer(Handle hTimer)
 				ForcePlayerSuicide(iTarget);
 			}
 			ForceTeamChange(boss,TEAM_BLUE);
+
+			//DP("vsha_CreateTimer_WatchGameMode ForceTeamChange(boss,TEAM_BLUE)");
 
 			CPrintToChatAll("{lightgreen}No Boss??\nRestarting Game...");
 			return Plugin_Continue;

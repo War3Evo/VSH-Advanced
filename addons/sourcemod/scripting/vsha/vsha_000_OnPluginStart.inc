@@ -33,17 +33,16 @@ public void OnPluginStart()
 
 	p_OnPrepBoss = CreateForward(ET_Ignore, Param_Cell);
 
-	p_OnMusic = CreateForward(ET_Hook, Param_String, Param_FloatByRef);
+	p_OnMusic = CreateForward(ET_Hook, Param_Cell, Param_String, Param_FloatByRef);
 
-	p_OnModelTimer = CreateForward(ET_Hook, Param_Cell, Param_String);
+	p_OnModelTimer = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_String);
 
 	p_OnBossRage = CreateForward(ET_Ignore, Param_Cell);
 
-	p_OnConfiguration_Load_Sounds = CreateForward(ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
-	p_OnConfiguration_Load_Materials = CreateForward(ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
-	p_OnConfiguration_Load_Models = CreateForward(ET_Ignore, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
-
-	p_OnConfiguration_Load_Misc =  CreateForward(ET_Ignore, Param_String, Param_String);
+	p_OnConfiguration_Load_Sounds = CreateForward(ET_Ignore, Param_String, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
+	p_OnConfiguration_Load_Materials = CreateForward(ET_Ignore, Param_String, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
+	p_OnConfiguration_Load_Models = CreateForward(ET_Ignore, Param_String, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
+	p_OnConfiguration_Load_Misc =  CreateForward(ET_Ignore, Param_String, Param_String, Param_String);
 
 	p_OnEquipPlayer_Pre = CreateForward(ET_Hook, Param_Cell);
 
@@ -56,6 +55,12 @@ public void OnPluginStart()
 	p_OnUberTimer = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
 	p_OnLastSurvivorLoop =  CreateForward(ET_Ignore, Param_Cell);
+
+	p_OnGameMode_BossSetup = 			 CreateForward(ET_Hook);
+	p_OnGameMode_ForceBossTeamChange = CreateForward(ET_Hook, Param_Cell, Param_Cell);
+	p_OnGameMode_ForcePlayerTeamChange = CreateForward(ET_Hook, Param_Cell, Param_Cell);
+
+	p_OnGameMode_WatchGameModeTimer = 			 CreateForward(ET_Hook);
 
 	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);
 	bEnabled = CreateConVar("vsha_enabled", "1", "Enable the VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);

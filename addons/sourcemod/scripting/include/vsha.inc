@@ -34,7 +34,7 @@
 #define LifeState_Alive 0
 #define LifeState_Dead 2
 
-#define HudTextScreenHoldTime 0.21
+#define HudTextScreenHoldTime 0.20
 
 #define HEALTHBAR_CLASS "monster_resource"
 #define HEALTHBAR_PROPERTY "m_iBossHealthPercentageByte"
@@ -211,7 +211,7 @@ native float VSHA_GetGlowTimer(int client); //used to set glow timers on players
 native void VSHA_SetGlowTimer(int client, float glowtime);
 
 native bool VSHA_IsBossPlayer(int client); //is client a boss?
-native void VSHA_SetIsBossPlayer(int client, bool state);
+native void VSHA_SetBossPlayer(int client, bool state);
 
 native bool VSHA_IsPlayerInJump(int client); //did player rocket/sticky jump?
 
@@ -224,6 +224,14 @@ native int VSHA_CountScoutsLeft(); /* counts how many scouts are left */
 native int VSHA_GetPlayerCount();
 
 native void VSHA_CallModelTimer(float time, int client);
+
+// GAME MODE EXTRA NATIVES
+
+native void VSHA_BossSelected_Forward(int client);
+native void VSHA_SetClientQueuePoints(int client, int points);
+native int VSHA_GetClientQueuePoints(int client);
+native int VSHA_AddBoss();
+native void VSHA_SetPlayMusic(bool bSetPlayMusic);
 
 // may use in future, removed for now
 //native int VSHA_CreateEvent(VSHA_EVENT event, int client);
@@ -278,10 +286,22 @@ enum VSHAHookType
 	VSHAHook_ShowBossHelpMenu,
 	VSHAHook_OnUberTimer,
 	VSHAHook_OnLastSurvivorLoop,
+	VSHAHook_OnGameMode_BossSetup,
+	VSHAHook_OnGameMode_ForceBossTeamChange,
+	VSHAHook_OnGameMode_ForcePlayerTeamChange,
+	VSHAHook_OnGameMode_WatchGameModeTimer,
 };
 
 typeset VSHAHookCB
 {
+	// VSHAHook_OnGameMode_BossSetup
+	// VSHAHook_OnGameMode_WatchGameModeTimer - Repeating 1 second timer to watch for games that need to be restarted / started.
+	function Action ();
+
+	// VSHAHook_OnGameMode_ForceBossTeamChange
+	// VSHAHook_OnGameMode_ForcePlayerTeamChange
+	function Action (int iEntity, int iTeam);
+
 	// VSHAHook_OnBossIntroTalk
 	// VSHAHook_AddToDownloads
 	// VSHAHook_OnMessageTimer
@@ -318,18 +338,18 @@ typeset VSHAHookCB
 	function Action (int BossEntity, int &BossMaxHealth);
 
 	// VSHAHook_OnMusic
-	function Action (char BossTheme[PATHX], float &time);
+	function Action (int iClient, char BossTheme[PATHX], float &time);
 
 	// VSHAHook_OnModelTimer
-	function Action (int iClient, char modelpath[PATHX]);
+	function Action (Handle plugin, int iClient, char modelpath[PATHX]);
 
 	// VSHAHook_OnConfiguration_Load_Sounds
 	// VSHAHook_OnConfiguration_Load_Materials
 	// VSHAHook_OnConfiguration_Load_Models
-	function void (char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable);
+	function void (char[] cFile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable);
 
 	// VSHAHook_OnConfiguration_Load_Misc
-	function void (char[] skey, char[] value);
+	function void (char[] cFile, char[] skey, char[] value);
 };
 
 /**
@@ -647,7 +667,7 @@ public __pl_vsha_SetNTVOptional()
 	MarkNativeAsOptional("VSHA_SetGlowTimer");
 
 	MarkNativeAsOptional("VSHA_IsBossPlayer");
-	MarkNativeAsOptional("VSHA_SetIsBossPlayer");
+	MarkNativeAsOptional("VSHA_SetBossPlayer");
 
 	MarkNativeAsOptional("VSHA_IsPlayerInJump");
 	MarkNativeAsOptional("VSHA_CanBossTaunt");
@@ -660,5 +680,6 @@ public __pl_vsha_SetNTVOptional()
 	MarkNativeAsOptional("VSHA_CallModelTimer");
 
 	MarkNativeAsOptional("VSHA_GetBossHandle");
+	MarkNativeAsOptional("VSHA_AddBoss");
 }
 #endif

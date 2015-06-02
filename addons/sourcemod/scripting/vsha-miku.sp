@@ -14,6 +14,8 @@ public Plugin myinfo =
 	url 			= "http://en.wikipedia.org/wiki/Hatsune_Miku"
 }
 
+#define ThisConfigurationFile "configs/vsha/miku.cfg"
+
 char MikuModel[PATHX];
 char MikuModelPrefix[PATHX];
 
@@ -212,8 +214,6 @@ int Hale[PLYR];
 
 float WeighDownTimer = 0.0;
 //float RageDist = 800.0;
-
-char playsound[PATHX];
 
 int JumpCoolDown[PLYR];
 
@@ -421,17 +421,17 @@ public void OnClientDisconnect(int client)
 		Hale[client] = 0;
 		bool see[PLYR];
 		see[Hale[client]] = true;
-		int tHale;
-		if (VSHA_GetPresetBossPlayer() > 0) tHale = VSHA_GetPresetBossPlayer();
-		else tHale = VSHA_FindNextBoss( see, sizeof(see) );
-		if (IsValidClient(tHale))
-		{
-			if (GetClientTeam(tHale) != 3)
-			{
-				ForceTeamChange(Hale[client], 3);
+		//int tHale;
+		//if (VSHA_GetPresetBossPlayer() > 0) tHale = VSHA_GetPresetBossPlayer();
+		//else tHale = VSHA_FindNextBoss( see, sizeof(see) );
+		//if (IsValidClient(tHale))
+		//{
+			//if (GetClientTeam(tHale) != 3)
+			//{
+				//ForceTeamChange(Hale[client], 3);
 				//DP("vsha-saxtonhale 166 ForceTeamChange(i, 3)");
-			}
-		}
+			//}
+		//}
 	}
 }
 public Action ChangeClass(Event event, const char[] name, bool dontBroadcast)
@@ -448,6 +448,8 @@ public void OnPlayerKilledByBoss(int iiBoss, int attacker)
 {
 	if(Hale[iiBoss] != iiBoss) return;
 
+	char playsound[PATHX];
+
 	if (!GetRandomInt(0, 2) && VSHA_GetAliveRedPlayers() != 1)
 	{
 		strcopy(playsound, PLATFORM_MAX_PATH, MikuKill[GetRandomInt(0, sizeof(MikuKill)-1)]);
@@ -458,6 +460,8 @@ public void OnKillingSpreeByBoss(int iiBoss, int attacker)
 {
 	if(Hale[iiBoss] != iiBoss) return;
 
+	char playsound[PATHX];
+
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuSpree[GetRandomInt(0, sizeof(MikuSpree)-1)]);
 
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
@@ -466,6 +470,8 @@ public void OnKillingSpreeByBoss(int iiBoss, int attacker)
 public void OnBossKilled(int iiBoss, int attacker) //victim is boss
 {
 	if(Hale[iiBoss] != iiBoss) return;
+
+	char playsound[PATHX];
 
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuFail[GetRandomInt(0, sizeof(MikuFail)-1)]);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
@@ -476,6 +482,8 @@ public void OnBossKilled(int iiBoss, int attacker) //victim is boss
 public void OnBossWin(Event event, int iiBoss)
 {
 	if(Hale[iiBoss] != iiBoss) return;
+
+	char playsound[PATHX];
 
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuWin[GetRandomInt(0, sizeof(MikuWin)-1)]);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
@@ -489,7 +497,7 @@ public void OnBossWin(Event event, int iiBoss)
 	Hale[iiBoss] = 0;
 
 	// Dynamically unload private forwards
-	UnLoad_VSHAHooks();
+	//UnLoad_VSHAHooks();
 }
 public void OnMessageTimer()
 {
@@ -526,12 +534,14 @@ public void OnBossSelected(int iiBoss)
 {
 	if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle) return;
 
+	CPrintToChatAll("%s, Miku Boss Selected!",VSHA_COLOR);
+
 	if (VSHA_IsBossPlayer(iiBoss)) Hale[iiBoss] = iiBoss;
 	if ( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )
 	{
-		VSHA_SetIsBossPlayer(Hale[iiBoss], false);
+		VSHA_SetBossPlayer(Hale[iiBoss], false);
 		Hale[iiBoss] = iiBoss;
-		ForceTeamChange(iiBoss, 3);
+		//ForceTeamChange(iiBoss, 3);
 		//DP("vsha-saxtonhale 526 ForceTeamChange(iiBoss, 3)");
 	}
 	// Dynamically load private forwards
@@ -540,6 +550,8 @@ public void OnBossSelected(int iiBoss)
 }
 public void OnBossIntroTalk()
 {
+	char playsound[PATHX];
+
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuStart[GetRandomInt(0, sizeof(MikuStart)-1)]);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
@@ -547,12 +559,14 @@ public void OnBossIntroTalk()
 public Action OnBossSetHP(int BossEntity, int &BossMaxHealth)
 {
 	if (BossEntity != Hale[BossEntity]) return Plugin_Continue;
-	BossMaxHealth = HealthCalc( 760.8, view_as<float>( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
+	BossMaxHealth = HealthCalc( 760.8, float( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
 	//VSHA_SetBossMaxHealth(Hale[BossEntity], BossMax);
 	return Plugin_Changed;
 }
 public void OnLastSurvivor()
 {
+	char playsound[PATHX];
+
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuLast[GetRandomInt(0, sizeof(MikuLast)-1)]);
 
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
@@ -561,6 +575,7 @@ public void OnLastSurvivor()
 public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
 {
 	if (iClient != Hale[iClient]) return;
+	char playsound[PATHX];
 	float speed;
 	//int curHealth = VSHA_GetBossHealth(iClient), curMaxHp = VSHA_GetBossMaxHealth(iClient);
 	// temporary health fix
@@ -573,7 +588,7 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
 	{
 		SetEntityHealth(iClient,curHealth);
 	}
-	if (curHealth <= curMaxHp) speed = 340.0 + 0.7 * (100-curHealth*100/curMaxHp); //convar/cvar for speed here!
+	if (curHealth <= curMaxHp) speed = 340.0 + 0.7 * (100.0-float(curHealth)*100.0/float(curMaxHp)); //convar/cvar for speed here!
 	SetEntPropFloat(iClient, Prop_Send, "m_flMaxspeed", speed);
 
 	int buttons = GetClientButtons(iClient);
@@ -648,8 +663,12 @@ public void OnPrepBoss(int iClient)
 		SetEntPropEnt(iClient, Prop_Send, "m_hActiveWeapon", SaxtonWeapon);
 	}
 }
-public Action OnMusic(char BossTheme[PATHX], float &time)
+public Action OnMusic(int iClient, char BossTheme[PATHX], float &time)
 {
+	if (iClient != Hale[iClient])
+	{
+		return Plugin_Continue;
+	}
 	//PrintToChatAll("MIKUTheme OnMusic %s",MIKUTheme);
 	BossTheme = MIKUTheme;
 	time = 210.0;
@@ -661,8 +680,12 @@ public Action OnMusic(char BossTheme[PATHX], float &time)
 
 	return Plugin_Continue;
 }
-public Action OnModelTimer(int iClient, char modelpath[PATHX])
+public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
 {
+	if(ThisPluginHandle != plugin) return Plugin_Continue;
+
+	if(!ValidPlayer(iClient)) return Plugin_Continue;
+
 	//DP("VSHA_OnModelTimer");
 	if (iClient != Hale[iClient])
 	{
@@ -687,6 +710,10 @@ public Action OnModelTimer(int iClient, char modelpath[PATHX])
 public void OnBossRage(int iClient)
 {
 	if (iClient != Hale[iClient]) return;
+	if (InRage[iClient]) return;
+	char playsound[PATHX];
+	InRage[iClient] = true;
+	//DP("iClient = %d",iClient);
 	float pos[3];
 	GetEntPropVector(iClient, Prop_Send, "m_vecOrigin", pos);
 	pos[2] += 20.0;
@@ -726,6 +753,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	// so we can remove that damage.
 
 	if(TF2_IsPlayerInCondition(victim, TFCond_Ubercharged)) return Plugin_Continue;
+
+	char playsound[PATHX];
 
 	if ( CheckRoundState() == 0 && (victim == Hale[victim] || (victim != attacker && attacker != Hale[attacker])) )
 	{
@@ -1146,8 +1175,6 @@ public Action UseRage(Handle hTimer, any client)
 	}*/
 	CPrintToChat(client,"%s {red}RAGE! {yellow}You can now sprint with no cooldown!",VSHA_COLOR);
 
-	InRage[client] = true;
-
 	int flags = GetEntityFlags(client)|FL_NOTARGET;
 	SetEntityFlags(client, flags);
 
@@ -1188,8 +1215,10 @@ stock bool OnlyScoutsLeft()
 }
 
 // LOAD CONFIGURATION
-public void OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+public void OnConfiguration_Load_Sounds(char[] cFile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
+	if(!StrEqual(cFile, ThisConfigurationFile)) return;
+
 	if(StrEqual(skey, "MIKUTheme"))
 	{
 		strcopy(STRING(MIKUTheme), value);
@@ -1208,8 +1237,10 @@ public void OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCac
 		PrintToServer("Loading Sounds %s = '%s'",skey,value);
 	}
 }
-public void OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
+public void OnConfiguration_Load_Materials(char[] cFile, char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
 {
+	if(!StrEqual(cFile, ThisConfigurationFile)) return;
+
 	if(StrEqual(skey, "MaterialPrefix"))
 	{
 		char s[PATHX];
@@ -1227,8 +1258,10 @@ public void OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPre
 		}
 	}
 }
-public void OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
+public void OnConfiguration_Load_Models(char[] cFile, char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
 {
+	if(!StrEqual(cFile, ThisConfigurationFile)) return;
+
 	if(StrEqual(skey, "MikuModel"))
 	{
 		strcopy(STRING(MikuModel), value);
@@ -1259,8 +1292,9 @@ public void OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCac
 // This makes loading configurations easier for you.
 // Keeping all your configurations for your sub plugin in one location!
 /*
-public void VSHA_OnConfiguration_Load_Misc(char[] skey, char[] value)
+public void VSHA_OnConfiguration_Load_Misc(char[] cFile, char[] skey, char[] value)
 {
+* if(!StrEqual(cFile, ThisConfigurationFile)) return;
 }
 */
 
@@ -1271,6 +1305,8 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	if(client != Hale[client]) return Plugin_Continue;
 
 	if(!InRage[client] && (JumpCoolDown[client] > GetTime())) return Plugin_Continue;
+
+	char playsound[PATHX];
 
 	if (buttons & IN_JUMP)
 	//if(HaleAbilityPressed[client])

@@ -9,11 +9,14 @@ public void EquipPlayers(int iClientid)
 	if ( iClient <= 0 || !IsPlayerAlive(iClient) || CheckRoundState() == 2) return;
 
 	if (IsValidEntity(iClient)) TF2Attrib_RemoveAll(iClient);
-	if (GetClientTeam(iClient) != OtherTeam)
+	if(VSHA_OnGameMode_ForcePlayerTeamChange(iClient, OtherTeam) != Plugin_Handled)
 	{
-		ForceTeamChange(iClient, OtherTeam);
-		//DP("vsha_PawnTimer_EquipPlayers 12 ForceTeamChange(i, OtherTeam)");
-		TF2_RegeneratePlayer(iClient); // Added fix by Chdata to correct team colors
+		if (GetClientTeam(iClient) != OtherTeam)
+		{
+			ForceTeamChange(iClient, OtherTeam);
+			//DP("vsha_PawnTimer_EquipPlayers 12 ForceTeamChange(i, OtherTeam)");
+			TF2_RegeneratePlayer(iClient); // Added fix by Chdata to correct team colors
+		}
 	}
 
 	Action result = Plugin_Continue;

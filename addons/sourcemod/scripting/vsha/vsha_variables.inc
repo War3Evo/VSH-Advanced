@@ -142,3 +142,10 @@ Handle p_OnEquipPlayer_Post;
 Handle p_ShowBossHelpMenu;
 Handle p_OnUberTimer;
 Handle p_OnLastSurvivorLoop;
+Handle p_OnGameMode_BossSetup;
+Handle p_OnGameMode_ForceBossTeamChange;
+Handle p_OnGameMode_ForcePlayerTeamChange;
+Handle p_OnGameMode_WatchGameModeTimer;
+
+// Multi boss
+bool AllowMusic = true;

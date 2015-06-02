@@ -13,24 +13,24 @@ enum VSHA_SoundType
 
 VSHA_SoundType VSHA_Load_Type = VSHA_none;
 
-public bool VSHA_Load_Configuration(Handle plugin, const char[] cFileName)
+public bool VSHA_Load_Configuration(Handle plugin, char[] cFile)
 {
 	bool found = false;
 
-	Handle kv = PrePareTheFile(cFileName);
+	Handle kv = PrePareTheFile(cFile);
 
 	if(kv != null)
 	{
 		// VSHA_OnConfiguration_Load_*(char[] key, char[] value)
 
-		found = LoadConfigurationValues(kv, plugin);
+		found = LoadConfigurationValues(cFile, kv, plugin);
 		CloseTheFile(kv);
 		return found;
 	}
 	return false;
 }
 
-public Handle PrePareTheFile(const char[] cfile)
+public Handle PrePareTheFile(char[] cfile)
 {
 	char path[1024];
 
@@ -55,7 +55,7 @@ public void CloseTheFile(Handle kv)
 }
 
 
-public bool LoadConfigurationValues(Handle kv, Handle plugin)
+public bool LoadConfigurationValues(char[] cFile, Handle kv, Handle plugin)
 {
 	KvRewind(kv);
 
@@ -121,7 +121,7 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
 
-										VSHA_OnConfiguration_Load_Sounds(sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
+										VSHA_OnConfiguration_Load_Sounds(cFile, sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
 
 										if(bPreCacheFile)
 										{
@@ -143,7 +143,7 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
 
-										VSHA_OnConfiguration_Load_Materials(sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
+										VSHA_OnConfiguration_Load_Materials(cFile, sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
 
 										if(bPreCacheFile)
 										{
@@ -163,7 +163,7 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
 
-										VSHA_OnConfiguration_Load_Models(sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
+										VSHA_OnConfiguration_Load_Models(cFile, sSubKeyBuffer, sTempBuffer, bPreCacheFile, bAddFileToDownloadsTable);
 
 										if(bPreCacheFile)
 										{
@@ -178,7 +178,7 @@ public bool LoadConfigurationValues(Handle kv, Handle plugin)
 								}
 								else if(VSHA_Load_Type == VSHA_Misc)
 								{
-										VSHA_OnConfiguration_Load_Misc(sSubKeyBuffer, sTempBuffer);
+										VSHA_OnConfiguration_Load_Misc(cFile, sSubKeyBuffer, sTempBuffer);
 
 										found = true;
 								}

@@ -437,7 +437,7 @@ public Action VSHA_OnBossSelected()
 	if (VSHA_IsBossPlayer(iiBoss)) Hale[iiBoss] = iiBoss;
 	if ( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )
 	{
-		VSHA_SetIsBossPlayer(Hale[iiBoss], false);
+		VSHA_SetBossPlayer(Hale[iiBoss], false);
 		Hale[iiBoss] = 0;
 		ForceTeamChange(iiBoss, 3);
 		//DP("vsha-Vagineer 526 ForceTeamChange(iiBoss, 3)");

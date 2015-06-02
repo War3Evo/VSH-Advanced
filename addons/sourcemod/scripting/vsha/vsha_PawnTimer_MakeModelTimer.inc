@@ -32,7 +32,7 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 	//VSHA_SetVar(EventModel,ModelMap);
 	//VSHA_SetVar(EventModelTimer,iClient);
 	//Action result = VSHA_Private_Forward("VSHA_OnModelTimer");
-	Action result = VSHA_OnModelTimer(iClient, model);
+	Action result = VSHA_OnModelTimer(Storage[iClient], iClient, model);
 	if(result == Plugin_Changed)
 	{
 		//DP("VSHA_OnModelTimer result != Plugin_Continue");

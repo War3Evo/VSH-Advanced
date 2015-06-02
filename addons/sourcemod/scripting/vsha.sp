@@ -91,7 +91,6 @@ enum VSHAError
 #include "vsha/vsha_PawnTimer_MakeBoss.inc"
 #include "vsha/vsha_PawnTimer_EquipPlayers.inc"
 #include "vsha/vsha_PawnTimer_CalcScores.inc"
-#include "vsha/vsha_PawnTimer_MusicPlay.inc"
 #include "vsha/vsha_PawnTimer_tTenSecStart.inc"
 #include "vsha/vsha_PawnTimer_TimerNineThousand.inc"
 #include "vsha/vsha_PawnTimer_ResetUberCharge.inc"
@@ -109,7 +108,7 @@ enum VSHAError
 #include "vsha/vsha_CreateTimer_Timer_RemoveHonorBound.inc"
 #include "vsha/vsha_CreateTimer_BossTimer.inc"
 #include "vsha/vsha_CreateTimer_WatchGameMode.inc"
-//#include "vsha/"
+#include "vsha/vsha_CreateTimer_MusicPlay.inc"
 //#include "vsha/"
 //#include "vsha/"
 //#include "vsha/"
@@ -263,8 +262,8 @@ public int GetFirstBossIndex() //purpose is for the Storage client Handle
 public int FindNextBoss(bool[] array) //why force specs to Boss? They're prob AFK...
 {
 	int inBoss = -1;
-	//LoopIngameClients(i) // no bots for now
-	LoopIngamePlayers(i)
+	LoopIngameClients(i) // no bots for now
+	//LoopIngamePlayers(i)
 	{
 		if ( IsValidClient(i) )
 		{
@@ -396,6 +395,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHAUnhook", Native_Unhook);
 	CreateNative("VSHAUnhookEx", Native_UnhookEx);
 
+	CreateNative("VSHA_SetPlayMusic", Native_SetPlayMusic);
+
 	CreateNative("VSHA_GetBossUserID", Native_GetBossUserID);
 	CreateNative("VSHA_SetBossUserID", Native_SetBossUserID);
 
@@ -454,7 +455,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHA_SetGlowTimer", Native_SetGlowTimer);
 
 	CreateNative("VSHA_IsBossPlayer", Native_IsBossPlayer);
-	CreateNative("VSHA_SetIsBossPlayer", Native_SetIsBossPlayer);
+	CreateNative("VSHA_SetBossPlayer", Native_SetBossPlayer);
 
 	CreateNative("VSHA_IsPlayerInJump", Native_IsPlayerInJump);
 	CreateNative("VSHA_CanBossTaunt", Native_CanBossTaunt);
@@ -469,6 +470,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHA_SetVar",Native_VSHA_SetVar);
 
 	CreateNative("VSHA_CallModelTimer",Native_CallModelTimer);
+
+	// EXTRA GAME MODE STUFF
+
+	CreateNative("VSHA_BossSelected_Forward",Native_BossSelected_Forward);
+	CreateNative("VSHA_SetClientQueuePoints",Native_SetClientQueuePoints);
+	CreateNative("VSHA_GetClientQueuePoints",Native_GetClientQueuePoints);
+	CreateNative("VSHA_AddBoss",Native_AddBoss);
 
 	// may use in future.. depends
 	//vsha_Events_AskPluginLoad2();
@@ -710,9 +718,25 @@ public int Native_IsBossPlayer(Handle plugin, int numParams)
 {
 	return view_as<int>(bIsBoss[GetNativeCell(1)]);
 }
-public int Native_SetIsBossPlayer(Handle plugin, int numParams)
+public int Native_SetBossPlayer(Handle plugin, int numParams)
 {
-	bIsBoss[GetNativeCell(1)] = GetNativeCell(2);
+	// Make sure only boss plugins can set this!
+	bool foundBoss = false;
+	LoopMaxPLYR(SearchBosses)
+	{
+		if(Storage[SearchBosses] == plugin)
+		{
+			foundBoss = true;
+			break;
+		}
+	}
+	if(foundBoss)
+	{
+		int iiBoss = GetNativeCell(1);
+		Storage[iiBoss] = plugin;
+		iBossUserID[iiBoss] = GetClientUserId(iiBoss);
+		bIsBoss[iiBoss] = GetNativeCell(2);
+	}
 	return 0;
 }
 
@@ -1042,6 +1066,22 @@ stock Handle GetVSHAHookType(VSHAHookType vshaHOOKtype)
 		{
 			return p_OnBossWin;
 		}
+		case VSHAHook_OnGameMode_BossSetup:
+		{
+			return p_OnGameMode_BossSetup;
+		}
+		case VSHAHook_OnGameMode_ForceBossTeamChange:
+		{
+			return p_OnGameMode_ForceBossTeamChange;
+		}
+		case VSHAHook_OnGameMode_ForcePlayerTeamChange:
+		{
+			return p_OnGameMode_ForcePlayerTeamChange;
+		}
+		case VSHAHook_OnGameMode_WatchGameModeTimer:
+		{
+			return p_OnGameMode_WatchGameModeTimer;
+		}
 	}
 	return null;
 }
@@ -1291,20 +1331,22 @@ public void VSHA_OnPrepBoss(int iiBoss)
 	Call_Finish();
 }
 
-public Action VSHA_OnMusic(char BossTheme[PATHX], float &time)
+public Action VSHA_OnMusic(int iClient, char BossTheme[PATHX], float &time)
 {
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnMusic);
+	Call_PushCell(iClient);
 	Call_PushStringEx(STRING(BossTheme),0, SM_PARAM_COPYBACK);
 	Call_PushFloatRef(time);
 	Call_Finish(result);
 	return result;
 }
 
-public Action VSHA_OnModelTimer(int iClient, char modelpath[PATHX])
+public Action VSHA_OnModelTimer(Handle pluginhandle, int iClient, char modelpath[PATHX])
 {
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnModelTimer);
+	Call_PushCell(pluginhandle);
 	Call_PushCell(iClient);
 	Call_PushStringEx(STRING(modelpath),0, SM_PARAM_COPYBACK);
 	Call_Finish(result);
@@ -1318,9 +1360,10 @@ public void VSHA_OnBossRage(int iiBoss)
 	Call_Finish();
 }
 
-public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+public void VSHA_OnConfiguration_Load_Sounds(char[] cFile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
 	Call_StartForward(p_OnConfiguration_Load_Sounds);
+	Call_PushString(cFile);
 	Call_PushString(skey);
 	Call_PushString(value);
 	Call_PushCellRef(bPreCacheFile);
@@ -1328,9 +1371,10 @@ public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bP
 	Call_Finish();
 }
 
-public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+public void VSHA_OnConfiguration_Load_Materials(char[] cFile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
 	Call_StartForward(p_OnConfiguration_Load_Materials);
+	Call_PushString(cFile);
 	Call_PushString(skey);
 	Call_PushString(value);
 	Call_PushCellRef(bPreCacheFile);
@@ -1338,9 +1382,10 @@ public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool 
 	Call_Finish();
 }
 
-public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+public void VSHA_OnConfiguration_Load_Models(char[] cFile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
 	Call_StartForward(p_OnConfiguration_Load_Models);
+	Call_PushString(cFile);
 	Call_PushString(skey);
 	Call_PushString(value);
 	Call_PushCellRef(bPreCacheFile);
@@ -1348,9 +1393,10 @@ public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bP
 	Call_Finish();
 }
 
-public void VSHA_OnConfiguration_Load_Misc(char[] skey, char[] value)
+public void VSHA_OnConfiguration_Load_Misc(char[] cFile, char[] skey, char[] value)
 {
 	Call_StartForward(p_OnConfiguration_Load_Misc);
+	Call_PushString(cFile);
 	Call_PushString(skey);
 	Call_PushString(value);
 	Call_Finish();
@@ -1399,4 +1445,91 @@ public void VSHA_OnLastSurvivorLoop(int iEntity)
 	Call_StartForward(p_OnLastSurvivorLoop);
 	Call_PushCell(iEntity);
 	Call_Finish();
+}
+
+public Action VSHA_OnGameMode_BossSetup()
+{
+	Action result = Plugin_Continue;
+	Call_StartForward(p_OnGameMode_BossSetup);
+	Call_Finish(result);
+	return result;
+}
+public Action VSHA_OnGameMode_ForceBossTeamChange(int iEntity, int iTeam)
+{
+	Action result = Plugin_Continue;
+	Call_StartForward(p_OnGameMode_ForceBossTeamChange);
+	Call_PushCell(iEntity);
+	Call_PushCell(iTeam);
+	Call_Finish(result);
+	return result;
+}
+public Action VSHA_OnGameMode_ForcePlayerTeamChange(int iEntity, int iTeam)
+{
+	Action result = Plugin_Continue;
+	Call_StartForward(p_OnGameMode_ForcePlayerTeamChange);
+	Call_PushCell(iEntity);
+	Call_PushCell(iTeam);
+	Call_Finish(result);
+	return result;
+}
+
+public Action VSHA_OnGameMode_WatchGameModeTimer()
+{
+	Action result = Plugin_Continue;
+	Call_StartForward(p_OnGameMode_WatchGameModeTimer);
+	Call_Finish(result);
+	return result;
+}
+
+// GAME MODE EXTRA NATIVES
+
+public int Native_BossSelected_Forward(Handle plugin, int numParams)
+{
+	int iClient = GetNativeCell(1);
+	if(ValidPlayer(iClient))
+	{
+		VSHA_OnBossSelected(iClient);
+	}
+	return 0;
+}
+public int Native_SetClientQueuePoints(Handle plugin, int numParams)
+{
+	int iClient = GetNativeCell(1);
+	if(ValidPlayer(iClient))
+	{
+		int iPoints = GetNativeCell(2);
+		SetClientQueuePoints(iClient,iPoints);
+	}
+	return 0;
+}
+public int Native_GetClientQueuePoints(Handle plugin, int numParams)
+{
+	int iClient = GetNativeCell(1);
+	if(ValidPlayer(iClient))
+	{
+		return GetClientQueuePoints(iClient);
+	}
+	return 0;
+}
+public int Native_AddBoss(Handle plugin, int numParams)
+{
+	int boss = -1;
+	if ( IsClientValid(iNextBossPlayer) ) boss = iNextBossPlayer;
+	else boss = FindNextBoss(bIsBoss);
+
+	if (boss <= 0)
+	{
+		return -1;
+	}
+
+	iBossUserID[boss] = GetClientUserId(boss);
+	bIsBoss[boss] = true;
+	Storage[boss] = PickBossSpecial(iPresetBoss[boss]);
+
+	return boss;
+}
+public int Native_SetPlayMusic(Handle plugin, int numParams)
+{
+	AllowMusic = view_as<bool>(GetNativeCell(1));
+	return 0;
 }

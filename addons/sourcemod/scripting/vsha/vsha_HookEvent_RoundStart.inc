@@ -91,51 +91,59 @@ public Action RoundStartFunction()
 		return Plugin_Continue;
 	}
 
-	SetConVarInt(FindConVar("mp_teams_unbalance_limit"), 0);
+	// GAME MODE STARTS HERE
 
-	int boss = -1;
-	if ( IsClientValid(iNextBossPlayer) ) boss = iNextBossPlayer;
-	else boss = FindNextBoss(bIsBoss);
-
-	if (boss <= 0)
+	if(VSHA_OnGameMode_BossSetup() != Plugin_Handled)
 	{
-		CPrintToChatAll("{olive}[VSH Engine]{default} Need more players to begin");
-		Enabled = false;
-		return Plugin_Continue;
-	}
+		SetConVarInt(FindConVar("mp_teams_unbalance_limit"), 0);
 
-	iBossUserID[boss] = GetClientUserId(boss);
-	bIsBoss[boss] = true;
-	Storage[boss] = PickBossSpecial(iPresetBoss[boss]);
-#if defined DEBUG
-	DEBUGPRINT3("VSH Engine::PickBossSpecial() **** Boss subplugin has been chosen and player is set ****");
-#endif
+		int boss = -1;
+		if ( IsClientValid(iNextBossPlayer) ) boss = iNextBossPlayer;
+		else boss = FindNextBoss(bIsBoss);
 
-	/*
-	LoopInActiveBosses(NonActiveBosses)
-	{
-		UnHookAutomaticHooks(Storage[NonActiveBosses]);
-	}*/
-
-	//VSHA_SetVar(EventClient,boss);
-	//VSHA_Private_Forward("VSHA_OnBossSelected");
-	VSHA_OnBossSelected(boss);
-
-	if ( GetTeamPlayerCount(HaleTeam) <= 0 || GetTeamPlayerCount(OtherTeam) <= 0 )
-	{
-		for (i = 1; i <= MaxClients; i++)
+		if (boss <= 0)
 		{
-			if ( IsValidClient(i) && IsOnBlueOrRedTeam(i) )
+			CPrintToChatAll("{olive}[VSH Engine]{default} Need more players to begin");
+			Enabled = false;
+			return Plugin_Continue;
+		}
+
+		iBossUserID[boss] = GetClientUserId(boss);
+		bIsBoss[boss] = true;
+		Storage[boss] = PickBossSpecial(iPresetBoss[boss]);
+
+		/*
+		LoopInActiveBosses(NonActiveBosses)
+		{
+			UnHookAutomaticHooks(Storage[NonActiveBosses]);
+		}*/
+
+		//VSHA_SetVar(EventClient,boss);
+		//VSHA_Private_Forward("VSHA_OnBossSelected");
+		VSHA_OnBossSelected(boss);
+
+		if ( GetTeamPlayerCount(HaleTeam) <= 0 || GetTeamPlayerCount(OtherTeam) <= 0 )
+		{
+			for (i = 1; i <= MaxClients; i++)
 			{
-				if (bIsBoss[i])
+				if ( IsValidClient(i) && IsOnBlueOrRedTeam(i) )
 				{
-					//DP("HookEvent_RoundStart 123 ForceTeamChange(i, HaleTeam)");
-					ForceTeamChange(i, HaleTeam);
-				}
-				else
-				{
-					//DP("HookEvent_RoundStart 123 ForceTeamChange(i, OtherTeam)");
-					ForceTeamChange(i, OtherTeam);
+					if (bIsBoss[i])
+					{
+						//DP("HookEvent_RoundStart 123 ForceTeamChange(i, HaleTeam)");
+						if(VSHA_OnGameMode_ForceBossTeamChange(i, HaleTeam) != Plugin_Handled)
+						{
+							ForceTeamChange(i, HaleTeam);
+						}
+					}
+					else
+					{
+						//DP("HookEvent_RoundStart 123 ForceTeamChange(i, OtherTeam)");
+						if(VSHA_OnGameMode_ForcePlayerTeamChange(i, OtherTeam) != Plugin_Handled)
+						{
+							ForceTeamChange(i, OtherTeam);
+						}
+					}
 				}
 			}
 		}
