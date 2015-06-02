@@ -16,6 +16,8 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 		plugin = hArrayModelManagerPlugin.Get(i);
 		hArrayModelManagerStringName.GetString(i, STRING(ModelString));
 
+		if(plugin == null) continue;
+
 		LoopActiveBosses(iiBoss)
 		{
 			if(IsPlayerAlive(iiBoss))
@@ -23,7 +25,7 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 				if (Storage[iiBoss] == plugin)
 				{
 					GetClientName(iiBoss,STRING(sClientName));
-					PrintToServer("ModelString %s Applied to %s",ModelString,sClientName);
+					//PrintToServer("ModelString %s Applied to %s",ModelString,sClientName);
 					// apply ModelString to player
 					SetVariantString(ModelString);
 					AcceptEntityInput(iiBoss, "SetCustomModel");

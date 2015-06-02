@@ -7,7 +7,7 @@ public void OnPluginStart()
 	hTrieBossSubplugins = new StringMap();	//CreateTrie();
 
 	hArrayModelManagerPlugin = new ArrayList();
-	hArrayModelManagerStringName = new ArrayList();
+	hArrayModelManagerStringName = new ArrayList(ByteCountToCells(PATHX));
 
 	//hArrayAutomaticHooking = new ArrayList();
 
