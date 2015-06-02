@@ -203,7 +203,7 @@ public void VSHA_AddToDownloads()
 	}
 }
 
-//Handle ThisPluginHandle = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDING DATA.
+Handle ThisPluginHandle = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDING DATA.
 
 //make defines, handles, variables heer lololol
 int HaleCharge[PLYR];
@@ -250,13 +250,155 @@ public Action VSHA_AbilityCommand(int client, int args)
 	return Plugin_Handled;
 }*/
 
+public void Load_VSHAHooks()
+{
+	if(!VSHAHookEx(VSHAHook_OnBossIntroTalk, OnBossIntroTalk))
+	{
+		LogError("Error loading VSHAHook_OnBossIntroTalk forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss))
+	{
+		LogError("Error loading VSHAHook_OnPlayerKilledByBoss forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss))
+	{
+		LogError("Error loading VSHAHook_OnKillingSpreeByBoss forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossKilled, OnBossKilled))
+	{
+		LogError("Error loading VSHAHook_OnBossKilled forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossWin, OnBossWin))
+	{
+		LogError("Error loading VSHAHook_OnBossWin forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
+	{
+		LogError("Error loading VSHAHook_OnMessageTimer forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
+	{
+		LogError("Error loading VSHAHook_OnBossAirblasted forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossSetHP, OnBossSetHP))
+	{
+		LogError("Error loading VSHAHook_OnBossSetHP forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnLastSurvivor, OnLastSurvivor))
+	{
+		LogError("Error loading VSHAHook_OnLastSurvivor forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossTimer, OnBossTimer))
+	{
+		LogError("Error loading VSHAHook_OnBossTimer forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnPrepBoss, OnPrepBoss))
+	{
+		LogError("Error loading VSHAHook_OnPrepBoss forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnMusic, OnMusic))
+	{
+		LogError("Error loading VSHAHook_OnMusic forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnModelTimer, OnModelTimer))
+	{
+		LogError("Error loading VSHAHook_OnModelTimer forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossRage, OnBossRage))
+	{
+		LogError("Error loading VSHAHook_OnBossRage forwards for saxton hale.");
+	}
+}
+
+public void UnLoad_VSHAHooks()
+{
+	if(!VSHAUnhookEx(VSHAHook_OnBossIntroTalk, OnBossIntroTalk))
+	{
+		LogError("Error unloading VSHAHook_OnBossIntroTalk forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss))
+	{
+		LogError("Error unloading VSHAHook_OnPlayerKilledByBoss forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss))
+	{
+		LogError("Error unloading VSHAHook_OnKillingSpreeByBoss forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossKilled, OnBossKilled))
+	{
+		LogError("Error unloading VSHAHook_OnBossKilled forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossWin, OnBossWin))
+	{
+		LogError("Error unloading VSHAHook_OnBossWin forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
+	{
+		LogError("Error unloading VSHAHook_OnMessageTimer forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
+	{
+		LogError("Error unloading VSHAHook_OnBossAirblasted forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossSetHP, OnBossSetHP))
+	{
+		LogError("Error unloading VSHAHook_OnBossSetHP forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnLastSurvivor, OnLastSurvivor))
+	{
+		LogError("Error unloading VSHAHook_OnLastSurvivor forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossTimer, OnBossTimer))
+	{
+		LogError("Error unloading VSHAHook_OnBossTimer forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnPrepBoss, OnPrepBoss))
+	{
+		LogError("Error unloading VSHAHook_OnPrepBoss forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnMusic, OnMusic))
+	{
+		LogError("Error unloading VSHAHook_OnMusic forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnModelTimer, OnModelTimer))
+	{
+		LogError("Error unloading VSHAHook_OnModelTimer forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossRage, OnBossRage))
+	{
+		LogError("Error unloading VSHAHook_OnBossRage forwards for saxton hale.");
+	}
+}
+
 public void OnAllPluginsLoaded()
 {
 	//ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("miku","Hatsunemiku") );
-	VSHA_RegisterBoss("miku","Hatsunemiku");
+	ThisPluginHandle = VSHA_RegisterBoss("miku","Hatsunemiku");
 
 	HookEvent("player_changeclass", ChangeClass);
 
+	if(!VSHAHookEx(VSHAHook_OnBossSelected, OnBossSelected))
+	{
+		LogError("Error loading VSHAHook_OnBossSelected forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnConfiguration_Load_Sounds, OnConfiguration_Load_Sounds))
+	{
+		LogError("Error loading VSHAHook_OnConfiguration_Load_Sounds forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnConfiguration_Load_Materials, OnConfiguration_Load_Materials))
+	{
+		LogError("Error loading VSHAHook_OnConfiguration_Load_Materials forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnConfiguration_Load_Models, OnConfiguration_Load_Models))
+	{
+		LogError("Error loading VSHAHook_OnConfiguration_Load_Models forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_ShowBossHelpMenu, OnShowBossHelpMenu))
+	{
+		LogError("Error loading VSHAHook_ShowBossHelpMenu forwards for saxton hale.");
+	}
+
+	// LoadConfiguration ALWAYS after VSHAHook
 	VSHA_LoadConfiguration("configs/vsha/miku.cfg");
 }
 
@@ -302,66 +444,38 @@ public Action ChangeClass(Event event, const char[] name, bool dontBroadcast)
 	}
 	return Plugin_Continue;
 }
-
-public Action VSHA_OnPlayerKilledByBoss()
+public void OnPlayerKilledByBoss(int iiBoss, int attacker)
 {
-	int iiBoss = VSHA_GetVar(EventBoss);
-	int attacker = VSHA_GetVar(EventAttacker);
-
-	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
+	if(Hale[iiBoss] != iiBoss) return;
 
 	if (!GetRandomInt(0, 2) && VSHA_GetAliveRedPlayers() != 1)
 	{
 		strcopy(playsound, PLATFORM_MAX_PATH, MikuKill[GetRandomInt(0, sizeof(MikuKill)-1)]);
 	}
 	if ( !StrEqual(playsound, "") ) EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnPlayerKilled() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnPlayerKilled() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
 }
-public Action VSHA_OnKillingSpreeByBoss()
+public void OnKillingSpreeByBoss(int iiBoss, int attacker)
 {
-	int iiBoss = VSHA_GetVar(EventBoss);
-	int attacker = VSHA_GetVar(EventAttacker);
-
-	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
+	if(Hale[iiBoss] != iiBoss) return;
 
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuSpree[GetRandomInt(0, sizeof(MikuSpree)-1)]);
 
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnKillingSpree() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnKillingSpree() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossKilled() //victim is boss
+public void OnBossKilled(int iiBoss, int attacker) //victim is boss
 {
-	int iiBoss = VSHA_GetVar(EventBoss);
-	//int attacker = VSHA_GetVar(EventAttacker);
-
-	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
+	if(Hale[iiBoss] != iiBoss) return;
 
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuFail[GetRandomInt(0, sizeof(MikuFail)-1)]);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossKilled() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossKilled() **** Forward Responded ****");
-#endif
+
 	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 	Hale[iiBoss] = 0;
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossWin()
+public void OnBossWin(Event event, int iiBoss)
 {
-	//VSHA_GetVar(SmEvent,event);
-	int iiBoss = VSHA_GetVar(EventBoss);
-
-	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
+	if(Hale[iiBoss] != iiBoss) return;
 
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuWin[GetRandomInt(0, sizeof(MikuWin)-1)]);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
@@ -373,9 +487,11 @@ public Action VSHA_OnBossWin()
 
 	SDKUnhook(Hale[iiBoss], SDKHook_OnTakeDamage, OnTakeDamage);
 	Hale[iiBoss] = 0;
-	return Plugin_Continue;
+
+	// Dynamically unload private forwards
+	UnLoad_VSHAHooks();
 }
-public Action VSHA_MessageTimer()
+public void OnMessageTimer()
 {
 	//SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
 	char text[PATHX];
@@ -397,93 +513,61 @@ public Action VSHA_MessageTimer()
 			ShowHudText(client, -1, text);
 		}
 	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_MessageTimer() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_MessageTimer() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossAirblasted()
+public void OnBossAirblasted(Event event, int iiBoss)
 {
-	int iiBoss = VSHA_GetVar(EventBoss);
-	//int airblaster = VSHA_GetVar(EventAttacker);
-
-	if (iiBoss != Hale[iiBoss]) return Plugin_Continue;
+	if (iiBoss != Hale[iiBoss]) return;
 	//float rage = 0.04*RageDMG;
 	//HaleRage += RoundToCeil(rage);
 	//if (HaleRage > RageDMG) HaleRage = RageDMG;
 	VSHA_SetBossRage(Hale[iiBoss], VSHA_GetBossRage(Hale[iiBoss])+4.0); //make this a convar/cvar!
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossAirblasted() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossAirblasted() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossSelected()
+public void OnBossSelected(int iiBoss)
 {
-	int iiBoss = VSHA_GetVar(EventClient);
+	if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle) return;
+
 	if (VSHA_IsBossPlayer(iiBoss)) Hale[iiBoss] = iiBoss;
 	if ( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )
 	{
 		VSHA_SetIsBossPlayer(Hale[iiBoss], false);
-		Hale[iiBoss] = 0;
+		Hale[iiBoss] = iiBoss;
 		ForceTeamChange(iiBoss, 3);
 		//DP("vsha-saxtonhale 526 ForceTeamChange(iiBoss, 3)");
-		return Plugin_Stop;
 	}
+	// Dynamically load private forwards
+	Load_VSHAHooks();
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossSelected() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossSelected() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossIntroTalk()
+public void OnBossIntroTalk()
 {
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuStart[GetRandomInt(0, sizeof(MikuStart)-1)]);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossIntroTalk() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossIntroTalk() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossSetHP()
+public Action OnBossSetHP(int BossEntity, int &BossMaxHealth)
 {
-	int iClient = VSHA_GetVar(EventBoss);
-	if (iClient != Hale[iClient]) return Plugin_Continue;
-	int BossMax = HealthCalc( 760.8, view_as<float>( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
-	VSHA_SetBossMaxHealth(Hale[iClient], BossMax);
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossSetHP() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossSetHP() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
+	if (BossEntity != Hale[BossEntity]) return Plugin_Continue;
+	BossMaxHealth = HealthCalc( 760.8, view_as<float>( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
+	//VSHA_SetBossMaxHealth(Hale[BossEntity], BossMax);
+	return Plugin_Changed;
 }
-public Action VSHA_OnLastSurvivor()
+public void OnLastSurvivor()
 {
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuLast[GetRandomInt(0, sizeof(MikuLast)-1)]);
 
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnLastSurvivor() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnLastSurvivor() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossTimer()
+public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
 {
-	int iClient = VSHA_GetVar(EventClient);
-	if (iClient != Hale[iClient]) return Plugin_Continue;
+	if (iClient != Hale[iClient]) return;
 	float speed;
-	int curHealth = VSHA_GetBossHealth(iClient), curMaxHp = VSHA_GetBossMaxHealth(iClient);
+	//int curHealth = VSHA_GetBossHealth(iClient), curMaxHp = VSHA_GetBossMaxHealth(iClient);
 	// temporary health fix
-	if (curHealth <= 0)
+	if (curHealth < 0)
 	{
 		ForcePlayerSuicide(iClient);
-		return Plugin_Continue;
+		return;
 	}
 	if(GetClientHealth(iClient) != curHealth)
 	{
@@ -539,17 +623,12 @@ public Action VSHA_OnBossTimer()
 		//CPrintToChat(client, "{olive}[VSHE]{default} You just used your weighdown!");
 		//all this just to do a cprint? It's not like weighdown has a limit...
 	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossTimer() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossTimer() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
 }
-public Action VSHA_OnPrepBoss()
+public void OnPrepBoss(int iClient)
 {
-	int iClient = VSHA_GetVar(EventOnPrepBoss);
+	if(VSHA_GetBossHandle(iClient)!=ThisPluginHandle) return;
 
-	if (iClient != Hale[iClient]) return Plugin_Continue;
+	if (iClient != Hale[iClient]) return;
 	TF2_SetPlayerClass(iClient, TFClass_Scout, _, false);
 	HaleCharge[iClient] = 0;
 
@@ -568,62 +647,46 @@ public Action VSHA_OnPrepBoss()
 		int SaxtonWeapon = SpawnWeapon(iClient, "tf_weapon_shovel", 5, 100, 4, attribs);
 		SetEntPropEnt(iClient, Prop_Send, "m_hActiveWeapon", SaxtonWeapon);
 	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnPrepBoss() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnPrepBoss() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
 }
-public Action VSHA_OnMusic()
+public Action OnMusic(char BossTheme[PATHX], float &time)
 {
 	//PrintToChatAll("MIKUTheme OnMusic %s",MIKUTheme);
-	float time;
-
+	BossTheme = MIKUTheme;
 	time = 210.0;
 
-	StringMap SoundMap = new StringMap();
-	SoundMap.SetString("Sound", MIKUTheme);
-	VSHA_SetVar(EventSound,SoundMap);
-	VSHA_SetVar(EventTime,time);
+	//StringMap SoundMap = new StringMap();
+	//SoundMap.SetString("Sound", MIKUTheme);
+	//VSHA_SetVar(EventSound,SoundMap);
+	//VSHA_SetVar(EventTime,time);
 
 	return Plugin_Continue;
 }
-
-public Action VSHA_OnModelTimer()
+public Action OnModelTimer(int iClient, char modelpath[PATHX])
 {
-	int iClient = VSHA_GetVar(EventModelTimer);
-
-	char modelpath[PATHX];
-
 	//DP("VSHA_OnModelTimer");
 	if (iClient != Hale[iClient])
 	{
-		SetVariantString("");
-		AcceptEntityInput(iClient, "SetCustomModel");
-		return Plugin_Stop;
+		//SetVariantString("");
+		//AcceptEntityInput(iClient, "SetCustomModel");
+		return Plugin_Continue;
 	}
-	modelpath = MikuModel;
+	//modelpath = MikuModel;
 
-	StringMap ModelMap = new StringMap();
-	ModelMap.SetString("Model", modelpath);
-	VSHA_SetVar(EventModel,ModelMap);
+	strcopy(STRING(modelpath), MikuModel);
 
-	SetVariantString(modelpath);
-	AcceptEntityInput(iClient, "SetCustomModel");
-	SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
+	//StringMap ModelMap = new StringMap();
+	//ModelMap.SetString("Model", modelpath);
+	//VSHA_SetVar(EventModel,ModelMap);
 
-#if defined DEBUG
-	//DEBUGPRINT1("VSH SaxtonHale::VSHA_OnModelTimer() **** Forward Responded ****");
-	//DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnModelTimer() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
+	//SetVariantString(modelpath);
+	//AcceptEntityInput(iClient, "SetCustomModel");
+	//SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
+
+	return Plugin_Changed;
 }
-
-public Action VSHA_OnBossRage()
+public void OnBossRage(int iClient)
 {
-	int iClient = VSHA_GetVar(EventBoss);
-
-	if (iClient != Hale[iClient]) return Plugin_Continue;
+	if (iClient != Hale[iClient]) return;
 	float pos[3];
 	GetEntPropVector(iClient, Prop_Send, "m_vecOrigin", pos);
 	pos[2] += 20.0;
@@ -632,11 +695,6 @@ public Action VSHA_OnBossRage()
 	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
 	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
 	CreateTimer(0.6, UseRage, iClient);
-#if defined DEBUG
-	DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossRage() **** Forward Responded ****");
-	DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossRage() **** Forward Responded ****");
-#endif
-	return Plugin_Continue;
 }
 public void TF2_OnConditionAdded(int client, TFCond condition)
 {
@@ -645,19 +703,11 @@ public void TF2_OnConditionAdded(int client, TFCond condition)
 	{
 		case TFCond_Jarated:
 		{
-#if defined DEBUG
-			DEBUGPRINT1("VSH SaxtonHale::TF2_OnConditionAdded() **** Hale was Jarated ****");
-			DEBUGPRINT2("{lime}VSH SaxtonHale::TF2_OnConditionAdded() **** Hale was Jarated ****");
-#endif
 			VSHA_SetBossRage(Hale[client], VSHA_GetBossRage(client)-8.0);
 			TF2_RemoveCondition(Hale[client], condition);
 		}
 		case TFCond_MarkedForDeath:
 		{
-#if defined DEBUG
-			DEBUGPRINT1("VSH SaxtonHale::TF2_OnConditionAdded() **** Hale was MarkedForDeath ****");
-			DEBUGPRINT2("{lime}VSH SaxtonHale::TF2_OnConditionAdded() **** Hale was MarkedForDeath ****");
-#endif
 			VSHA_SetBossRage(Hale[client], VSHA_GetBossRage(client)-5.0);
 			TF2_RemoveCondition(Hale[client], condition);
 		}
@@ -788,10 +838,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					damage = 1.0;
 					return Plugin_Changed;
 				}
-#if defined DEBUG
-				DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossTeleFragd() **** Forward Responded ****");
-				DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossTeleFragd() **** Forward Responded ****");
-#endif
 				damage = view_as<float>( VSHA_GetBossHealth(victim) ); //(HaleHealth > 9001 ? 15.0:float(GetEntProp(Hale, Prop_Send, "m_iHealth")) + 90.0);
 				int teleowner = FindTeleOwner(attacker);
 				if (IsValidClient(teleowner) && teleowner != attacker)
@@ -1017,11 +1063,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				PrintCenterText(attacker, "You Tickled The Boss!");
 				PrintCenterText(victim, "You Were Just Tickled!");
 
-#if defined DEBUG
-				DEBUGPRINT1("VSH SaxtonHale::VSHA_OnBossStabbed() **** Forward Responded ****");
-				DEBUGPRINT2("{lime}VSH SaxtonHale::VSHA_OnBossStabbed() **** Forward Responded ****");
-#endif
-
 				int pistol = GetIndexOfWeaponSlot(attacker, TFWeaponSlot_Primary);
 				if (pistol == 525) //Diamondback gives 3 crits on backstab
 				{
@@ -1076,8 +1117,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 	return Plugin_Continue;
 }
-
-
 public Action UseRage(Handle hTimer, any client)
 {
 	//float pos[3], pos2[3];
@@ -1149,7 +1188,7 @@ stock bool OnlyScoutsLeft()
 }
 
 // LOAD CONFIGURATION
-public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+public void OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
 	if(StrEqual(skey, "MIKUTheme"))
 	{
@@ -1169,7 +1208,7 @@ public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bP
 		PrintToServer("Loading Sounds %s = '%s'",skey,value);
 	}
 }
-public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
+public void OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
 {
 	if(StrEqual(skey, "MaterialPrefix"))
 	{
@@ -1188,7 +1227,7 @@ public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool 
 		}
 	}
 }
-public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
+public void OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
 {
 	if(StrEqual(skey, "MikuModel"))
 	{
@@ -1333,9 +1372,8 @@ public Action EndRage(Handle thandle, int userid)
 }
 
 // Is triggered by VSHA engine when a boos needs a help menu
-public void VSHA_ShowBossHelpMenu()
+public void OnShowBossHelpMenu(int iClient)
 {
-	int iClient = VSHA_GetVar(EventBoss);
 	if(Hale[iClient] != iClient) return;
 
 	if(Hale[iClient] == iClient && ValidPlayer(iClient))
