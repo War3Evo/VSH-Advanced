@@ -20,7 +20,7 @@ ConVar ThisEnabled = null;
 
 public void OnPluginStart()
 {
-	ThisEnabled = CreateConVar("vsha_duo_boss", "1", "Enable Duo Boss Fighting Mode", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	ThisEnabled = CreateConVar("vsha_duo_boss", "0", "Enable Duo Boss Fighting Mode", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 }
 
 public void OnAllPluginsLoaded()
