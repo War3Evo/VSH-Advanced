@@ -22,7 +22,7 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 		if ( !IsValidClient(i) ) continue;
 		if ( bIsBoss[i] )
 		{
-			ClearTimer(ModelTimer[i]);
+			//ClearTimer(ModelTimer[i]);
 
 			SetClientQueuePoints(i, 0);
 			if (event.GetInt("team") == GetClientTeam(i) && !playedwinsound)
@@ -104,8 +104,8 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 		top[2] = 0;
 	}
 
-        SetHudTextParams(-1.0, 0.3, 10.0, 255, 255, 255, 255);
-        PrintCenterTextAll(""); //Should clear center text
+	SetHudTextParams(-1.0, 0.3, 10.0, 255, 255, 255, 255);
+	PrintCenterTextAll(""); //Should clear center text
 	for (i = 1; i <= MaxClients; i++)
 	{
 		if (IsValidClient(i) && !(GetClientButtons(i) & IN_SCORE))

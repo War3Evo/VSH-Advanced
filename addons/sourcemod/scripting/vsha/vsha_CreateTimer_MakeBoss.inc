@@ -5,12 +5,13 @@ public Action MakeBoss(Handle timer, int userid)
 	//DP("MakeBoss");
 	int iClient = GetClientOfUserId(userid);
 
-	if(iClient > 0)
-	{
+	//if(iClient > 0)
+	//{
 		//DP("MakeBoss MakeModelTimer PawnTimer");
 		//PawnTimer(MakeModelTimer, 0.1, iBossUserID[iClient]); //CreateTimer(0.2, MakeModelTimer, iBossUserID[iClient]);
-		CreateTimer(0.0, MakeModelTimer, userid);
-	}
+
+		//CreateTimer(0.0, MakeModelTimer, userid);
+	//}
 
 	if ( iClient <= 0 || !IsClientInGame(iClient) || !bIsBoss[iClient] ) return;
 
@@ -32,10 +33,10 @@ public Action MakeBoss(Handle timer, int userid)
 
 	//DP("MakeBoss MakeModelTimer");
 
-	if(ModelTimer[iClient] == null)
-	{
-		ModelTimer[iClient] = CreateTimer(10.0, MakeModelTimer, iBossUserID[iClient], TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-	}
+	//if(ModelTimer[iClient] == null)
+	//{
+		//ModelTimer[iClient] = CreateTimer(10.0, MakeModelTimer, iBossUserID[iClient], TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	//}
 
 	int ent = -1, index = -1;
 	while ((ent = FindEntityByClassname2(ent, "tf_wearable")) != -1)

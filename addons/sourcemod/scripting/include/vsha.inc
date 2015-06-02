@@ -225,6 +225,8 @@ native int VSHA_GetPlayerCount();
 
 native void VSHA_CallModelTimer(float time, int client);
 
+native bool VSHA_SetPluginModel(char ModelString[PATHX]); // sets up a model for a boss plugin for model manager
+
 // GAME MODE EXTRA NATIVES
 
 native void VSHA_BossSelected_Forward(int client);

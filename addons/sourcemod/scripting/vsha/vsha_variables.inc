@@ -10,9 +10,13 @@ ArrayList hArrayNonBossSubplugins = null;	// List <Subplugin Addon> Not a boss a
 ArrayList hArrayBossSubplugins = null;	// List <Subplugin>
 StringMap hTrieBossSubplugins = null;	// Map <Boss Name, Subplugin Handle>
 
+// Model Manager
+ArrayList hArrayModelManagerPlugin = null;
+ArrayList hArrayModelManagerStringName = null;
+
 //Handles
 Handle Storage[PLYR];
-Handle ModelTimer[PLYR];
+//Handle ModelTimer[PLYR];
 
 //ints
 int iModelRetrys[PLYR],

@@ -29,6 +29,9 @@ public void OnMapStart()
 		DEBUGPRINT1("VSH Engine::OnMapStart() **** Map is VSH map & VSHA is enabled! ****");
 #endif
 		CreateTimer(1.0, WatchGameModeTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+
+		// Model Manager
+		CreateTimer(2.0, MakeModelTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{

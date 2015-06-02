@@ -6,6 +6,9 @@ public void OnPluginStart()
 	hArrayNonBossSubplugins = new ArrayList();	//CreateArray();
 	hTrieBossSubplugins = new StringMap();	//CreateTrie();
 
+	hArrayModelManagerPlugin = new ArrayList();
+	hArrayModelManagerStringName = new ArrayList();
+
 	//hArrayAutomaticHooking = new ArrayList();
 
 	// VSHAHook

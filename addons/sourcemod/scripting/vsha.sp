@@ -77,12 +77,12 @@ enum VSHAError
 #include "vsha/vsha_Engine_SubPlugin_Configuration_File.inc"
 #include "vsha/vsha_Engine_ClearVariables.inc"
 #include "vsha/vsha_Engine_CacheDownloads.inc"
-//#include "vsha/"
+//#include "vsha/vsha_Engine_ModelManager.inc"
 //#include "vsha/"
 //#include "vsha/"
 //#include "vsha/"
 
-#include "vsha/vsha_PawnTimer_MakeModelTimer.inc"
+// eventually need to just remove PawnTimer and make it back to CreateTimer
 #include "vsha/vsha_PawnTimer_BossStart.inc"
 #include "vsha/vsha_PawnTimer_InitBoss.inc"
 #include "vsha/vsha_PawnTimer_BossResponse.inc"
@@ -109,6 +109,10 @@ enum VSHAError
 #include "vsha/vsha_CreateTimer_WatchGameMode.inc"
 #include "vsha/vsha_CreateTimer_MusicPlay.inc"
 #include "vsha/vsha_CreateTimer_MakeBoss.inc"
+#include "vsha/vsha_CreateTimer_MakeModelTimer.inc"
+//#include "vsha/"
+//#include "vsha/"
+//#include "vsha/"
 //#include "vsha/"
 //#include "vsha/"
 
@@ -388,6 +392,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHA_RegisterBoss", Native_RegisterBossSubplugin);
 
 	CreateNative("VSHA_GetBossHandle", Native_GetBossHandle);
+
+	CreateNative("VSHA_SetPluginModel", Native_SetPluginModel);
+	//CreateNative("VSHA_RemovePluginModel", Native_RemovePluginModel);
 
 	CreateNative("VSHAHook", Native_Hook);
 	CreateNative("VSHAHookEx", Native_HookEx);
@@ -903,7 +910,7 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 
 					//iModelRetrys[plyrBoss]=15;
 
-					CreateTimer(0.2, MakeModelTimer, GetClientUserId(plyrBoss));
+					//CreateTimer(0.2, MakeModelTimer, GetClientUserId(plyrBoss));
 				}
 			}
 		}
@@ -1531,4 +1538,26 @@ public int Native_SetPlayMusic(Handle plugin, int numParams)
 {
 	AllowMusic = view_as<bool>(GetNativeCell(1));
 	return 0;
+}
+
+public int Native_SetPluginModel(Handle plugin, int numParams)
+{
+	char ModelString[PATHX];
+	if(GetNativeString(1, STRING(ModelString)) == SP_ERROR_NONE)
+	{
+		for (int i = 0; i < hArrayModelManagerPlugin.Length; i++)
+		{
+			if (hArrayModelManagerPlugin.Get(i) == plugin)
+			{
+				// if found same plugin, overwrite old model
+				hArrayModelManagerStringName.SetString(i,ModelString);
+				return true;
+			}
+		}
+
+		hArrayModelManagerPlugin.Push(plugin);
+		hArrayModelManagerStringName.PushString(ModelString);
+		return true;
+	}
+	return false;
 }

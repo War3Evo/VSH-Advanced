@@ -171,10 +171,10 @@ public void Load_VSHAHooks()
 	{
 		LogError("Error loading VSHAHook_OnMusic forwards for saxton hale.");
 	}
-	if(!VSHAHookEx(VSHAHook_OnModelTimer, OnModelTimer))
-	{
-		LogError("Error loading VSHAHook_OnModelTimer forwards for saxton hale.");
-	}
+	//if(!VSHAHookEx(VSHAHook_OnModelTimer, OnModelTimer))
+	//{
+		//LogError("Error loading VSHAHook_OnModelTimer forwards for saxton hale.");
+	//}
 	if(!VSHAHookEx(VSHAHook_OnBossRage, OnBossRage))
 	{
 		LogError("Error loading VSHAHook_OnBossRage forwards for saxton hale.");
@@ -234,10 +234,10 @@ public void UnLoad_VSHAHooks()
 	{
 		LogError("Error unloading VSHAHook_OnMusic forwards for saxton hale.");
 	}
-	if(!VSHAUnhookEx(VSHAHook_OnModelTimer, OnModelTimer))
-	{
-		LogError("Error unloading VSHAHook_OnModelTimer forwards for saxton hale.");
-	}
+	//if(!VSHAUnhookEx(VSHAHook_OnModelTimer, OnModelTimer))
+	//{
+		//LogError("Error unloading VSHAHook_OnModelTimer forwards for saxton hale.");
+	//}
 	if(!VSHAUnhookEx(VSHAHook_OnBossRage, OnBossRage))
 	{
 		LogError("Error unloading VSHAHook_OnBossRage forwards for saxton hale.");
@@ -629,6 +629,7 @@ public Action OnMusic(int iClient, char BossTheme[PATHX], float &time)
 	//VSHA_SetVar(EventTime,time);
 	return Plugin_Continue;
 }
+/*
 public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
 {
 	if(ThisPluginHandle != plugin) return Plugin_Continue;
@@ -665,7 +666,7 @@ public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
 	SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
 
 	return Plugin_Changed;
-}
+}*/
 public void OnBossRage(int iClient)
 {
 	if (iClient != Hale[iClient]) return;
@@ -1422,6 +1423,8 @@ public void OnConfiguration_Load_Models(char[] cFile, char[] skey, char[] value,
 		strcopy(STRING(HaleModel), value);
 		bPreCacheModel = true;
 		bAddFileToDownloadsTable = true;
+		// For Model Manager:
+		VSHA_SetPluginModel(HaleModel);
 	}
 	else if(StrEqual(skey, "HaleModelPrefix"))
 	{

@@ -53,7 +53,7 @@ stock bool ValidPlayer(int client, bool check_alive = false,bool alivecheckbyhea
 stock bool SuperJump(int client, float charge, float JumpAngle, int &changecharge, int subtractCharge)
 {
 	float ang[3]; GetClientEyeAngles(client, ang);
-        if ( ang[0] <= JumpAngle) // JumpAngle = -45.0
+	if ( ang[0] <= JumpAngle) // JumpAngle = -45.0
 	{
 		float vel[3]; GetEntPropVector(client, Prop_Data, "m_vecVelocity", vel);
 		vel[2] = 750 + charge * 13.0;
