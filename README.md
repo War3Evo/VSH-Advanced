@@ -1,4 +1,5 @@
-# VSH Advanced - Experimental
+# VSH Advanced - Develop Branch
 
-I just wanted to back to when the private forwards was working except for the reload boss,
-and try and figure out why reload boss does not work properly.
+https://forums.alliedmods.net/showthread.php?t=263744
+
+
