@@ -1,6 +1,6 @@
-// vsha_PawnTimer_MakeBoss.inc
+// vsha_CreateTimer_MakeBoss.inc
 
-public void MakeBoss(int userid)
+public Action MakeBoss(Handle timer, int userid)
 {
 	//DP("MakeBoss");
 	int iClient = GetClientOfUserId(userid);
@@ -32,7 +32,10 @@ public void MakeBoss(int userid)
 
 	//DP("MakeBoss MakeModelTimer");
 
-	ModelTimer[iClient] = CreateTimer(10.0, MakeModelTimer, iBossUserID[iClient], TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	if(ModelTimer[iClient] == null)
+	{
+		ModelTimer[iClient] = CreateTimer(10.0, MakeModelTimer, iBossUserID[iClient], TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	}
 
 	int ent = -1, index = -1;
 	while ((ent = FindEntityByClassname2(ent, "tf_wearable")) != -1)
