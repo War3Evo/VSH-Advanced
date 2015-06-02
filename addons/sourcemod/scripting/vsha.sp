@@ -10,7 +10,7 @@
 #include <vsha>
 #include <vsha_stocks>
 
-#define PLUGIN_VERSION			"0.1"
+#define PLUGIN_VERSION			"0.1.1"
 
 public Plugin myinfo = {
 	name = "Versus Saxton Hale Engine",
