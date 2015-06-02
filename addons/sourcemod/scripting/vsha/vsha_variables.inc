@@ -12,6 +12,7 @@ StringMap hTrieBossSubplugins = null;	// Map <Boss Name, Subplugin Handle>
 
 //Handles
 Handle Storage[PLYR];
+Handle ModelTimer[PLYR];
 
 //ints
 int iModelRetrys[PLYR],

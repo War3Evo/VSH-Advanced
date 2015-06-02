@@ -637,7 +637,6 @@ public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
 
 	if(!ValidPlayer(iClient)) return Plugin_Continue;
 
-	//DP("saxtonhale OnModelTimer");
 	if (iClient != Hale[iClient])
 	{
 		//SetVariantString("");
@@ -646,9 +645,12 @@ public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
 		// is not thisboss, continue looking
 		return Plugin_Continue;
 	}
-	//modelpath = HaleModel;
 
-	strcopy(STRING(modelpath), HaleModel);
+	modelpath = HaleModel;
+
+	PrintToChatAll("saxtonhale %d OnModelTimer %s", iClient, modelpath);
+
+	//strcopy(STRING(modelpath), HaleModel);
 
 	//PrintToChatAll("modelpath %s",modelpath);
 
@@ -658,9 +660,9 @@ public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
 	//ModelMap.SetString("Model", modelpath);
 	//VSHA_SetVar(EventModel,ModelMap);
 
-	//SetVariantString(modelpath);
-	//AcceptEntityInput(iClient, "SetCustomModel");
-	//SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
+	SetVariantString(modelpath);
+	AcceptEntityInput(iClient, "SetCustomModel");
+	SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
 
 	return Plugin_Changed;
 }

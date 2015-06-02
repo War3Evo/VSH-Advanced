@@ -32,7 +32,7 @@ public void MakeBoss(int userid)
 
 	//DP("MakeBoss MakeModelTimer");
 
-	CreateTimer(10.0, MakeModelTimer, iBossUserID[iClient], TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	ModelTimer[iClient] = CreateTimer(10.0, MakeModelTimer, iBossUserID[iClient], TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 
 	int ent = -1, index = -1;
 	while ((ent = FindEntityByClassname2(ent, "tf_wearable")) != -1)

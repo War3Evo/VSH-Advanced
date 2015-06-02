@@ -116,8 +116,13 @@ public bool LoadConfigurationValues(char[] cFile, Handle kv, Handle plugin)
 								KvGetString(kv, NULL_STRING, sTempBuffer, sizeof(sTempBuffer));
 								if(VSHA_Load_Type == VSHA_Sounds)
 								{
-										TrimString(sSubKeyBuffer);
-										TrimString(sTempBuffer);
+										//TrimString(sSubKeyBuffer);
+										//TrimString(sTempBuffer);
+										//PrintToServer("VSHA_Sounds Before %s = %s",sSubKeyBuffer,sTempBuffer);
+										FilterSentence(sSubKeyBuffer);
+										FilterSentence(sTempBuffer);
+										//PrintToServer("VSHA_Sounds After %s = %s",sSubKeyBuffer,sTempBuffer);
+
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
 
@@ -138,8 +143,11 @@ public bool LoadConfigurationValues(char[] cFile, Handle kv, Handle plugin)
 								}
 								else if(VSHA_Load_Type == VSHA_Materials)
 								{
-										TrimString(sSubKeyBuffer);
-										TrimString(sTempBuffer);
+										//PrintToServer("VSHA_Materials Before %s = %s",sSubKeyBuffer,sTempBuffer);
+										FilterSentence(sSubKeyBuffer);
+										FilterSentence(sTempBuffer);
+										//PrintToServer("VSHA_Materials After %s = %s",sSubKeyBuffer,sTempBuffer);
+
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
 
@@ -158,8 +166,11 @@ public bool LoadConfigurationValues(char[] cFile, Handle kv, Handle plugin)
 								}
 								else if(VSHA_Load_Type == VSHA_Models)
 								{
-										TrimString(sSubKeyBuffer);
-										TrimString(sTempBuffer);
+										//PrintToServer("VSHA_Models Before %s = %s",sSubKeyBuffer,sTempBuffer);
+										FilterSentence(sSubKeyBuffer);
+										FilterSentence(sTempBuffer);
+										//PrintToServer("VSHA_Models After %s = %s",sSubKeyBuffer,sTempBuffer);
+
 										bPreCacheFile = false;
 										bAddFileToDownloadsTable = false;
 
@@ -178,6 +189,8 @@ public bool LoadConfigurationValues(char[] cFile, Handle kv, Handle plugin)
 								}
 								else if(VSHA_Load_Type == VSHA_Misc)
 								{
+										FilterSentence(sSubKeyBuffer);
+										FilterSentence(sTempBuffer);
 										VSHA_OnConfiguration_Load_Misc(cFile, sSubKeyBuffer, sTempBuffer);
 
 										found = true;

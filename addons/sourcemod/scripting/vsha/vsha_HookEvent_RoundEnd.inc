@@ -22,6 +22,8 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 		if ( !IsValidClient(i) ) continue;
 		if ( bIsBoss[i] )
 		{
+			ClearTimer(ModelTimer[i]);
+
 			SetClientQueuePoints(i, 0);
 			if (event.GetInt("team") == GetClientTeam(i) && !playedwinsound)
 			{

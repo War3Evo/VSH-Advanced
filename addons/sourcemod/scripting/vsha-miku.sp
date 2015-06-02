@@ -693,17 +693,19 @@ public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
 		//AcceptEntityInput(iClient, "SetCustomModel");
 		return Plugin_Continue;
 	}
-	//modelpath = MikuModel;
+	modelpath = MikuModel;
 
-	strcopy(STRING(modelpath), MikuModel);
+	PrintToChatAll("miku %d OnModelTimer %s", iClient, modelpath);
+
+	//strcopy(STRING(modelpath), MikuModel);
 
 	//StringMap ModelMap = new StringMap();
 	//ModelMap.SetString("Model", modelpath);
 	//VSHA_SetVar(EventModel,ModelMap);
 
-	//SetVariantString(modelpath);
-	//AcceptEntityInput(iClient, "SetCustomModel");
-	//SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
+	SetVariantString(modelpath);
+	AcceptEntityInput(iClient, "SetCustomModel");
+	SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
 
 	return Plugin_Changed;
 }
@@ -1264,6 +1266,7 @@ public void OnConfiguration_Load_Models(char[] cFile, char[] skey, char[] value,
 
 	if(StrEqual(skey, "MikuModel"))
 	{
+		TrimString(value);
 		strcopy(STRING(MikuModel), value);
 		bPreCacheModel = true;
 		bAddFileToDownloadsTable = true;

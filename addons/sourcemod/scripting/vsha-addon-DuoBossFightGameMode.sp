@@ -143,14 +143,21 @@ public Action OnGameMode_BossSetup()
 	CPrintToChatAll("%s DUO BOSSES!",VSHA_COLOR);
 
 	// will be adding duo boss theme music sometime soon
-	//CreateTimer(9.1, MusicTimerStart);
+	CreateTimer(9.1, MusicTimerStart);
 
 	return Plugin_Handled;
 }
 
-//public Action MusicTimerStart(Handle timer, int userid)
-//{
-//}
+public Action MusicTimerStart(Handle timer, int userid)
+{
+	LoopAlivePlayers(players)
+	{
+		if(VSHA_IsBossPlayer(players))
+		{
+			VSHA_CallModelTimer(2.0,GetClientUserId(players));
+		}
+	}
+}
 
 public void OnBossWin(Event event, int iiBoss)
 {

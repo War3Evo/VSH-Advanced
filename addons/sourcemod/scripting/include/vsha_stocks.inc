@@ -790,6 +790,59 @@ stock bool ValidateName(const char[] name)
 	} // A name is, of course, only valid if it's 1 or more chars long, though longer is recommended
 	return (length > 0);
 }
+stock int FilterSentence(char[] message,bool extremefilter=false,bool RemoveWhiteSpace=false)
+{
+	int charMax = strlen(message)+1;
+	int charIndex;
+	int copyPos = 0;
+
+	char[] strippedString = new char[charMax];
+
+	for (charIndex = 0; charIndex < charMax; charIndex++)
+	{
+		// Reach end of string. Break.
+		if (message[copyPos] == 0) {
+			strippedString[copyPos] = 0;
+			break;
+		}
+
+		if (GetCharBytes(message[charIndex])>1)
+		{
+			continue;
+		}
+
+		if(RemoveWhiteSpace && IsCharSpace(message[charIndex]))
+		{
+			continue;
+		}
+
+		if(extremefilter && IsAlphaNumeric(message[charIndex]))
+		{
+			strippedString[copyPos] = message[charIndex];
+			copyPos++;
+			continue;
+		}
+
+		// Found a normal character. Copy.
+		if (!extremefilter && IsNormalCharacter(message[charIndex])) {
+			strippedString[copyPos] = message[charIndex];
+			copyPos++;
+			continue;
+		}
+	}
+
+	// Copy back to passing parameter.
+	strcopy(message, charMax, strippedString);
+	return copyPos;
+}
+stock bool IsAlphaNumeric(int characterNum) {
+	return ((characterNum >= 48 && characterNum <=57)
+		||  (characterNum >= 65 && characterNum <=90)
+		||  (characterNum >= 97 && characterNum <=122));
+}
+stock bool IsNormalCharacter(int characterNum) {
+	return (characterNum > 31 && characterNum < 127);
+}
 stock Handle GetBossSubPlugin(StringMap StrMapHndl)
 {
 	Handle plugin;
