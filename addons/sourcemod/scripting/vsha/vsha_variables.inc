@@ -2,6 +2,14 @@
 
 // V A R I A B L E S =========================================================================
 
+ArrayList hArrayAutomaticHooking = null;
+
+ArrayList hArrayNonBossSubplugins = null;	// List <Subplugin Addon> Not a boss addon, just an external extra
+
+
+ArrayList hArrayBossSubplugins = null;	// List <Subplugin>
+StringMap hTrieBossSubplugins = null;	// Map <Boss Name, Subplugin Handle>
+
 //Handles
 Handle Storage[PLYR];
 
@@ -134,4 +142,3 @@ Handle p_OnEquipPlayer_Post;
 Handle p_ShowBossHelpMenu;
 Handle p_OnUberTimer;
 Handle p_OnLastSurvivorLoop;
-

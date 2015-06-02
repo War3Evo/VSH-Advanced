@@ -128,102 +128,83 @@ public void OnAllPluginsLoaded()
 #endif
 	HookEvent("player_changeclass", ChangeClass);
 
-	bool successfull = false;
-	successfull = VSHAHook(VSHAHook_OnBossIntroTalk, OnBossIntroTalk);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnBossIntroTalk, OnBossIntroTalk))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossIntroTalk");
+		LogError("Error loading VSHAHook_OnBossIntroTalk forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnPlayerKilledByBoss");
+		LogError("Error loading VSHAHook_OnPlayerKilledByBoss forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnKillingSpreeByBoss");
+		LogError("Error loading VSHAHook_OnKillingSpreeByBoss forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnBossKilled, OnBossKilled);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnBossKilled, OnBossKilled))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossKilled");
+		LogError("Error loading VSHAHook_OnBossKilled forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnBossWin, OnBossWin);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnBossWin, OnBossWin))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossWin");
+		LogError("Error loading VSHAHook_OnBossWin forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnBossKillBuilding, OnBossKillBuilding);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnBossKillBuilding, OnBossKillBuilding))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossKillBuilding");
+		LogError("Error loading VSHAHook_OnBossKillBuilding forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnMessageTimer, OnMessageTimer);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnMessageTimer, OnMessageTimer))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnMessageTimer");
+		LogError("Error loading VSHAHook_OnMessageTimer forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnBossAirblasted, OnBossAirblasted);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnBossAirblasted, OnBossAirblasted))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossAirblasted");
+		LogError("Error loading VSHAHook_OnBossAirblasted forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnBossSelected, OnBossSelected);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnBossSelected, OnBossSelected))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossSelected");
+		LogError("Error loading VSHAHook_OnBossSelected forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnBossSetHP, OnBossSetHP);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnBossSetHP, OnBossSetHP))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossSetHP");
+		LogError("Error loading VSHAHook_OnBossSetHP forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnLastSurvivor, OnLastSurvivor);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnLastSurvivor, OnLastSurvivor))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnLastSurvivor");
+		LogError("Error loading VSHAHook_OnLastSurvivor forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnBossTimer, OnBossTimer);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnBossTimer, OnBossTimer))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossTimer");
+		LogError("Error loading VSHAHook_OnBossTimer forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnPrepBoss, OnPrepBoss);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnPrepBoss, OnPrepBoss))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnPrepBoss");
+		LogError("Error loading VSHAHook_OnPrepBoss forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnMusic, OnMusic);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnMusic, OnMusic))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnMusic");
+		LogError("Error loading VSHAHook_OnMusic forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnModelTimer, OnModelTimer);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnModelTimer, OnModelTimer))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnModelTimer");
+		LogError("Error loading VSHAHook_OnModelTimer forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnBossRage, OnBossRage);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnBossRage, OnBossRage))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnBossRage");
+		LogError("Error loading VSHAHook_OnBossRage forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnConfiguration_Load_Sounds, OnConfiguration_Load_Sounds);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnConfiguration_Load_Sounds, OnConfiguration_Load_Sounds))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnConfiguration_Load_Sounds");
+		LogError("Error loading VSHAHook_OnConfiguration_Load_Sounds forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnConfiguration_Load_Materials, OnConfiguration_Load_Materials);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnConfiguration_Load_Materials, OnConfiguration_Load_Materials))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnConfiguration_Load_Materials");
+		LogError("Error loading VSHAHook_OnConfiguration_Load_Materials forwards for saxton hale.");
 	}
-	successfull = VSHAHook(VSHAHook_OnConfiguration_Load_Models, OnConfiguration_Load_Models);
-	if(!successfull)
+	if(!VSHAHook(VSHAHook_OnConfiguration_Load_Models, OnConfiguration_Load_Models))
 	{
-		PrintToServer("Error saxtonhale VSHAHook_OnConfiguration_Load_Models");
+		LogError("Error loading VSHAHook_OnConfiguration_Load_Models forwards for saxton hale.");
 	}
+
 
 	VSHA_LoadConfiguration("configs/vsha/saxtonhale.cfg");
 }

@@ -245,6 +245,7 @@ native void VSHA_SetVar(VSHA_Var variabletoretrieve, any value);
 
 enum VSHAHookType
 {
+	VSHAHook_None,
 	VSHAHook_OnLastSurvivor,
 	VSHAHook_OnMessageTimer,
 	VSHAHook_OnBossIntroTalk,
@@ -329,11 +330,35 @@ typeset VSHAHookCB
 /**
  * @brief Hooks for function
  *
- * @param		type		Type of function to hook
- * @param		callback	Function to call when hook is called
- * @return		returns		true if successful
+ * @param		type					Type of function to hook
+ * @param		callback				Function to call when hook is called
+ * @param		AllowAutomaticHooking	Will Unhook/Rehook functions that are deemed not need for a round event.
+ * 										Most likely will unload a function before round start, if is not a active boss
+ * 										plugin, and rehook at round end.
+ * @return		returns					nothing
  */
-native bool VSHAHook(VSHAHookType type, VSHAHookCB callback);
+native void VSHAHook(VSHAHookType type, VSHAHookCB callback, bool AllowAutomaticHooking = true);
+
+/**
+ * @brief Hooks for function
+ *
+ * @param		type					Type of function to hook
+ * @param		callback				Function to call when hook is called
+ * @param		AllowAutomaticHooking	Will Unhook/Rehook functions that are deemed not need for a round event.
+ * 										Most likely will unload a function before round start, if is not a active boss
+ * 										plugin, and rehook at round end.
+ * @return		returns					true if successful
+ */
+native bool VSHAHookEx(VSHAHookType type, VSHAHookCB callback, bool AllowAutomaticHooking = true);
+
+/**
+ * @brief Unhooks a function
+ *
+ * @param		type		Type of function to unhook
+ * @param		callback	Callback function to unhook
+ * @return		returns		nothing
+ */
+native void VSHAUnhook(VSHAHookType type, VSHAHookCB callback);
 
 /**
  * @brief Unhooks a function
@@ -342,8 +367,7 @@ native bool VSHAHook(VSHAHookType type, VSHAHookCB callback);
  * @param		callback	Callback function to unhook
  * @return		returns		true if successful
  */
-native bool VSHAUnhook(VSHAHookType type, VSHAHookCB callback);
-
+native bool VSHAUnhookEx(VSHAHookType type, VSHAHookCB callback);
 
 
 /*

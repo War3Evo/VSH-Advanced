@@ -20,12 +20,6 @@ public Plugin myinfo = {
 	url = "https://github.com/War3Evo/VSH-Advanced"
 };
 
-ArrayList hArrayNonBossSubplugins = null;	// List <Subplugin Addon> Not a boss addon, just an external extra
-
-
-ArrayList hArrayBossSubplugins = null;	// List <Subplugin>
-StringMap hTrieBossSubplugins = null;	// Map <Boss Name, Subplugin Handle>
-
 enum VSHAError
 {
 	Error_None,				// All-Clear :>
@@ -396,7 +390,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHA_RegisterBoss", Native_RegisterBossSubplugin);
 
 	CreateNative("VSHAHook", Native_Hook);
+	CreateNative("VSHAHookEx", Native_HookEx);
 	CreateNative("VSHAUnhook", Native_Unhook);
+	CreateNative("VSHAUnhookEx", Native_UnhookEx);
 
 	CreateNative("VSHA_GetBossUserID", Native_GetBossUserID);
 	CreateNative("VSHA_SetBossUserID", Native_SetBossUserID);
@@ -927,241 +923,227 @@ public int Native_CallModelTimer(Handle plugin, int numParams)
 
 // Real Private Forwards
 
-public int Native_Hook(Handle plugin, int numParams)
+stock Handle GetVSHAHookType(VSHAHookType vshaHOOKtype)
 {
-	bool result = false;
-	VSHAHookType vshaHOOKtype = GetNativeCell(1);
 	switch(vshaHOOKtype)
 	{
 		case VSHAHook_OnBossIntroTalk:
 		{
-			result = AddToForward(p_OnBossIntroTalk, plugin, GetNativeFunction(2));
+			return p_OnBossIntroTalk;
 		}
 		case VSHAHook_AddToDownloads:
 		{
-			result = AddToForward(p_AddToDownloads, plugin, GetNativeFunction(2));
+			return p_AddToDownloads;
 		}
 		case VSHAHook_OnPlayerKilledByBoss:
 		{
-			result = AddToForward(p_OnPlayerKilledByBoss, plugin, GetNativeFunction(2));
+			return p_OnPlayerKilledByBoss;
 		}
 		case VSHAHook_OnKillingSpreeByBoss:
 		{
-			result = AddToForward(p_OnKillingSpreeByBoss, plugin, GetNativeFunction(2));
+			return p_OnKillingSpreeByBoss;
 		}
 		case VSHAHook_OnBossKilled:
 		{
-			result = AddToForward(p_OnBossKilled, plugin, GetNativeFunction(2));
+			return p_OnBossKilled;
 		}
 		case VSHAHook_OnBossKillBuilding:
 		{
-			result = AddToForward(p_OnBossKillBuilding, plugin, GetNativeFunction(2));
+			return p_OnBossKillBuilding;
 		}
 		case VSHAHook_OnMessageTimer:
 		{
-			result = AddToForward(p_OnMessageTimer, plugin, GetNativeFunction(2));
+			return p_OnMessageTimer;
 		}
 		case VSHAHook_OnBossAirblasted:
 		{
-			result = AddToForward(p_OnBossAirblasted, plugin, GetNativeFunction(2));
+			return p_OnBossAirblasted;
 		}
 		case VSHAHook_OnBossSelected:
 		{
-			result = AddToForward(p_OnBossSelected, plugin, GetNativeFunction(2));
+			return p_OnBossSelected;
 		}
 		case VSHAHook_OnBossSetHP:
 		{
-			result = AddToForward(p_OnBossSetHP, plugin, GetNativeFunction(2));
+			return p_OnBossSetHP;
 		}
 		case VSHAHook_OnLastSurvivor:
 		{
-			result = AddToForward(p_OnLastSurvivor, plugin, GetNativeFunction(2));
+			return p_OnLastSurvivor;
 		}
 		case VSHAHook_OnBossTimer:
 		{
-			result = AddToForward(p_OnBossTimer, plugin, GetNativeFunction(2));
+			return p_OnBossTimer;
 		}
 		case VSHAHook_OnPrepBoss:
 		{
-			result = AddToForward(p_OnPrepBoss, plugin, GetNativeFunction(2));
+			return p_OnPrepBoss;
 		}
 		case VSHAHook_OnMusic:
 		{
-			result = AddToForward(p_OnMusic, plugin, GetNativeFunction(2));
+			return p_OnMusic;
 		}
 		case VSHAHook_OnModelTimer:
 		{
-			result = AddToForward(p_OnModelTimer, plugin, GetNativeFunction(2));
+			return p_OnModelTimer;
 		}
 		case VSHAHook_OnBossRage:
 		{
-			result = AddToForward(p_OnBossRage, plugin, GetNativeFunction(2));
+			return p_OnBossRage;
 		}
 		case VSHAHook_OnConfiguration_Load_Sounds:
 		{
-			result = AddToForward(p_OnConfiguration_Load_Sounds, plugin, GetNativeFunction(2));
+			return p_OnConfiguration_Load_Sounds;
 		}
 		case VSHAHook_OnConfiguration_Load_Materials:
 		{
-			result = AddToForward(p_OnConfiguration_Load_Materials, plugin, GetNativeFunction(2));
+			return p_OnConfiguration_Load_Materials;
 		}
 		case VSHAHook_OnConfiguration_Load_Models:
 		{
-			result = AddToForward(p_OnConfiguration_Load_Models, plugin, GetNativeFunction(2));
+			return p_OnConfiguration_Load_Models;
 		}
 		case VSHAHook_OnConfiguration_Load_Misc:
 		{
-			result = AddToForward(p_OnConfiguration_Load_Misc, plugin, GetNativeFunction(2));
+			return p_OnConfiguration_Load_Misc;
 		}
 		case VSHAHook_OnEquipPlayer_Pre:
 		{
-			result = AddToForward(p_OnEquipPlayer_Pre, plugin, GetNativeFunction(2));
+			return p_OnEquipPlayer_Pre;
 		}
 		case VSHAHook_ShowPlayerHelpMenu:
 		{
-			result = AddToForward(p_ShowPlayerHelpMenu, plugin, GetNativeFunction(2));
+			return p_ShowPlayerHelpMenu;
 		}
 		case VSHAHook_OnEquipPlayer_Post:
 		{
-			result = AddToForward(p_OnEquipPlayer_Post, plugin, GetNativeFunction(2));
+			return p_OnEquipPlayer_Post;
 		}
 		case VSHAHook_ShowBossHelpMenu:
 		{
-			result = AddToForward(p_ShowBossHelpMenu, plugin, GetNativeFunction(2));
+			return p_ShowBossHelpMenu;
 		}
 		case VSHAHook_OnUberTimer:
 		{
-			result = AddToForward(p_OnUberTimer, plugin, GetNativeFunction(2));
+			return p_OnUberTimer;
 		}
 		case VSHAHook_OnLastSurvivorLoop:
 		{
-			result = AddToForward(p_OnLastSurvivorLoop, plugin, GetNativeFunction(2));
+			return p_OnLastSurvivorLoop;
 		}
 		case VSHAHook_OnBossWin:
 		{
-			result = AddToForward(p_OnBossWin, plugin, GetNativeFunction(2));
+			return p_OnBossWin;
 		}
 	}
-	return result;
+	return null;
+}
+
+public bool HasAutomaticHooking(Handle plugin)
+{
+	StringMap MapHooking = new StringMap();
+	int count = hArrayAutomaticHooking.Length;
+	for (int i = 0; i < count; i++)
+	{
+		MapHooking = hArrayAutomaticHooking.Get(i);
+
+		if(MapHooking.GetValue("Plugin", plugin))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+public void RemoveAutomaticHooking(Handle plugin)
+{
+	StringMap MapHooking = new StringMap();
+	int count = hArrayAutomaticHooking.Length;
+	for (int i = 0; i < count; i++)
+	{
+		MapHooking = hArrayAutomaticHooking.Get(i);
+
+		if(MapHooking.GetValue("Plugin", plugin))
+		{
+			// Found, lets remove!
+			hArrayAutomaticHooking.Erase(i);
+			break;
+		}
+	}
+}
+
+public int Native_Hook(Handle plugin, int numParams)
+{
+	VSHAHookType vshaHOOKtype = GetNativeCell(1);
+
+	Handle FwdHandle = GetVSHAHookType(vshaHOOKtype);
+	Function Func = GetNativeFunction(2);
+
+	if(FwdHandle != null)
+	{
+		if(GetNativeCell(3))
+		{
+			// if true to automatic hooking
+
+			StringMap MapHooking = new StringMap();
+			MapHooking.SetValue("Plugin", plugin);
+			MapHooking.SetValue("VSHAHookType", vshaHOOKtype);
+
+			hArrayAutomaticHooking.Push(MapHooking);
+		}
+		AddToForward(FwdHandle, plugin, Func);
+	}
+}
+public int Native_HookEx(Handle plugin, int numParams)
+{
+	VSHAHookType vshaHOOKtype = GetNativeCell(1);
+
+	Handle FwdHandle = GetVSHAHookType(vshaHOOKtype);
+	Function Func = GetNativeFunction(2);
+
+	if(FwdHandle != null)
+	{
+		if(GetNativeCell(3))
+		{
+			// if true to automatic hooking
+
+			StringMap MapHooking = new StringMap();
+			MapHooking.SetValue("Plugin", plugin);
+			MapHooking.SetValue("VSHAHookType", vshaHOOKtype);
+
+			hArrayAutomaticHooking.Push(MapHooking);
+		}
+		return AddToForward(FwdHandle, plugin, Func);
+	}
+	return 0;
 }
 
 public int Native_Unhook(Handle plugin, int numParams)
 {
-	bool result = false;
 	VSHAHookType vshaHOOKtype = GetNativeCell(1);
-	switch(vshaHOOKtype)
+
+	Handle FwdHandle = GetVSHAHookType(vshaHOOKtype);
+
+	if(FwdHandle != null)
 	{
-		case VSHAHook_OnBossIntroTalk:
-		{
-			result = RemoveFromForward(p_OnBossIntroTalk, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_AddToDownloads:
-		{
-			result = RemoveFromForward(p_AddToDownloads, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnPlayerKilledByBoss:
-		{
-			result = RemoveFromForward(p_OnPlayerKilledByBoss, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnKillingSpreeByBoss:
-		{
-			result = RemoveFromForward(p_OnKillingSpreeByBoss, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnBossKilled:
-		{
-			result = RemoveFromForward(p_OnBossKilled, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnBossKillBuilding:
-		{
-			result = RemoveFromForward(p_OnBossKillBuilding, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnMessageTimer:
-		{
-			result = RemoveFromForward(p_OnMessageTimer, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnBossAirblasted:
-		{
-			result = RemoveFromForward(p_OnBossAirblasted, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnBossSelected:
-		{
-			result = RemoveFromForward(p_OnBossSelected, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnBossSetHP:
-		{
-			result = RemoveFromForward(p_OnBossSetHP, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnLastSurvivor:
-		{
-			result = RemoveFromForward(p_OnLastSurvivor, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnBossTimer:
-		{
-			result = RemoveFromForward(p_OnBossTimer, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnPrepBoss:
-		{
-			result = RemoveFromForward(p_OnPrepBoss, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnMusic:
-		{
-			result = RemoveFromForward(p_OnMusic, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnModelTimer:
-		{
-			result = RemoveFromForward(p_OnModelTimer, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnBossRage:
-		{
-			result = RemoveFromForward(p_OnBossRage, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnConfiguration_Load_Sounds:
-		{
-			result = RemoveFromForward(p_OnConfiguration_Load_Sounds, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnConfiguration_Load_Materials:
-		{
-			result = RemoveFromForward(p_OnConfiguration_Load_Materials, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnConfiguration_Load_Models:
-		{
-			result = RemoveFromForward(p_OnConfiguration_Load_Models, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnConfiguration_Load_Misc:
-		{
-			result = RemoveFromForward(p_OnConfiguration_Load_Misc, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnEquipPlayer_Pre:
-		{
-			result = RemoveFromForward(p_OnEquipPlayer_Pre, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_ShowPlayerHelpMenu:
-		{
-			result = RemoveFromForward(p_ShowPlayerHelpMenu, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnEquipPlayer_Post:
-		{
-			result = RemoveFromForward(p_OnEquipPlayer_Post, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_ShowBossHelpMenu:
-		{
-			result = RemoveFromForward(p_ShowBossHelpMenu, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnUberTimer:
-		{
-			result = RemoveFromForward(p_OnUberTimer, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnLastSurvivorLoop:
-		{
-			result = RemoveFromForward(p_OnLastSurvivorLoop, plugin, GetNativeFunction(2));
-		}
-		case VSHAHook_OnBossWin:
-		{
-			result = RemoveFromForward(p_OnBossWin, plugin, GetNativeFunction(2));
-		}
+		RemoveAutomaticHooking(plugin);
+		RemoveFromForward(FwdHandle, plugin, GetNativeFunction(2));
 	}
-	return result;
 }
+public int Native_UnhookEx(Handle plugin, int numParams)
+{
+	VSHAHookType vshaHOOKtype = GetNativeCell(1);
+
+	Handle FwdHandle = GetVSHAHookType(vshaHOOKtype);
+
+	if(FwdHandle != null)
+	{
+		RemoveAutomaticHooking(plugin);
+		return RemoveFromForward(FwdHandle, plugin, GetNativeFunction(2));
+	}
+	return 0;
+}
+
 // Internal private forward calls
 
 public void VSHA_OnBossIntroTalk()
