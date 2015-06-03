@@ -81,15 +81,14 @@ stock bool Weighdown(int client, float &weighdowntime, float AngleForWayDown, fl
 			fVelocity[2] = -1000.0;
 			TeleportEntity(client, nullvec, nullvec, fVelocity);
 			SetEntityGravity(client, 6.0);
-			PawnTimer( GravityCat, 2.0, GetClientUserId(client) );
-			//CreateTimer(2.0, TimerGravityCat, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(2.0, TimerGravityCat, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 			weighdowntime = SetWeighdown;
 			return true;
 		}
 	}
 	return false;
 }
-public void GravityCat(int userid)
+public Action TimerGravityCat(Handle timer, int userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (IsValidClient(client)) SetEntityGravity(client, 1.0);
@@ -105,10 +104,8 @@ stock void StunSentry(int client, float dist, float duration = 6.0, int Removehe
 		if ( GetVectorDistance(playerPos, sentryPos) <= dist )
 		{
 			SetEntProp(sentry, Prop_Send, "m_bDisabled", 1);
-			PawnTimer( RemoveEnt, duration, EntIndexToEntRef(AttachParticle(sentry, "yikes_fx", 75.0)) );
-			PawnTimer( EnableSentry, duration, EntIndexToEntRef(sentry) );
-			//CreateTimer( duration, RemoveEnt, EntIndexToEntRef(AttachParticle(sentry, "yikes_fx", 75.0)) );
-			//CreateTimer( duration, TimerEnableSentry, EntIndexToEntRef(sentry) );
+			CreateTimer( duration, RemoveEnt, EntIndexToEntRef(AttachParticle(sentry, "yikes_fx", 75.0)) );
+			CreateTimer( duration, TimerEnableSentry, EntIndexToEntRef(sentry) );
 		}
 		if (Removehealth > 0.0)
 		{
@@ -117,7 +114,7 @@ stock void StunSentry(int client, float dist, float duration = 6.0, int Removehe
 		}
 	}
 }
-public void EnableSentry(int sentryid)
+public Action EnableSentry(Handle timer, int sentryid)
 {
 	int i = EntRefToEntIndex(sentryid);
 	if (CheckRoundState() == 1 && IsValidEdict(i) && i > MaxClients)
@@ -127,43 +124,6 @@ public void EnableSentry(int sentryid)
 	}
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- * Wrapper function for easily setting up timers; USE ONLY FOR FIRE-ONCE TIMERS
- *
- * @param func			Function pointer to callback desired function when time elapses
- * @param thinktime		time in seconds when timer function will be called
- * @param param1		1st param for the call back function
- * @param param2		2nd param for the call back function
- *
- * @noreturn
- */
-stock void PawnTimer(Function func, float thinktime = 0.1, any param1 = -999, any param2 = -999)
-{
-	DataPack thinkpack = new DataPack();
-	thinkpack.WriteFunction(func);
-	thinkpack.WriteCell(param1);
-	thinkpack.WriteCell(param2);
-
-	CreateTimer(thinktime, DoTimer, thinkpack, TIMER_DATA_HNDL_CLOSE);
-}
-
-public Action DoTimer(Handle hTimer, DataPack hndl)
-{
-	hndl.Reset();
-	Function pFunc = hndl.ReadFunction();
-	Call_StartFunction( null, pFunc );
-
-	any param1 = hndl.ReadCell();
-	if ( param1 != -999 ) Call_PushCell(param1);
-
-	any param2 = hndl.ReadCell();
-	if ( param2 != -999 ) Call_PushCell(param2);
-
-	Call_Finish();
-	return Plugin_Continue;
-}
 stock bool IsVSHMap() //just use arena maps as vsh/ff2 maps
 {
 	char config[PATHX], currentmap[99];
@@ -852,7 +812,7 @@ stock Handle GetBossSubPlugin(StringMap StrMapHndl)
 	return null;
 }
 
-public void RemoveEnt(int entid)
+public Action RemoveEnt(Handle timer, int entid)
 {
 	int ent = EntRefToEntIndex(entid);
 	if (ent > 0 && IsValidEntity(ent)) AcceptEntityInput(ent, "Kill");
