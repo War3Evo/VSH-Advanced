@@ -11,6 +11,10 @@ public void OnPluginStart()
 
 	//hArrayAutomaticHooking = new ArrayList();
 
+	hHudSynchronizer = CreateHudSynchronizer();
+	hHudSynchronizer2 = CreateHudSynchronizer();
+
+
 	// VSHAHook
 	p_OnBossIntroTalk = CreateForward(ET_Ignore);
 	p_AddToDownloads = CreateForward(ET_Ignore);

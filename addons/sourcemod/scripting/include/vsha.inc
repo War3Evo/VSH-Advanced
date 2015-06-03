@@ -324,7 +324,7 @@ typeset VSHAHookCB
 	function void (int iEntity);
 
 	// VSHAHook_OnBossTimer
-	function void (int iEntity, int &iiBossHealth, int &iiBossMaxHealth);
+	function void (int iEntity, int &iiBossHealth, int &iiBossMaxHealth, int buttons, Handle hHudSync, Handle hHudSync2);
 
 	// VSHAHook_OnEquipPlayer_Pre
 	// VSHAHook_OnMessageTimer

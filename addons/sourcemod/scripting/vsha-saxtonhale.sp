@@ -107,6 +107,8 @@ int HaleCharge[PLYR];
 
 int Hale[PLYR];
 
+int HaleChargeCoolDown[PLYR];
+
 float WeighDownTimer = 0.0;
 float RageDist = 800.0;
 
@@ -521,7 +523,7 @@ public void OnLastSurvivor()
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
+public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
 {
 	if (iClient != Hale[iClient]) return;
 	char playsound[PATHX];
@@ -530,39 +532,39 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
 	if (curHealth <= curMaxHp) speed = 340.0 + 0.7 * (100.0-float(curHealth)*100.0/float(curMaxHp)); //convar/cvar for speed here!
 	SetEntPropFloat(iClient, Prop_Send, "m_flMaxspeed", speed);
 
-	int buttons = GetClientButtons(iClient);
-	if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iClient] >= 0 )
+	//int buttons = GetClientButtons(iClient);
+	if (HaleChargeCoolDown[iClient] <= GetTime())
 	{
-		if (HaleCharge[iClient] + 5 < HALE_JUMPCHARGE) HaleCharge[iClient] += 5;
-		else HaleCharge[iClient] = HALE_JUMPCHARGE;
-		if (!(buttons & IN_SCORE))
+		if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iClient] >= 0 )
 		{
-			SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Jump Charge: %i%", HaleCharge[iClient]);
+			if (HaleCharge[iClient] + 5 < HALE_JUMPCHARGE) HaleCharge[iClient] += 5;
+			else HaleCharge[iClient] = HALE_JUMPCHARGE;
+			if (!(buttons & IN_SCORE))
+			{
+				SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
+				ShowSyncHudText(iClient, hHudSync, "Jump Charge: %i%", HaleCharge[iClient]);
+			}
 		}
-	}
-	else if (HaleCharge[iClient] < 0)
-	{
-		HaleCharge[iClient] += 5;
-		if (!(buttons & IN_SCORE))
-		{
-			SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", (-HaleCharge[iClient]/10));
-		}
-	}
-	else
-	{
 		// 5 * 60 = 300
 		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
 		// 300 = 1 minute wait
 		float ExtraBoost = float(HaleCharge[iClient]) * 2;
 		if ( HaleCharge[iClient] > 1 && SuperJump(iClient, ExtraBoost, -15.0, HaleCharge[iClient], -150) ) //put convar/cvar for jump sensitivity here!
 		{
-			strcopy(playsound, PLATFORM_MAX_PATH, "");
+			HaleChargeCoolDown[iClient] = GetTime()+3;
 			Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", GetRandomInt(0, 1) ? HaleJump : HaleJump132, GetRandomInt(1, 2));
 			EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 		}
 	}
+		else if (HaleCharge[iClient] < 0)
+		{
+			HaleCharge[iClient] += 5;
+			if (!(buttons & IN_SCORE))
+			{
+				SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
+				ShowSyncHudText(iClient, hHudSync, "Super Jump will be ready again in: %i", (HaleChargeCoolDown[iClient]-GetTime()));
+			}
+		}
 
 	if (VSHA_GetAliveRedPlayers() == 1) PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
 	if ( OnlyScoutsLeft() ) VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.5);

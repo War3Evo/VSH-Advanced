@@ -47,6 +47,7 @@ int iModelRetrys[PLYR],
 	iPlaying = 0,
 	TeamRoundCounter,
 	RoundCount,
+	Buttons[PLYR],
 	timeleft;
 
 //floats
@@ -96,6 +97,9 @@ Handle hdoorchecktimer = null;
 Handle PointCookie = null;
 Handle MusicTimer = null;
 Handle DrawGameTimer = null;
+
+Handle hHudSynchronizer = null;
+Handle hHudSynchronizer2 = null;
 
 //Forward Handles
 Handle AddToDownloads;

@@ -51,7 +51,7 @@ enum VSHAError
 #include "vsha/vsha_000_OnConfigsExecuted.inc"
 #include "vsha/vsha_000_RegConsoleCmd.inc"
 #include "vsha/vsha_000_RegAdminCmd.inc"
-//#include "vsha/"
+#include "vsha/vsha_000_OnPlayerRunCmd.inc"
 //#include "vsha/"
 //#include "vsha/"
 
@@ -1334,12 +1334,15 @@ public void VSHA_OnLastSurvivor()
 	Call_Finish();
 }
 
-public void VSHA_OnBossTimer (int iiBoss)
+public void VSHA_OnBossTimer(int iiBoss)
 {
 	Call_StartForward(p_OnBossTimer);
 	Call_PushCell(iiBoss);
 	Call_PushCellRef(iBossHealth[iiBoss]);
 	Call_PushCellRef(iBossMaxHealth[iiBoss]);
+	Call_PushCell(Buttons[iiBoss]);
+	Call_PushCell(hHudSynchronizer);
+	Call_PushCell(hHudSynchronizer2);
 	Call_Finish();
 }
 public void VSHA_OnBossTimer_1_Second(int iiBoss)
@@ -1584,3 +1587,4 @@ public int Native_SetPluginModel(Handle plugin, int numParams)
 	}
 	return false;
 }
+

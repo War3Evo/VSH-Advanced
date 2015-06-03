@@ -215,8 +215,6 @@ int HaleCharge[PLYR];
 
 int Hale[PLYR];
 
-int HaleButtons[PLYR];
-
 float WeighDownTimer = 0.0;
 //float RageDist = 800.0;
 
@@ -224,16 +222,12 @@ int JumpCoolDown[PLYR];
 
 Handle JumpTimerHandle[PLYR];
 
-int m_vecVelocity_0;
+int HaleChargeCoolDown[PLYR];
 
-Handle hudText;
-Handle hudText2;
+int m_vecVelocity_0;
 
 public void OnPluginStart()
 {
-	hudText = CreateHudSynchronizer();
-	hudText2 = CreateHudSynchronizer();
-
 	CreateConVar("vsha_miku_version", "1.0", "VSHA Miku Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
 	m_vecVelocity_0 = FindSendPropOffs("CBasePlayer","m_vecVelocity[0]");
@@ -604,51 +598,7 @@ public void OnLastSurvivor()
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-
-int HaleChargeCoolDown[PLYR];
-/*
-public void OnBossTimer_1_Second(int iClient)
-{
-	if (iClient != Hale[iClient]) return;
-
-	if(HaleChargeCoolDown[iClient]>0)
-	{
-		--HaleChargeCoolDown[iClient];
-	}
-}
-// InitHaleTimer allows a player to start the display.
-
-bool InitHaleTimer[PLYR];
-int HaleChargeCoolDown[PLYR];
-public void OnBossTimer_HalfASecond(int iClient)
-{
-	if (iClient != Hale[iClient]) return;
-	DP("iClient = %d",iClient);
-
-	if (HaleChargeCoolDown[iClient] <= 0)
-	{
-		if ( ((HaleButtons[iClient] & IN_DUCK) || (HaleButtons[iClient] & IN_ATTACK2)) && HaleCharge[iClient] >= 0 )
-		{
-			if (!(HaleButtons[iClient] & IN_SCORE))
-			{
-				SetHudTextParams(-1.0, 0.70, 0.6, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
-				ShowHudText(iClient, hudText, "  Jump Charge: %d% ", HaleCharge[iClient]);
-				InitHaleTimer[iClient] = false;
-			}
-		}
-	}
-	else
-	{
-		HaleCharge[iClient] = 1;
-		if (!(HaleButtons[iClient] & IN_SCORE))
-		{
-			SetHudTextParams(-1.0, 0.75, 0.6, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, hudText2, "  Mini-Super Jump will be ready again in: %d  ", --HaleChargeCoolDown[iClient]);
-			InitHaleTimer[iClient] = false;
-		}
-	}
-}*/
-public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
+public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
 {
 	if (iClient != Hale[iClient]) return;
 	char playsound[PATHX];
@@ -671,17 +621,17 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
 	//if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iClient] >= 0 )
 	if (HaleChargeCoolDown[iClient] <= GetTime())
 	{
-		if ( ((HaleButtons[iClient] & IN_DUCK) || (HaleButtons[iClient] & IN_ATTACK2)) && HaleCharge[iClient] >= 0 )
+		if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iClient] >= 0 )
 		{
 			if ((HaleCharge[iClient] + HALE_JUMPCHARGE) < HALE_JUMPCHARGETIME) HaleCharge[iClient] += HALE_JUMPCHARGE;
 			else HaleCharge[iClient] = HALE_JUMPCHARGETIME;
 			//if (!(buttons & IN_SCORE))
-			if (!(HaleButtons[iClient] & IN_SCORE))
+			if (!(buttons & IN_SCORE))
 			{
 				//if(!InitHaleTimer[iClient])
 				//{
-					SetHudTextParams(-1.0, 0.70, 0.30, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
-					ShowSyncHudText(iClient, hudText, "Jump Charge: %i% ", HaleCharge[iClient]);
+					SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
+					ShowSyncHudText(iClient, hHudSync, "Jump Charge: %i% ", HaleCharge[iClient]);
 					//InitHaleTimer[iClient]=true;
 				//}
 			}
@@ -700,13 +650,13 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
 	}
 	else
 	{
-		if (!(HaleButtons[iClient] & IN_SCORE))
+		if (!(buttons & IN_SCORE))
 		{
 			//if(!InitHaleTimer[iClient])
 			//{
 				HaleCharge[iClient] = 1;
-				SetHudTextParams(-1.0, 0.75, 0.30, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
-				ShowSyncHudText(iClient, hudText2, "Mini-Super Jump will be ready again in: %d ", (HaleChargeCoolDown[iClient]-GetTime()));
+				SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
+				ShowSyncHudText(iClient, hHudSync2, "Mini-Super Jump will be ready again in: %d ", (HaleChargeCoolDown[iClient]-GetTime()));
 				//InitHaleTimer[iClient]=true;
 			//}
 		}
@@ -720,7 +670,7 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp)
 	if ( !(GetEntityFlags(iClient) & FL_ONGROUND) ) WeighDownTimer += 0.2;
 	else WeighDownTimer = 0.0;
 
-	if ( (HaleButtons[iClient] & IN_DUCK) && Weighdown(iClient, WeighDownTimer, 60.0, 0.0) )
+	if ( (buttons & IN_DUCK) && Weighdown(iClient, WeighDownTimer, 60.0, 0.0) )
 	{
 		//CPrintToChat(client, "{olive}[VSHE]{default} You just used your weighdown!");
 		//all this just to do a cprint? It's not like weighdown has a limit...
@@ -1396,8 +1346,6 @@ bool lastframewasground[MAXPLAYERS + 1];
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
 	if(client != Hale[client]) return Plugin_Continue;
-
-	HaleButtons[client] = buttons;
 
 	if(!InRage[client] && (JumpCoolDown[client] > GetTime())) return Plugin_Continue;
 
