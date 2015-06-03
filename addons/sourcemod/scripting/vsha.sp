@@ -840,6 +840,16 @@ public void UnRegisterNonBossAddon(Handle pluginhndl)
 
 	hArrayNonBossSubplugins.Erase(iPlugin);
 }
+public bool GetBossName(Handle pluginhandle, char BossName[32])
+{
+	int BossPluginID = FindByBossSubPluginByID(pluginhandle);
+	if(BossPluginID > -1)
+	{
+		StringMap BossSubplug = hArrayBossSubplugins.Get(BossPluginID);
+		return BossSubplug.GetString("BossLongName", STRING(BossName));
+	}
+	return false;
+}
 public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const char longname[32], VSHAError &error)
 {
 	if (!ValidateName(shortname))
@@ -1280,10 +1290,13 @@ public void VSHA_OnBossKillBuilding(Event event, int iiBoss)
 	Call_Finish();
 }
 
-public void VSHA_OnMessageTimer()
+public Action VSHA_OnMessageTimer(int iiBoss)
 {
+	Action result = Plugin_Continue;
 	Call_StartForward(p_OnMessageTimer);
-	Call_Finish();
+	Call_PushCell(iiBoss);
+	Call_Finish(result);
+	return result;
 }
 
 public void VSHA_OnBossAirblasted(Event event, int attacker)

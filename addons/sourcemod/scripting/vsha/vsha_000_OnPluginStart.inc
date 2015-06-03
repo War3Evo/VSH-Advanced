@@ -22,7 +22,7 @@ public void OnPluginStart()
 	p_OnBossWin = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 	p_OnBossKillBuilding = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
-	p_OnMessageTimer = CreateForward(ET_Ignore);
+	p_OnMessageTimer = CreateForward(ET_Hook, Param_Cell);
 
 	p_OnBossAirblasted = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 

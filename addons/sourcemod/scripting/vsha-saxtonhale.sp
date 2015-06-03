@@ -143,10 +143,10 @@ public void Load_VSHAHooks()
 	{
 		LogError("Error loading VSHAHook_OnBossKillBuilding forwards for saxton hale.");
 	}
-	if(!VSHAHookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
-	{
-		LogError("Error loading VSHAHook_OnMessageTimer forwards for saxton hale.");
-	}
+	//if(!VSHAHookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
+	//{
+		//LogError("Error loading VSHAHook_OnMessageTimer forwards for saxton hale.");
+	//}
 	if(!VSHAHookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
 	{
 		LogError("Error loading VSHAHook_OnBossAirblasted forwards for saxton hale.");
@@ -210,10 +210,10 @@ public void UnLoad_VSHAHooks()
 	{
 		LogError("Error unloading VSHAHook_OnBossKillBuilding forwards for saxton hale.");
 	}
-	if(!VSHAUnhookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
-	{
-		LogError("Error unloading VSHAHook_OnMessageTimer forwards for saxton hale.");
-	}
+	//if(!VSHAUnhookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
+	//{
+		//LogError("Error unloading VSHAHook_OnMessageTimer forwards for saxton hale.");
+	//}
 	if(!VSHAUnhookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
 	{
 		LogError("Error unloading VSHAHook_OnBossAirblasted forwards for saxton hale.");
@@ -434,8 +434,10 @@ public void OnBossKillBuilding(Event event, int iiBoss)
 		EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	}
 }
-public void OnMessageTimer()
+/*        NO LONGER USING.. HANDLED INTERNALLY, unless you just want to handle it.
+public Action OnMessageTimer(int iiBoss)
 {
+	if ( iiBoss!= Hale[iiBoss] ) return Plugin_Continue;
 	//SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
 	char text[PATHX];
 	int client;
@@ -457,7 +459,7 @@ public void OnMessageTimer()
 		}
 	}
 	return;
-}
+}*/
 public void OnBossAirblasted(Event event, int iiBoss)
 {
 	if (iiBoss != Hale[iiBoss]) return;
@@ -1131,7 +1133,7 @@ public Action UseRage(Handle hTimer, any client)
 			{
 				int flags = TF_STUNFLAGS_GHOSTSCARE;
 				flags |= TF_STUNFLAG_NOSOUNDOREFFECT;
-				PawnTimer( RemoveEnt, 5.0, EntIndexToEntRef(AttachParticle(i, "yikes_fx", 75.0)) );
+				CreateTimer( 5.0, RemoveEnt, EntIndexToEntRef(AttachParticle(i, "yikes_fx", 75.0)) );
 				if (CheckRoundState() != 0) TF2_StunPlayer(i, 5.0, _, flags, client);
 			}
 		}

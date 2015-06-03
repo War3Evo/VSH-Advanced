@@ -15,8 +15,33 @@ public Action DoMessage(Handle timer, int data)
 		hdoorchecktimer = CreateTimer(5.0, Timer_CheckDoors, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 
+	int CountBosses = 0;
+	LoopActiveBosses(target)
+	{
+		CountBosses++;
+	}
+
+	char sBossName[32];
+	char sClientName[32];
+
+
+	//if(CountBosses>0)
+	//{
+	LoopActiveBosses(target)
+	{
+		if(VSHA_OnMessageTimer(target) == Plugin_Continue)
+		{
+			if(GetBossName(Storage[target],sBossName))
+			{
+				GetClientName(target,STRING(sClientName));
+				CPrintToChatAll("%s %s became %s starting with %d HP",VSHA_COLOR,sClientName,sBossName,iBossMaxHealth[target]);
+			}
+		}
+	}
+	//}
+
 	//VSHA_Private_Forward("VSHA_MessageTimer");
-	VSHA_OnMessageTimer();
+	//VSHA_OnMessageTimer();
 
 	/*SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
 	char text[PATHX];

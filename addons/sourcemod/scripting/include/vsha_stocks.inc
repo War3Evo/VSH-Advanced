@@ -105,7 +105,7 @@ stock void StunSentry(int client, float dist, float duration = 6.0, int Removehe
 		{
 			SetEntProp(sentry, Prop_Send, "m_bDisabled", 1);
 			CreateTimer( duration, RemoveEnt, EntIndexToEntRef(AttachParticle(sentry, "yikes_fx", 75.0)) );
-			CreateTimer( duration, TimerEnableSentry, EntIndexToEntRef(sentry) );
+			CreateTimer( duration, EnableSentry, EntIndexToEntRef(sentry) );
 		}
 		if (Removehealth > 0.0)
 		{

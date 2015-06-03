@@ -274,10 +274,10 @@ public void Load_VSHAHooks()
 	{
 		LogError("Error loading VSHAHook_OnBossWin forwards for saxton hale.");
 	}
-	if(!VSHAHookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
-	{
-		LogError("Error loading VSHAHook_OnMessageTimer forwards for saxton hale.");
-	}
+	//if(!VSHAHookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
+	//{
+		//LogError("Error loading VSHAHook_OnMessageTimer forwards for saxton hale.");
+	//}
 	if(!VSHAHookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
 	{
 		LogError("Error loading VSHAHook_OnBossAirblasted forwards for saxton hale.");
@@ -338,10 +338,10 @@ public void UnLoad_VSHAHooks()
 	{
 		LogError("Error unloading VSHAHook_OnBossWin forwards for saxton hale.");
 	}
-	if(!VSHAUnhookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
-	{
-		LogError("Error unloading VSHAHook_OnMessageTimer forwards for saxton hale.");
-	}
+	//if(!VSHAUnhookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
+	//{
+		//LogError("Error unloading VSHAHook_OnMessageTimer forwards for saxton hale.");
+	//}
 	if(!VSHAUnhookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
 	{
 		LogError("Error unloading VSHAHook_OnBossAirblasted forwards for saxton hale.");
@@ -514,8 +514,10 @@ public void OnGameOver() // best play to reset all variables
 		}
 	}
 }
-public void OnMessageTimer()
+/*        NO LONGER USING.. HANDLED INTERNALLY, unless you just want to handle it.
+public Action OnMessageTimer(int iiBoss)
 {
+	if ( iiBoss!= Hale[iiBoss] ) return Plugin_Continue;
 	//SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
 	char text[PATHX];
 	int client;
@@ -536,7 +538,7 @@ public void OnMessageTimer()
 			ShowHudText(client, -1, text);
 		}
 	}
-}
+}*/
 public void OnBossAirblasted(Event event, int iiBoss)
 {
 	if (iiBoss != Hale[iiBoss]) return;

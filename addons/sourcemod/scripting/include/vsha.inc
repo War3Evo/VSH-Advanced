@@ -262,7 +262,7 @@ enum VSHAHookType
 {
 	VSHAHook_None,
 	VSHAHook_OnLastSurvivor,
-	VSHAHook_OnMessageTimer,		// Best Place to unhook your functions
+	VSHAHook_OnMessageTimer,
 	VSHAHook_OnBossIntroTalk,
 	VSHAHook_OnBossKilled,
 	VSHAHook_OnBossWin,				// Best Place to rehook your functions
@@ -325,6 +325,7 @@ typeset VSHAHookCB
 	function void (int iEntity, int &iiBossHealth, int &iiBossMaxHealth);
 
 	// VSHAHook_OnEquipPlayer_Pre
+	// VSHAHook_OnMessageTimer
 	function Action (int iEntity);
 
 	// VSHAHook_OnPlayerKilledByBoss
