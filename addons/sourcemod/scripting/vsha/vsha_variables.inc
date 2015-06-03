@@ -151,6 +151,7 @@ Handle p_OnGameMode_BossSetup;
 Handle p_OnGameMode_ForceBossTeamChange;
 Handle p_OnGameMode_ForcePlayerTeamChange;
 Handle p_OnGameMode_WatchGameModeTimer;
+Handle p_OnGameOver;
 
 // Multi boss
 bool AllowMusic = true;

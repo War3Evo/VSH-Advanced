@@ -65,6 +65,8 @@ public void OnPluginStart()
 
 	p_OnGameMode_WatchGameModeTimer = 			 CreateForward(ET_Hook);
 
+	p_OnGameOver = CreateForward(ET_Ignore);
+
 	CreateConVar("vsha_version", PLUGIN_VERSION, "VSHA Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
 	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);

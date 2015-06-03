@@ -179,6 +179,10 @@ public void Load_VSHAHooks()
 	{
 		LogError("Error loading VSHAHook_OnBossRage forwards for saxton hale.");
 	}
+	if(!VSHAHookEx(VSHAHook_OnGameOver, OnGameOver))
+	{
+		LogError("Error loading VSHAHook_OnGameOver forwards for saxton hale.");
+	}
 }
 public void UnLoad_VSHAHooks()
 {
@@ -1454,3 +1458,13 @@ public void VSHA_OnConfiguration_Load_Misc(char[] cFile, char[] skey, char[] val
 {
 }
 */
+public void OnGameOver() // best play to reset all variables
+{
+	LoopMaxPLYR(players)
+	{
+		if(Hale[players])
+		{
+			Hale[players]=false;
+		}
+	}
+}

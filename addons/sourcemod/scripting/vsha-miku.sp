@@ -310,6 +310,10 @@ public void Load_VSHAHooks()
 	{
 		LogError("Error loading VSHAHook_OnBossRage forwards for saxton hale.");
 	}
+	if(!VSHAHookEx(VSHAHook_OnGameOver, OnGameOver))
+	{
+		LogError("Error loading VSHAHook_OnGameOver forwards for saxton hale.");
+	}
 }
 
 public void UnLoad_VSHAHooks()
@@ -479,7 +483,6 @@ public void OnBossKilled(int iiBoss, int attacker) //victim is boss
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 
 	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
-	Hale[iiBoss] = 0;
 }
 public void OnBossWin(Event event, int iiBoss)
 {
@@ -500,6 +503,16 @@ public void OnBossWin(Event event, int iiBoss)
 
 	// Dynamically unload private forwards
 	//UnLoad_VSHAHooks();
+}
+public void OnGameOver() // best play to reset all variables
+{
+	LoopMaxPLYR(players)
+	{
+		if(Hale[players])
+		{
+			Hale[players]=false;
+		}
+	}
 }
 public void OnMessageTimer()
 {

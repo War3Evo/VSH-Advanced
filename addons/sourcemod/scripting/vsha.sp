@@ -1088,6 +1088,10 @@ stock Handle GetVSHAHookType(VSHAHookType vshaHOOKtype)
 		{
 			return p_OnGameMode_WatchGameModeTimer;
 		}
+		case VSHAHook_OnGameOver:
+		{
+			return p_OnGameOver;
+		}
 	}
 	return null;
 }
@@ -1487,6 +1491,11 @@ public Action VSHA_OnGameMode_WatchGameModeTimer()
 	return result;
 }
 
+public void VSHA_OnGameOver()
+{
+	Call_StartForward(p_OnGameOver);
+	Call_Finish();
+}
 // GAME MODE EXTRA NATIVES
 
 public int Native_BossSelected_Forward(Handle plugin, int numParams)

@@ -95,6 +95,8 @@ public Action OnGameMode_BossSetup()
 	}
 	SetConVarInt(FindConVar("mp_teams_unbalance_limit"), 0);
 
+	VSHA_SetPlayMusic(false);
+
 	// BOSS 1
 	int boss = VSHA_AddBoss();
 
@@ -139,7 +141,6 @@ public Action OnGameMode_BossSetup()
 			}
 		}
 	}
-	VSHA_SetPlayMusic(false);
 	CPrintToChatAll("%s DUO BOSSES!",VSHA_COLOR);
 
 	// will be adding duo boss theme music sometime soon

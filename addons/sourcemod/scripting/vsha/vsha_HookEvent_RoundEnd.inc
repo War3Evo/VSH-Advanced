@@ -115,5 +115,8 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 	}
 	PawnTimer( CalcScores, 3.0, TIMER_FLAG_NO_MAPCHANGE );
 	//CreateTimer(3.0, TimerCalcScores, _, TIMER_FLAG_NO_MAPCHANGE);
+
+	VSHA_OnGameOver();
+
 	return Plugin_Continue;
 }

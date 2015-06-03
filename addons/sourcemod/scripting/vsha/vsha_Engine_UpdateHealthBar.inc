@@ -2,23 +2,24 @@
 
 public void UpdateHealthBar()
 {
-	//int dohealth = 0, domaxhealth = 0, bosscount = 0;
-	int bosscount = 0;
-	LoopAlivePlayers(target)
+	int bossHP = 0, bossMaxHealth = 0, bosscount = 0;
+	//int bosscount = 0;
+	LoopIngameClients(target)
 	{
 		if ( !IsClientValid(target) || !bIsBoss[target] ) continue;
 
 		//dohealth += iBossHealth[i]-iBossMaxHealth[i];
-		//domaxhealth += iBossMaxHealth[i];
+		bossHP += iBossHealth[target];
+		bossMaxHealth += iBossMaxHealth[target];
 
 		// Take the lowest boss health
-		if( iBossHealth[target] < iLowestBossHP)
-		{
-			iLowestBossHP = iBossHealth[target];
-		}
+		//if( iBossHealth[target] < iLowestBossHP)
+		//{
+			//iLowestBossHP = iBossHealth[target];
+		//}
 		bosscount++;
 	}
-	if ( bosscount == 1 )
+	if ( bosscount >= 1 )
 	{
 		if(iHealthBar == -1)
 		{
@@ -33,17 +34,17 @@ public void UpdateHealthBar()
 			//int maxHP = GetEntProp(BossIndex, Prop_Data, "m_iMaxHealth");
 			//int HP = GetEntProp(BossIndex, Prop_Data, "m_iHealth");
 
-			int HP = iBossHealth[BossIndex];
-			int maxHP = iBossMaxHealth[BossIndex];
+			//int HP = iBossHealth[BossIndex];
+			//int maxHP = iBossMaxHealth[BossIndex];
 
-			if (HP <= 0)
+			if (bossHP <= 0)
 			{
 				percentage = 1;
 			}
 			else
 			{
-				float fHP = float(HP);
-				float fmaxHP = float(maxHP);
+				float fHP = float(bossHP);
+				float fmaxHP = float(bossMaxHealth);
 				float fHEALTHBAR = float(HEALTHBAR_MAX);
 
 				//PrintToChatAll("fHP %f fmaxHP %f fHEALTHBAR %f",fHP,fmaxHP,fHEALTHBAR);
@@ -72,7 +73,7 @@ public void UpdateHealthBar()
 
 		//DP("UPDATE HEALTH BAR %i",percentage);
 	}
-	else if ( bosscount > 1 && iHealthBar != -1)
+	else if ( bosscount <= 0 && iHealthBar != -1)
 	{
 		if (IsValidEntity(iHealthBar))
 		{

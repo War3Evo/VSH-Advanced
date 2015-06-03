@@ -292,6 +292,7 @@ enum VSHAHookType
 	VSHAHook_OnGameMode_ForceBossTeamChange,
 	VSHAHook_OnGameMode_ForcePlayerTeamChange,
 	VSHAHook_OnGameMode_WatchGameModeTimer,
+	VSHAHook_OnGameOver, // the very end of round or game over, best place to reset variables for your boss
 };
 
 typeset VSHAHookCB
@@ -308,6 +309,7 @@ typeset VSHAHookCB
 	// VSHAHook_AddToDownloads
 	// VSHAHook_OnMessageTimer
 	// VSHAHook_OnLastSurvivor
+	// VSHAHook_OnGameOver
 	function void ();
 
 	// VSHAHook_OnBossSelected
