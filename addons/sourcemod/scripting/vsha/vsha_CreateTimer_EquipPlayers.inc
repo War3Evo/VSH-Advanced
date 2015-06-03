@@ -1,12 +1,9 @@
-// vsha_PawnTimer_EquipPlayers.inc
+// vsha_CreateTimer_EquipPlayers.inc
 
-
-// OnEquipPlayers(int iClient,
-
-public void EquipPlayers(int iClientid)
+public Action EquipPlayers(Handle timer, int userid)
 {
-	int iClient = GetClientOfUserId(iClientid);
-	if ( iClient <= 0 || !IsPlayerAlive(iClient) || CheckRoundState() == 2) return;
+	int iClient = GetClientOfUserId(userid);
+	if ( iClient <= 0 || !IsPlayerAlive(iClient) || CheckRoundState() == 2) return Plugin_Continue;
 
 	if (IsValidEntity(iClient)) TF2Attrib_RemoveAll(iClient);
 	if(VSHA_OnGameMode_ForcePlayerTeamChange(iClient, OtherTeam) != Plugin_Handled)
@@ -31,7 +28,7 @@ public void EquipPlayers(int iClientid)
 			VSHHelped[iClient] = true;
 		}
 
-		return;
+		return Plugin_Continue;
 	}
 	else if(result != Plugin_Continue)
 	{
@@ -43,7 +40,7 @@ public void EquipPlayers(int iClientid)
 			VSHHelped[iClient] = true;
 		}
 
-		return;
+		return Plugin_Continue;
 	}
 
 	int weapon = GetPlayerWeaponSlot(iClient, TFWeaponSlot_Primary);
@@ -167,5 +164,5 @@ public void EquipPlayers(int iClientid)
 		VSHHelped[iClient] = true;
 	}
 
-	return;
+	return Plugin_Continue;
 }

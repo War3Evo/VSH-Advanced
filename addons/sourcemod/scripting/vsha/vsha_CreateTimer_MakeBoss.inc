@@ -68,6 +68,6 @@ public Action MakeBoss(Handle timer, int userid)
 
 	VSHA_OnPrepBoss(iClient);
 
-	PawnTimer(CleanScreen, 0.2, iBossUserID[iClient]); //CreateTimer(0.0, CleanScreen, iBossUserID[iClient]);
+	CreateTimer(0.2, CleanScreen, iBossUserID[iClient]);
 	return;
 }

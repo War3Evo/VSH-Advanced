@@ -1,6 +1,6 @@
 // vsha_HookEvent_RoundStart.inc
 
-public void ForceRoundStartCheckTimer()
+public Action ForceRoundStartCheckTimer(Handle timer, int data)
 {
 	RoundStartFunction();
 }
@@ -72,7 +72,7 @@ public Action RoundStartFunction()
 			{
 				RetryCounter--;
 			}
-			PawnTimer(ForceRoundStartCheckTimer, 4.8);
+			CreateTimer(4.8, ForceRoundStartCheckTimer);
 			CPrintToChatAll("{olive}[VSH Engine]{default} Waiting for more players...");
 		}
 		else
@@ -152,13 +152,13 @@ public Action RoundStartFunction()
 	bTenSecStart[0] = true;
 	bTenSecStart[1] = true;
 
-	PawnTimer(tTenSecStart, 29.1, 0);
-	PawnTimer(tTenSecStart, 60.1, 1);
+	CreateTimer(29.1, tTenSecStart, 0);
+	CreateTimer(60.1, tTenSecStart, 1);
 
-	PawnTimer(BossStart, 9.1); //CreateTimer(9.1, TimerBossStart);
-	PawnTimer(InitBoss, 0.2); //CreateTimer(0.1, TimerInitBoss);
-	PawnTimer(BossResponse, 3.5); //CreateTimer(3.5, TimerBossResponse);
-	PawnTimer(DoMessage, 9.6); //CreateTimer(9.6, MessageTimer);
+	CreateTimer(9.1, BossStart);
+	CreateTimer(0.2, InitBoss);
+	CreateTimer(3.5, BossResponse);
+	CreateTimer(9.6, DoMessage);
 	PointReady = false;
 
 	for ( int entity = MaxClients+1; entity < MaxEntities; entity++ )

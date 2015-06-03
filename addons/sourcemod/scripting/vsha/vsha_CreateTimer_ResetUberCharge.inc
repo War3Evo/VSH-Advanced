@@ -1,6 +1,6 @@
-// vsha_PawnTimer_ResetUberCharge.inc
+// vsha_CreateTimer_ResetUberCharge.inc
 
-public void ResetUberCharge(int medigunid)
+public Action ResetUberCharge(Handle timer, int medigunid)
 {
 	int medigun = EntRefToEntIndex(medigunid);
 	if ( IsValidEntity(medigun) ) SetMediCharge(medigun, GetMediCharge(medigun)+MedigunReset.FloatValue); //GetConVarFloat(MedigunReset)); //40.0

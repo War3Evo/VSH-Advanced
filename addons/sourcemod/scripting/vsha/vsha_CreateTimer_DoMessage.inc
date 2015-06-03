@@ -1,8 +1,8 @@
-// vsha_PawnTimer_DoMessage.inc
+// vsha_CreateTimer_DoMessage.inc
 
-public void DoMessage()
+public Action DoMessage(Handle timer, int data)
 {
-	if (CheckRoundState() != 0) return;
+	if (CheckRoundState() != 0) return Plugin_Continue;
 
 	int entity = -1;
 	while ( (entity = FindEntityByClassname2(entity, "func_door")) != -1 )
@@ -29,5 +29,5 @@ public void DoMessage()
 	{
 		if ( IsValidClient(client) ) ShowHudText(client, -1, text);
 	}*/
-	return;
+	return Plugin_Continue;
 }

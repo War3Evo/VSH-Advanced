@@ -1,6 +1,6 @@
-// vsha_PawnTimer_BossStart.inc
+// vsha_CreateTimer_BossStart.inc
 
-public void BossStart()
+public Action BossStart(Handle timer, int data)
 {
 	iPlaying = 0;
 	LoopIngameClients(iClient) //loop iClients first for health calculation
@@ -9,15 +9,11 @@ public void BossStart()
 		{
 			iPlaying++;
 			SetEntityMoveType(iClient, MOVETYPE_WALK); // >_>
-			PawnTimer(EquipPlayers, 0.2, GetClientUserId(iClient)); //SUIT UP!
-			//CreateTimer(0.1, TimerEquipPlayers, GetClientUserId(iClient));
+			CreateTimer(0.2, EquipPlayers, GetClientUserId(iClient)); //SUIT UP!
 		}
 	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH Engine::BossStart() **** non-Boss Player loop finished ****");
-	DEBUGPRINT2("{lime}VSH Engine::BossStart() **** non-Boss Player loop finished ****");
-	DEBUGPRINT3("VSH Engine::BossStart() **** non-Boss Player loop finished ****");
-#endif
+	//VSH Engine::BossStart() **** non-Boss Player loop finished
+
 	LoopActiveBosses(iClient)
 	{
 		// LoopActiveBosses takes care of this:
@@ -67,18 +63,13 @@ public void BossStart()
 			if ( CheckRoundState() == 0 ) CreateTimer(2.0, MusicPlay, GetClientUserId(iClient), TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH Engine::TimerBossStart() **** Boss Player loop finished ****");
-	DEBUGPRINT2("{lime}VSH Engine::TimerBossStart() **** Boss Player loop finished ****");
-	DEBUGPRINT3("VSH Engine::TimerBossStart() **** Boss Player loop finished ****");
-#endif
-	PawnTimer(CheckAlivePlayers, 0.2); //CreateTimer(0.2, CheckAlivePlayers);
+	// VSH Engine::TimerBossStart() **** Boss Player loop finished
+
+	CreateTimer(0.2, CheckAlivePlayers);
 	CreateTimer(0.2, HaleTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	CreateTimer(0.2, BossTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 
-#if defined DEBUG
-	DEBUGPRINT1("VSH Engine::TimerBossStart() **** Boss & Client Loop Timers created ****");
-	DEBUGPRINT2("{lime}VSH Engine::TimerBossStart() **** Boss & Client Loop Timers created ****");
-#endif
+	// VSH Engine::TimerBossStart() **** Boss & Client Loop Timers created ****
+
 	if ( !PointType && iPlaying > AliveToEnable.IntValue ) SetControlPoint(false); //GetConVarInt(AliveToEnable)
 }

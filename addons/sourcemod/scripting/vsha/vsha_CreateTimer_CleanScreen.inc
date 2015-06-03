@@ -1,11 +1,11 @@
-// vsha_PawnTimer_CleanScreen.inc
+// vsha_CreateTimer_CleanScreen.inc
 
-public void CleanScreen(int userid)
+public Action CleanScreen(Handle timer, int userid)
 {
 	int client = GetClientOfUserId(userid);
-	if ( client <= 0 || !bIsBoss[client] ) return;
+	if ( client <= 0 || !bIsBoss[client] ) return Plugin_Continue;
 	SetCommandFlags("r_screenoverlay", GetCommandFlags("r_screenoverlay") & (~FCVAR_CHEAT));
 	ClientCommand(client, "r_screenoverlay \"\"");
 	SetCommandFlags("r_screenoverlay", GetCommandFlags("r_screenoverlay") & FCVAR_CHEAT);
-	return;
+	return Plugin_Continue;
 }

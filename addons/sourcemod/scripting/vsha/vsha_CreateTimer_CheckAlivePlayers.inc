@@ -1,8 +1,8 @@
-// vsha_PawnTimer_CheckAlivePlayers.inc
+// vsha_CreateTimer_CheckAlivePlayers.inc
 
-public void CheckAlivePlayers()
+public Action CheckAlivePlayers(Handle timer, int data)
 {
-	if ( CheckRoundState() == 2 ) return;
+	if ( CheckRoundState() == 2 ) return Plugin_Continue;
 	iRedAlivePlayers = 0, iBluAlivePlayers = 0;
 	for (int client = 1; client <= MaxClients; client++)
 	{
@@ -74,5 +74,5 @@ public void CheckAlivePlayers()
 #endif
 		}
 	}
-	return;
+	return Plugin_Continue;
 }

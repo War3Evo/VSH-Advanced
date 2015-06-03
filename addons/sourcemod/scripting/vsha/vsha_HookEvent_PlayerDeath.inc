@@ -12,7 +12,7 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 	}
 	int victim = GetClientOfUserId(event.GetInt("userid"));
 	int attacker = GetClientOfUserId(event.GetInt("attacker"));
-	PawnTimer(CheckAlivePlayers, 0.2); //CreateTimer(0.1, CheckAlivePlayers);
+	CreateTimer(0.2, CheckAlivePlayers);
 	SetClientOverlay(victim, "");
 	if (!bIsBoss[victim])
 	{

@@ -1,6 +1,6 @@
-// vsha_PawnTimer_InitBoss.inc
+// vsha_CreateTimer_InitBoss.inc
 
-public void InitBoss()
+public Action InitBoss(Handle timer, int data)
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
@@ -11,8 +11,5 @@ public void InitBoss()
 			CreateTimer(0.2, MakeBoss, iBossUserID[i]);
 		}
 	}
-#if defined DEBUG
-	DEBUGPRINT1("VSH Engine::InitBoss() **** Player loop finished ****");
-	DEBUGPRINT3("VSH Engine::InitBoss() **** Player loop finished ****");
-#endif
+	return Plugin_Continue;
 }

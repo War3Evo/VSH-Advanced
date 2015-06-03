@@ -77,8 +77,10 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 			top[2] = i;
 		}
 	}
-	if ( iDamage[top[0]] > 9000 ) PawnTimer( TimerNineThousand, 1.0, TIMER_FLAG_NO_MAPCHANGE );
-	//CreateTimer(1.0, TimerNineThousand, _, TIMER_FLAG_NO_MAPCHANGE);
+	if ( iDamage[top[0]] > 9000 )
+	{
+		CreateTimer(1.0, TimerNineThousand, _, TIMER_FLAG_NO_MAPCHANGE);
+	}
 
 	char first[32];
 	if ( IsValidClient(top[0]) && (GetClientTeam(top[0]) == OtherTeam) ) GetClientName(top[0], first, 32);
@@ -113,8 +115,7 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 			ShowHudText(i, -1, "Most Damage Dealt By:\n1)%i - %s\n2)%i - %s\n3)%i - %s\n\nDamage Dealt: %i\nScore for this round: %i", iDamage[top[0]], first, iDamage[top[1]], second, iDamage[top[2]], third, iDamage[i], RoundFloat(iDamage[i]/600.0));
 		}
 	}
-	PawnTimer( CalcScores, 3.0, TIMER_FLAG_NO_MAPCHANGE );
-	//CreateTimer(3.0, TimerCalcScores, _, TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(3.0, CalcScores, _, TIMER_FLAG_NO_MAPCHANGE);
 
 	VSHA_OnGameOver();
 

@@ -1,6 +1,6 @@
-// vsha_PawnTimer_CalcScores.inc
+// vsha_CreateTimer_CalcScores.inc
 
-public void CalcScores()
+public Action CalcScores(Handle timer, int data)
 {
 	int j, damage;
 	for (int i = 1; i <= MaxClients; i++)

@@ -27,7 +27,7 @@ public Action Timer_Uber(Handle timer, any medigunid)
 		}
 		if ( GetMediCharge(medigun) <= 0.05 )
 		{
-			PawnTimer(ResetUberCharge, 3.0, EntIndexToEntRef(medigun)); //CreateTimer(3.0, ResetUberCharge, EntIndexToEntRef(medigun));
+			CreateTimer(3.0, ResetUberCharge, EntIndexToEntRef(medigun));
 			return Plugin_Stop;
 		}
 	}

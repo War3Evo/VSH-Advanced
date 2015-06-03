@@ -21,12 +21,12 @@ public Action PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 
 			TF2_RemoveAllWeapons2(client);
 			TF2_RegeneratePlayer(client);
-			PawnTimer(EquipPlayers, 0.2, GetClientUserId(client)); //CreateTimer(0.1, EquipPlayers, GetClientUserId(client));
+			CreateTimer(0.2, EquipPlayers, GetClientUserId(client));
 #if defined DEBUG
 			DEBUGPRINT1("VSH Engine::PlayerSpawn() **** Non-Boss Player sent to Equip Timer! ****");
 #endif
 		}
 	}
-	if ( CheckRoundState() == 1 ) PawnTimer(CheckAlivePlayers, 0.2); //CreateTimer(0.5, CheckAlivePlayers);
+	if ( CheckRoundState() == 1 ) CreateTimer(0.2, CheckAlivePlayers);
 	return Plugin_Continue;
 }
