@@ -78,7 +78,7 @@ enum VSHAError
 #include "vsha/vsha_Engine_ClearVariables.inc"
 #include "vsha/vsha_Engine_CacheDownloads.inc"
 //#include "vsha/vsha_Engine_ModelManager.inc"
-//#include "vsha/"
+//#include "vsha/vsha_Engine_CoolDownManager.inc"
 //#include "vsha/"
 //#include "vsha/"
 
@@ -104,7 +104,7 @@ enum VSHAError
 #include "vsha/vsha_CreateTimer_TimerNineThousand.inc"
 #include "vsha/vsha_CreateTimer_ResetUberCharge.inc"
 #include "vsha/vsha_CreateTimer_CleanScreen.inc"
-//#include "vsha/"
+#include "vsha/vsha_CreateTimer_ZeroPointTwo.inc"
 //#include "vsha/"
 //#include "vsha/"
 
@@ -1094,6 +1094,10 @@ stock Handle GetVSHAHookType(VSHAHookType vshaHOOKtype)
 		{
 			return p_OnGameOver;
 		}
+		case VSHAHook_OnBossTimer_1_Second:
+		{
+			return p_OnBossTimer_1_Second;
+		}
 	}
 	return null;
 }
@@ -1338,7 +1342,12 @@ public void VSHA_OnBossTimer (int iiBoss)
 	Call_PushCellRef(iBossMaxHealth[iiBoss]);
 	Call_Finish();
 }
-
+public void VSHA_OnBossTimer_1_Second(int iiBoss)
+{
+	Call_StartForward(p_OnBossTimer_1_Second);
+	Call_PushCell(iiBoss);
+	Call_Finish();
+}
 public void VSHA_OnPrepBoss(int iiBoss)
 {
 	Call_StartForward(p_OnPrepBoss);

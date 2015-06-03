@@ -2,7 +2,7 @@
 
 public void BossHUD(int client)
 {
-	SetHudTextParams(-1.0, 0.88, 1.0, 90, 255, 90, 200);
+	SetHudTextParams(-1.0, 0.88, 0.3, 90, 255, 90, 200); // was 1.0 .. from 0.3
 	if ( !(GetClientButtons(client) & IN_SCORE) )
 	{
 		if (IsPlayerAlive(client) )

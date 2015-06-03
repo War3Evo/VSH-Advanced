@@ -66,8 +66,10 @@ public Action BossStart(Handle timer, int data)
 	// VSH Engine::TimerBossStart() **** Boss Player loop finished
 
 	CreateTimer(0.2, CheckAlivePlayers);
-	CreateTimer(0.2, HaleTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-	CreateTimer(0.2, BossTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	// ZeroPointTwo takes care of HaleTimer and BossTimer
+	CreateTimer(0.2, ZeroPointTwo, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	//CreateTimer(0.2, HaleTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	//CreateTimer(0.2, BossTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 
 	// VSH Engine::TimerBossStart() **** Boss & Client Loop Timers created ****
 

@@ -1,4 +1,4 @@
-
+// vsha-OnEquipPlayer-example.sp
 #include <tf2attributes>
 #include <vsha>
 #include <vsha_stocks>

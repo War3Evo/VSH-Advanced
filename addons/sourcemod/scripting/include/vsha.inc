@@ -34,7 +34,7 @@
 #define LifeState_Alive 0
 #define LifeState_Dead 2
 
-#define HudTextScreenHoldTime 0.20
+#define HudTextScreenHoldTime 0.3
 
 #define HEALTHBAR_CLASS "monster_resource"
 #define HEALTHBAR_PROPERTY "m_iBossHealthPercentageByte"
@@ -272,6 +272,7 @@ enum VSHAHookType
 	VSHAHook_OnBossSetHP,
 	VSHAHook_OnBossRage,
 	VSHAHook_OnBossTimer,
+	VSHAHook_OnBossTimer_1_Second,
 	VSHAHook_OnPlayerKilledByBoss,
 	VSHAHook_OnKillingSpreeByBoss,
 	VSHAHook_OnPrepBoss,
@@ -319,6 +320,7 @@ typeset VSHAHookCB
 	// VSHAHook_OnEquipPlayer_Post
 	// VSHAHook_ShowBossHelpMenu
 	// VSHAHook_OnLastSurvivorLoop
+	// VSHAHook_OnBossTimer_1_Second
 	function void (int iEntity);
 
 	// VSHAHook_OnBossTimer

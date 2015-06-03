@@ -133,6 +133,7 @@ Handle p_OnBossSelected;
 Handle p_OnBossSetHP;
 Handle p_OnLastSurvivor;
 Handle p_OnBossTimer;
+Handle p_OnBossTimer_1_Second;
 Handle p_OnPrepBoss;
 Handle p_OnMusic;
 Handle p_OnModelTimer;

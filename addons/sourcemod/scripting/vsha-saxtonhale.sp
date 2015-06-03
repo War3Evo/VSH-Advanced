@@ -1466,7 +1466,8 @@ public void OnGameOver() // best play to reset all variables
 	{
 		if(Hale[players])
 		{
-			Hale[players]=false;
+			Hale[players]=0;
+			HaleCharge[players]=0;
 		}
 	}
 }

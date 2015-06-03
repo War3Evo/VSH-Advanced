@@ -2,7 +2,8 @@
 
 public Action HaleTimer(Handle hTimer)
 {
-	if (CheckRoundState() == ROUNDSTATE_ROUND_END || CheckRoundState() == ROUNDSTATE_INVALID) return Plugin_Stop;
+	//if (!Enabled || CheckRoundState() == ROUNDSTATE_ROUND_END || CheckRoundState() == ROUNDSTATE_INVALID) return Plugin_Stop;
+	if (!Enabled || CheckRoundState() == ROUNDSTATE_ROUND_END ) return Plugin_Stop;
 	LoopActiveBosses(iClient)
 	{
 		//if (IsValidClient(iClient) && !bIsBoss[iClient] && GetClientTeam(iClient) == OtherTeam) continue;
