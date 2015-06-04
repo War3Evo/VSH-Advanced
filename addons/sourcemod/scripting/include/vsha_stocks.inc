@@ -817,3 +817,28 @@ public Action RemoveEnt(Handle timer, int entid)
 	int ent = EntRefToEntIndex(entid);
 	if (ent > 0 && IsValidEntity(ent)) AcceptEntityInput(ent, "Kill");
 }
+
+stock void Gib(float Origin[3], float Direction[3], char[] Model)
+{
+	//int max = GetMaxEntities();
+	int count = GetEntityCount();
+
+	if (count > 20)
+	{
+		int Ent = CreateEntityByName("prop_physics");
+		DispatchKeyValue(Ent, "model", Model);
+		SetEntProp(Ent, Prop_Send, "m_CollisionGroup", 1);
+		DispatchSpawn(Ent);
+		TeleportEntity(Ent, Origin, Direction, Direction);
+		CreateTimer(GetRandomFloat(15.0, 30.0), RemoveGib,EntIndexToEntRef(Ent));
+	}
+}
+
+public Action RemoveGib(Handle Timer, any Ref)
+{
+	int Ent = EntRefToEntIndex(Ref);
+	if (Ent > 0 && IsValidEdict(Ent))
+	{
+		RemoveEdict(Ent);
+	}
+}

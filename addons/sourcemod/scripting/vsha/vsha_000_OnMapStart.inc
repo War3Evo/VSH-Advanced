@@ -5,6 +5,9 @@ public void OnMapStart()
 	if ( IsVSHMap() )
 	{
 		Enabled = true;
+
+		PrecacheModel(GIBmodel, true);
+
 		tf_arena_use_queue = GetConVarInt( FindConVar("tf_arena_use_queue") );
 		mp_teams_unbalance_limit = GetConVarInt( FindConVar("mp_teams_unbalance_limit") );
 		tf_arena_first_blood = GetConVarInt( FindConVar("tf_arena_first_blood") );
