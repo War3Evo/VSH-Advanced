@@ -47,10 +47,10 @@ public Action RoundStartFunction()
 	{
 		if (IsValidClient(i) && IsOnBlueOrRedTeam(i))
 		{
+			// bIsBoss is set to false in ClearVariables
 			ClearVariablesRoundStart(i);
 			//ForceTeamChange(i, OtherTeam);
 			//iDamage[i] = 0;
-			//bIsBoss[i] = false;
 			iPlaying++;
 		}
 	}

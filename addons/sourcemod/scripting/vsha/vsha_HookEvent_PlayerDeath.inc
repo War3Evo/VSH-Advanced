@@ -184,6 +184,7 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 		UpdateHealthBar();
 		iStabbed[victim] = 0;
 		iMarketed[victim] = 0;
+		// moved to calculation of scores
 		//bIsBoss[victim] = false;
 	}
 	return Plugin_Continue;
