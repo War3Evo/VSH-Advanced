@@ -88,7 +88,7 @@ stock int AttachThrowAwayParticle(const int client, const char[] effectName, con
 // still need to work on jump charge vs more players == faster jump charge
 // also need to send the jump charge new stuff to saxtonhale
 
-#define HALE_JUMPCHARGE			1
+#define HALE_JUMPCHARGE			3
 #define HALE_JUMPCHARGETIME		100
 
 stock const char MikuWin[][] = {
@@ -662,10 +662,31 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons,
 		}
 	}
 
-	if (VSHA_GetAliveRedPlayers() == 1) PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
-	if ( OnlyScoutsLeft() ) VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.5);
+	int iAlivePlayers = VSHA_GetAliveRedPlayers();
+	float AddToRage = 0.0;//VSHA_GetBossRage(iClient);
 
-	VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+1.0);
+	if (iAlivePlayers == 1)
+	{
+		PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
+		AddToRage += 0.5;
+		//VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.2);
+	}
+	else if(iAlivePlayers > 1)
+	{
+		AddToRage += (float((MaxClients + 1) - iAlivePlayers) * 0.01);
+	}
+	if ( OnlyScoutsLeft() )
+	{
+		AddToRage += 0.2;
+		VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.5);
+	}
+
+	if(AddToRage > 0)
+	{
+		VSHA_SetBossRage(iClient, (VSHA_GetBossRage(iClient)+AddToRage));
+	}
+
+	//VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+1.0);
 
 	if ( !(GetEntityFlags(iClient) & FL_ONGROUND) ) WeighDownTimer += 0.2;
 	else WeighDownTimer = 0.0;
@@ -1247,11 +1268,10 @@ stock bool OnlyScoutsLeft()
 	{
 		if (IsValidClient(client) && IsPlayerAlive(client) && GetClientTeam(client) == 2)
 		{
-			if (TF2_GetPlayerClass(client) != TFClass_Scout) break;
-			return true;
+			if (TF2_GetPlayerClass(client) != TFClass_Scout) return false;
 		}
 	}
-	return false;
+	return true;
 }
 
 // LOAD CONFIGURATION
