@@ -854,6 +854,7 @@ public Action RemoveGib(Handle Timer, any Ref)
  * @param BloodDropModel	Precached model index.
  * @noreturn
  */
+ // remember to use TE_SendToAll(0.5); after words
 stock void VSHA_TE_SetupBloodSprite(float pos[3], float dir[3], int color[4], int Size, int SprayModel, int BloodDropModel)
 {
 	TE_Start("Blood Sprite");

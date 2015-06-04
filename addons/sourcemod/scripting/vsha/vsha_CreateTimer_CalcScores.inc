@@ -19,14 +19,22 @@ public Action CalcScores(Handle timer, int data)
 			if ( bIsBoss[i] )
 			{
 				SetClientQueuePoints(i, 0);
-				CPrintToChat(i, "{olive}[VSH Engine]{default} You now have %i+ queue points.", GetClientQueuePoints(i));
+				CPrintToChat(i, "{olive}[VSH Engine]{default} You now have %i queue points.", GetClientQueuePoints(i));
 			}
 			else
 			{
 				CPrintToChat(i, "{olive}[VSH Engine]{default} You get %i+ queue points.", QueueIncrement.IntValue); //GetConVarInt(QueueIncrement));
 				SetClientQueuePoints( i, (GetClientQueuePoints(i)+QueueIncrement.IntValue) );
-				CPrintToChat(i, "{olive}[VSH Engine]{default} You now have %i+ queue points.", GetClientQueuePoints(i));
+				CPrintToChat(i, "{olive}[VSH Engine]{default} You now have %i queue points.", GetClientQueuePoints(i));
 			}
+		}
+	}
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if ( bIsBoss[i] )
+		{
+			// moved from on death, cause was messing with que system
+			bIsBoss[i] = false;
 		}
 	}
 }

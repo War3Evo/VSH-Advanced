@@ -49,7 +49,8 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 					}
 				}
 			}
-			bIsBoss[i] = false;
+			// moved to calculate points
+			//bIsBoss[i] = false;
 		}
 		else // reset client shit heer
 		{
