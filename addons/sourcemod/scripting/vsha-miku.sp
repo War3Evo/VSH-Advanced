@@ -521,6 +521,10 @@ public void OnGameOver() // best play to reset all variables
 			Hale[players]=0;
 			HaleCharge[players]=0;
 		}
+		if(ValidPlayer(players))
+		{
+			StopSound(players, SNDCHAN_AUTO, MIKUTheme);
+		}
 	}
 }
 /*        NO LONGER USING.. HANDLED INTERNALLY, unless you just want to handle it.
@@ -883,11 +887,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Changed;
 			}
 		}
-		int ent = -1;
-		while ((ent = FindEntityByClassname2(ent, "tf_wearable_demoshield")) != -1)
+		int shield = VSHA_HasShield(victim);
+		if(shield > -1 && weapon == GetPlayerWeaponSlot(attacker, 2))
 		{
-			if (GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity") == victim && !GetEntProp(ent, Prop_Send, "m_bDisguiseWearable") && weapon == GetPlayerWeaponSlot(attacker, 2))
-			{
 				//int HitsTaken = VSHA_GetHits(victim);
 				//int HitsRequired = 0;
 				/*int index = GetItemIndex(ent);
@@ -899,7 +901,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				TF2_AddCondition(victim, TFCond_Bonked, 0.1);
 				//if (HitsRequired <= HitsTaken)
 				//{
-				TF2_RemoveWearable(victim, ent);
+				TF2_RemoveWearable(victim, shield);
+				VSHA_SetShield(victim, -1);
 				float Pos[3];
 				GetEntPropVector(victim, Prop_Send, "m_vecOrigin", Pos);
 				EmitSoundToClient(victim, "player/spy_shield_break.wav", _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, 0.7, 100, _, Pos, NULL_VECTOR, false, 0.0);
@@ -908,7 +911,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				EmitSoundToClient(attacker, "player/spy_shield_break.wav", _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, 0.7, 100, _, Pos, NULL_VECTOR, false, 0.0);
 				//}
 				//return Plugin_Continue;
-			}
 		}
 	}
 	else if (Hale[victim] == victim && Hale[attacker] != attacker)
