@@ -36,7 +36,7 @@ public void OnPluginStart()
 
 	p_OnLastSurvivor = CreateForward(ET_Ignore);
 
-	p_OnBossTimer = CreateForward(ET_Ignore, Param_Cell, Param_CellByRef, Param_CellByRef);
+	p_OnBossTimer = CreateForward(ET_Ignore, Param_Cell, Param_CellByRef, Param_CellByRef, Param_Cell, Param_Cell, Param_Cell);
 	p_OnBossTimer_1_Second = CreateForward(ET_Ignore, Param_Cell);
 
 	p_OnPrepBoss = CreateForward(ET_Ignore, Param_Cell);
