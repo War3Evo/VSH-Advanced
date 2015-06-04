@@ -78,6 +78,7 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 		Direction[1] = GetRandomFloat(-100.0, 100.0);
 		Direction[2] = 300.0;
 		Gib(Origin, Direction, GIBmodel);
+		TE_SendToAll(0.0);
 
 		VSHA_OnBossKilled(victim, attacker);
 
