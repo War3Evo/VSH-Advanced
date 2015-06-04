@@ -662,10 +662,14 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons,
 		}
 	}
 
-	int iAlivePlayers = VSHA_GetAliveRedPlayers();
+	int iAlivePlayers;
+	LoopAlivePlayers(alivePlayers)
+	{
+		++iAlivePlayers;
+	}
 	float AddToRage = 0.0;//VSHA_GetBossRage(iClient);
 
-	if (iAlivePlayers == 1)
+	if (iAlivePlayers <= 2)
 	{
 		PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
 		AddToRage += 0.5;
@@ -673,12 +677,13 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons,
 	}
 	else if(iAlivePlayers > 1)
 	{
-		AddToRage += (float((MaxClients + 1) - iAlivePlayers) * 0.01);
+		AddToRage += (float((MaxClients + 1) - iAlivePlayers) * 0.001);
 	}
-	if ( OnlyScoutsLeft() )
+	int iGetOtherTeam = GetClientTeam(iClient) == 2 ? 3:2;
+	if ( OnlyScoutsLeft(iGetOtherTeam) )
 	{
-		AddToRage += 0.2;
-		VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.5);
+		AddToRage += 0.5;
+		//VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.5);
 	}
 
 	if(AddToRage > 0)
@@ -1262,11 +1267,11 @@ public Action Timer_StopTickle(Handle timer, any userid)
 	return Plugin_Continue;
 }
 // stocks
-stock bool OnlyScoutsLeft()
+stock bool OnlyScoutsLeft( int iTeam )
 {
 	for (int client; client <= MaxClients; client++)
 	{
-		if (IsValidClient(client) && IsPlayerAlive(client) && GetClientTeam(client) == 2)
+		if (IsValidClient(client) && IsPlayerAlive(client) && GetClientTeam(client) == iTeam)
 		{
 			if (TF2_GetPlayerClass(client) != TFClass_Scout) return false;
 		}
