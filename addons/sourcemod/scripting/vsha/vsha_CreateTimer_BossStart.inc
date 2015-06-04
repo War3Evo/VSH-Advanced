@@ -63,6 +63,11 @@ public Action BossStart(Handle timer, int data)
 			if ( CheckRoundState() == 0 ) CreateTimer(2.0, MusicPlay, GetClientUserId(iClient), TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
+	if(!AllowMusic)
+	{
+		// Send OnMusic to Game Mode Addon
+		if ( CheckRoundState() == 0 ) CreateTimer(2.0, MusicPlay, -2, TIMER_FLAG_NO_MAPCHANGE);
+	}
 	// VSH Engine::TimerBossStart() **** Boss Player loop finished
 
 	CreateTimer(0.2, CheckAlivePlayers);
