@@ -185,6 +185,10 @@ public void Load_VSHAHooks()
 	{
 		LogError("Error loading VSHAHook_OnGameOver forwards for saxton hale.");
 	}
+	if(!VSHAHookEx(VSHAHook_ShowBossHelpMenu, OnShowBossHelpMenu))
+	{
+		LogError("Error loading VSHAHook_ShowBossHelpMenu forwards for saxton hale.");
+	}
 }
 public void UnLoad_VSHAHooks()
 {
@@ -567,7 +571,11 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons,
 		}
 
 	if (VSHA_GetAliveRedPlayers() == 1) PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
-	if ( OnlyScoutsLeft() ) VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.5);
+	int iGetOtherTeam = GetClientTeam(iClient) == 2 ? 3:2;
+	if ( OnlyScoutsLeft(iGetOtherTeam ) )
+	{
+		//VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.5);
+	}
 
 	if ( !(GetEntityFlags(iClient) & FL_ONGROUND) ) WeighDownTimer += 0.2;
 	else WeighDownTimer = 0.0;
@@ -1173,18 +1181,17 @@ public Action Timer_StopTickle(Handle timer, any userid)
 	return Plugin_Continue;
 }
 // stocks
-stock bool OnlyScoutsLeft()
+stock bool OnlyScoutsLeft( int iTeam )
 {
 	for (int client; client <= MaxClients; client++)
 	{
-		if (IsValidClient(client) && IsPlayerAlive(client) && GetClientTeam(client) == 2)
+		if (IsValidClient(client) && IsPlayerAlive(client) && GetClientTeam(client) == iTeam)
 		{
-			if (TF2_GetPlayerClass(client) != TFClass_Scout) break;
-			return true;
+			if (TF2_GetPlayerClass(client) != TFClass_Scout) return false;
 		}
 	}
-	return false;
-}
+	return true;
+}}
 
 // LOAD CONFIGURATION
 public void OnConfiguration_Load_Sounds(char[] cFile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
@@ -1472,4 +1479,29 @@ public void OnGameOver() // best play to reset all variables
 			HaleCharge[players]=0;
 		}
 	}
+}
+
+// Is triggered by VSHA engine when a boos needs a help menu
+public void OnShowBossHelpMenu(int iClient)
+{
+	if(Hale[iClient] != iClient) return;
+
+	if(Hale[iClient] == iClient && ValidPlayer(iClient))
+	{
+		Handle panel = CreatePanel();
+		char s[512];
+		Format(s, 512, "Help menu needs work.");
+		SetPanelTitle(panel, s);
+		DrawPanelItem(panel, "Exit");
+		SendPanelToClient(panel, iClient, HintPanelH, 12);
+		CloseHandle(panel);
+	}
+	return;
+}
+
+public int HintPanelH(Handle menu, MenuAction action, int param1, int param2)
+{
+	if (!ValidPlayer(param1)) return;
+	//if (action == MenuAction_Select || (action == MenuAction_Cancel && param2 == MenuCancel_Exit)) VSHFlags[param1] |= VSHFLAG_CLASSHELPED;
+	return;
 }
