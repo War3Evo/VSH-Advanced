@@ -47,6 +47,8 @@ public void OnAllPluginsLoaded()
 	{
 		LogError("Error loading VSHAHook_OnBossWin forwards for saxton hale.");
 	}
+
+	VSHAHook(VSHAHook_OnEquipPlayer_Post, OnEquipPlayer_Post);
 }
 
 public Action OnGameMode_ForceBossTeamChange(int iiBoss, int iTeam)
@@ -165,3 +167,12 @@ public void OnBossWin(Event event, int iiBoss)
 	// set defaults back
 	VSHA_SetPlayMusic(true);
 }
+
+public void OnEquipPlayer_Post(int iClient)
+{
+	if(ValidPlayer(iClient))
+	{
+
+	}
+}
+
