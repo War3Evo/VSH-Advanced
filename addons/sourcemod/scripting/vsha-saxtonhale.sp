@@ -560,22 +560,44 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons,
 			EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 		}
 	}
-		else if (HaleCharge[iClient] < 0)
+	else if (HaleCharge[iClient] < 0)
+	{
+		HaleCharge[iClient] += 5;
+		if (!(buttons & IN_SCORE))
 		{
-			HaleCharge[iClient] += 5;
-			if (!(buttons & IN_SCORE))
-			{
-				SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-				ShowSyncHudText(iClient, hHudSync, "Super Jump will be ready again in: %i", (HaleChargeCoolDown[iClient]-GetTime()));
-			}
+			SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
+			ShowSyncHudText(iClient, hHudSync, "Super Jump will be ready again in: %i", (HaleChargeCoolDown[iClient]-GetTime()));
 		}
+	}
 
-	if (VSHA_GetAliveRedPlayers() == 1) PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
+	int iAlivePlayers;
+	LoopAlivePlayers(alivePlayers)
+	{
+		++iAlivePlayers;
+	}
+	float AddToRage = 0.0;//VSHA_GetBossRage(iClient);
+
+	if (iAlivePlayers <= 2)
+	{
+		PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
+		AddToRage += 0.5;
+	}
+	else if(iAlivePlayers > 1)
+	{
+		AddToRage += (float((MaxClients + 1) - iAlivePlayers) * 0.001);
+	}
+
 	int iGetOtherTeam = GetClientTeam(iClient) == 2 ? 3:2;
 	if ( OnlyScoutsLeft(iGetOtherTeam ) )
 	{
+		AddToRage += 0.5;
 		//VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.5);
 	}
+	if(AddToRage > 0)
+	{
+		VSHA_SetBossRage(iClient, (VSHA_GetBossRage(iClient)+AddToRage));
+	}
+
 
 	if ( !(GetEntityFlags(iClient) & FL_ONGROUND) ) WeighDownTimer += 0.2;
 	else WeighDownTimer = 0.0;
@@ -1191,7 +1213,7 @@ stock bool OnlyScoutsLeft( int iTeam )
 		}
 	}
 	return true;
-}}
+}
 
 // LOAD CONFIGURATION
 public void OnConfiguration_Load_Sounds(char[] cFile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
