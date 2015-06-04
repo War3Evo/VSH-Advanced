@@ -32,6 +32,7 @@ int iModelRetrys[PLYR],
 	iAirDamage[PLYR],
 	iMarketed[PLYR],
 	iStabbed[PLYR],
+	iShield[PLYR],		// Shield Entity a player is wearing
 	iUberedTarget[PLYR],
 	iLives[PLYR],		//lives can work for BOTH Bosses & for players, get creative!
 	iHits[PLYR],		//How many times a player has been hit lol

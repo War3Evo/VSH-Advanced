@@ -156,6 +156,16 @@ public Action EquipPlayers(Handle timer, int userid)
 		default: TF2Attrib_SetByDefIndex( iClient, 57, float(GetClientHealth(iClient)/50) ); //make by cvar
 	}
 
+	// New to VSHA .. detect the shield ahead of time and store it.
+	int entity=-1;
+	while((entity=FindEntityByClassname2(entity, "tf_wearable_demoshield"))!=-1)  //Demoshields
+	{
+		if(GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity")==client && !GetEntProp(entity, Prop_Send, "m_bDisguiseWearable"))
+		{
+			iShield[iClient]=entity;
+		}
+	}
+
 	VSHA_OnEquipPlayer_Post(iClient);
 
 	if(!VSHHelped[iClient])

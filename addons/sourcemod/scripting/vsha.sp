@@ -467,6 +467,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHA_GetVar",Native_VSHA_GetVar);
 	CreateNative("VSHA_SetVar",Native_VSHA_SetVar);
 
+	CreateNative("VSHA_HasShield",Native_VSHA_HasShield);
+	CreateNative("VSHA_SetShield",Native_VSHA_SetShield);
+
 	CreateNative("VSHA_CallModelTimer",Native_CallModelTimer);
 
 	// EXTRA GAME MODE STUFF
@@ -948,6 +951,16 @@ public int Native_VSHA_GetVar(Handle plugin, int numParams)
 public int Native_VSHA_SetVar(Handle plugin, int numParams)
 {
 	VSHA_VarArr[GetNativeCell(1)] = GetNativeCell(2);
+	return 0;
+}
+
+public int Native_VSHA_HasShield(Handle plugin, int numParams)
+{
+	return iShield[GetNativeCell(1)];
+}
+public int Native_VSHA_SetShield(Handle plugin, int numParams)
+{
+	iShield[GetNativeCell(1)] = GetNativeCell(2);
 	return 0;
 }
 

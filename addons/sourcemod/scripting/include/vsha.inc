@@ -15,7 +15,7 @@
 
 #pragma semicolon			1
 
-//#define DEBUG				0
+//#define DEBUG
 
 #if defined DEBUG
 	#define DEBUGPRINT0(%1)			PrintToServer(%1)
@@ -25,7 +25,12 @@
 #endif
 
 #define MaxEntities			2048
-#define PLYR				MAXPLAYERS+1
+//#define PLYR				MAXPLAYERS+1 // 65	/**< Maximum number of players SourceMod supports */
+										// This number is much higher than what TF2 supports
+
+// Setting (PLYR = Max players) to maximum TF2 Supports (32 + 2 relay?)
+#define PLYR				34
+
 #define PATH				64
 #define PATHX				PLATFORM_MAX_PATH
 #define nullfunc			INVALID_FUNCTION
@@ -144,91 +149,123 @@ enum VSHA_Var
 //=================================================================================================================================
 //=================================================== [ N A T I V E ] =============================================================
 
+// MISC
 native bool VSHA_LoadConfiguration(char[] cFileName); // Load Subplugin Configuration file
 
+// MISC
 native Handle VSHA_RegisterNonBossAddon();
 native void VSHA_UnRegisterNonBossAddon();
 
+// BOSS
 native Handle VSHA_RegisterBoss(char BossShortName[16], char BossLongName[32]); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
 
+// BOSS
 native Handle VSHA_GetBossHandle(int client);
 
+// BOSS
 native int VSHA_GetBossUserID(int client); //gets boss' userid
 native void VSHA_SetBossUserID(int client, int userid);
 
+// BOSS
 native int VSHA_GetDifficulty(int client); /* this is to modify bosses based on what difficulty level the player wants his boss to be, doesn't do anything by itself but this API should help with it. */
 native void VSHA_SetDifficulty(int client, int difficultylevel);
 
+// ANY PLAYER
 native int VSHA_GetLives(int client); /* gets the player's lives, you can get/set lives for both players and bosses */
 native void VSHA_SetLives(int client, int lives);
 
+// BOSS
 native int VSHA_GetPresetBoss(int client); //this gets the preset boss special ID, similar to VSH Special or FF2 Get special
 native void VSHA_SetPresetBoss(int client, int presetboss);
 
+// BOSS
 native int VSHA_GetBossHealth(int client);
 native void VSHA_SetBossHealth(int client, int health);
 
+// BOSS
 native int VSHA_GetBossMaxHealth(int client);
 native void VSHA_SetBossMaxHealth(int client, int maxhealth);
 
+// BOSS
 native int VSHA_GetBossPlayerKills(int client); //how many players a boss killed in the entire round
 native void VSHA_SetBossPlayerKills(int client, int kills);
 
+// BOSS
 native int VSHA_GetBossKillstreak(int client); //how many people boss killed in a certain amount of time
 native void VSHA_SetBossKillstreak(int client, int killspree);
 
+// PLAYER
 native int VSHA_GetPlayerBossKills(int client); //how many times a player has killed a boss in entire map time
 native void VSHA_SetPlayerBossKills(int client, int bosseskilled);
 
+// ANY PLAYER
 native int VSHA_GetDamage(int client); //this can also get the boss' damage.
 native void VSHA_SetDamage(int client, int dmg);
 
+// BOSS
 native int VSHA_GetBossMarkets(int client); /* how many times a boss was market-gardened. THIS DOES NOT AUTO INCREMENT IN CORE PLUGIN. If you want your boss to take Market-Garden Backstab-like damage, you should use this. */
 native void VSHA_SetBossMarkets(int client, int markets);
 
+// BOSS
 native int VSHA_GetBossStabs(int client); //how many times a boss was backstabbed
 native void VSHA_SetBossStabs(int client, int stabs);
 
+// ANY PLAYER
 native int VSHA_GetHits(int client); //how many times a client was hit aka took dmg.
 native void VSHA_SetHits(int client, int hits);
 
+// MISC
 native int VSHA_GetMaxWepAmmo(int wepentity);
 native void VSHA_SetMaxWepAmmo(int wepentity, int maxammo);
 
+// MISC
 native int VSHA_GetMaxWepClip(int wepentity);
 native void VSHA_SetMaxWepClip(int wepentity, int maxclip);
 
+// ANY PLAYER
 native int VSHA_GetPresetBossPlayer(); //Get when or which player will be forced as the next boss
 native void VSHA_SetPresetBossPlayer(int client);
 
+// MISC
 native int VSHA_GetAliveRedPlayers();
 native int VSHA_GetAliveBluPlayers();
 
+// BOSS
 native float VSHA_GetBossRage(int client); /* gets the charge of the hardcoded, built-in rage charge. You can create multiple rage charges or make the default one charge up from different things than just taking damage. */
 native void VSHA_SetBossRage(int client, float rage);
 
+// MISC
 native float VSHA_GetGlowTimer(int client); //used to set glow timers on players, use in boss subplugins plz
 native void VSHA_SetGlowTimer(int client, float glowtime);
 
+// BOSS
 native bool VSHA_IsBossPlayer(int client); //is client a boss?
 native void VSHA_SetBossPlayer(int client, bool state);
 
+// ANY PLAYER
 native bool VSHA_IsPlayerInJump(int client); //did player rocket/sticky jump?
 
+// BOSS
 native bool VSHA_CanBossTaunt(int client); //is boss taunt cooldown over?
 
+// BOSS
 native int VSHA_FindNextBoss(bool[] clientarray, int arraysize); /* gets the next player in queue list */
 
+// PLAYER
 native int VSHA_CountScoutsLeft(); /* counts how many scouts are left */
-
 native int VSHA_GetPlayerCount();
 
+// ANY PLAYER // no need much anymore.. handled interally
 native void VSHA_CallModelTimer(float time, int client);
 
+// ANY PLAYER
 native bool VSHA_SetPluginModel(char ModelString[PATHX]); // sets up a model for a boss plugin for model manager
 
-// GAME MODE EXTRA NATIVES
+// ANY PLAYER
+native void VSHA_SetShield(int client, int ShieldEntity); // set the entity of the shield if a player is wearing a demoshield
+native int VSHA_HasShield(int client); // the entity of the shield a player has
 
+// GAME MODE EXTRA NATIVES
 native void VSHA_BossSelected_Forward(int client);
 native void VSHA_SetClientQueuePoints(int client, int points);
 native int VSHA_GetClientQueuePoints(int client);
