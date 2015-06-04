@@ -160,7 +160,7 @@ public Action EquipPlayers(Handle timer, int userid)
 	int entity=-1;
 	while((entity=FindEntityByClassname2(entity, "tf_wearable_demoshield"))!=-1)  //Demoshields
 	{
-		if(GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity")==client && !GetEntProp(entity, Prop_Send, "m_bDisguiseWearable"))
+		if(GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity")==iClient && !GetEntProp(entity, Prop_Send, "m_bDisguiseWearable"))
 		{
 			iShield[iClient]=entity;
 		}
