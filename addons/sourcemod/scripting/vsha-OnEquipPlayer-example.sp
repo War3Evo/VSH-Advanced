@@ -17,8 +17,7 @@ public Plugin myinfo = {
 //#define OVERRIDE_MEDIGUNS_ON
 
 ConVar EnableEurekaEffect;
-ConVar vshEquipment;
-ConVar FF2Equipment;
+ConVar SetupEquipment;
 
 bool bMedieval;
 
@@ -86,8 +85,7 @@ public void OnAllPluginsLoaded()
 
 	EnableEurekaEffect = FindConVar("vsha_alloweureka");
 
-	vshEquipment = CreateConVar("vsha_vsh_equipment", "0", "Use VSH Equipement", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	FF2Equipment = CreateConVar("vsha_ff2_equipment", "0", "Use FF2 Equipement", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	SetupEquipment = CreateConVar("vsha_equipment", "0", "0 default, 1 to use VSH Equipement, 2 to use FF2 Equipement", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 
 	bMedieval=FindEntityByClassname(-1, "tf_logic_medieval")!=-1 || GetConVarBool(FindConVar("tf_medieval"));
 }
@@ -96,12 +94,12 @@ public Action OnEquipPlayer_Pre(int iClient)
 {
 	if(!ValidPlayer(iClient)) return Plugin_Continue;
 
-	if(vshEquipment.BoolValue)
+	if(SetupEquipment.IntValue == 1)
 	{
 		return MakeNoBoss_VSH(iClient);
 	}
 
-	if(FF2Equipment.BoolValue)
+	if(SetupEquipment.IntValue == 2)
 	{
 		return CheckItems_FF2(iClient);
 	}
@@ -309,7 +307,7 @@ public Action MakeNoBoss_VSH(int userid)
 	{
 		if(GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity")==client && !GetEntProp(entity, Prop_Send, "m_bDisguiseWearable"))
 		{
-			shield=entity;
+			break;
 		}
 	}
 
@@ -462,7 +460,7 @@ public Action CheckItems_FF2(int userid)
 		}
 	}
 
-	VSHA_SetShield(client, entity);
+	VSHA_SetShield(client, shield);
 
 	weapon=GetPlayerWeaponSlot(client, TFWeaponSlot_Melee);
 	if(weapon && IsValidEdict(weapon))
