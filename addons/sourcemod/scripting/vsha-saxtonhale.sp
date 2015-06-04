@@ -1143,29 +1143,29 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 	return Plugin_Continue;
 }
-public Action UseRage(Handle hTimer, any iiBoss)
+public Action UseRage(Handle hTimer, int iiBoss)
 {
 	float pos[3], pos2[3];
 	int i;
 	float distance;
-	if (!IsValidiiBoss(iiBoss)) return Plugin_Continue;
+	if (!IsValidClient(iiBoss)) return Plugin_Continue;
 	if (!GetEntProp(iiBoss, Prop_Send, "m_bIsReadyToHighFive") && !IsValidEntity(GetEntPropEnt(iiBoss, Prop_Send, "m_hHighFivePartner")))
 	{
 		TF2_RemoveCondition(iiBoss, TFCond_Taunting);
 	}
 	GetEntPropVector(iiBoss, Prop_Send, "m_vecOrigin", pos);
-	for (i = 1; i <= MaxiiBosss; i++)
+	LoopMaxClients(target)
 	{
-		if (IsValidiiBoss(i) && IsPlayerAlive(i) && i != iiBoss)
+		if (IsValidClient(target) && IsPlayerAlive(target) && target != iiBoss)
 		{
 			GetEntPropVector(i, Prop_Send, "m_vecOrigin", pos2);
 			distance = GetVectorDistance(pos, pos2);
-			if (!TF2_IsPlayerInCondition(i, TFCond_Ubercharged) && distance < RageDist)
+			if (!TF2_IsPlayerInCondition(target, TFCond_Ubercharged) && distance < RageDist)
 			{
 				int flags = TF_STUNFLAGS_GHOSTSCARE;
 				flags |= TF_STUNFLAG_NOSOUNDOREFFECT;
-				CreateTimer( 5.0, RemoveEnt, EntIndexToEntRef(AttachParticle(i, "yikes_fx", 75.0)) );
-				if (CheckRoundState() != 0) TF2_StunPlayer(i, 5.0, _, flags, iiBoss);
+				CreateTimer( 5.0, RemoveEnt, EntIndexToEntRef(AttachParticle(target, "yikes_fx", 75.0)) );
+				if (CheckRoundState() != 0) TF2_StunPlayer(target, 5.0, _, flags, iiBoss);
 			}
 		}
 	}
