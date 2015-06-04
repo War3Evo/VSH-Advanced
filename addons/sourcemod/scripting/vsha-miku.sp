@@ -658,7 +658,7 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons,
 		{
 			//if(!InitHaleTimer[iClient])
 			//{
-				HaleCharge[iClient] = 1;
+				HaleCharge[iClient] = 0;
 				SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
 				ShowSyncHudText(iClient, hHudSync2, "Mini-Super Jump will be ready again in: %d ", (HaleChargeCoolDown[iClient]-GetTime()));
 				//InitHaleTimer[iClient]=true;

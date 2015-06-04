@@ -26,8 +26,8 @@ char HaleTheme1[PATHX];
 char HaleTheme2[PATHX];
 char HaleTheme3[PATHX];
 
-#define HALE_JUMPCHARGETIME		4
-#define HALE_JUMPCHARGE			(25 * HALE_JUMPCHARGETIME)
+#define HALE_JUMPCHARGE			5
+#define HALE_JUMPCHARGETIME		100
 
 //#define HaleModel			"models/player/saxton_hale/saxton_hale.mdl"
 //#define HaleModelPrefix			"models/player/saxton_hale/saxton_hale"
@@ -541,8 +541,9 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons,
 	{
 		if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iClient] >= 0 )
 		{
-			if (HaleCharge[iClient] + 5 < HALE_JUMPCHARGE) HaleCharge[iClient] += 5;
-			else HaleCharge[iClient] = HALE_JUMPCHARGE;
+			if ((HaleCharge[iClient] + HALE_JUMPCHARGE) < HALE_JUMPCHARGETIME) HaleCharge[iClient] += HALE_JUMPCHARGE;
+			else HaleCharge[iClient] = HALE_JUMPCHARGETIME;
+			//DP("%d",HaleCharge[iClient]);
 			if (!(buttons & IN_SCORE))
 			{
 				SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
@@ -552,7 +553,7 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons,
 		// 5 * 60 = 300
 		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
 		// 300 = 1 minute wait
-		float ExtraBoost = float(HaleCharge[iClient]) * 2;
+		float ExtraBoost = float(HaleCharge[iClient])/4;
 		if ( HaleCharge[iClient] > 1 && SuperJump(iClient, ExtraBoost, -15.0, HaleCharge[iClient], -150) ) //put convar/cvar for jump sensitivity here!
 		{
 			HaleChargeCoolDown[iClient] = GetTime()+3;
@@ -560,9 +561,9 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons,
 			EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 		}
 	}
-	else if (HaleCharge[iClient] < 0)
+	else
 	{
-		HaleCharge[iClient] += 5;
+		HaleCharge[iClient] = 0;
 		if (!(buttons & IN_SCORE))
 		{
 			SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
