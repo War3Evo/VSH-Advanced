@@ -10,6 +10,11 @@
 #include <vsha>
 #include <vsha_stocks>
 
+// auto precached on mapstart
+#define GIBmodel "models/gibs/hgibs.mdl"
+#define BloodDropmodel "sprites/blood.vmt"
+#define BloodSpraymodel "sprites/bloodspray.vmt"
+
 // old version 0.1.2 on forums
 #define PLUGIN_VERSION			"0.1.3"
 

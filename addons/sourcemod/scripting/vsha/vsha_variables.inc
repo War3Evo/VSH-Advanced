@@ -49,7 +49,9 @@ int iModelRetrys[PLYR],
 	TeamRoundCounter,
 	RoundCount,
 	Buttons[PLYR],
-	timeleft;
+	timeleft,
+	BloodSpraymodelEntity,
+	BloodDropmodelEntity;
 
 //floats
 float flCharge[PLYR], //SINGLE MEDIC-TAUNT/RAGE CHARGE, MAKE YOUR OWN CHARGE VARS IN YOUR OWN BOSS SUBPLUGINS

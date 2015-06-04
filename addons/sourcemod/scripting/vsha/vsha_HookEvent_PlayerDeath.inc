@@ -67,6 +67,18 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 		//VSHA_SetVar(EventAttacker,attacker);
 		//VSHA_Private_Forward("VSHA_OnBossKilled");
 
+		// Create the illusion the boss was killed!
+		float vecAngles[3];
+		float Origin[3], Direction[3];
+		GetClientEyeAngles(victim,vecAngles);
+		GetClientAbsOrigin(victim, Origin);
+
+		VSHA_TE_SetupBloodSprite(Origin, vecAngles, {0, 0, 255, 255}, 28, BloodSpraymodelEntity, BloodDropmodelEntity);
+		Direction[0] = GetRandomFloat(-100.0, 100.0);
+		Direction[1] = GetRandomFloat(-100.0, 100.0);
+		Direction[2] = 300.0;
+		Gib(Origin, Direction, GIBmodel);
+
 		VSHA_OnBossKilled(victim, attacker);
 
 		SDKUnhook(victim, SDKHook_GetMaxHealth, OnGetMaxHealth);

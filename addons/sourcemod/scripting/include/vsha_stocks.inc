@@ -842,3 +842,28 @@ public Action RemoveGib(Handle Timer, any Ref)
 		RemoveEdict(Ent);
 	}
 }
+
+/**
+ * Sets up a blood sprite effect.
+ *
+ * @param pos			Position of the sprite.
+ * @param dir			Sprite direction.
+ * @param color			Color array (r, g, b, a).
+ * @param Size			Sprite size.
+ * @param SprayModel		Precached model index.
+ * @param BloodDropModel	Precached model index.
+ * @noreturn
+ */
+stock void VSHA_TE_SetupBloodSprite(float pos[3], float dir[3], int color[4], int Size, int SprayModel, int BloodDropModel)
+{
+	TE_Start("Blood Sprite");
+	TE_WriteVector("m_vecOrigin", pos);
+	TE_WriteVector("m_vecDirection", dir);
+	TE_WriteNum("r", color[0]);
+	TE_WriteNum("g", color[1]);
+	TE_WriteNum("b", color[2]);
+	TE_WriteNum("a", color[3]);
+	TE_WriteNum("m_nSize", Size);
+	TE_WriteNum("m_nSprayModel", SprayModel);
+	TE_WriteNum("m_nDropModel", BloodDropModel);
+}

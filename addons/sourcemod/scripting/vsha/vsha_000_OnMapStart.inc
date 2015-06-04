@@ -7,6 +7,8 @@ public void OnMapStart()
 		Enabled = true;
 
 		PrecacheModel(GIBmodel, true);
+		BloodSpraymodelEntity = PrecacheModel(BloodDropmodel, true);
+		BloodDropmodelEntity = PrecacheModel(BloodSpraymodel, true);
 
 		tf_arena_use_queue = GetConVarInt( FindConVar("tf_arena_use_queue") );
 		mp_teams_unbalance_limit = GetConVarInt( FindConVar("mp_teams_unbalance_limit") );

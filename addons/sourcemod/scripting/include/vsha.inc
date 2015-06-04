@@ -36,9 +36,6 @@
 #define nullfunc			INVALID_FUNCTION
 #define nullvec				NULL_VECTOR
 
-// auto precached on mapstart
-#define GIBmodel "models/gibs/hgibs.mdl"
-
 #define LifeState_Alive 0
 #define LifeState_Dead 2
 
