@@ -602,66 +602,66 @@ public void OnLastSurvivor()
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
+public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
 {
-	if (iClient != Hale[iClient]) return;
+	if (iiBoss != Hale[iiBoss]) return;
 	char playsound[PATHX];
 	float speed;
-	//int curHealth = VSHA_GetBossHealth(iClient), curMaxHp = VSHA_GetBossMaxHealth(iClient);
+	//int curHealth = VSHA_GetBossHealth(iiBoss), curMaxHp = VSHA_GetBossMaxHealth(iiBoss);
 	// temporary health fix
 	if (curHealth < 0)
 	{
-		ForcePlayerSuicide(iClient);
+		ForcePlayerSuicide(iiBoss);
 		return;
 	}
-	if(GetClientHealth(iClient) != curHealth)
+	if(GetClientHealth(iiBoss) != curHealth)
 	{
-		SetEntityHealth(iClient,curHealth);
+		SetEntityHealth(iiBoss,curHealth);
 	}
 	if (curHealth <= curMaxHp) speed = 340.0 + 0.7 * (100.0-float(curHealth)*100.0/float(curMaxHp)); //convar/cvar for speed here!
-	SetEntPropFloat(iClient, Prop_Send, "m_flMaxspeed", speed);
+	SetEntPropFloat(iiBoss, Prop_Send, "m_flMaxspeed", speed);
 
-	//int buttons = GetClientButtons(iClient);
-	//if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iClient] >= 0 )
-	if (HaleChargeCoolDown[iClient] <= GetTime())
+	//int buttons = GetClientButtons(iiBoss);
+	//if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iiBoss] >= 0 )
+	if (HaleChargeCoolDown[iiBoss] <= GetTime())
 	{
-		if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iClient] >= 0 )
+		if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iiBoss] >= 0 )
 		{
-			if ((HaleCharge[iClient] + HALE_JUMPCHARGE) < HALE_JUMPCHARGETIME) HaleCharge[iClient] += HALE_JUMPCHARGE;
-			else HaleCharge[iClient] = HALE_JUMPCHARGETIME;
+			if ((HaleCharge[iiBoss] + HALE_JUMPCHARGE) < HALE_JUMPCHARGETIME) HaleCharge[iiBoss] += HALE_JUMPCHARGE;
+			else HaleCharge[iiBoss] = HALE_JUMPCHARGETIME;
 			//if (!(buttons & IN_SCORE))
 			if (!(buttons & IN_SCORE))
 			{
-				//if(!InitHaleTimer[iClient])
+				//if(!InitHaleTimer[iiBoss])
 				//{
 					SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
-					ShowSyncHudText(iClient, hHudSync, "Jump Charge: %i% ", HaleCharge[iClient]);
-					//InitHaleTimer[iClient]=true;
+					ShowSyncHudText(iiBoss, hHudSync, "Jump Charge: %i% ", HaleCharge[iiBoss]);
+					//InitHaleTimer[iiBoss]=true;
 				//}
 			}
 		}
 		// 5 * 60 = 300
 		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
 		// 300 = 1 minute wait
-		//float ExtraBoost = float(HaleCharge[iClient]) * 2;
-		float ExtraBoost = float(HaleCharge[iClient]) / 10;
-		if ( HaleCharge[iClient] > 1 && SuperJump(iClient, ExtraBoost, -15.0, HaleCharge[iClient], -150) ) //put convar/cvar for jump sensitivity here!
+		//float ExtraBoost = float(HaleCharge[iiBoss]) * 2;
+		float ExtraBoost = float(HaleCharge[iiBoss]) / 10;
+		if ( HaleCharge[iiBoss] > 1 && SuperJump(iiBoss, ExtraBoost, -15.0, HaleCharge[iiBoss], -150) ) //put convar/cvar for jump sensitivity here!
 		{
-			HaleChargeCoolDown[iClient] = GetTime()+3;
+			HaleChargeCoolDown[iiBoss] = GetTime()+3;
 			strcopy(playsound, PLATFORM_MAX_PATH, MikuJump[GetRandomInt(0, sizeof(MikuJump)-1)]);
-			EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, NULL_VECTOR, NULL_VECTOR, false, 0.0);
+			EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 		}
 	}
 	else
 	{
 		if (!(buttons & IN_SCORE))
 		{
-			//if(!InitHaleTimer[iClient])
+			//if(!InitHaleTimer[iiBoss])
 			//{
-				HaleCharge[iClient] = 0;
+				HaleCharge[iiBoss] = 0;
 				SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
-				ShowSyncHudText(iClient, hHudSync2, "Mini-Super Jump will be ready again in: %d ", (HaleChargeCoolDown[iClient]-GetTime()));
-				//InitHaleTimer[iClient]=true;
+				ShowSyncHudText(iiBoss, hHudSync2, "Mini-Super Jump will be ready again in: %d ", (HaleChargeCoolDown[iiBoss]-GetTime()));
+				//InitHaleTimer[iiBoss]=true;
 			//}
 		}
 	}
@@ -671,68 +671,68 @@ public void OnBossTimer(int iClient, int &curHealth, int &curMaxHp, int buttons,
 	{
 		++iAlivePlayers;
 	}
-	float AddToRage = 0.0;//VSHA_GetBossRage(iClient);
+	float AddToRage = 0.0;//VSHA_GetBossRage(iiBoss);
 
 	if (iAlivePlayers <= 2)
 	{
 		PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
 		AddToRage += 0.5;
-		//VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.2);
+		//VSHA_SetBossRage(iiBoss, VSHA_GetBossRage(iiBoss)+0.2);
 	}
 	else if(iAlivePlayers > 1)
 	{
 		AddToRage += (float((MaxClients + 1) - iAlivePlayers) * 0.001);
 	}
-	int iGetOtherTeam = GetClientTeam(iClient) == 2 ? 3:2;
+	int iGetOtherTeam = GetClientTeam(iiBoss) == 2 ? 3:2;
 	if ( OnlyScoutsLeft(iGetOtherTeam) )
 	{
 		AddToRage += 0.5;
-		//VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.5);
+		//VSHA_SetBossRage(iiBoss, VSHA_GetBossRage(iiBoss)+0.5);
 	}
 
 	if(AddToRage > 0)
 	{
-		VSHA_SetBossRage(iClient, (VSHA_GetBossRage(iClient)+AddToRage));
+		VSHA_SetBossRage(iiBoss, (VSHA_GetBossRage(iiBoss)+AddToRage));
 	}
 
-	//VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+1.0);
+	//VSHA_SetBossRage(iiBoss, VSHA_GetBossRage(iiBoss)+1.0);
 
-	if ( !(GetEntityFlags(iClient) & FL_ONGROUND) ) WeighDownTimer += 0.2;
+	if ( !(GetEntityFlags(iiBoss) & FL_ONGROUND) ) WeighDownTimer += 0.2;
 	else WeighDownTimer = 0.0;
 
-	if ( (buttons & IN_DUCK) && Weighdown(iClient, WeighDownTimer, 60.0, 0.0) )
+	if ( (buttons & IN_DUCK) && Weighdown(iiBoss, WeighDownTimer, 60.0, 0.0) )
 	{
 		//CPrintToChat(client, "{olive}[VSHE]{default} You just used your weighdown!");
 		//all this just to do a cprint? It's not like weighdown has a limit...
 	}
 }
-public void OnPrepBoss(int iClient)
+public void OnPrepBoss(int iiBoss)
 {
-	if(VSHA_GetBossHandle(iClient)!=ThisPluginHandle) return;
+	if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle) return;
 
-	if (iClient != Hale[iClient]) return;
-	TF2_SetPlayerClass(iClient, TFClass_Scout, _, false);
-	HaleCharge[iClient] = 0;
+	if (iiBoss != Hale[iiBoss]) return;
+	TF2_SetPlayerClass(iiBoss, TFClass_Scout, _, false);
+	HaleCharge[iiBoss] = 0;
 
-	TF2_RemoveAllWeapons2(iClient);
-	TF2_RemovePlayerDisguise(iClient);
+	TF2_RemoveAllWeapons2(iiBoss);
+	TF2_RemovePlayerDisguise(iiBoss);
 
-	bool pri = IsValidEntity(GetPlayerWeaponSlot(iClient, TFWeaponSlot_Primary));
-	bool sec = IsValidEntity(GetPlayerWeaponSlot(iClient, TFWeaponSlot_Secondary));
-	bool mel = IsValidEntity(GetPlayerWeaponSlot(iClient, TFWeaponSlot_Melee));
+	bool pri = IsValidEntity(GetPlayerWeaponSlot(iiBoss, TFWeaponSlot_Primary));
+	bool sec = IsValidEntity(GetPlayerWeaponSlot(iiBoss, TFWeaponSlot_Secondary));
+	bool mel = IsValidEntity(GetPlayerWeaponSlot(iiBoss, TFWeaponSlot_Melee));
 
 	if (pri || sec || !mel)
 	{
-		TF2_RemoveAllWeapons2(iClient);
+		TF2_RemoveAllWeapons2(iiBoss);
 		char attribs[PATH];
 		Format(attribs, sizeof(attribs), "68 ; 2.0 ; 2 ; 3.0 ; 259 ; 1.0 ; 252 ; 0.6 ; 214 ; %d", GetRandomInt(999, 9999));
-		int SaxtonWeapon = SpawnWeapon(iClient, "tf_weapon_shovel", 5, 100, 4, attribs);
-		SetEntPropEnt(iClient, Prop_Send, "m_hActiveWeapon", SaxtonWeapon);
+		int SaxtonWeapon = SpawnWeapon(iiBoss, "tf_weapon_shovel", 5, 100, 4, attribs);
+		SetEntPropEnt(iiBoss, Prop_Send, "m_hActiveWeapon", SaxtonWeapon);
 	}
 }
-public Action OnMusic(int iClient, char BossTheme[PATHX], float &time)
+public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 {
-	if (iClient != Hale[iClient])
+	if (iiBoss != Hale[iiBoss])
 	{
 		return Plugin_Continue;
 	}
@@ -777,21 +777,21 @@ public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
 
 	return Plugin_Changed;
 }*/
-public void OnBossRage(int iClient)
+public void OnBossRage(int iiBoss)
 {
-	if (iClient != Hale[iClient]) return;
-	if (InRage[iClient]) return;
+	if (iiBoss != Hale[iiBoss]) return;
+	if (InRage[iiBoss]) return;
 	char playsound[PATHX];
-	InRage[iClient] = true;
-	//DP("iClient = %d",iClient);
+	InRage[iiBoss] = true;
+	//DP("iiBoss = %d",iiBoss);
 	float pos[3];
-	GetEntPropVector(iClient, Prop_Send, "m_vecOrigin", pos);
+	GetEntPropVector(iiBoss, Prop_Send, "m_vecOrigin", pos);
 	pos[2] += 20.0;
-	TF2_AddCondition(iClient, view_as<TFCond>(42), 4.0);
+	TF2_AddCondition(iiBoss, view_as<TFCond>(42), 4.0);
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuRage[GetRandomInt(1, sizeof(MikuRage)-1)]);
-	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
-	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
-	CreateTimer(0.6, UseRage, iClient);
+	EmitSoundToAll(playsound, iiBoss, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, pos, NULL_VECTOR, true, 0.0);
+	EmitSoundToAll(playsound, iiBoss, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, pos, NULL_VECTOR, true, 0.0);
+	CreateTimer(0.6, UseRage, iiBoss);
 }
 public void TF2_OnConditionAdded(int client, TFCond condition)
 {
@@ -1478,18 +1478,18 @@ public Action EndRage(Handle thandle, int userid)
 }
 
 // Is triggered by VSHA engine when a boos needs a help menu
-public void OnShowBossHelpMenu(int iClient)
+public void OnShowBossHelpMenu(int iiBoss)
 {
-	if(Hale[iClient] != iClient) return;
+	if(Hale[iiBoss] != iiBoss) return;
 
-	if(Hale[iClient] == iClient && ValidPlayer(iClient))
+	if(Hale[iiBoss] == iiBoss && ValidPlayer(iiBoss))
 	{
 		Handle panel = CreatePanel();
 		char s[512];
 		Format(s, 512, "You have 'Mini-Super Jump' not as high as other bosses.\nYou have a 'Sprint-Jump' ability that has a cooldown of 30 seconds.\nYou can trigger your 'Sprint-Jump' ability by normal jumping.\nWhen you RAGE, you have no cooldown of your 'Sprint-Jump' ability!");
 		SetPanelTitle(panel, s);
 		DrawPanelItem(panel, "Exit");
-		SendPanelToClient(panel, iClient, HintPanelH, 12);
+		SendPanelToClient(panel, iiBoss, HintPanelH, 12);
 		CloseHandle(panel);
 	}
 	return;
