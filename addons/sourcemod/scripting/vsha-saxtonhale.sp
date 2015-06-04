@@ -394,14 +394,6 @@ public void OnBossKilled(int iiBoss, int attacker) //victim is boss
 {
 	if(Hale[iiBoss] != iiBoss) return;
 
-	float Origin[3], Direction[3];
-	GetClientAbsOrigin(iiBoss, Origin);
-	Direction[0] = GetRandomFloat(-100.0, 100.0);
-	Direction[1] = GetRandomFloat(-100.0, 100.0);
-	Direction[2] = 300.0;
-	Gib(Origin, Direction, GIBmodel);
-
-
 	char playsound[PATHX];
 
 	Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleFail, GetRandomInt(1, 3));
