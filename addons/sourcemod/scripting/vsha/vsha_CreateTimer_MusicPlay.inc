@@ -42,18 +42,22 @@ public Action MusicPlay(Handle Timer, int userid)
 
 	if ( sound[0] != '\0' && !StrEqual(sound,""))
 	{
-	//      Format(sound, sizeof(sound), "#%s", sound);
-		EmitSoundToAll(sound, _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, nullvec, nullvec, false, 0.0);
-		//PrintToServer("[VSHA] Music Theme '%s' played.",sound);
-	}
-	if ( time > 0.0 )
-	{
-		//PrintToChatAll("Started CreateDataTimer for MusicPlay");
+		if(IsSoundPrecached(sound))
+		{
+			//Format(sound, sizeof(sound), "#%s", sound);
+			EmitSoundToAll(sound, _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, nullvec, nullvec, false, 0.0);
+			PrintToServer("[VSHA] Music Theme '%s' played.",sound);
 
-		DataPack SndPack = new DataPack();
-		SndPack.WriteString(sound);
-		SndPack.WriteFloat(time);
-		MusicTimer = CreateTimer(time, TimerMusicTheme, SndPack, TIMER_DATA_HNDL_CLOSE);
+			if ( time > 0.0 )
+			{
+				//PrintToChatAll("Started CreateDataTimer for MusicPlay");
+
+				DataPack SndPack = new DataPack();
+				SndPack.WriteString(sound);
+				SndPack.WriteFloat(time);
+				MusicTimer = CreateTimer(time, TimerMusicTheme, SndPack, TIMER_DATA_HNDL_CLOSE);
+			}
+		}
 	}
 	return;
 }

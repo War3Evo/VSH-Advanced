@@ -251,7 +251,7 @@ public Action OnGameMode_ForcePlayerTeamChange(VSHA_EVENTS vshaEvent, int iClien
 			{
 				char sClientName[32];
 				GetClientName(iClient,STRING(sClientName));
-				LogError("ERROR: Player %s found not marked as boss on BossVsBossGameMode event vshaRoundStart",sClientName);
+				//LogError("ERROR: Player %s found not marked as boss on BossVsBossGameMode event vshaRoundStart",sClientName);
 				if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
 				{
 					ForceTeamChange(iClient, TEAM_RED);
@@ -265,15 +265,15 @@ public Action OnGameMode_ForcePlayerTeamChange(VSHA_EVENTS vshaEvent, int iClien
 			{
 				char sClientName[32];
 				GetClientName(iClient,STRING(sClientName));
-				LogError("ERROR: Player %s found not marked as boss on BossVsBossGameMode event vshaEquipPlayers",sClientName);
+				//LogError("ERROR: Player %s found not marked as boss on BossVsBossGameMode event vshaEquipPlayers",sClientName);
 
 				int boss = VSHA_AddBoss(iClient);
 
-				LogError("VSHA_AddBoss vshaEquipPlayers BossVsBossGameMode ForcePlayerTeamChange boss = %d",boss);
+				//LogError("VSHA_AddBoss vshaEquipPlayers BossVsBossGameMode ForcePlayerTeamChange boss = %d",boss);
 				//sm plugins reload vsha-addon-GameModes.smx
 				if(boss == -1)
 				{
-					LogError("ERROR: Player %s unable to make boss. vshaEquipPlayers BossVsBossGameMode ",sClientName);
+					//LogError("ERROR: Player %s unable to make boss. vshaEquipPlayers BossVsBossGameMode ",sClientName);
 					return Plugin_Handled;
 				}
 
@@ -460,7 +460,7 @@ public Action OnGameMode_BossSetup()
 
 				boss = VSHA_AddBoss(i);
 
-				DP("VSHA_AddBoss");
+				//DP("VSHA_AddBoss");
 				//sm plugins reload vsha-addon-GameModes.smx
 				if(boss == -1)
 				{
@@ -475,12 +475,12 @@ public Action OnGameMode_BossSetup()
 				if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
 				{
 					ForceTeamChange(boss, TEAM_RED);
-					DP("boss TEAM_RED");
+					//DP("boss TEAM_RED");
 				}
 				else if(GetTeamPlayerCount(TEAM_BLUE)<GetTeamPlayerCount(TEAM_RED))
 				{
 					ForceTeamChange(boss, TEAM_BLUE);
-					DP("boss TEAM_BLUE");
+					//DP("boss TEAM_BLUE");
 				}
 			}
 		}
@@ -500,7 +500,7 @@ public Action OnBossSetHP_Pre(int BossEntity, int &BossMaxHealth)
 	if(CurrentBossGame != BossVsBossGameMode) return Plugin_Continue;
 	//if(!ValidPlayer(BossEntity)) return;
 
-	DP("OnBossSetHP_Pre %d",BossEntity);
+	//DP("OnBossSetHP_Pre %d",BossEntity);
 
 	BossMaxHealth = 1000;
 	//int BossMaxHealth = HealthCalc( 760.8, float( CountBossTeam(BossEntity) ), 1.0, 1.0341, 2046.0 );
