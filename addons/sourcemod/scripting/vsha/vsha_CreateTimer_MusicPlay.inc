@@ -40,7 +40,7 @@ public Action MusicPlay(Handle Timer, int userid)
 
 	//PrintToChatAll("VSHA_OnMusic %s",sound);
 
-	if ( sound[0] != '\0' )
+	if ( sound[0] != '\0' && !StrEqual(sound,""))
 	{
 	//      Format(sound, sizeof(sound), "#%s", sound);
 		EmitSoundToAll(sound, _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, nullvec, nullvec, false, 0.0);

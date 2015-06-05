@@ -562,7 +562,15 @@ public void OnBossAirblasted(Event event, int iiBoss)
 }
 public void OnBossSelected(int iiBoss)
 {
-	if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle) return;
+	if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle)
+	{
+		// reset boss
+		if(iiBoss == Hale[iiBoss])
+		{
+			Hale[iiBoss]=0;
+		}
+		return;
+	}
 
 	CPrintToChatAll("%s, Miku Boss Selected!",VSHA_COLOR);
 

@@ -195,12 +195,13 @@ public Action OnGameMode_ForceBossTeamChange(VSHA_EVENTS vshaEvent, int iiBoss, 
 				if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
 				{
 					ForceTeamChange(iiBoss, TEAM_RED);
+					TF2_RegeneratePlayer(iiBoss); // correct team colors
 				}
 				else if(GetTeamPlayerCount(TEAM_BLUE)<GetTeamPlayerCount(TEAM_RED))
 				{
 					ForceTeamChange(iiBoss, TEAM_BLUE);
+					TF2_RegeneratePlayer(iiBoss); // correct team colors
 				}
-				TF2_RegeneratePlayer(iiBoss); // correct team colors
 			}
 			case vshaRoundEnd:
 			{
@@ -265,15 +266,29 @@ public Action OnGameMode_ForcePlayerTeamChange(VSHA_EVENTS vshaEvent, int iClien
 				char sClientName[32];
 				GetClientName(iClient,STRING(sClientName));
 				LogError("ERROR: Player %s found not marked as boss on BossVsBossGameMode event vshaEquipPlayers",sClientName);
+
+				int boss = VSHA_AddBoss(iClient);
+
+				LogError("VSHA_AddBoss vshaEquipPlayers BossVsBossGameMode ForcePlayerTeamChange boss = %d",boss);
+				//sm plugins reload vsha-addon-GameModes.smx
+				if(boss == -1)
+				{
+					LogError("ERROR: Player %s unable to make boss. vshaEquipPlayers BossVsBossGameMode ",sClientName);
+					return Plugin_Handled;
+				}
+
+				VSHA_BossSelected_Forward(boss);
+
 				if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
 				{
 					ForceTeamChange(iClient, TEAM_RED);
+					TF2_RegeneratePlayer(iClient); // correct team colors
 				}
 				else if(GetTeamPlayerCount(TEAM_BLUE)<GetTeamPlayerCount(TEAM_RED))
 				{
 					ForceTeamChange(iClient, TEAM_BLUE);
+					TF2_RegeneratePlayer(iClient); // correct team colors
 				}
-				TF2_RegeneratePlayer(iClient); // correct team colors
 			}
 			case vshaRoundEnd:
 			{
@@ -392,6 +407,7 @@ public Action OnGameMode_BossSetup()
 		if(VSHA_GetPlayerCount()<2)
 		{
 			PrintToServer("%s Unable to play Boss Vs Boss with less than 2 players!",VSHA_COLOR);
+			CurrentBossGame = 0;
 			return Plugin_Continue;
 		}
 
@@ -442,27 +458,29 @@ public Action OnGameMode_BossSetup()
 			if ( IsValidClient(i) && IsOnBlueOrRedTeam(i) )
 			{
 
-				boss = VSHA_AddBossStock(i);
+				boss = VSHA_AddBoss(i);
 
+				DP("VSHA_AddBoss");
+				//sm plugins reload vsha-addon-GameModes.smx
 				if(boss == -1)
 				{
-					CPrintToChatAll("%s Unable to play Boss vs Boss!  Not enough players.",VSHA_COLOR);
+					LogError("%s Unable to play Boss vs Boss!  Not enough players.",VSHA_COLOR);
+					CurrentBossGame = 0;
 					return Plugin_Continue;
 				}
 
-				if(boss != ALREADY_BOSS)
-				{
-					VSHA_BossSelected_Forward(boss);
-					VSHA_SetClientQueuePoints(boss, 0);
-				}
+				VSHA_BossSelected_Forward(boss);
+				VSHA_SetClientQueuePoints(boss, 0);
 
 				if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
 				{
 					ForceTeamChange(boss, TEAM_RED);
+					DP("boss TEAM_RED");
 				}
 				else if(GetTeamPlayerCount(TEAM_BLUE)<GetTeamPlayerCount(TEAM_RED))
 				{
 					ForceTeamChange(boss, TEAM_BLUE);
+					DP("boss TEAM_BLUE");
 				}
 			}
 		}
@@ -532,9 +550,9 @@ public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 
 	if(CurrentBossGame == BossVsBossGameMode)
 	{
+		ThemeMusicIsPlaying = true;
 		if(GameModeMusicEnable.BoolValue)
 		{
-			ThemeMusicIsPlaying = true;
 			BossTheme = BossVsBoss1;
 			time = 94.0;
 		}
@@ -556,7 +574,6 @@ public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 				TF2_RegeneratePlayer(BossEntity);
 			}
 		}
-
 	}
 	else if(CurrentBossGame == DuoBossGameMode)
 	{
@@ -575,9 +592,9 @@ public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 				TF2_RegeneratePlayer(BossEntity);
 			}
 		}
+		ThemeMusicIsPlaying = true;
 		if(GameModeMusicEnable.BoolValue)
 		{
-			ThemeMusicIsPlaying = true;
 			BossTheme = DuoBoss1;
 			time = 121.0;
 		}

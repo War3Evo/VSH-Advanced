@@ -1591,7 +1591,6 @@ public int Native_GetClientQueuePoints(Handle plugin, int numParams)
 public int Native_AddBoss(Handle plugin, int numParams)
 {
 	int boss = GetNativeCell(1);
-	if(bIsBoss[boss]) return ALREADY_BOSS; //already boss
 
 	if(boss == -1)
 	{
@@ -1599,7 +1598,7 @@ public int Native_AddBoss(Handle plugin, int numParams)
 		else boss = FindNextBoss(bIsBoss);
 	}
 
-	if (boss <= 0)
+	if (!ValidPlayer(boss))
 	{
 		return -1;
 	}
