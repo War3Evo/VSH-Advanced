@@ -138,6 +138,7 @@ Handle p_OnMessageTimer;
 Handle p_OnBossAirblasted;
 Handle p_OnBossSelected;
 Handle p_OnBossSetHP;
+Handle p_OnBossSetHP_Post;
 Handle p_OnLastSurvivor;
 Handle p_OnBossTimer;
 Handle p_OnBossTimer_1_Second;

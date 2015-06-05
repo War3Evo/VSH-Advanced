@@ -18,6 +18,7 @@ public Plugin myinfo =
 
 ConVar ThisEnabled = null;
 ConVar GameModeType = null;
+ConVar GameModeMusicEnable = null;
 
 int m_OffsetClrRender=-1;
 
@@ -45,6 +46,7 @@ public void OnPluginStart()
 
 	ThisEnabled = CreateConVar("vsha_gamemode_enabled", "0", "Enable Game Modes", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	GameModeType = CreateConVar("vsha_gamemode_type_test", "0", "0 - default, 1 - Duo Boss, 2 - Boss vs Boss, 999 - Random", FCVAR_PLUGIN, true, 0.0, false);
+	GameModeMusicEnable = CreateConVar("vsha_gamemode_music_enable", "0", "0 - disabled, 1 - enabled", FCVAR_PLUGIN, true, 0.0, false);
 }
 
 public void OnAllPluginsLoaded()
@@ -72,10 +74,10 @@ public void OnAllPluginsLoaded()
 		LogError("Error loading VSHAHook_OnConfiguration_Load_Sounds forwards for saxton hale.");
 	}
 
-	//if(!VSHAHookEx(VSHAHook_OnBossSetHP, OnBossSetHP))
-	//{
-		//LogError("Error loading VSHAHook_OnBossSetHP forwards for saxton hale.");
-	//}
+	if(!VSHAHookEx(VSHAHook_OnBossSetHP_Post, OnBossSetHP_Post))
+	{
+		LogError("Error loading VSHAHook_OnBossSetHP_Post forwards for saxton hale.");
+	}
 
 	if(!VSHAHookEx(VSHAHook_OnBossTimer, OnBossTimer))
 	{
@@ -474,18 +476,18 @@ public Action OnGameMode_BossSetup()
 	}
 	return Plugin_Continue;
 }
-//public Action OnBossSetHP(int BossEntity, int &BossMaxHealth)
-//{
-	//if(GameModeType.IntValue != BossVsBossGameMode) return Plugin_Continue;
-	//if(!ValidPlayer(BossEntity)) return Plugin_Continue;
 
-	//BossMaxHealth = HealthCalc( 760.8, float( CountBossTeam(BossEntity) ), 1.0, 1.0341, 2046.0 );
-	//VSHA_SetBossMaxHealth(Hale[BossEntity], BossMax);
+public void OnBossSetHP_Post(int BossEntity)
+{
+	if(CurrentBossGame != BossVsBossGameMode) return;
+	if(!ValidPlayer(BossEntity)) return;
+
+	int BossMaxHealth = 1000;
+	//int BossMaxHealth = HealthCalc( 760.8, float( CountBossTeam(BossEntity) ), 1.0, 1.0341, 2046.0 );
+	VSHA_SetBossHealth(BossEntity, BossMaxHealth);
+	VSHA_SetBossMaxHealth(BossEntity, BossMaxHealth);
 	//BossMaxHealth = 1000;
-
-	// This forces to over-ride the change
-	//return Plugin_Stop;
-//}
+}
 
 /*
 public Action MusicTimerStart(Handle timer, int userid)
@@ -527,9 +529,12 @@ public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 
 	if(CurrentBossGame == BossVsBossGameMode)
 	{
-		ThemeMusicIsPlaying = true;
-		BossTheme = BossVsBoss1;
-		time = 94.0;
+		if(GameModeMusicEnable.BoolValue)
+		{
+			ThemeMusicIsPlaying = true;
+			BossTheme = BossVsBoss1;
+			time = 94.0;
+		}
 
 		LoopIngamePlayers(BossEntity)
 		{
@@ -567,9 +572,12 @@ public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 				TF2_RegeneratePlayer(BossEntity);
 			}
 		}
-		ThemeMusicIsPlaying = true;
-		BossTheme = DuoBoss1;
-		time = 121.0;
+		if(GameModeMusicEnable.BoolValue)
+		{
+			ThemeMusicIsPlaying = true;
+			BossTheme = DuoBoss1;
+			time = 121.0;
+		}
 	}
 
 	return Plugin_Continue;

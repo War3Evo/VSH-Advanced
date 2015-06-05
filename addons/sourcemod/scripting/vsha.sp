@@ -1026,6 +1026,10 @@ stock Handle GetVSHAHookType(VSHAHookType vshaHOOKtype)
 		{
 			return p_OnBossSetHP;
 		}
+		case VSHAHook_OnBossSetHP_Post:
+		{
+			return p_OnBossSetHP_Post;
+		}
 		case VSHAHook_OnLastSurvivor:
 		{
 			return p_OnLastSurvivor;
@@ -1346,6 +1350,12 @@ public Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth)
 	Call_PushCellRef(BossMaxHealth);
 	Call_Finish(result);
 	return result;
+}
+public void VSHA_OnBossSetHP_Post(int BossEntity)
+{
+	Call_StartForward(p_OnBossSetHP_Post);
+	Call_PushCell(BossEntity);
+	Call_Finish();
 }
 
 public void VSHA_OnLastSurvivor()

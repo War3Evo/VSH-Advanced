@@ -326,6 +326,7 @@ enum VSHAHookType
 	VSHAHook_OnBossAirblasted,
 	VSHAHook_OnBossSelected,
 	VSHAHook_OnBossSetHP,
+	VSHAHook_OnBossSetHP_Post,
 	VSHAHook_OnBossRage,
 	VSHAHook_OnBossTimer,
 	VSHAHook_OnBossTimer_1_Second,
@@ -377,6 +378,7 @@ typeset VSHAHookCB
 	// VSHAHook_ShowBossHelpMenu
 	// VSHAHook_OnLastSurvivorLoop
 	// VSHAHook_OnBossTimer_1_Second
+	// VSHAHook_OnBossSetHP_Post
 	function void (int iEntity);
 
 	// VSHAHook_OnBossTimer

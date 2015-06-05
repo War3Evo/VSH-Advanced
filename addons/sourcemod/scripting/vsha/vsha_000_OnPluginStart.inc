@@ -33,6 +33,7 @@ public void OnPluginStart()
 	p_OnBossSelected = CreateForward(ET_Ignore, Param_Cell);
 
 	p_OnBossSetHP = CreateForward(ET_Hook, Param_Cell, Param_CellByRef);
+	p_OnBossSetHP_Post = CreateForward(ET_Ignore, Param_Cell);
 
 	p_OnLastSurvivor = CreateForward(ET_Ignore);
 

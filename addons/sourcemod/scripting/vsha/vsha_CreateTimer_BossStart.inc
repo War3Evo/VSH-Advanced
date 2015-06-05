@@ -25,9 +25,13 @@ public Action BossStart(Handle timer, int data)
 		//VSHA_SetVar(EventBoss,iClient);
 		//VSHA_SetVar(EventHitPoints,2500);
 		//VSHA_Private_Forward("VSHA_OnBossSetHP");
-		int MaxBossHP = 500;
+		int MaxBossHP = 2500;
 
-		VSHA_OnBossSetHP(iClient, MaxBossHP);
+		if(VSHA_OnBossSetHP(iClient, MaxBossHP) == Plugin_Changed)
+		{
+			// created to change any change that a boss would make .. mainly for the game modes
+			VSHA_OnBossSetHP_Post(iClient);
+		}
 
 		//int MaxBossHP = VSHA_GetVar(EventHitPoints);
 
