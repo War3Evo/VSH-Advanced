@@ -148,26 +148,143 @@ stock void SetPlayerRGB(int index, int r, int g, int b)
 }
 
 
-public Action OnGameMode_ForceBossTeamChange(int iiBoss, int iTeam)
+public Action OnGameMode_ForceBossTeamChange(VSHA_EVENTS vshaEvent, int iiBoss, int iTeam)
 {
+	//VSHA_IsBossPlayer(iiBoss)
 	if(!ThisEnabled.BoolValue) return Plugin_Continue;
 
-	if(CurrentBossGame == DuoBossGameMode && VSHA_IsBossPlayer(iiBoss))
+	if(CurrentBossGame == DuoBossGameMode)
 	{
-		ForceTeamChange(iiBoss, TEAM_RED);
-		TF2_RegeneratePlayer(iiBoss);
+		switch(vshaEvent)
+		{
+			case vshaRoundStart:
+			{
+				ForceTeamChange(iiBoss, TEAM_RED);
+			}
+			case vshaMakeBoss:
+			{
+				ForceTeamChange(iiBoss, TEAM_RED);
+				TF2_RegeneratePlayer(iiBoss); // correct team colors
+			}
+			case vshaRoundEnd:
+			{
+				ForceTeamChange(iiBoss, TEAM_RED);
+			}
+		}
+		return Plugin_Handled;
 	}
-	return Plugin_Handled;
+	else if(CurrentBossGame == BossVsBossGameMode)
+	{
+		switch(vshaEvent)
+		{
+			case vshaRoundStart:
+			{
+				if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
+				{
+					ForceTeamChange(iiBoss, TEAM_RED);
+				}
+				else if(GetTeamPlayerCount(TEAM_BLUE)<GetTeamPlayerCount(TEAM_RED))
+				{
+					ForceTeamChange(iiBoss, TEAM_BLUE);
+				}
+			}
+			case vshaMakeBoss:
+			{
+				if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
+				{
+					ForceTeamChange(iiBoss, TEAM_RED);
+				}
+				else if(GetTeamPlayerCount(TEAM_BLUE)<GetTeamPlayerCount(TEAM_RED))
+				{
+					ForceTeamChange(iiBoss, TEAM_BLUE);
+				}
+				TF2_RegeneratePlayer(iiBoss); // correct team colors
+			}
+			case vshaRoundEnd:
+			{
+				if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
+				{
+					ForceTeamChange(iiBoss, TEAM_RED);
+				}
+				else if(GetTeamPlayerCount(TEAM_BLUE)<GetTeamPlayerCount(TEAM_RED))
+				{
+					ForceTeamChange(iiBoss, TEAM_BLUE);
+				}
+			}
+		}
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
 }
 
-public Action OnGameMode_ForcePlayerTeamChange(int iClient, int iTeam)
+public Action OnGameMode_ForcePlayerTeamChange(VSHA_EVENTS vshaEvent, int iClient, int iTeam)
 {
 	if(!ThisEnabled.BoolValue) return Plugin_Continue;
 
-	if(CurrentBossGame == DuoBossGameMode && !VSHA_IsBossPlayer(iClient))
+	if(CurrentBossGame == DuoBossGameMode)
 	{
-		ForceTeamChange(iClient, TEAM_BLUE);
-		TF2_RegeneratePlayer(iClient);
+		switch(vshaEvent)
+		{
+			case vshaRoundStart:
+			{
+				ForceTeamChange(iClient, TEAM_BLUE);
+			}
+			case vshaEquipPlayers:
+			{
+				ForceTeamChange(iClient, TEAM_BLUE);
+				TF2_RegeneratePlayer(iClient); // correct team colors
+			}
+			case vshaRoundEnd:
+			{
+				ForceTeamChange(iClient, TEAM_BLUE);
+			}
+		}
+	}
+	else if(CurrentBossGame == BossVsBossGameMode)
+	{
+		switch(vshaEvent)
+		{
+			case vshaRoundStart:
+			{
+				char sClientName[32];
+				GetClientName(iClient,STRING(sClientName));
+				LogError("ERROR: Player %s found not marked as boss on BossVsBossGameMode event vshaRoundStart",sClientName);
+				if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
+				{
+					ForceTeamChange(iClient, TEAM_RED);
+				}
+				else if(GetTeamPlayerCount(TEAM_BLUE)<GetTeamPlayerCount(TEAM_RED))
+				{
+					ForceTeamChange(iClient, TEAM_BLUE);
+				}
+			}
+			case vshaEquipPlayers:
+			{
+				char sClientName[32];
+				GetClientName(iClient,STRING(sClientName));
+				LogError("ERROR: Player %s found not marked as boss on BossVsBossGameMode event vshaEquipPlayers",sClientName);
+				if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
+				{
+					ForceTeamChange(iClient, TEAM_RED);
+				}
+				else if(GetTeamPlayerCount(TEAM_BLUE)<GetTeamPlayerCount(TEAM_RED))
+				{
+					ForceTeamChange(iClient, TEAM_BLUE);
+				}
+				TF2_RegeneratePlayer(iClient); // correct team colors
+			}
+			case vshaRoundEnd:
+			{
+				if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
+				{
+					ForceTeamChange(iClient, TEAM_RED);
+				}
+				else if(GetTeamPlayerCount(TEAM_BLUE)<GetTeamPlayerCount(TEAM_RED))
+				{
+					ForceTeamChange(iClient, TEAM_BLUE);
+				}
+			}
+		}
 	}
 	return Plugin_Handled;
 }
@@ -220,7 +337,7 @@ public Action OnGameMode_BossSetup()
 		VSHA_SetPlayMusic(false);
 
 		// BOSS 1
-		int boss = VSHA_AddBoss();
+		int boss = VSHA_AddBossStock();
 
 		if(boss == -1)
 		{
@@ -234,7 +351,7 @@ public Action OnGameMode_BossSetup()
 
 		// BOSS 2
 
-		boss = VSHA_AddBoss();
+		boss = VSHA_AddBossStock();
 
 		if(boss == -1)
 		{
@@ -246,23 +363,21 @@ public Action OnGameMode_BossSetup()
 
 		VSHA_SetClientQueuePoints(boss, 0);
 
-		if ( GetTeamPlayerCount(TEAM_BLUE) <= 0 || GetTeamPlayerCount(TEAM_RED) <= 0 )
+		for (int i = 1; i <= MaxClients; i++)
 		{
-			for (int i = 1; i <= MaxClients; i++)
+			if ( IsValidClient(i) && IsOnBlueOrRedTeam(i) )
 			{
-				if ( IsValidClient(i) && IsOnBlueOrRedTeam(i) )
+				if (VSHA_IsBossPlayer(i))
 				{
-					if (VSHA_IsBossPlayer(i))
-					{
-						ForceTeamChange(i, TEAM_RED);
-					}
-					else
-					{
-						ForceTeamChange(i, TEAM_BLUE);
-					}
+					ForceTeamChange(i, TEAM_RED);
+				}
+				else
+				{
+					ForceTeamChange(i, TEAM_BLUE);
 				}
 			}
 		}
+
 		CPrintToChatAll("%s DUO BOSSES!",VSHA_COLOR);
 
 		// will be adding duo boss theme music sometime soon
@@ -277,7 +392,7 @@ public Action OnGameMode_BossSetup()
 			PrintToServer("%s Unable to play Boss Vs Boss with less than 2 players!",VSHA_COLOR);
 			return Plugin_Continue;
 		}
-		else
+
 		SetConVarInt(FindConVar("mp_teams_unbalance_limit"), 0);
 
 		// This game mode will handle its own sound / health
@@ -325,7 +440,7 @@ public Action OnGameMode_BossSetup()
 			if ( IsValidClient(i) && IsOnBlueOrRedTeam(i) )
 			{
 
-				boss = VSHA_AddBoss();
+				boss = VSHA_AddBossStock(i);
 
 				if(boss == -1)
 				{
@@ -333,9 +448,11 @@ public Action OnGameMode_BossSetup()
 					return Plugin_Continue;
 				}
 
-				VSHA_BossSelected_Forward(boss);
-
-				VSHA_SetClientQueuePoints(boss, 0);
+				if(boss != ALREADY_BOSS)
+				{
+					VSHA_BossSelected_Forward(boss);
+					VSHA_SetClientQueuePoints(boss, 0);
+				}
 
 				if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
 				{

@@ -49,6 +49,8 @@
 #define TEAM_RED 2
 #define TEAM_BLUE 3
 
+#define ALREADY_BOSS -2
+
 #define VSHA_COLOR "{olive}[VSHA]{default}"
 
 #define ROUNDSTATE_INVALID						-1		/**< Invalid RoundState (VSH is disabled)*/
@@ -115,6 +117,14 @@ enum VSHA_EVENT
 }*/
 
 // VSHA Events
+enum VSHA_EVENTS
+{
+	vshaRoundStart,
+	vshaMakeBoss, // boss only
+	vshaEquipPlayers, // happens before pre-equip players (players only)
+	vshaRoundEnd,
+}
+
 enum VSHA_Var
 {
 	hString,
@@ -269,7 +279,14 @@ native int VSHA_HasShield(int client); // the entity of the shield a player has
 native void VSHA_BossSelected_Forward(int client);
 native void VSHA_SetClientQueuePoints(int client, int points);
 native int VSHA_GetClientQueuePoints(int client);
-native int VSHA_AddBoss();
+
+native int VSHA_AddBoss(int iiBoss);
+// USE STOCK if your just going to add a random boss VSHA_AddBossStock();
+stock int VSHA_AddBossStock(int iiBoss = -1)
+{
+	return VSHA_AddBoss(iiBoss);
+}
+
 native void VSHA_SetPlayMusic(bool bSetPlayMusic);
 native void VSHA_SetHealthBar(bool bSetHealthBar);
 
@@ -343,7 +360,7 @@ typeset VSHAHookCB
 
 	// VSHAHook_OnGameMode_ForceBossTeamChange
 	// VSHAHook_OnGameMode_ForcePlayerTeamChange
-	function Action (int iEntity, int iTeam);
+	function Action (VSHA_EVENTS vshaEvent, int iEntity, int iTeam);
 
 	// VSHAHook_OnBossIntroTalk
 	// VSHAHook_AddToDownloads

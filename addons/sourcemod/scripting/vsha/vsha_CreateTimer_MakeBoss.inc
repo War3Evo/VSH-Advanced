@@ -16,7 +16,7 @@ public Action MakeBoss(Handle timer, int userid)
 	if ( iClient <= 0 || !IsClientInGame(iClient) || !bIsBoss[iClient] ) return;
 
 
-	if(VSHA_OnGameMode_ForceBossTeamChange(iClient, HaleTeam) != Plugin_Handled)
+	if(VSHA_OnGameMode_ForceBossTeamChange(vshaMakeBoss, iClient, HaleTeam) != Plugin_Handled)
 	{
 		ForceTeamChange(iClient, HaleTeam);
 		//DP("MakeBoss ForceTeamChange");

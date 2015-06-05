@@ -65,8 +65,8 @@ public void OnPluginStart()
 	p_OnLastSurvivorLoop =  CreateForward(ET_Ignore, Param_Cell);
 
 	p_OnGameMode_BossSetup = 			 CreateForward(ET_Hook);
-	p_OnGameMode_ForceBossTeamChange = CreateForward(ET_Hook, Param_Cell, Param_Cell);
-	p_OnGameMode_ForcePlayerTeamChange = CreateForward(ET_Hook, Param_Cell, Param_Cell);
+	p_OnGameMode_ForceBossTeamChange = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_Cell);
+	p_OnGameMode_ForcePlayerTeamChange = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_Cell);
 
 	p_OnGameMode_WatchGameModeTimer = 			 CreateForward(ET_Hook);
 

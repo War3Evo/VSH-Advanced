@@ -131,7 +131,7 @@ public Action RoundStartFunction()
 					if (bIsBoss[i])
 					{
 						//DP("HookEvent_RoundStart 123 ForceTeamChange(i, HaleTeam)");
-						if(VSHA_OnGameMode_ForceBossTeamChange(i, HaleTeam) != Plugin_Handled)
+						if(VSHA_OnGameMode_ForceBossTeamChange(vshaRoundStart, i, HaleTeam) != Plugin_Handled)
 						{
 							ForceTeamChange(i, HaleTeam);
 						}
@@ -139,7 +139,7 @@ public Action RoundStartFunction()
 					else
 					{
 						//DP("HookEvent_RoundStart 123 ForceTeamChange(i, OtherTeam)");
-						if(VSHA_OnGameMode_ForcePlayerTeamChange(i, OtherTeam) != Plugin_Handled)
+						if(VSHA_OnGameMode_ForcePlayerTeamChange(vshaRoundStart, i, OtherTeam) != Plugin_Handled)
 						{
 							ForceTeamChange(i, OtherTeam);
 						}

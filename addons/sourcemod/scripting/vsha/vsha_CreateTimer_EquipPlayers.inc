@@ -6,7 +6,7 @@ public Action EquipPlayers(Handle timer, int userid)
 	if ( iClient <= 0 || !IsPlayerAlive(iClient) || CheckRoundState() == 2) return Plugin_Continue;
 
 	if (IsValidEntity(iClient)) TF2Attrib_RemoveAll(iClient);
-	if(VSHA_OnGameMode_ForcePlayerTeamChange(iClient, OtherTeam) != Plugin_Handled)
+	if(VSHA_OnGameMode_ForcePlayerTeamChange(vshaEquipPlayers, iClient, OtherTeam) != Plugin_Handled)
 	{
 		if (GetClientTeam(iClient) != OtherTeam)
 		{

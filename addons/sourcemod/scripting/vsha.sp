@@ -1501,19 +1501,21 @@ public Action VSHA_OnGameMode_BossSetup()
 	Call_Finish(result);
 	return result;
 }
-public Action VSHA_OnGameMode_ForceBossTeamChange(int iEntity, int iTeam)
+public Action VSHA_OnGameMode_ForceBossTeamChange(VSHA_EVENTS vshaEvent, int iEntity, int iTeam)
 {
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnGameMode_ForceBossTeamChange);
+	Call_PushCell(vshaEvent);
 	Call_PushCell(iEntity);
 	Call_PushCell(iTeam);
 	Call_Finish(result);
 	return result;
 }
-public Action VSHA_OnGameMode_ForcePlayerTeamChange(int iEntity, int iTeam)
+public Action VSHA_OnGameMode_ForcePlayerTeamChange(VSHA_EVENTS vshaEvent, int iEntity, int iTeam)
 {
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnGameMode_ForcePlayerTeamChange);
+	Call_PushCell(vshaEvent);
 	Call_PushCell(iEntity);
 	Call_PushCell(iTeam);
 	Call_Finish(result);
@@ -1565,9 +1567,14 @@ public int Native_GetClientQueuePoints(Handle plugin, int numParams)
 }
 public int Native_AddBoss(Handle plugin, int numParams)
 {
-	int boss = -1;
-	if ( IsClientValid(iNextBossPlayer) ) boss = iNextBossPlayer;
-	else boss = FindNextBoss(bIsBoss);
+	int boss = GetNativeCell(1);
+	if(bIsBoss[boss]) return ALREADY_BOSS; //already boss
+
+	if(boss == -1)
+	{
+		if ( IsClientValid(iNextBossPlayer) ) boss = iNextBossPlayer;
+		else boss = FindNextBoss(bIsBoss);
+	}
 
 	if (boss <= 0)
 	{

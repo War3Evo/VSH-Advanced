@@ -42,7 +42,7 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 			{
 				if (GetClientTeam(i) != HaleTeam)
 				{
-					if(VSHA_OnGameMode_ForceBossTeamChange(i, HaleTeam) != Plugin_Handled)
+					if(VSHA_OnGameMode_ForceBossTeamChange(vshaRoundEnd, i, HaleTeam) != Plugin_Handled)
 					{
 						ForceTeamChange(i, HaleTeam);
 						//DP("vsha_HookEvent_RoundEnd 39 ForceTeamChange(i, HaleTeam)");
