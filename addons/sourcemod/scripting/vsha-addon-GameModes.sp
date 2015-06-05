@@ -74,9 +74,9 @@ public void OnAllPluginsLoaded()
 		LogError("Error loading VSHAHook_OnConfiguration_Load_Sounds forwards for saxton hale.");
 	}
 
-	if(!VSHAHookEx(VSHAHook_OnBossSetHP_Post, OnBossSetHP_Post))
+	if(!VSHAHookEx(VSHAHook_OnBossSetHP_Pre, OnBossSetHP_Pre))
 	{
-		LogError("Error loading VSHAHook_OnBossSetHP_Post forwards for saxton hale.");
+		LogError("Error loading VSHA_OnBossSetHP_Pre forwards for saxton hale.");
 	}
 
 	if(!VSHAHookEx(VSHAHook_OnBossTimer, OnBossTimer))
@@ -477,16 +477,19 @@ public Action OnGameMode_BossSetup()
 	return Plugin_Continue;
 }
 
-public void OnBossSetHP_Post(int BossEntity)
+public Action OnBossSetHP_Pre(int BossEntity, int &BossMaxHealth)
 {
-	if(CurrentBossGame != BossVsBossGameMode) return;
-	if(!ValidPlayer(BossEntity)) return;
+	if(CurrentBossGame != BossVsBossGameMode) return Plugin_Continue;
+	//if(!ValidPlayer(BossEntity)) return;
 
-	int BossMaxHealth = 1000;
+	DP("OnBossSetHP_Pre %d",BossEntity);
+
+	BossMaxHealth = 1000;
 	//int BossMaxHealth = HealthCalc( 760.8, float( CountBossTeam(BossEntity) ), 1.0, 1.0341, 2046.0 );
-	VSHA_SetBossHealth(BossEntity, BossMaxHealth);
-	VSHA_SetBossMaxHealth(BossEntity, BossMaxHealth);
+	//VSHA_SetBossHealth(BossEntity, BossMaxHealth);
+	//VSHA_SetBossMaxHealth(BossEntity, BossMaxHealth);
 	//BossMaxHealth = 1000;
+	return Plugin_Handled;
 }
 
 /*

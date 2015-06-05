@@ -1022,6 +1022,10 @@ stock Handle GetVSHAHookType(VSHAHookType vshaHOOKtype)
 		{
 			return p_OnBossSelected;
 		}
+		case VSHAHook_OnBossSetHP_Pre:
+		{
+			return p_OnBossSetHP_Pre;
+		}
 		case VSHAHook_OnBossSetHP:
 		{
 			return p_OnBossSetHP;
@@ -1342,6 +1346,15 @@ public void VSHA_OnBossSelected(int iiBoss)
 	Call_Finish();
 }
 
+public Action VSHA_OnBossSetHP_Pre(int BossEntity, int &BossMaxHealth)
+{
+	Action result = Plugin_Continue;
+	Call_StartForward(p_OnBossSetHP_Pre);
+	Call_PushCell(BossEntity);
+	Call_PushCellRef(BossMaxHealth);
+	Call_Finish(result);
+	return result;
+}
 public Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth)
 {
 	Action result = Plugin_Continue;
@@ -1351,10 +1364,10 @@ public Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth)
 	Call_Finish(result);
 	return result;
 }
-public void VSHA_OnBossSetHP_Post(int BossEntity)
+public void VSHA_OnBossSetHP_Post(int iEntity)
 {
 	Call_StartForward(p_OnBossSetHP_Post);
-	Call_PushCell(BossEntity);
+	Call_PushCell(iEntity);
 	Call_Finish();
 }
 

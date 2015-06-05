@@ -137,6 +137,7 @@ Handle p_OnBossKillBuilding;
 Handle p_OnMessageTimer;
 Handle p_OnBossAirblasted;
 Handle p_OnBossSelected;
+Handle p_OnBossSetHP_Pre;
 Handle p_OnBossSetHP;
 Handle p_OnBossSetHP_Post;
 Handle p_OnLastSurvivor;

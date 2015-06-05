@@ -325,6 +325,7 @@ enum VSHAHookType
 	VSHAHook_OnBossKillBuilding,
 	VSHAHook_OnBossAirblasted,
 	VSHAHook_OnBossSelected,
+	VSHAHook_OnBossSetHP_Pre,
 	VSHAHook_OnBossSetHP,
 	VSHAHook_OnBossSetHP_Post,
 	VSHAHook_OnBossRage,
@@ -399,6 +400,7 @@ typeset VSHAHookCB
 	// VSHAHook_OnBossAirblasted
 	function void (Event smEvent, int iEntity);
 
+	// VSHAHook_OnBossSetHP_Pre
 	// VSHAHook_OnBossSetHP
 	function Action (int BossEntity, int &BossMaxHealth);
 
