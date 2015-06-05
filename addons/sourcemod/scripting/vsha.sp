@@ -400,6 +400,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHAUnhookEx", Native_UnhookEx);
 
 	CreateNative("VSHA_SetPlayMusic", Native_SetPlayMusic);
+	CreateNative("VSHA_SetHealthBar", Native_SetHealthBar);
 
 	CreateNative("VSHA_GetBossUserID", Native_GetBossUserID);
 	CreateNative("VSHA_SetBossUserID", Native_SetBossUserID);
@@ -1582,6 +1583,12 @@ public int Native_AddBoss(Handle plugin, int numParams)
 public int Native_SetPlayMusic(Handle plugin, int numParams)
 {
 	AllowMusic = view_as<bool>(GetNativeCell(1));
+	return 0;
+}
+
+public int Native_SetHealthBar(Handle plugin, int numParams)
+{
+	AllowHealthBar = view_as<bool>(GetNativeCell(1));
 	return 0;
 }
 

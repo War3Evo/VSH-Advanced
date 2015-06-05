@@ -163,3 +163,4 @@ Handle p_OnGameOver;
 
 // Multi boss
 bool AllowMusic = true;
+bool AllowHealthBar = true;

@@ -291,6 +291,11 @@ public void OnPluginEnd()
 		//VSHA_UnRegisterBoss("saxtonhale");
 	}
 }
+public void OnMapStart()
+{
+	PrecacheParticleSystem("ghost_appearation");
+	PrecacheParticleSystem("yikes_fx");
+}
 public void OnMapEnd()
 {
 	WeighDownTimer = 0.0;
@@ -532,6 +537,11 @@ public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, 
 	if (iiBoss != Hale[iiBoss]) return;
 	char playsound[PATHX];
 	float speed;
+	if (curHealth < 0)
+	{
+		ForcePlayerSuicide(iiBoss);
+		return;
+	}
 	//int curHealth = VSHA_GetBossHealth(iiBoss), curMaxHp = VSHA_GetBossMaxHealth(iiBoss);
 	if (curHealth <= curMaxHp) speed = 340.0 + 0.7 * (100.0-float(curHealth)*100.0/float(curMaxHp)); //convar/cvar for speed here!
 	SetEntPropFloat(iiBoss, Prop_Send, "m_flMaxspeed", speed);
@@ -578,20 +588,21 @@ public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, 
 	}
 	float AddToRage = 0.0;//VSHA_GetBossRage(iiBoss);
 
-	if (iAlivePlayers <= 2)
+	if (iAlivePlayers > 12)
 	{
-		PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
+		//PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
 		AddToRage += 0.5;
 	}
 	else if(iAlivePlayers > 1)
 	{
-		AddToRage += (float((MaxClients + 1) - iAlivePlayers) * 0.001);
+		//AddToRage += (float((MaxClients + 1) - iAlivePlayers) * 0.001);
+		AddToRage += float(iAlivePlayers) * 0.001;
 	}
 
 	int iGetOtherTeam = GetClientTeam(iiBoss) == 2 ? 3:2;
 	if ( OnlyScoutsLeft(iGetOtherTeam ) )
 	{
-		AddToRage += 0.5;
+		AddToRage += 1.0;
 		//VSHA_SetBossRage(iiBoss, VSHA_GetBossRage(iiBoss)+0.5);
 	}
 	if(AddToRage > 0)
@@ -706,9 +717,14 @@ public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
 
 	return Plugin_Changed;
 }*/
+
+bool InRage[PATHX];
 public void OnBossRage(int iiBoss)
 {
 	if (iiBoss != Hale[iiBoss]) return;
+	if (InRage[iiBoss]) return;
+	// Helps prevent multiple rages
+	InRage[iiBoss] = true;
 	char playsound[PATHX];
 	float pos[3];
 	GetEntPropVector(iiBoss, Prop_Send, "m_vecOrigin", pos);
@@ -1162,10 +1178,11 @@ public Action UseRage(Handle hTimer, int iiBoss)
 			distance = GetVectorDistance(pos, pos2);
 			if (!TF2_IsPlayerInCondition(target, TFCond_Ubercharged) && distance < RageDist)
 			{
-				int flags = TF_STUNFLAGS_GHOSTSCARE;
-				flags |= TF_STUNFLAG_NOSOUNDOREFFECT;
+				//int flags = TF_STUNFLAGS_GHOSTSCARE;
+				//flags |= TF_STUNFLAG_NOSOUNDOREFFECT;
 				CreateTimer( 5.0, RemoveEnt, EntIndexToEntRef(AttachParticle(target, "yikes_fx", 75.0)) );
-				if (CheckRoundState() != 0) TF2_StunPlayer(target, 5.0, _, flags, iiBoss);
+				TF2_StunPlayer(target, 5.0, _, (TF_STUNFLAGS_GHOSTSCARE|TF_STUNFLAG_NOSOUNDOREFFECT), iiBoss);
+				//if (CheckRoundState() != 0) TF2_StunPlayer(target, 5.0, _, flags, iiBoss);
 			}
 		}
 	}
@@ -1192,6 +1209,7 @@ public Action UseRage(Handle hTimer, int iiBoss)
 			AcceptEntityInput(i, "RemoveHealth");
 		}
 	}
+	InRage[iiBoss]=false;
 	return Plugin_Continue;
 }
 public Action Timer_StopTickle(Handle timer, any userid)
@@ -1532,3 +1550,62 @@ public int HintPanelH(Handle menu, MenuAction action, int param1, int param2)
 	//if (action == MenuAction_Select || (action == MenuAction_Cancel && param2 == MenuCancel_Exit)) VSHFlags[param1] |= VSHFLAG_CLASSHELPED;
 	return;
 }
+
+#if !defined _smlib_included
+/* SMLIB
+ * Precaches the given particle system.
+ * It's best to call this OnMapStart().
+ * Code based on Rochellecrab's, thanks.
+ *
+ * @param particleSystem    Name of the particle system to precache.
+ * @return                  Returns the particle system index, INVALID_STRING_INDEX on error.
+ */
+stock int PrecacheParticleSystem(const char[] particleSystem)
+{
+	static int particleEffectNames = INVALID_STRING_TABLE;
+
+	if (particleEffectNames == INVALID_STRING_TABLE) {
+		if ((particleEffectNames = FindStringTable("ParticleEffectNames")) == INVALID_STRING_TABLE) {
+			return INVALID_STRING_INDEX;
+		}
+	}
+
+	int index = FindStringIndex2(particleEffectNames, particleSystem);
+	if (index == INVALID_STRING_INDEX) {
+		int numStrings = GetStringTableNumStrings(particleEffectNames);
+		if (numStrings >= GetStringTableMaxStrings(particleEffectNames)) {
+			return INVALID_STRING_INDEX;
+		}
+
+		AddToStringTable(particleEffectNames, particleSystem);
+		index = numStrings;
+	}
+
+	return index;
+}
+
+/* SMLIB
+ * Rewrite of FindStringIndex, because in my tests
+ * FindStringIndex failed to work correctly.
+ * Searches for the index of a given string in a string table.
+ *
+ * @param tableidx      A string table index.
+ * @param str           String to find.
+ * @return              String index if found, INVALID_STRING_INDEX otherwise.
+ */
+stock int FindStringIndex2(int tableidx, const char[] str)
+{
+	char buf[1024];
+
+	int numStrings = GetStringTableNumStrings(tableidx);
+	for (int i=0; i < numStrings; i++) {
+		ReadStringTable(tableidx, i, buf, sizeof(buf));
+
+		if (StrEqual(buf, str)) {
+			return i;
+		}
+	}
+
+	return INVALID_STRING_INDEX;
+}
+#endif

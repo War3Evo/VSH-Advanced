@@ -21,11 +21,11 @@ public Action MusicPlay(Handle Timer, int userid)
 	//VSHA_SetVar(EventTime,time);
 	//VSHA_Private_Forward("VSHA_OnMusic");
 
-	if(ValidPlayer(iClient) && AllowMusic)
+	if(AllowMusic)
 	{
 		VSHA_OnMusic(iClient, sound, time);
 	}
-	else if(iClient == -2 && !AllowMusic)
+	else if(userid == -2)
 	{
 		// Send OnMusic to Game Mode Addon
 		VSHA_OnMusic(-2, sound, time);

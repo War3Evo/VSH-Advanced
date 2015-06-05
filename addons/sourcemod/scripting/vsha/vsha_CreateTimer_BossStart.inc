@@ -25,7 +25,7 @@ public Action BossStart(Handle timer, int data)
 		//VSHA_SetVar(EventBoss,iClient);
 		//VSHA_SetVar(EventHitPoints,2500);
 		//VSHA_Private_Forward("VSHA_OnBossSetHP");
-		int MaxBossHP = 2500;
+		int MaxBossHP = 500;
 
 		VSHA_OnBossSetHP(iClient, MaxBossHP);
 

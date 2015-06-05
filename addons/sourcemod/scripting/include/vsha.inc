@@ -271,6 +271,8 @@ native void VSHA_SetClientQueuePoints(int client, int points);
 native int VSHA_GetClientQueuePoints(int client);
 native int VSHA_AddBoss();
 native void VSHA_SetPlayMusic(bool bSetPlayMusic);
+native void VSHA_SetHealthBar(bool bSetHealthBar);
+
 
 // may use in future, removed for now
 //native int VSHA_CreateEvent(VSHA_EVENT event, int client);

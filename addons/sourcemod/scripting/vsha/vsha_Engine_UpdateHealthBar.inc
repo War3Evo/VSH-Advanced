@@ -2,6 +2,19 @@
 
 public void UpdateHealthBar()
 {
+	if(!AllowHealthBar)
+	{
+		if (iHealthBar != -1)
+		{
+			if (IsValidEntity(iHealthBar))
+			{
+				iHealthBar = -1;
+				AcceptEntityInput(iHealthBar, "Kill");
+			}
+		}
+		return;
+	}
+
 	int bossHP = 0, bossMaxHealth = 0, bosscount = 0;
 	//int bosscount = 0;
 	LoopIngameClients(target)

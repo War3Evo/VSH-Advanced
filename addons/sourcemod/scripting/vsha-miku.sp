@@ -654,11 +654,11 @@ public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, 
 	}
 	else
 	{
+		HaleCharge[iiBoss] = 0;
 		if (!(buttons & IN_SCORE))
 		{
 			//if(!InitHaleTimer[iiBoss])
 			//{
-				HaleCharge[iiBoss] = 0;
 				SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
 				ShowSyncHudText(iiBoss, hHudSync2, "Mini-Super Jump will be ready again in: %d ", (HaleChargeCoolDown[iiBoss]-GetTime()));
 				//InitHaleTimer[iiBoss]=true;
@@ -673,20 +673,21 @@ public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, 
 	}
 	float AddToRage = 0.0;//VSHA_GetBossRage(iiBoss);
 
-	if (iAlivePlayers <= 2)
+	if (iAlivePlayers > 12)
 	{
-		PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
+		//PrintCenterTextAll("Saxton Hale's Current Health is: %i of %i", curHealth, curMaxHp);
 		AddToRage += 0.5;
 		//VSHA_SetBossRage(iiBoss, VSHA_GetBossRage(iiBoss)+0.2);
 	}
 	else if(iAlivePlayers > 1)
 	{
-		AddToRage += (float((MaxClients + 1) - iAlivePlayers) * 0.001);
+		//AddToRage += (float((MaxClients + 1) - iAlivePlayers) * 0.001);
+		AddToRage += float(iAlivePlayers) * 0.001;
 	}
 	int iGetOtherTeam = GetClientTeam(iiBoss) == 2 ? 3:2;
 	if ( OnlyScoutsLeft(iGetOtherTeam) )
 	{
-		AddToRage += 0.5;
+		AddToRage += 1.0;
 		//VSHA_SetBossRage(iiBoss, VSHA_GetBossRage(iiBoss)+0.5);
 	}
 
@@ -781,8 +782,9 @@ public void OnBossRage(int iiBoss)
 {
 	if (iiBoss != Hale[iiBoss]) return;
 	if (InRage[iiBoss]) return;
-	char playsound[PATHX];
+	// Helps prevent multiple rages
 	InRage[iiBoss] = true;
+	char playsound[PATHX];
 	//DP("iiBoss = %d",iiBoss);
 	float pos[3];
 	GetEntPropVector(iiBoss, Prop_Send, "m_vecOrigin", pos);
