@@ -18,19 +18,34 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 
 		if(plugin == null) continue;
 
-		LoopActiveBosses(iiBoss)
+		LoopAlivePlayers(TargetPlayer)
 		{
-			if(IsPlayerAlive(iiBoss))
+			if(IsPlayerAlive(TargetPlayer))
 			{
-				if (Storage[iiBoss] == plugin)
+				if(bIsBoss[TargetPlayer])
 				{
-					GetClientName(iiBoss,STRING(sClientName));
-					//PrintToServer("ModelString %s Applied to %s",ModelString,sClientName);
-					// apply ModelString to player
-					SetVariantString(ModelString);
-					AcceptEntityInput(iiBoss, "SetCustomModel");
-					SetEntProp(iiBoss, Prop_Send, "m_bUseClassAnimations", 1);
+					if (Storage[TargetPlayer] == plugin)
+					{
+						GetClientName(TargetPlayer,STRING(sClientName));
+						//PrintToServer("ModelString %s Applied to %s",ModelString,sClientName);
+						// apply ModelString to player
+						SetVariantString(ModelString);
+						AcceptEntityInput(TargetPlayer, "SetCustomModel");
+						SetEntProp(TargetPlayer, Prop_Send, "m_bUseClassAnimations", 1);
+					}
 				}
+				else
+				{
+						SetVariantString("");
+						AcceptEntityInput(TargetPlayer, "SetCustomModel");
+						//SetEntProp(TargetPlayer, Prop_Send, "m_bUseClassAnimations", 1);
+				}
+			}
+			else
+			{
+					SetVariantString("");
+					AcceptEntityInput(TargetPlayer, "SetCustomModel");
+					//SetEntProp(TargetPlayer, Prop_Send, "m_bUseClassAnimations", 1);
 			}
 		}
 	}
