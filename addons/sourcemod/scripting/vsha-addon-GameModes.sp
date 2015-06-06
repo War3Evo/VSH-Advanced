@@ -48,7 +48,7 @@ public void OnPluginStart()
 	}
 
 	ThisEnabled = CreateConVar("vsha_gamemode_enabled", "0", "Enable Game Modes", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	GameModeType = CreateConVar("vsha_gamemode_type_test", "0", "0 - default, 1 - Duo Boss, 2 - Boss vs Boss, 999 - Random", FCVAR_PLUGIN, true, 0.0, false);
+	GameModeType = CreateConVar("vsha_gamemode_type", "0", "0 - default, 1 - Duo Boss, 2 - Boss vs Boss, 999 - Random", FCVAR_PLUGIN, true, 0.0, false);
 	GameModeMusicEnable = CreateConVar("vsha_gamemode_music_enable", "0", "0 - disabled, 1 - enabled", FCVAR_PLUGIN, true, 0.0, false);
 }
 

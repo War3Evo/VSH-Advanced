@@ -17,7 +17,7 @@ public Plugin myinfo =
 #define ThisConfigurationFile "configs/vsha/cbs.cfg"
 
 #define HALE_JUMPCHARGETIME		100
-#define HALE_JUMPCHARGE			4
+#define HALE_JUMPCHARGE			5
 #define CBS_MAX_ARROWS 			9
 
 int HaleChargeCoolDown[PLYR];
@@ -324,6 +324,7 @@ public void OnGameOver() // best play to reset all variables
 		{
 			Hale[players]=0;
 			HaleCharge[players]=0;
+			InRage[players]=false;
 		}
 		if(ValidPlayer(players))
 		{
@@ -461,7 +462,7 @@ public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, 
 		// 5 * 60 = 300
 		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
 		// 300 = 1 minute wait
-		float ExtraBoost = float(HaleCharge[iiBoss]) * 2;
+		float ExtraBoost = float(HaleCharge[iiBoss]) /4;
 		if ( HaleCharge[iiBoss] > 1 && SuperJump(iiBoss, ExtraBoost, -15.0, HaleCharge[iiBoss], -150) ) //put convar/cvar for jump sensitivity here!
 		{
 			HaleChargeCoolDown[iiBoss] = GetTime()+3;
@@ -550,7 +551,11 @@ public void OnPrepBoss(int iiBoss)
 }
 public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 {
-	if (iiBoss<0 || iiBoss != Hale[iiBoss])
+	if (iiBoss<0)
+	{
+		return Plugin_Continue;
+	}
+	if (iiBoss != Hale[iiBoss])
 	{
 		return Plugin_Continue;
 	}
@@ -663,6 +668,8 @@ public void TF2_OnConditionAdded(int client, TFCond condition)
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
 	if(!IsValidEdict(attacker)) return Plugin_Continue;
+	if(attacker <= 0)  return Plugin_Continue;
+	if(!ValidPlayer(victim))  return Plugin_Continue;
 
 	//char playsound[PATHX];
 
@@ -693,7 +700,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 	float AttackerPos[3];
 	GetEntPropVector(attacker, Prop_Send, "m_vecOrigin", AttackerPos); //Spot of attacker
-	if (attacker == Hale[attacker])
+	if (ValidPlayer(attacker) && attacker == Hale[attacker])
 	{
 		if (TF2_IsPlayerInCondition(victim, TFCond_DefenseBuffed))
 		{
@@ -728,7 +735,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			}
 		}
 		int shield = VSHA_HasShield(victim);
-		if(shield > -1 && weapon == GetPlayerWeaponSlot(attacker, 2))
+		if(shield > -1 && ValidPlayer(attacker) && weapon == GetPlayerWeaponSlot(attacker, 2))
 		{
 				//int HitsTaken = VSHA_GetHits(victim);
 				//int HitsRequired = 0;
@@ -741,7 +748,13 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				TF2_AddCondition(victim, TFCond_Bonked, 0.1);
 				//if (HitsRequired <= HitsTaken)
 				//{
-				TF2_RemoveWearable(victim, shield);
+				if(IsValidEntity(shield))
+				{
+					if(GetEntPropEnt(shield, Prop_Send, "m_hOwnerEntity")==victim && !GetEntProp(shield, Prop_Send, "m_bDisguiseWearable"))
+					{
+						TF2_RemoveWearable(victim, shield);
+					}
+				}
 				VSHA_SetShield(victim, -1);
 				float Pos[3];
 				GetEntPropVector(victim, Prop_Send, "m_vecOrigin", Pos);
@@ -753,7 +766,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				//return Plugin_Continue;
 		}
 	}
-	else if (Hale[victim] == victim && Hale[attacker] != attacker)
+	else if (ValidPlayer(victim) && ValidPlayer(attacker) && Hale[victim] == victim && Hale[attacker] != attacker)
 	{
 		if (attacker <= MaxClients && attacker > 0)
 		{

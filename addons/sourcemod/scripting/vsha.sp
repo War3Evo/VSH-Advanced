@@ -15,7 +15,7 @@
 //#define BloodDropmodel "sprites/blood.vmt"
 //#define BloodSpraymodel "sprites/bloodspray.vmt"
 
-// old version 0.1.2 on forums
+// old version 0.1.3 on forums
 #define PLUGIN_VERSION			"0.1.3"
 
 public Plugin myinfo = {

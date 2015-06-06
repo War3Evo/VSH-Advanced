@@ -520,6 +520,7 @@ public void OnGameOver() // best play to reset all variables
 		{
 			Hale[players]=0;
 			HaleCharge[players]=0;
+			InRage[players]=false;
 		}
 		if(ValidPlayer(players))
 		{
@@ -569,6 +570,7 @@ public void OnBossSelected(int iiBoss)
 		{
 			Hale[iiBoss]=0;
 			HaleCharge[iiBoss]=0;
+			InRage[iiBoss]=false;
 		}
 		return;
 	}
@@ -742,7 +744,11 @@ public void OnPrepBoss(int iiBoss)
 }
 public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 {
-	if (iiBoss<0 || iiBoss != Hale[iiBoss])
+	if (iiBoss<0)
+	{
+		return Plugin_Continue;
+	}
+	if (iiBoss != Hale[iiBoss])
 	{
 		return Plugin_Continue;
 	}
@@ -829,6 +835,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	if(!IsValidEdict(attacker)) return Plugin_Continue;
 	//DP("attacker = %d, victim = %d, hale[victim] = %d",attacker,victim,Hale[victim]);
 	//if((attacker <= 0) && (victim == Hale[victim])) return Plugin_Continue;
+	if(attacker <= 0)  return Plugin_Continue;
+	if(!ValidPlayer(victim))  return Plugin_Continue;
 
 	// removed the = sign because we need to detect when hale takes damage from falls,
 	// so we can remove that damage.
@@ -864,7 +872,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 	float AttackerPos[3];
 	GetEntPropVector(attacker, Prop_Send, "m_vecOrigin", AttackerPos); //Spot of attacker
-	if (attacker == Hale[attacker])
+	if (ValidPlayer(attacker) && attacker == Hale[attacker])
 	{
 		if (TF2_IsPlayerInCondition(victim, TFCond_DefenseBuffed))
 		{
@@ -899,7 +907,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			}
 		}
 		int shield = VSHA_HasShield(victim);
-		if(shield > -1 && weapon == GetPlayerWeaponSlot(attacker, 2))
+		if(shield > -1 && ValidPlayer(attacker) && weapon == GetPlayerWeaponSlot(attacker, 2))
 		{
 				//int HitsTaken = VSHA_GetHits(victim);
 				//int HitsRequired = 0;
@@ -912,7 +920,13 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				TF2_AddCondition(victim, TFCond_Bonked, 0.1);
 				//if (HitsRequired <= HitsTaken)
 				//{
-				TF2_RemoveWearable(victim, shield);
+				if(IsValidEntity(shield))
+				{
+					if(GetEntPropEnt(shield, Prop_Send, "m_hOwnerEntity")==victim && !GetEntProp(shield, Prop_Send, "m_bDisguiseWearable"))
+					{
+						TF2_RemoveWearable(victim, shield);
+					}
+				}
 				VSHA_SetShield(victim, -1);
 				float Pos[3];
 				GetEntPropVector(victim, Prop_Send, "m_vecOrigin", Pos);
@@ -924,7 +938,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				//return Plugin_Continue;
 		}
 	}
-	else if (Hale[victim] == victim && Hale[attacker] != attacker)
+	else if (ValidPlayer(attacker) && ValidPlayer(victim) && Hale[victim] == victim && Hale[attacker] != attacker)
 	{
 		if (attacker <= MaxClients && attacker > 0)
 		{
