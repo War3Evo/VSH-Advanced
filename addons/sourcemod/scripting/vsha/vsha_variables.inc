@@ -18,6 +18,14 @@ ArrayList hArrayModelManagerStringName = null;
 Handle Storage[PLYR];
 //Handle ModelTimer[PLYR];
 
+// Timer Handles
+Handle HandletTenSecStartTimer;
+Handle HandletTenSecStartTimer2;
+Handle hBossStartTimer;
+Handle hInitBossTimer;
+Handle hBossResponse;
+Handle hDoMessage;
+
 //ints
 int iModelRetrys[PLYR],
 	iBossUserID[PLYR],		//USERID NUM OVER CLIENT INT

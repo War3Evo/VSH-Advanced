@@ -11,6 +11,16 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 #endif
 		return Plugin_Continue;
 	}
+	// Stop RoundStart Timers
+	ClearTimer(HandletTenSecStartTimer);
+	ClearTimer(HandletTenSecStartTimer2);
+	bTenSecStart[0] = false;
+	bTenSecStart[1] = false;
+	ClearTimer(hBossStartTimer);
+	ClearTimer(hInitBossTimer);
+	ClearTimer(hBossResponse);
+	ClearTimer(hDoMessage);
+
 	ClearTimer(MusicTimer);
 
 	TeamRoundCounter++;

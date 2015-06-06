@@ -152,13 +152,13 @@ public Action RoundStartFunction()
 	bTenSecStart[0] = true;
 	bTenSecStart[1] = true;
 
-	CreateTimer(29.1, tTenSecStart, 0);
-	CreateTimer(60.1, tTenSecStart, 1);
+	HandletTenSecStartTimer = CreateTimer(29.1, tTenSecStart, 0);
+	HandletTenSecStartTimer2 = CreateTimer(60.1, tTenSecStart, 1);
 
-	CreateTimer(9.1, BossStart);
-	CreateTimer(0.2, InitBoss);
-	CreateTimer(3.5, BossResponse);
-	CreateTimer(9.6, DoMessage);
+	hBossStartTimer = CreateTimer(9.1, BossStart); // 9.1
+	hInitBossTimer = CreateTimer(0.2, InitBoss);
+	hBossResponse = CreateTimer(3.5, BossResponse);
+	hDoMessage = CreateTimer(9.6, DoMessage); //9.6
 	PointReady = false;
 
 	for ( int entity = MaxClients+1; entity < MaxEntities; entity++ )
