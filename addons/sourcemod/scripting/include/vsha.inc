@@ -378,7 +378,6 @@ typeset VSHAHookCB
 	// VSHAHook OnPrepBoss
 	// VSHAHook OnBossRage
 	// VSHAHook ShowPlayerHelpMenu
-	// VSHAHook OnEquipPlayer_Post
 	// VSHAHook ShowBossHelpMenu
 	// VSHAHook OnLastSurvivorLoop
 	// VSHAHook OnBossTimer_1_Second
@@ -391,6 +390,9 @@ typeset VSHAHookCB
 	// VSHAHook OnEquipPlayer_Pre
 	// VSHAHook OnMessageTimer
 	function Action (int iEntity);
+
+	// VSHAHook OnEquipPlayer_Post
+	function void (int iEntity);
 
 	// VSHAHook OnPlayerKilledByBoss
 	// VSHAHook OnKillingSpreeByBoss

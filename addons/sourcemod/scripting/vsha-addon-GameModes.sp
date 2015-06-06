@@ -19,9 +19,11 @@ public Plugin myinfo =
 ConVar ThisEnabled = null;
 ConVar GameModeType = null;
 ConVar GameModeMusicEnable = null;
+ConVar RandomType = null;
 
 int m_OffsetClrRender=-1;
 
+int PreviousBossGame = 0;
 int CurrentBossGame = 0;
 
 // Themes
@@ -49,6 +51,7 @@ public void OnPluginStart()
 
 	ThisEnabled = CreateConVar("vsha_gamemode_enabled", "0", "Enable Game Modes", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	GameModeType = CreateConVar("vsha_gamemode_type", "0", "0 - default, 1 - Duo Boss, 2 - Boss vs Boss, 999 - Random", FCVAR_PLUGIN, true, 0.0, false);
+	RandomType = CreateConVar("vsha_random_type", "1", "0 - disabled, 1 - not the same game twice", FCVAR_PLUGIN, true, 0.0, false);
 	GameModeMusicEnable = CreateConVar("vsha_gamemode_music_enable", "0", "0 - disabled, 1 - enabled", FCVAR_PLUGIN, true, 0.0, false);
 }
 
@@ -368,11 +371,22 @@ public Action OnGameMode_BossSetup()
 {
 	if(!ThisEnabled.BoolValue) return Plugin_Continue;
 
-	int iGameMode = -1;
+	int iGameMode = PreviousBossGame;
 
 	if(GameModeType.IntValue == RandomBossGameMode)
 	{
-		iGameMode = GetRandomInt(0,2);
+		if(RandomType.IntValue == 1)
+		{
+			// not the same game twice
+			while(iGameMode == PreviousBossGame)
+			{
+				iGameMode = GetRandomInt(0,2);
+			}
+		}
+		else
+		{
+			iGameMode = GetRandomInt(0,2);
+		}
 	}
 	else
 	{
@@ -380,6 +394,7 @@ public Action OnGameMode_BossSetup()
 	}
 
 	CurrentBossGame = iGameMode;
+	PreviousBossGame = iGameMode;
 
 	if(CurrentBossGame == DuoBossGameMode)
 	{
@@ -535,7 +550,7 @@ public Action OnGameMode_BossSetup()
 	return Plugin_Continue;
 }
 
-public Action OnBossSetHP_Pre(int BossEntity, int &BossMaxHealth)
+public Action OnBossSetHP_Pre(Handle BossPlugin, int BossEntity, int &BossMaxHealth)
 {
 	if(CurrentBossGame == BossVsBossGameMode)
 	{
@@ -624,7 +639,7 @@ public void OnEquipPlayer_Post(int iClient)
 	}
 }
 
-public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
+public Action OnMusic(Handle BossPlugin, int iiBoss, char BossTheme[PATHX], float &time)
 {
 	if (iiBoss != -2) return Plugin_Continue;
 
@@ -762,7 +777,7 @@ public void OnConfiguration_Load_Misc(char[] cFile, char[] skey, char[] value)
 		DuoBoss1Time = StringToFloat(value);
 	}
 }
-public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
+public void OnBossTimer(Handle BossPlugin, int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
 {
 	if(CurrentBossGame != BossVsBossGameMode) return;
 	if(ValidPlayer(iiBoss,true))
