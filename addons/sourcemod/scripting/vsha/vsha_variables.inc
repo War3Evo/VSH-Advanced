@@ -144,6 +144,7 @@ Handle p_OnBossWin;
 Handle p_OnBossKillBuilding;
 Handle p_OnMessageTimer;
 Handle p_OnBossAirblasted;
+Handle p_OnBossChangeClass;
 Handle p_OnBossSelected;
 Handle p_OnBossSetHP_Pre;
 Handle p_OnBossSetHP;

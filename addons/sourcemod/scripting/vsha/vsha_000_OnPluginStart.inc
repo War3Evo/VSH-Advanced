@@ -19,35 +19,37 @@ public void OnPluginStart()
 	p_OnBossIntroTalk = CreateForward(ET_Ignore);
 	p_AddToDownloads = CreateForward(ET_Ignore);
 
-	p_OnPlayerKilledByBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
-	p_OnKillingSpreeByBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
-	p_OnBossKilled = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	p_OnPlayerKilledByBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
+	p_OnKillingSpreeByBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
+	p_OnBossKilled = CreateForward(ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 
-	p_OnBossWin = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
-	p_OnBossKillBuilding = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	p_OnBossWin = CreateForward(ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
+	p_OnBossKillBuilding = CreateForward(ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 
 	p_OnMessageTimer = CreateForward(ET_Hook, Param_Cell);
 
-	p_OnBossAirblasted = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+	p_OnBossAirblasted = CreateForward(ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 
-	p_OnBossSelected = CreateForward(ET_Ignore, Param_Cell);
+	p_OnBossChangeClass = CreateForward(ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 
-	p_OnBossSetHP_Pre = CreateForward(ET_Hook, Param_Cell, Param_CellByRef);
-	p_OnBossSetHP = CreateForward(ET_Hook, Param_Cell, Param_CellByRef);
-	p_OnBossSetHP_Post = CreateForward(ET_Ignore, Param_Cell);
+	p_OnBossSelected = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+
+	p_OnBossSetHP_Pre = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_CellByRef);
+	p_OnBossSetHP = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_CellByRef);
+	p_OnBossSetHP_Post = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
 	p_OnLastSurvivor = CreateForward(ET_Ignore);
 
-	p_OnBossTimer = CreateForward(ET_Ignore, Param_Cell, Param_CellByRef, Param_CellByRef, Param_Cell, Param_Cell, Param_Cell);
-	p_OnBossTimer_1_Second = CreateForward(ET_Ignore, Param_Cell);
+	p_OnBossTimer = CreateForward(ET_Ignore, Param_Cell, Param_Cell, Param_CellByRef, Param_CellByRef, Param_Cell, Param_Cell, Param_Cell);
+	p_OnBossTimer_1_Second = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
-	p_OnPrepBoss = CreateForward(ET_Ignore, Param_Cell);
+	p_OnPrepBoss = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
-	p_OnMusic = CreateForward(ET_Hook, Param_Cell, Param_String, Param_FloatByRef);
+	p_OnMusic = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_String, Param_FloatByRef);
 
 	p_OnModelTimer = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_String);
 
-	p_OnBossRage = CreateForward(ET_Ignore, Param_Cell);
+	p_OnBossRage = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
 	p_OnConfiguration_Load_Sounds = CreateForward(ET_Ignore, Param_String, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
 	p_OnConfiguration_Load_Materials = CreateForward(ET_Ignore, Param_String, Param_String, Param_String, Param_CellByRef, Param_CellByRef);
@@ -60,7 +62,7 @@ public void OnPluginStart()
 
 	p_OnEquipPlayer_Post = CreateForward(ET_Ignore, Param_Cell);
 
-	p_ShowBossHelpMenu = CreateForward(ET_Ignore, Param_Cell);
+	p_ShowBossHelpMenu = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
 	p_OnUberTimer = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
@@ -112,7 +114,7 @@ public void OnPluginStart()
 	HookEvent("player_hurt", PlayerHurt, EventHookMode_Pre);
 	HookEvent("object_destroyed", Destroyed, EventHookMode_Pre);
 	HookEvent("object_deflected", Deflected, EventHookMode_Pre);
-	//HookEvent("player_changeclass", ChangeClass);
+	HookEvent("player_changeclass", ChangeClass);
 
 	vsha_000_RegConsoleCmd_OnPluginStart();
 	vsha_000_RegAdminCmd_OnPluginStart();

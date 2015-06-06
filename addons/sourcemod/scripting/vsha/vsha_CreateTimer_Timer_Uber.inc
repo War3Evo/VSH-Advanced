@@ -17,9 +17,6 @@ public Action Timer_Uber(Handle timer, any medigunid)
 					TF2_AddCondition(target, TFCond_HalloweenCritCandy, 0.5);
 					iUberedTarget[medic] = target;
 
-					//VSHA_SetVar(EventClient,medic);
-					//VSHA_SetVar(EventTarget,target);
-					//VSHA_Private_Forward("VSHA_OnUberTimer");
 					VSHA_OnUberTimer(medic, target);
 				}
 				else iUberedTarget[medic] = -1;

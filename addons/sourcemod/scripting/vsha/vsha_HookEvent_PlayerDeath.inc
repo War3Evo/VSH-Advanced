@@ -123,7 +123,7 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 			//VSHA_SetVar(EventAttacker,attacker);
 			//VSHA_Private_Forward("VSHA_OnPlayerKilledByBoss");
 
-			VSHA_OnPlayerKilledByBoss(victim,attacker);
+			VSHA_OnPlayerKilledByBoss(Storage[attacker], victim, attacker);
 
 			if ( iPlayerKilled[attacker][1] >= GetRandomInt(2, 3) )
 			{
@@ -131,7 +131,7 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 				//VSHA_SetVar(EventAttacker,attacker);
 				//VSHA_Private_Forward("VSHA_OnKillingSpreeByBoss");
 
-				VSHA_OnKillingSpreeByBoss(victim, attacker);
+				VSHA_OnKillingSpreeByBoss(Storage[attacker], victim, attacker);
 
 				iPlayerKilled[attacker][1] = 0;
 			}
@@ -177,7 +177,7 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 		Direction[2] = 300.0;
 		Gib(Origin, Direction, GIBmodel);
 
-		VSHA_OnBossKilled(victim, attacker);
+		VSHA_OnBossKilled(Storage[victim], victim, attacker);
 
 		SDKUnhook(victim, SDKHook_GetMaxHealth, OnGetMaxHealth);
 

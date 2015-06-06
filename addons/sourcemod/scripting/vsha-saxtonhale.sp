@@ -14,9 +14,9 @@ public Plugin myinfo =
 	url 			= "http://wiki.teamfortress.com/wiki/Saxton_Hale"
 }
 
-#define ThisConfigurationFile "configs/vsha/saxtonhale.cfg"
+Handle hThisPlugin = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDING DATA.
 
-Handle ThisPluginHandle = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDING DATA.
+#define ThisConfigurationFile "configs/vsha/saxtonhale.cfg"
 
 char HaleModel[PATHX];
 char HaleModelPrefix[PATHX];
@@ -105,8 +105,6 @@ char HaleStubbed132[PATHX];
 //make defines, handles, variables heer lololol
 int HaleCharge[PLYR];
 
-int Hale[PLYR];
-
 int HaleChargeCoolDown[PLYR];
 
 float WeighDownTimer = 0.0;
@@ -145,13 +143,13 @@ public void Load_VSHAHooks()
 	{
 		LogError("Error loading VSHAHook_OnBossKillBuilding forwards for saxton hale.");
 	}
-	//if(!VSHAHookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
-	//{
-		//LogError("Error loading VSHAHook_OnMessageTimer forwards for saxton hale.");
-	//}
 	if(!VSHAHookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
 	{
 		LogError("Error loading VSHAHook_OnBossAirblasted forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossChangeClass, OnChangeClass))
+	{
+		LogError("Error loading VSHAHook_OnBossChangeClass forwards for saxton hale.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnBossSetHP, OnBossSetHP))
 	{
@@ -173,10 +171,6 @@ public void Load_VSHAHooks()
 	{
 		LogError("Error loading VSHAHook_OnMusic forwards for saxton hale.");
 	}
-	//if(!VSHAHookEx(VSHAHook_OnModelTimer, OnModelTimer))
-	//{
-		//LogError("Error loading VSHAHook_OnModelTimer forwards for saxton hale.");
-	//}
 	if(!VSHAHookEx(VSHAHook_OnBossRage, OnBossRage))
 	{
 		LogError("Error loading VSHAHook_OnBossRage forwards for saxton hale.");
@@ -216,13 +210,13 @@ public void UnLoad_VSHAHooks()
 	{
 		LogError("Error unloading VSHAHook_OnBossKillBuilding forwards for saxton hale.");
 	}
-	//if(!VSHAUnhookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
-	//{
-		//LogError("Error unloading VSHAHook_OnMessageTimer forwards for saxton hale.");
-	//}
 	if(!VSHAUnhookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
 	{
 		LogError("Error unloading VSHAHook_OnBossAirblasted forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossChangeClass, OnChangeClass))
+	{
+		LogError("Error unloading VSHAHook_OnBossChangeClass forwards for saxton hale.");
 	}
 	if(!VSHAUnhookEx(VSHAHook_OnBossSetHP, OnBossSetHP))
 	{
@@ -244,24 +238,29 @@ public void UnLoad_VSHAHooks()
 	{
 		LogError("Error unloading VSHAHook_OnMusic forwards for saxton hale.");
 	}
-	//if(!VSHAUnhookEx(VSHAHook_OnModelTimer, OnModelTimer))
-	//{
-		//LogError("Error unloading VSHAHook_OnModelTimer forwards for saxton hale.");
-	//}
 	if(!VSHAUnhookEx(VSHAHook_OnBossRage, OnBossRage))
 	{
 		LogError("Error unloading VSHAHook_OnBossRage forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnGameOver, OnGameOver))
+	{
+		LogError("Error unloading VSHAHook_OnGameOver forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_ShowBossHelpMenu, OnShowBossHelpMenu))
+	{
+		LogError("Error unloading VSHAHook_ShowBossHelpMenu forwards for saxton hale.");
 	}
 }
 
 public void OnAllPluginsLoaded()
 {
-	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("saxtonhale","Saxton Hale") );
+	hThisPlugin = view_as<Handle>( VSHA_RegisterBoss("saxtonhale","Saxton Hale") );
 #if defined DEBUG
 	if (ThisPluginHandle == null) DEBUGPRINT1("VSHA SaxtonHale::OnAllPluginsLoaded() **** ThisPluginHandle is NULL ****");
 	else DEBUGPRINT1("VSHA SaxtonHale::OnAllPluginsLoaded() **** ThisPluginHandle is OK and SaxtonHale is Registered! ****");
 #endif
-	HookEvent("player_changeclass", ChangeClass);
+
+	//HookEvent("player_changeclass", ChangeClass);
 
 
 	if(!VSHAHookEx(VSHAHook_OnBossSelected, OnBossSelected))
@@ -284,13 +283,13 @@ public void OnAllPluginsLoaded()
 	// LoadConfiguration ALWAYS after VSHAHook
 	VSHA_LoadConfiguration(ThisConfigurationFile);
 }
-public void OnPluginEnd()
-{
-	if(ThisPluginHandle != null)
-	{
+//public void OnPluginEnd()
+//{
+	//if(ThisPluginHandle != null)
+	//{
 		//VSHA_UnRegisterBoss("saxtonhale");
-	}
-}
+	//}
+//}
 public void OnMapStart()
 {
 	PrecacheParticleSystem("ghost_appearation");
@@ -303,46 +302,38 @@ public void OnMapEnd()
 
 	LoopMaxPLYR(player)
 	{
-		Hale[player] = 0;
 		HaleCharge[player] = 0;
 	}
 }
 
-public void OnClientDisconnect(int client)
-{
-	if (client == Hale[client])
-	{
-		Hale[client] = 0;
-		bool see[PLYR];
-		see[Hale[client]] = true;
-		//int tHale;
-		//if (VSHA_GetPresetBossPlayer() > 0) tHale = VSHA_GetPresetBossPlayer();
-		//else tHale = VSHA_FindNextBoss( see, sizeof(see) );
-		/*
-		if (IsValidClient(tHale))
-		{
-			if (GetClientTeam(tHale) != 3)
-			{
-				ForceTeamChange(Hale[client], 3);
-				//DP("vsha-saxtonhale 166 ForceTeamChange(i, 3)");
-			}
-		}*/
-	}
-}
-public Action ChangeClass(Event event, const char[] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId( event.GetInt("userid") );
-	if (client == Hale[client])
-	{
-		if (TF2_GetPlayerClass(client) != TFClass_Soldier) TF2_SetPlayerClass(client, TFClass_Soldier, _, false);
-		TF2_RemovePlayerDisguise(client);
-	}
-	return Plugin_Continue;
-}
+//public void OnClientDisconnect(int client)
+//{
+	//if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle) return;
 
-public void OnPlayerKilledByBoss(int iiBoss, int attacker)
+	//bool see[PLYR];
+	//see[client] = true;
+	//int tHale;
+	//if (VSHA_GetPresetBossPlayer() > 0) tHale = VSHA_GetPresetBossPlayer();
+	//else tHale = VSHA_FindNextBoss( see, sizeof(see) );
+	//if (IsValidClient(tHale))
+	//{
+		//if (GetClientTeam(tHale) != 3)
+		//{
+			//ForceTeamChange(Hale[client], 3);
+			//DP("vsha-saxtonhale 166 ForceTeamChange(i, 3)");
+		//}
+	//}
+//}
+public void OnChangeClass(Handle BossPlugin, Event event, int iiBoss)
 {
-	if(Hale[iiBoss] != iiBoss) return;
+	if (hThisPlugin != BossPlugin) return;
+
+	if (TF2_GetPlayerClass(iiBoss) != TFClass_Soldier) TF2_SetPlayerClass(iiBoss, TFClass_Soldier, _, false);
+	TF2_RemovePlayerDisguise(iiBoss);
+}
+public void OnPlayerKilledByBoss(Handle BossPlugin, int iiBoss, int attacker)
+{
+	if (hThisPlugin != BossPlugin) return;
 
 	if (!GetRandomInt(0, 2) && VSHA_GetAliveRedPlayers() != 1)
 	{
@@ -378,12 +369,9 @@ public void OnPlayerKilledByBoss(int iiBoss, int attacker)
 		if ( !StrEqual(playsound, "") ) EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	}
 }
-public void OnKillingSpreeByBoss()
+public void OnKillingSpreeByBoss(Handle BossPlugin, int iiBoss, int attacker)
 {
-	int iiBoss = VSHA_GetVar(EventBoss);
-	int attacker = VSHA_GetVar(EventAttacker);
-
-	if(Hale[iiBoss] != iiBoss) return;
+	if (hThisPlugin != BossPlugin) return;
 
 	char playsound[PATHX];
 
@@ -395,9 +383,9 @@ public void OnKillingSpreeByBoss()
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public void OnBossKilled(int iiBoss, int attacker) //victim is boss
+public void OnBossKilled(Handle BossPlugin, int iiBoss, int attacker) //victim is boss
 {
-	if(Hale[iiBoss] != iiBoss) return;
+	if (hThisPlugin != BossPlugin) return;
 
 	char playsound[PATHX];
 
@@ -405,12 +393,10 @@ public void OnBossKilled(int iiBoss, int attacker) //victim is boss
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 
 	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
-	Hale[iiBoss] = 0;
-	return;
 }
-public void OnBossWin(Event event, int iiBoss)
+public void OnBossWin(Handle BossPlugin, Event event, int iiBoss)
 {
-	if(Hale[iiBoss] != iiBoss) return;
+	if (hThisPlugin != BossPlugin) return;
 
 	char playsound[PATHX];
 
@@ -424,19 +410,30 @@ public void OnBossWin(Event event, int iiBoss)
 		StopSound(i, SNDCHAN_AUTO, HaleTheme3);
 	}
 
-	SDKUnhook(Hale[iiBoss], SDKHook_OnTakeDamage, OnTakeDamage);
-	Hale[iiBoss] = 0;
-
-	// Dynamically unload private forwards
-	//UnLoad_VSHAHooks();
+	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
-public void OnBossKillBuilding(Event event, int iiBoss)
+public void OnGameOver() // best play to reset all variables
 {
-	//Event event = VSHA_GetVar(SmEvent);
-	//int building = event.GetInt("index");
-	//int attacker = VSHA_GetVar(EventAttacker);
+	LoopMaxPLYR(players)
+	{
+		HaleCharge[players]=0;
+		//InRage[players]=false;
 
-	if (iiBoss != Hale[iiBoss]) return;
+		if(ValidPlayer(players))
+		{
+			StopSound(players, SNDCHAN_AUTO, HaleTheme1);
+			StopSound(players, SNDCHAN_AUTO, HaleTheme2);
+			StopSound(players, SNDCHAN_AUTO, HaleTheme3);
+		}
+	}
+	// Dynamically unload private forwards
+	UnLoad_VSHAHooks();
+}
+
+public void OnBossKillBuilding(Handle BossPlugin, Event event, int iiBoss)
+{
+	if (hThisPlugin != BossPlugin) return;
+
 	if ( !GetRandomInt(0, 4) )
 	{
 		char playsound[PATHX];
@@ -445,86 +442,44 @@ public void OnBossKillBuilding(Event event, int iiBoss)
 		EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	}
 }
-/*        NO LONGER USING.. HANDLED INTERNALLY, unless you just want to handle it.
-public Action OnMessageTimer(int iiBoss)
+public void OnBossAirblasted(Handle BossPlugin, Event event, int iiBoss)
 {
-	if ( iiBoss!= Hale[iiBoss] ) return Plugin_Continue;
-	//SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
-	char text[PATHX];
-	int client;
-	for (client = 1; client <= MaxClients; client++)
-	{
-		if ( !IsValidClient(client) ) continue;
-		if ( client == Hale[client] )
-		{
-			Format( text, sizeof(text), "%N became Saxton Hale with %i HP", client, VSHA_GetBossMaxHealth(client) );
-			break;
-		}
-	}
-	for (client = 1; client <= MaxClients; client++)
-	{
-		if ( IsValidClient(client) )
-		{
-			SetHudTextParams(-1.0, 0.60, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(client, -1, text);
-		}
-	}
-	return;
-}*/
-public void OnBossAirblasted(Event event, int iiBoss)
-{
-	if (iiBoss != Hale[iiBoss]) return;
+	if (hThisPlugin != BossPlugin) return;
 	//float rage = 0.04*RageDMG;
 	//HaleRage += RoundToCeil(rage);
 	//if (HaleRage > RageDMG) HaleRage = RageDMG;
-	VSHA_SetBossRage(Hale[iiBoss], VSHA_GetBossRage(Hale[iiBoss])+4.0); //make this a convar/cvar!
+	VSHA_SetBossRage(iiBoss, VSHA_GetBossRage(iiBoss)+4.0); //make this a convar/cvar!
 }
-public void OnBossSelected(int iiBoss)
+public void OnBossSelected(Handle BossPlugin, int iiBoss)
 {
-	if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle)
+	if(BossPlugin!=hThisPlugin)
 	{
-		// reset boss
-		if(iiBoss == Hale[iiBoss])
-		{
-			Hale[iiBoss]=0;
-			HaleCharge[iiBoss]=0;
-		}
+		// reset variables
+		SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+		HaleCharge[iiBoss]=0;
+		//InRage[iiBoss]=false;
 		return;
 	}
 
-	CPrintToChatAll("%s, Saxton Hale Selected!",VSHA_COLOR);
+	//CPrintToChatAll("%s, Saxton Hale Selected!",VSHA_COLOR);
 
-	//PrintToChatAll("OnBossSelected %d Hale[iiBoss] = %d",iiBoss,Hale[iiBoss]);
-	//int iiBoss = VSHA_GetVar(EventClient);
-	if (VSHA_IsBossPlayer(iiBoss)) Hale[iiBoss] = iiBoss;
-	if ( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )
-	{
-		VSHA_SetBossPlayer(Hale[iiBoss], true);
-		Hale[iiBoss] = iiBoss;
-		//ForceTeamChange(iiBoss, 3);
-		//DP("vsha-saxtonhale 526 ForceTeamChange(iiBoss, 3)");
-		//return;
-		//DP("( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )");
-	}
 	// Dynamically load private forwards
 	Load_VSHAHooks();
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 public void OnBossIntroTalk()
 {
-	//DP("VSHA_OnBossIntroTalk");
 	char playsound[PATHX];
 	if (!GetRandomInt(0, 1)) Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleRoundStart, GetRandomInt(1, 5));
 	else Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", HaleStart132, GetRandomInt(1, 5));
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public Action OnBossSetHP(int BossEntity, int &BossMaxHealth)
+public Action OnBossSetHP(Handle BossPlugin, int BossEntity, int &BossMaxHealth)
 {
-	//int iClient = VSHA_GetVar(EventBoss);
-	if (BossEntity != Hale[BossEntity]) return Plugin_Continue;
+	if (hThisPlugin != BossPlugin) return Plugin_Continue;
 	BossMaxHealth = HealthCalc( 760.8, float( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
-	//VSHA_SetBossMaxHealth(Hale[iClient], BossMax);
+	//VSHA_SetBossMaxHealth(Hale[BossEntity], BossMax);
 	return Plugin_Changed;
 }
 public void OnLastSurvivor()
@@ -541,17 +496,23 @@ public void OnLastSurvivor()
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
+public void OnBossTimer(Handle BossPlugin, int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
 {
-	if (iiBoss != Hale[iiBoss]) return;
+	if (hThisPlugin != BossPlugin) return;
+
 	char playsound[PATHX];
 	float speed;
+	//int curHealth = VSHA_GetBossHealth(iiBoss), curMaxHp = VSHA_GetBossMaxHealth(iiBoss);
+	// temporary health fix
 	if (curHealth < 0)
 	{
 		ForcePlayerSuicide(iiBoss);
 		return;
 	}
-	//int curHealth = VSHA_GetBossHealth(iiBoss), curMaxHp = VSHA_GetBossMaxHealth(iiBoss);
+	if(GetClientHealth(iiBoss) != curHealth)
+	{
+		SetEntityHealth(iiBoss,curHealth);
+	}
 	if (curHealth <= curMaxHp) speed = 340.0 + 0.7 * (100.0-float(curHealth)*100.0/float(curMaxHp)); //convar/cvar for speed here!
 	SetEntPropFloat(iiBoss, Prop_Send, "m_flMaxspeed", speed);
 
@@ -607,7 +568,6 @@ public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, 
 		//AddToRage += (float((MaxClients + 1) - iAlivePlayers) * 0.001);
 		AddToRage += float(iAlivePlayers) * 0.001;
 	}
-
 	int iGetOtherTeam = GetClientTeam(iiBoss) == 2 ? 3:2;
 	if ( OnlyScoutsLeft(iGetOtherTeam ) )
 	{
@@ -630,11 +590,10 @@ public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, 
 	}
 	return;
 }
-public void OnPrepBoss(int iiBoss)
+public void OnPrepBoss(Handle BossPlugin, int iiBoss)
 {
-	if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle) return;
+	if (hThisPlugin != BossPlugin) return;
 
-	if (iiBoss != Hale[iiBoss]) return;
 	TF2_SetPlayerClass(iiBoss, TFClass_Soldier, _, false);
 	HaleCharge[iiBoss] = 0;
 
@@ -654,13 +613,11 @@ public void OnPrepBoss(int iiBoss)
 		SetEntPropEnt(iiBoss, Prop_Send, "m_hActiveWeapon", SaxtonWeapon);
 	}
 }
-public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
+public Action OnMusic(Handle BossPlugin, int iiBoss, char BossTheme[PATHX], float &time)
 {
+	if (hThisPlugin != BossPlugin) return Plugin_Continue;
+
 	if (iiBoss<0)
-	{
-		return Plugin_Continue;
-	}
-	if (iiBoss != Hale[iiBoss])
 	{
 		return Plugin_Continue;
 	}
@@ -692,49 +649,10 @@ public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 	//VSHA_SetVar(EventTime,time);
 	return Plugin_Continue;
 }
-/*
-public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
-{
-	if(ThisPluginHandle != plugin) return Plugin_Continue;
-	//int iClient = VSHA_GetVar(EventModelTimer);
-	//char modelpath[PATHX];
-
-	if(!ValidPlayer(iClient)) return Plugin_Continue;
-
-	if (iClient != Hale[iClient])
-	{
-		//SetVariantString("");
-		//AcceptEntityInput(iClient, "SetCustomModel");
-
-		// is not thisboss, continue looking
-		return Plugin_Continue;
-	}
-
-	modelpath = HaleModel;
-
-	PrintToChatAll("saxtonhale %d OnModelTimer %s", iClient, modelpath);
-
-	//strcopy(STRING(modelpath), HaleModel);
-
-	//PrintToChatAll("modelpath %s",modelpath);
-
-	//DP("saxtonhale OnModelTimer changed");
-
-	//StringMap ModelMap = new StringMap();
-	//ModelMap.SetString("Model", modelpath);
-	//VSHA_SetVar(EventModel,ModelMap);
-
-	SetVariantString(modelpath);
-	AcceptEntityInput(iClient, "SetCustomModel");
-	SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
-
-	return Plugin_Changed;
-}*/
-
 bool InRage[PATHX];
-public void OnBossRage(int iiBoss)
+public void OnBossRage(Handle BossPlugin, int iiBoss)
 {
-	if (iiBoss != Hale[iiBoss]) return;
+	if (hThisPlugin != BossPlugin) return;
 	if (InRage[iiBoss]) return;
 	// Helps prevent multiple rages
 	InRage[iiBoss] = true;
@@ -748,27 +666,27 @@ public void OnBossRage(int iiBoss)
 	EmitSoundToAll(playsound, iiBoss, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, pos, NULL_VECTOR, true, 0.0);
 	EmitSoundToAll(playsound, iiBoss, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, pos, NULL_VECTOR, true, 0.0);
 	CreateTimer(0.6, UseRage, iiBoss);
-	return;
 }
 public void TF2_OnConditionAdded(int client, TFCond condition)
 {
-	if (client != Hale[client]) return;
+	if(VSHA_GetBossPluginHandle(client)!=hThisPlugin) return;
+
 	switch (condition)
 	{
 		case TFCond_Jarated:
 		{
-			VSHA_SetBossRage(Hale[client], VSHA_GetBossRage(client)-8.0);
-			TF2_RemoveCondition(Hale[client], condition);
+			VSHA_SetBossRage(client, VSHA_GetBossRage(client)-8.0);
+			TF2_RemoveCondition(client, condition);
 		}
 		case TFCond_MarkedForDeath:
 		{
-			VSHA_SetBossRage(Hale[client], VSHA_GetBossRage(client)-5.0);
-			TF2_RemoveCondition(Hale[client], condition);
+			VSHA_SetBossRage(client, VSHA_GetBossRage(client)-5.0);
+			TF2_RemoveCondition(client, condition);
 		}
-		case TFCond_Disguised: TF2_RemoveCondition(Hale[client], condition);
+		case TFCond_Disguised: TF2_RemoveCondition(client, condition);
 	}
-	if (TF2_IsPlayerInCondition(Hale[client], view_as<TFCond>(42))
-		&& TF2_IsPlayerInCondition(Hale[client], TFCond_Dazed)) TF2_RemoveCondition(Hale[client], TFCond_Dazed);
+	if (TF2_IsPlayerInCondition(client, view_as<TFCond>(42))
+		&& TF2_IsPlayerInCondition(client, TFCond_Dazed)) TF2_RemoveCondition(client, TFCond_Dazed);
 }
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
@@ -785,18 +703,18 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 	char playsound[PATHX];
 
-	if ( CheckRoundState() == 0 && (victim == Hale[victim] || (victim != attacker && attacker != Hale[attacker])) )
+	if ( CheckRoundState() == 0 && (VSHA_GetBossPluginHandle(victim)==hThisPlugin || (victim != attacker && VSHA_GetBossPluginHandle(attacker)!=hThisPlugin)) )
 	{
 		damage *= 0.0;
 		return Plugin_Changed;
 	}
-	if ((damagetype & DMG_FALL) && victim == Hale[victim])
+	if ((damagetype & DMG_FALL) && VSHA_GetBossPluginHandle(victim)==hThisPlugin)
 	{
 		//DP("DMG_FALL victim = %d, hale[victim] = %d",victim,Hale[victim]);
 		if(GetEntityFlags(victim) & FL_ONGROUND)
 		{
 			//DP("Hale Fall Damage");
-			damage = (VSHA_GetBossHealth(Hale[victim]) > 100) ? 10.0 : 100.0; //please don't fuck with this.
+			damage = (VSHA_GetBossHealth(victim) > 100) ? 10.0 : 100.0; //please don't fuck with this.
 			//damage = 0.0;
 			return Plugin_Changed;
 		}
@@ -812,7 +730,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 	float AttackerPos[3];
 	GetEntPropVector(attacker, Prop_Send, "m_vecOrigin", AttackerPos); //Spot of attacker
-	if (ValidPlayer(attacker) && attacker == Hale[attacker])
+	if (ValidPlayer(attacker) && VSHA_GetBossPluginHandle(attacker)==hThisPlugin)
 	{
 		if (TF2_IsPlayerInCondition(victim, TFCond_DefenseBuffed))
 		{
@@ -878,7 +796,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				//return Plugin_Continue;
 		}
 	}
-	else if (ValidPlayer(attacker) && ValidPlayer(victim) && Hale[victim] == victim && Hale[attacker] != attacker)
+	else if (ValidPlayer(attacker) && ValidPlayer(victim) && VSHA_GetBossPluginHandle(victim)==hThisPlugin && VSHA_GetBossPluginHandle(attacker)!=hThisPlugin)
 	{
 		if (attacker <= MaxClients && attacker > 0)
 		{
@@ -1529,31 +1447,13 @@ public void VSHA_OnConfiguration_Load_Misc(char[] cFile, char[] skey, char[] val
 {
 }
 */
-public void OnGameOver() // best play to reset all variables
-{
-	LoopMaxPLYR(players)
-	{
-		if(Hale[players])
-		{
-			Hale[players]=0;
-			HaleCharge[players]=0;
-			InRage[players]=false;
-		}
-		if(ValidPlayer(players))
-		{
-			StopSound(players, SNDCHAN_AUTO, HaleTheme1);
-			StopSound(players, SNDCHAN_AUTO, HaleTheme2);
-			StopSound(players, SNDCHAN_AUTO, HaleTheme3);
-		}
-	}
-}
 
 // Is triggered by VSHA engine when a boos needs a help menu
-public void OnShowBossHelpMenu(int iiBoss)
+public void OnShowBossHelpMenu(Handle BossPlugin, int iiBoss)
 {
-	if(Hale[iiBoss] != iiBoss) return;
+	if (hThisPlugin != BossPlugin) return;
 
-	if(Hale[iiBoss] == iiBoss && ValidPlayer(iiBoss))
+	if(ValidPlayer(iiBoss))
 	{
 		Handle panel = CreatePanel();
 		char s[512];
@@ -1563,7 +1463,6 @@ public void OnShowBossHelpMenu(int iiBoss)
 		SendPanelToClient(panel, iiBoss, HintPanelH, 12);
 		CloseHandle(panel);
 	}
-	return;
 }
 
 public int HintPanelH(Handle menu, MenuAction action, int param1, int param2)

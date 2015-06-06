@@ -170,55 +170,55 @@ native void VSHA_UnRegisterNonBossAddon();
 native Handle VSHA_RegisterBoss(char BossShortName[16], char BossLongName[32]); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
 
 // BOSS
-native Handle VSHA_GetBossHandle(int client);
+native Handle VSHA_GetBossPluginHandle(int iiBoss);
 
 // BOSS
-native int VSHA_GetBossUserID(int client); //gets boss' userid
-native void VSHA_SetBossUserID(int client, int userid);
+native int VSHA_GetBossUserID(int iiBoss); //gets boss' userid
+native void VSHA_SetBossUserID(int iiBoss, int userid);
 
 // BOSS
-native int VSHA_GetDifficulty(int client); /* this is to modify bosses based on what difficulty level the player wants his boss to be, doesn't do anything by itself but this API should help with it. */
-native void VSHA_SetDifficulty(int client, int difficultylevel);
+native int VSHA_GetDifficulty(int iiBoss); /* this is to modify bosses based on what difficulty level the player wants his boss to be, doesn't do anything by itself but this API should help with it. */
+native void VSHA_SetDifficulty(int iiBoss, int difficultylevel);
 
 // ANY PLAYER
 native int VSHA_GetLives(int client); /* gets the player's lives, you can get/set lives for both players and bosses */
 native void VSHA_SetLives(int client, int lives);
 
 // BOSS
-native int VSHA_GetPresetBoss(int client); //this gets the preset boss special ID, similar to VSH Special or FF2 Get special
-native void VSHA_SetPresetBoss(int client, int presetboss);
+native int VSHA_GetPresetBoss(int iiBoss); //this gets the preset boss special ID, similar to VSH Special or FF2 Get special
+native void VSHA_SetPresetBoss(int iiBoss, int presetboss);
 
 // BOSS
-native int VSHA_GetBossHealth(int client);
-native void VSHA_SetBossHealth(int client, int health);
+native int VSHA_GetBossHealth(int iiBoss);
+native void VSHA_SetBossHealth(int iiBoss, int health);
 
 // BOSS
-native int VSHA_GetBossMaxHealth(int client);
-native void VSHA_SetBossMaxHealth(int client, int maxhealth);
+native int VSHA_GetBossMaxHealth(int iiBoss);
+native void VSHA_SetBossMaxHealth(int iiBoss, int maxhealth);
 
 // BOSS
-native int VSHA_GetBossPlayerKills(int client); //how many players a boss killed in the entire round
-native void VSHA_SetBossPlayerKills(int client, int kills);
+native int VSHA_GetBossPlayerKills(int iiBoss); //how many players a boss killed in the entire round
+native void VSHA_SetBossPlayerKills(int iiBoss, int kills);
 
 // BOSS
-native int VSHA_GetBossKillstreak(int client); //how many people boss killed in a certain amount of time
-native void VSHA_SetBossKillstreak(int client, int killspree);
+native int VSHA_GetBossKillstreak(int iiBoss); //how many people boss killed in a certain amount of time
+native void VSHA_SetBossKillstreak(int iiBoss, int killspree);
 
 // PLAYER
-native int VSHA_GetPlayerBossKills(int client); //how many times a player has killed a boss in entire map time
-native void VSHA_SetPlayerBossKills(int client, int bosseskilled);
+native int VSHA_GetPlayerBossKills(int iiBoss); //how many times a player has killed a boss in entire map time
+native void VSHA_SetPlayerBossKills(int iiBoss, int bosseskilled);
 
 // ANY PLAYER
 native int VSHA_GetDamage(int client); //this can also get the boss' damage.
 native void VSHA_SetDamage(int client, int dmg);
 
 // BOSS
-native int VSHA_GetBossMarkets(int client); /* how many times a boss was market-gardened. THIS DOES NOT AUTO INCREMENT IN CORE PLUGIN. If you want your boss to take Market-Garden Backstab-like damage, you should use this. */
-native void VSHA_SetBossMarkets(int client, int markets);
+native int VSHA_GetBossMarkets(int iiBoss); /* how many times a boss was market-gardened. THIS DOES NOT AUTO INCREMENT IN CORE PLUGIN. If you want your boss to take Market-Garden Backstab-like damage, you should use this. */
+native void VSHA_SetBossMarkets(int iiBoss, int markets);
 
 // BOSS
-native int VSHA_GetBossStabs(int client); //how many times a boss was backstabbed
-native void VSHA_SetBossStabs(int client, int stabs);
+native int VSHA_GetBossStabs(int iiBoss); //how many times a boss was backstabbed
+native void VSHA_SetBossStabs(int iiBoss, int stabs);
 
 // ANY PLAYER
 native int VSHA_GetHits(int client); //how many times a client was hit aka took dmg.
@@ -241,22 +241,22 @@ native int VSHA_GetAliveRedPlayers();
 native int VSHA_GetAliveBluPlayers();
 
 // BOSS
-native float VSHA_GetBossRage(int client); /* gets the charge of the hardcoded, built-in rage charge. You can create multiple rage charges or make the default one charge up from different things than just taking damage. */
-native void VSHA_SetBossRage(int client, float rage);
+native float VSHA_GetBossRage(int iiBoss); /* gets the charge of the hardcoded, built-in rage charge. You can create multiple rage charges or make the default one charge up from different things than just taking damage. */
+native void VSHA_SetBossRage(int iiBoss, float rage);
 
 // MISC
 native float VSHA_GetGlowTimer(int client); //used to set glow timers on players, use in boss subplugins plz
 native void VSHA_SetGlowTimer(int client, float glowtime);
 
 // BOSS
-native bool VSHA_IsBossPlayer(int client); //is client a boss?
-native void VSHA_SetBossPlayer(int client, bool state);
+native bool VSHA_IsBossPlayer(int iiBoss); //is client a boss?
+native void VSHA_SetBossPlayer(int iiBoss, bool state);
 
 // ANY PLAYER
 native bool VSHA_IsPlayerInJump(int client); //did player rocket/sticky jump?
 
 // BOSS
-native bool VSHA_CanBossTaunt(int client); //is boss taunt cooldown over?
+native bool VSHA_CanBossTaunt(int iiBoss); //is boss taunt cooldown over?
 
 // BOSS
 native int VSHA_FindNextBoss(bool[] clientarray, int arraysize); /* gets the next player in queue list */
@@ -327,6 +327,7 @@ enum VSHAHookType
 	VSHAHook_OnBossWin,				// Best Place to rehook your functions
 	VSHAHook_OnBossKillBuilding,
 	VSHAHook_OnBossAirblasted,
+	VSHAHook_OnBossChangeClass,
 	VSHAHook_OnBossSelected,
 	VSHAHook_OnBossSetHP_Pre, // make health changes here (non-boss)
 	VSHAHook_OnBossSetHP,	// for bosses to make health changes
@@ -359,66 +360,69 @@ enum VSHAHookType
 
 typeset VSHAHookCB
 {
-	// VSHAHook_OnGameMode_BossSetup
-	// VSHAHook_OnGameMode_WatchGameModeTimer - Repeating 1 second timer to watch for games that need to be restarted / started.
+	// VSHAHook OnGameMode_BossSetup
+	// VSHAHook OnGameMode_WatchGameModeTimer - Repeating 1 second timer to watch for games that need to be restarted / started.
 	function Action ();
 
-	// VSHAHook_OnGameMode_ForceBossTeamChange
-	// VSHAHook_OnGameMode_ForcePlayerTeamChange
+	// VSHAHook OnGameMode_ForceBossTeamChange
+	// VSHAHook OnGameMode_ForcePlayerTeamChange
 	function Action (VSHA_EVENTS vshaEvent, int iEntity, int iTeam);
 
-	// VSHAHook_OnBossIntroTalk
-	// VSHAHook_AddToDownloads
-	// VSHAHook_OnMessageTimer
-	// VSHAHook_OnLastSurvivor
-	// VSHAHook_OnGameOver
+	// VSHAHook OnBossIntroTalk
+	// VSHAHook AddToDownloads
+	// VSHAHook OnLastSurvivor
+	// VSHAHook OnGameOver
 	function void ();
 
-	// VSHAHook_OnBossSelected
-	// VSHAHook_OnPrepBoss
-	// VSHAHook_OnBossRage
-	// VSHAHook_ShowPlayerHelpMenu
-	// VSHAHook_OnEquipPlayer_Post
-	// VSHAHook_ShowBossHelpMenu
-	// VSHAHook_OnLastSurvivorLoop
-	// VSHAHook_OnBossTimer_1_Second
-	// VSHAHook_OnBossSetHP_Post
-	function void (int iEntity);
+	// VSHAHook OnBossSelected
+	// VSHAHook OnPrepBoss
+	// VSHAHook OnBossRage
+	// VSHAHook ShowPlayerHelpMenu
+	// VSHAHook OnEquipPlayer_Post
+	// VSHAHook ShowBossHelpMenu
+	// VSHAHook OnLastSurvivorLoop
+	// VSHAHook OnBossTimer_1_Second
+	// VSHAHook OnBossSetHP_Post
+	function void (Handle BossPlugin, int iEntity);
 
-	// VSHAHook_OnBossTimer
-	function void (int iEntity, int &iiBossHealth, int &iiBossMaxHealth, int buttons, Handle hHudSync, Handle hHudSync2);
+	// VSHAHook OnBossTimer
+	function void (Handle BossPlugin, int iEntity, int &iiBossHealth, int &iiBossMaxHealth, int buttons, Handle hHudSync, Handle hHudSync2);
 
-	// VSHAHook_OnEquipPlayer_Pre
-	// VSHAHook_OnMessageTimer
+	// VSHAHook OnEquipPlayer_Pre
+	// VSHAHook OnMessageTimer
 	function Action (int iEntity);
 
-	// VSHAHook_OnPlayerKilledByBoss
-	// VSHAHook_OnKillingSpreeByBoss
-	// VSHAHook_OnBossKilled
-	// VSHAHook_OnUberTimer
-	function void (int iEntity, int OtherEntity);
+	// VSHAHook OnPlayerKilledByBoss
+	// VSHAHook OnKillingSpreeByBoss
+	// VSHAHook OnBossKilled
+	// VSHAHook OnUberTimer
+	function void (Handle BossPlugin, int iEntity, int OtherEntity);
 
-	// VSHAHook_OnBossWin
-	// VSHAHook_OnBossKillBuilding
-	// VSHAHook_OnBossAirblasted
-	function void (Event smEvent, int iEntity);
+	// VSHAHook OnUberTimer -- may want to move this whole thing into player's equipment plugin
+	function void (int iMedic, int iTarget);
 
-	// VSHAHook_OnBossSetHP_Pre
-	// VSHAHook_OnBossSetHP
-	function Action (int BossEntity, int &BossMaxHealth);
+	// VSHAHook OnBossWin
+	// VSHAHook OnBossKillBuilding
+	// VSHAHook OnBossAirblasted
+	// VSHAHook OnBossChangeClass
+	function void (Handle BossPlugin, Event smEvent, int iEntity);
 
-	// VSHAHook_OnMusic
-	function Action (int iClient, char BossTheme[PATHX], float &time);
+	// VSHAHook OnBossSetHP_Pre
+	// VSHAHook OnBossSetHP
+	function Action (Handle BossPlugin, int BossEntity, int &BossMaxHealth);
 
-	// VSHAHook_OnModelTimer
-	function Action (Handle plugin, int iClient, char modelpath[PATHX]);
+	// VSHAHook OnMusic
+	function Action (Handle BossPlugin, int iiBoss, char BossTheme[PATHX], float &time);
 
-	// VSHAHook_OnConfiguration_Load_Sounds
-	// VSHAHook_OnConfiguration_Load_Materials
-	// VSHAHook_OnConfiguration_Load_Models
+	// VSHAHook OnModelTimer
+	function Action (Handle BossPlugin, int iiBoss, char modelpath[PATHX]);
+
+	// VSHAHook OnConfiguration_Load_Sounds
+	// VSHAHook OnConfiguration_Load_Materials
+	// VSHAHook OnConfiguration_Load_Models
 	function void (char[] cFile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable);
 
-	// VSHAHook_OnConfiguration_Load_Misc
+	// VSHAHook OnConfiguration_Load_Misc
 	function void (char[] cFile, char[] skey, char[] value);
 };
 
@@ -749,7 +753,7 @@ public __pl_vsha_SetNTVOptional()
 
 	MarkNativeAsOptional("VSHA_CallModelTimer");
 
-	MarkNativeAsOptional("VSHA_GetBossHandle");
+	MarkNativeAsOptional("VSHA_GetBossPluginHandle");
 	MarkNativeAsOptional("VSHA_AddBoss");
 }
 #endif

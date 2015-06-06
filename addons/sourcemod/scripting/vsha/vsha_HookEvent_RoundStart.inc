@@ -120,7 +120,7 @@ public Action RoundStartFunction()
 
 		//VSHA_SetVar(EventClient,boss);
 		//VSHA_Private_Forward("VSHA_OnBossSelected");
-		VSHA_OnBossSelected(boss);
+		VSHA_OnBossSelected(Storage[boss], boss);
 
 		if ( GetTeamPlayerCount(HaleTeam) <= 0 || GetTeamPlayerCount(OtherTeam) <= 0 )
 		{

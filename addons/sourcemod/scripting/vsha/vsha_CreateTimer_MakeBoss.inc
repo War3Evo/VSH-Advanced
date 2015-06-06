@@ -66,7 +66,7 @@ public Action MakeBoss(Handle timer, int userid)
 
 	SDKHook(iClient, SDKHook_GetMaxHealth, OnGetMaxHealth);
 
-	VSHA_OnPrepBoss(iClient);
+	VSHA_OnPrepBoss(Storage[iClient], iClient);
 
 	CreateTimer(0.2, CleanScreen, iBossUserID[iClient]);
 	return;

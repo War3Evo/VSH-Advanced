@@ -14,6 +14,8 @@ public Plugin myinfo =
 	url 			= "http://en.wikipedia.org/wiki/Hatsune_Miku"
 }
 
+Handle hThisPlugin = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDING DATA.
+
 #define ThisConfigurationFile "configs/vsha/miku.cfg"
 
 char MikuModel[PATHX];
@@ -208,12 +210,9 @@ public void VSHA_AddToDownloads()
 	}
 }
 
-Handle ThisPluginHandle = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDING DATA.
 
 //make defines, handles, variables heer lololol
 int HaleCharge[PLYR];
-
-int Hale[PLYR];
 
 float WeighDownTimer = 0.0;
 //float RageDist = 800.0;
@@ -261,67 +260,71 @@ public void Load_VSHAHooks()
 {
 	if(!VSHAHookEx(VSHAHook_OnBossIntroTalk, OnBossIntroTalk))
 	{
-		LogError("Error loading VSHAHook_OnBossIntroTalk forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnBossIntroTalk forwards for miku.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss))
 	{
-		LogError("Error loading VSHAHook_OnPlayerKilledByBoss forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnPlayerKilledByBoss forwards for miku.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss))
 	{
-		LogError("Error loading VSHAHook_OnKillingSpreeByBoss forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnKillingSpreeByBoss forwards for miku.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnBossKilled, OnBossKilled))
 	{
-		LogError("Error loading VSHAHook_OnBossKilled forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnBossKilled forwards for miku.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnBossWin, OnBossWin))
 	{
-		LogError("Error loading VSHAHook_OnBossWin forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnBossWin forwards for miku.");
 	}
 	//if(!VSHAHookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
 	//{
-		//LogError("Error loading VSHAHook_OnMessageTimer forwards for saxton hale.");
+		//LogError("Error loading VSHAHook_OnMessageTimer forwards for miku.");
 	//}
 	if(!VSHAHookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
 	{
-		LogError("Error loading VSHAHook_OnBossAirblasted forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnBossAirblasted forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossChangeClass, OnChangeClass))
+	{
+		LogError("Error loading VSHAHook_OnBossChangeClass forwards for miku.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnBossSetHP, OnBossSetHP))
 	{
-		LogError("Error loading VSHAHook_OnBossSetHP forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnBossSetHP forwards for miku.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnLastSurvivor, OnLastSurvivor))
 	{
-		LogError("Error loading VSHAHook_OnLastSurvivor forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnLastSurvivor forwards for miku.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnBossTimer, OnBossTimer))
 	{
-		LogError("Error loading VSHAHook_OnBossTimer forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnBossTimer forwards for miku.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnPrepBoss, OnPrepBoss))
 	{
-		LogError("Error loading VSHAHook_OnPrepBoss forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnPrepBoss forwards for miku.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnMusic, OnMusic))
 	{
-		LogError("Error loading VSHAHook_OnMusic forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnMusic forwards for miku.");
 	}
 	//if(!VSHAHookEx(VSHAHook_OnModelTimer, OnModelTimer))
 	//{
-		//LogError("Error loading VSHAHook_OnModelTimer forwards for saxton hale.");
+		//LogError("Error loading VSHAHook_OnModelTimer forwards for miku.");
 	//}
 	if(!VSHAHookEx(VSHAHook_OnBossRage, OnBossRage))
 	{
-		LogError("Error loading VSHAHook_OnBossRage forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnBossRage forwards for miku.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnGameOver, OnGameOver))
 	{
-		LogError("Error loading VSHAHook_OnGameOver forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnGameOver forwards for miku.");
 	}
 	//if(!VSHAHookEx(VSHAHook_OnBossTimer_1_Second, OnBossTimer_1_Second))
 	//{
-		//LogError("Error loading VSHAHook_OnGameOver forwards for saxton hale.");
+		//LogError("Error loading VSHAHook_OnGameOver forwards for miku.");
 	//}
 }
 
@@ -329,68 +332,67 @@ public void UnLoad_VSHAHooks()
 {
 	if(!VSHAUnhookEx(VSHAHook_OnBossIntroTalk, OnBossIntroTalk))
 	{
-		LogError("Error unloading VSHAHook_OnBossIntroTalk forwards for saxton hale.");
+		LogError("Error unloading VSHAHook_OnBossIntroTalk forwards for miku.");
 	}
 	if(!VSHAUnhookEx(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss))
 	{
-		LogError("Error unloading VSHAHook_OnPlayerKilledByBoss forwards for saxton hale.");
+		LogError("Error unloading VSHAHook_OnPlayerKilledByBoss forwards for miku.");
 	}
 	if(!VSHAUnhookEx(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss))
 	{
-		LogError("Error unloading VSHAHook_OnKillingSpreeByBoss forwards for saxton hale.");
+		LogError("Error unloading VSHAHook_OnKillingSpreeByBoss forwards for miku.");
 	}
 	if(!VSHAUnhookEx(VSHAHook_OnBossKilled, OnBossKilled))
 	{
-		LogError("Error unloading VSHAHook_OnBossKilled forwards for saxton hale.");
+		LogError("Error unloading VSHAHook_OnBossKilled forwards for miku.");
 	}
 	if(!VSHAUnhookEx(VSHAHook_OnBossWin, OnBossWin))
 	{
-		LogError("Error unloading VSHAHook_OnBossWin forwards for saxton hale.");
+		LogError("Error unloading VSHAHook_OnBossWin forwards for miku.");
 	}
 	//if(!VSHAUnhookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
 	//{
-		//LogError("Error unloading VSHAHook_OnMessageTimer forwards for saxton hale.");
+		//LogError("Error unloading VSHAHook_OnMessageTimer forwards for miku.");
 	//}
 	if(!VSHAUnhookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
 	{
-		LogError("Error unloading VSHAHook_OnBossAirblasted forwards for saxton hale.");
+		LogError("Error unloading VSHAHook_OnBossAirblasted forwards for miku.");
 	}
 	if(!VSHAUnhookEx(VSHAHook_OnBossSetHP, OnBossSetHP))
 	{
-		LogError("Error unloading VSHAHook_OnBossSetHP forwards for saxton hale.");
+		LogError("Error unloading VSHAHook_OnBossSetHP forwards for miku.");
 	}
 	if(!VSHAUnhookEx(VSHAHook_OnLastSurvivor, OnLastSurvivor))
 	{
-		LogError("Error unloading VSHAHook_OnLastSurvivor forwards for saxton hale.");
+		LogError("Error unloading VSHAHook_OnLastSurvivor forwards for miku.");
 	}
 	if(!VSHAUnhookEx(VSHAHook_OnBossTimer, OnBossTimer))
 	{
-		LogError("Error unloading VSHAHook_OnBossTimer forwards for saxton hale.");
+		LogError("Error unloading VSHAHook_OnBossTimer forwards for miku.");
 	}
 	if(!VSHAUnhookEx(VSHAHook_OnPrepBoss, OnPrepBoss))
 	{
-		LogError("Error unloading VSHAHook_OnPrepBoss forwards for saxton hale.");
+		LogError("Error unloading VSHAHook_OnPrepBoss forwards for miku.");
 	}
 	if(!VSHAUnhookEx(VSHAHook_OnMusic, OnMusic))
 	{
-		LogError("Error unloading VSHAHook_OnMusic forwards for saxton hale.");
+		LogError("Error unloading VSHAHook_OnMusic forwards for miku.");
 	}
 	//if(!VSHAUnhookEx(VSHAHook_OnModelTimer, OnModelTimer))
 	//{
-		//LogError("Error unloading VSHAHook_OnModelTimer forwards for saxton hale.");
+		//LogError("Error unloading VSHAHook_OnModelTimer forwards for miku.");
 	//}
 	if(!VSHAUnhookEx(VSHAHook_OnBossRage, OnBossRage))
 	{
-		LogError("Error unloading VSHAHook_OnBossRage forwards for saxton hale.");
+		LogError("Error unloading VSHAHook_OnBossRage forwards for miku.");
 	}
 }
 
 public void OnAllPluginsLoaded()
 {
-	//ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("miku","Hatsunemiku") );
-	ThisPluginHandle = VSHA_RegisterBoss("miku","Hatsunemiku");
+	hThisPlugin = view_as<Handle>( VSHA_RegisterBoss("miku","Hatsunemiku") );
 
-	HookEvent("player_changeclass", ChangeClass);
+	//HookEvent("player_changeclass", ChangeClass);
 
 	if(!VSHAHookEx(VSHAHook_OnBossSelected, OnBossSelected))
 	{
@@ -423,44 +425,38 @@ public void OnMapEnd()
 
 	LoopMaxPLYR(player)
 	{
-		Hale[player] = 0;
 		HaleCharge[player] = 0;
 	}
 }
 
-public void OnClientDisconnect(int client)
-{
-	if (client == Hale[client])
-	{
-		Hale[client] = 0;
-		bool see[PLYR];
-		see[Hale[client]] = true;
-		//int tHale;
-		//if (VSHA_GetPresetBossPlayer() > 0) tHale = VSHA_GetPresetBossPlayer();
-		//else tHale = VSHA_FindNextBoss( see, sizeof(see) );
-		//if (IsValidClient(tHale))
+//public void OnClientDisconnect(int client)
+//{
+	//if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle) return;
+
+	//bool see[PLYR];
+	//see[client] = true;
+	//int tHale;
+	//if (VSHA_GetPresetBossPlayer() > 0) tHale = VSHA_GetPresetBossPlayer();
+	//else tHale = VSHA_FindNextBoss( see, sizeof(see) );
+	//if (IsValidClient(tHale))
+	//{
+		//if (GetClientTeam(tHale) != 3)
 		//{
-			//if (GetClientTeam(tHale) != 3)
-			//{
-				//ForceTeamChange(Hale[client], 3);
-				//DP("vsha-saxtonhale 166 ForceTeamChange(i, 3)");
-			//}
+			//ForceTeamChange(Hale[client], 3);
+			//DP("vsha-saxtonhale 166 ForceTeamChange(i, 3)");
 		//}
-	}
-}
-public Action ChangeClass(Event event, const char[] name, bool dontBroadcast)
+	//}
+//}
+public void OnChangeClass(Handle BossPlugin, Event event, int iiBoss)
 {
-	int client = GetClientOfUserId( event.GetInt("userid") );
-	if (client == Hale[client])
-	{
-		if (TF2_GetPlayerClass(client) != TFClass_Scout) TF2_SetPlayerClass(client, TFClass_Scout, _, false);
-		TF2_RemovePlayerDisguise(client);
-	}
-	return Plugin_Continue;
+	if (hThisPlugin != BossPlugin) return;
+
+	if (TF2_GetPlayerClass(iiBoss) != TFClass_Scout) TF2_SetPlayerClass(iiBoss, TFClass_Scout, _, false);
+	TF2_RemovePlayerDisguise(iiBoss);
 }
-public void OnPlayerKilledByBoss(int iiBoss, int attacker)
+public void OnPlayerKilledByBoss(Handle BossPlugin, int iiBoss, int attacker)
 {
-	if(Hale[iiBoss] != iiBoss) return;
+	if (hThisPlugin != BossPlugin) return;
 
 	char playsound[PATHX];
 
@@ -470,9 +466,9 @@ public void OnPlayerKilledByBoss(int iiBoss, int attacker)
 	}
 	if ( !StrEqual(playsound, "") ) EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public void OnKillingSpreeByBoss(int iiBoss, int attacker)
+public void OnKillingSpreeByBoss(Handle BossPlugin, int iiBoss, int attacker)
 {
-	if(Hale[iiBoss] != iiBoss) return;
+	if (hThisPlugin != BossPlugin) return;
 
 	char playsound[PATHX];
 
@@ -481,9 +477,9 @@ public void OnKillingSpreeByBoss(int iiBoss, int attacker)
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public void OnBossKilled(int iiBoss, int attacker) //victim is boss
+public void OnBossKilled(Handle BossPlugin, int iiBoss, int attacker) //victim is boss
 {
-	if(Hale[iiBoss] != iiBoss) return;
+	if (hThisPlugin != BossPlugin) return;
 
 	char playsound[PATHX];
 
@@ -492,9 +488,9 @@ public void OnBossKilled(int iiBoss, int attacker) //victim is boss
 
 	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
-public void OnBossWin(Event event, int iiBoss)
+public void OnBossWin(Handle BossPlugin, Event event, int iiBoss)
 {
-	if(Hale[iiBoss] != iiBoss) return;
+	if (hThisPlugin != BossPlugin) return;
 
 	char playsound[PATHX];
 
@@ -506,27 +502,22 @@ public void OnBossWin(Event event, int iiBoss)
 		StopSound(i, SNDCHAN_AUTO, MIKUTheme);
 	}
 
-	SDKUnhook(Hale[iiBoss], SDKHook_OnTakeDamage, OnTakeDamage);
-	Hale[iiBoss] = 0;
-
-	// Dynamically unload private forwards
-	//UnLoad_VSHAHooks();
+	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 public void OnGameOver() // best play to reset all variables
 {
 	LoopMaxPLYR(players)
 	{
-		if(Hale[players])
-		{
-			Hale[players]=0;
-			HaleCharge[players]=0;
-			InRage[players]=false;
-		}
+		HaleCharge[players]=0;
+		InRage[players]=false;
+
 		if(ValidPlayer(players))
 		{
 			StopSound(players, SNDCHAN_AUTO, MIKUTheme);
 		}
 	}
+	// Dynamically unload private forwards
+	UnLoad_VSHAHooks();
 }
 /*        NO LONGER USING.. HANDLED INTERNALLY, unless you just want to handle it.
 public Action OnMessageTimer(int iiBoss)
@@ -553,38 +544,27 @@ public Action OnMessageTimer(int iiBoss)
 		}
 	}
 }*/
-public void OnBossAirblasted(Event event, int iiBoss)
+public void OnBossAirblasted(Handle BossPlugin, Event event, int iiBoss)
 {
-	if (iiBoss != Hale[iiBoss]) return;
+	if (hThisPlugin != BossPlugin) return;
 	//float rage = 0.04*RageDMG;
 	//HaleRage += RoundToCeil(rage);
 	//if (HaleRage > RageDMG) HaleRage = RageDMG;
-	VSHA_SetBossRage(Hale[iiBoss], VSHA_GetBossRage(Hale[iiBoss])+4.0); //make this a convar/cvar!
+	VSHA_SetBossRage(iiBoss, VSHA_GetBossRage(iiBoss)+4.0); //make this a convar/cvar!
 }
-public void OnBossSelected(int iiBoss)
+public void OnBossSelected(Handle BossPlugin, int iiBoss)
 {
-	if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle)
+	if(BossPlugin!=hThisPlugin)
 	{
-		// reset boss
-		if(iiBoss == Hale[iiBoss])
-		{
-			Hale[iiBoss]=0;
-			HaleCharge[iiBoss]=0;
-			InRage[iiBoss]=false;
-		}
+		// reset variables
+		SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+		HaleCharge[iiBoss]=0;
+		InRage[iiBoss]=false;
 		return;
 	}
 
-	CPrintToChatAll("%s, Miku Boss Selected!",VSHA_COLOR);
+	//CPrintToChatAll("%s, Miku Boss Selected!",VSHA_COLOR);
 
-	if (VSHA_IsBossPlayer(iiBoss)) Hale[iiBoss] = iiBoss;
-	if ( iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss) )
-	{
-		VSHA_SetBossPlayer(Hale[iiBoss], false);
-		Hale[iiBoss] = iiBoss;
-		//ForceTeamChange(iiBoss, 3);
-		//DP("vsha-saxtonhale 526 ForceTeamChange(iiBoss, 3)");
-	}
 	// Dynamically load private forwards
 	Load_VSHAHooks();
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -597,9 +577,9 @@ public void OnBossIntroTalk()
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public Action OnBossSetHP(int BossEntity, int &BossMaxHealth)
+public Action OnBossSetHP(Handle BossPlugin, int BossEntity, int &BossMaxHealth)
 {
-	if (BossEntity != Hale[BossEntity]) return Plugin_Continue;
+	if (hThisPlugin != BossPlugin) return Plugin_Continue;
 	BossMaxHealth = HealthCalc( 760.8, float( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
 	//VSHA_SetBossMaxHealth(Hale[BossEntity], BossMax);
 	return Plugin_Changed;
@@ -613,9 +593,10 @@ public void OnLastSurvivor()
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
+public void OnBossTimer(Handle BossPlugin, int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
 {
-	if (iiBoss != Hale[iiBoss]) return;
+	if (hThisPlugin != BossPlugin) return;
+
 	char playsound[PATHX];
 	float speed;
 	//int curHealth = VSHA_GetBossHealth(iiBoss), curMaxHp = VSHA_GetBossMaxHealth(iiBoss);
@@ -718,11 +699,10 @@ public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, 
 		//all this just to do a cprint? It's not like weighdown has a limit...
 	}
 }
-public void OnPrepBoss(int iiBoss)
+public void OnPrepBoss(Handle BossPlugin, int iiBoss)
 {
-	if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle) return;
+	if (hThisPlugin != BossPlugin) return;
 
-	if (iiBoss != Hale[iiBoss]) return;
 	TF2_SetPlayerClass(iiBoss, TFClass_Scout, _, false);
 	HaleCharge[iiBoss] = 0;
 
@@ -742,16 +722,15 @@ public void OnPrepBoss(int iiBoss)
 		SetEntPropEnt(iiBoss, Prop_Send, "m_hActiveWeapon", SaxtonWeapon);
 	}
 }
-public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
+public Action OnMusic(Handle BossPlugin, int iiBoss, char BossTheme[PATHX], float &time)
 {
+	if (hThisPlugin != BossPlugin) return Plugin_Continue;
+
 	if (iiBoss<0)
 	{
 		return Plugin_Continue;
 	}
-	if (iiBoss != Hale[iiBoss])
-	{
-		return Plugin_Continue;
-	}
+
 	//PrintToChatAll("MIKUTheme OnMusic %s",MIKUTheme);
 	BossTheme = MIKUTheme;
 	time = 210.0;
@@ -793,10 +772,10 @@ public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
 
 	return Plugin_Changed;
 }*/
-public void OnBossRage(int iiBoss)
+public void OnBossRage(Handle BossPlugin, int iiBoss)
 {
-	if (iiBoss != Hale[iiBoss]) return;
-	if (InRage[iiBoss]) return;
+	if (hThisPlugin != BossPlugin) return;
+
 	// Helps prevent multiple rages
 	InRage[iiBoss] = true;
 	char playsound[PATHX];
@@ -812,23 +791,24 @@ public void OnBossRage(int iiBoss)
 }
 public void TF2_OnConditionAdded(int client, TFCond condition)
 {
-	if (client != Hale[client]) return;
+	if(VSHA_GetBossPluginHandle(client)!=hThisPlugin) return;
+
 	switch (condition)
 	{
 		case TFCond_Jarated:
 		{
-			VSHA_SetBossRage(Hale[client], VSHA_GetBossRage(client)-8.0);
-			TF2_RemoveCondition(Hale[client], condition);
+			VSHA_SetBossRage(client, VSHA_GetBossRage(client)-8.0);
+			TF2_RemoveCondition(client, condition);
 		}
 		case TFCond_MarkedForDeath:
 		{
-			VSHA_SetBossRage(Hale[client], VSHA_GetBossRage(client)-5.0);
-			TF2_RemoveCondition(Hale[client], condition);
+			VSHA_SetBossRage(client, VSHA_GetBossRage(client)-5.0);
+			TF2_RemoveCondition(client, condition);
 		}
-		case TFCond_Disguised: TF2_RemoveCondition(Hale[client], condition);
+		case TFCond_Disguised: TF2_RemoveCondition(client, condition);
 	}
-	if (TF2_IsPlayerInCondition(Hale[client], view_as<TFCond>(42))
-		&& TF2_IsPlayerInCondition(Hale[client], TFCond_Dazed)) TF2_RemoveCondition(Hale[client], TFCond_Dazed);
+	if (TF2_IsPlayerInCondition(client, view_as<TFCond>(42))
+		&& TF2_IsPlayerInCondition(client, TFCond_Dazed)) TF2_RemoveCondition(client, TFCond_Dazed);
 }
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
@@ -845,18 +825,18 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 	char playsound[PATHX];
 
-	if ( CheckRoundState() == 0 && (victim == Hale[victim] || (victim != attacker && attacker != Hale[attacker])) )
+	if ( CheckRoundState() == 0 && (VSHA_GetBossPluginHandle(victim)==hThisPlugin || (victim != attacker && VSHA_GetBossPluginHandle(attacker)!=hThisPlugin)) )
 	{
 		damage *= 0.0;
 		return Plugin_Changed;
 	}
-	if ((damagetype & DMG_FALL) && victim == Hale[victim])
+	if ((damagetype & DMG_FALL) && VSHA_GetBossPluginHandle(victim)==hThisPlugin)
 	{
 		//DP("DMG_FALL victim = %d, hale[victim] = %d",victim,Hale[victim]);
 		if(GetEntityFlags(victim) & FL_ONGROUND)
 		{
 			//DP("Hale Fall Damage");
-			damage = (VSHA_GetBossHealth(Hale[victim]) > 100) ? 10.0 : 100.0; //please don't fuck with this.
+			damage = (VSHA_GetBossHealth(victim) > 100) ? 10.0 : 100.0; //please don't fuck with this.
 			//damage = 0.0;
 			return Plugin_Changed;
 		}
@@ -872,7 +852,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 	float AttackerPos[3];
 	GetEntPropVector(attacker, Prop_Send, "m_vecOrigin", AttackerPos); //Spot of attacker
-	if (ValidPlayer(attacker) && attacker == Hale[attacker])
+	if (ValidPlayer(attacker) && VSHA_GetBossPluginHandle(attacker)==hThisPlugin)
 	{
 		if (TF2_IsPlayerInCondition(victim, TFCond_DefenseBuffed))
 		{
@@ -938,7 +918,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				//return Plugin_Continue;
 		}
 	}
-	else if (ValidPlayer(attacker) && ValidPlayer(victim) && Hale[victim] == victim && Hale[attacker] != attacker)
+	else if (ValidPlayer(attacker) && ValidPlayer(victim) && VSHA_GetBossPluginHandle(victim)==hThisPlugin && VSHA_GetBossPluginHandle(attacker)!=hThisPlugin)
 	{
 		if (attacker <= MaxClients && attacker > 0)
 		{
@@ -1397,7 +1377,7 @@ bool lastframewasground[MAXPLAYERS + 1];
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if(client != Hale[client]) return Plugin_Continue;
+	if(VSHA_GetBossPluginHandle(client)!=hThisPlugin) return Plugin_Continue;
 
 	if(!InRage[client] && (JumpCoolDown[client] > GetTime())) return Plugin_Continue;
 
@@ -1503,11 +1483,11 @@ public Action EndRage(Handle thandle, int userid)
 }
 
 // Is triggered by VSHA engine when a boos needs a help menu
-public void OnShowBossHelpMenu(int iiBoss)
+public void OnShowBossHelpMenu(Handle BossPlugin, int iiBoss)
 {
-	if(Hale[iiBoss] != iiBoss) return;
+	if (hThisPlugin != BossPlugin) return;
 
-	if(Hale[iiBoss] == iiBoss && ValidPlayer(iiBoss))
+	if(ValidPlayer(iiBoss))
 	{
 		Handle panel = CreatePanel();
 		char s[512];
@@ -1517,7 +1497,6 @@ public void OnShowBossHelpMenu(int iiBoss)
 		SendPanelToClient(panel, iiBoss, HintPanelH, 12);
 		CloseHandle(panel);
 	}
-	return;
 }
 
 public int HintPanelH(Handle menu, MenuAction action, int param1, int param2)
