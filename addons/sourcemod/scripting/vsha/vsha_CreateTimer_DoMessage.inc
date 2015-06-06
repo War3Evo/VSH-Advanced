@@ -31,7 +31,7 @@ public Action DoMessage(Handle timer, int data)
 	{
 		if(VSHA_OnMessageTimer(target) == Plugin_Continue)
 		{
-			if(GetBossName(Storage[target],sBossName))
+			if(GetBossName(Storage[target],STRING(sBossName)))
 			{
 				GetClientName(target,STRING(sClientName));
 				CPrintToChatAll("%s %s became %s starting with %d HP",VSHA_COLOR,sClientName,sBossName,iBossMaxHealth[target]);
