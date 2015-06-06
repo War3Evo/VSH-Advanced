@@ -10,7 +10,7 @@ public Plugin myinfo =
 	name 			= "Saxton Hale",
 	author 			= "Valve",
 	description 		= "Saxton Haaaaaaaaaaaaale",
-	version 		= "1.0",
+	version 		= "1.2",
 	url 			= "http://wiki.teamfortress.com/wiki/Saxton_Hale"
 }
 
@@ -487,6 +487,7 @@ public void OnBossSelected(int iiBoss)
 		if(iiBoss == Hale[iiBoss])
 		{
 			Hale[iiBoss]=0;
+			HaleCharge[iiBoss]=0;
 		}
 		return;
 	}
@@ -655,7 +656,7 @@ public void OnPrepBoss(int iiBoss)
 }
 public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 {
-	if (iiBoss != Hale[iiBoss])
+	if (iiBoss<0 || iiBoss != Hale[iiBoss])
 	{
 		return Plugin_Continue;
 	}

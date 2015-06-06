@@ -14,9 +14,15 @@ public Plugin myinfo =
 	url 			= "http://tf2freakshow.wikia.com/wiki/Christian_Brutal_Sniper"
 }
 
-#define HALE_JUMPCHARGETIME		4
-#define HALE_JUMPCHARGE			(25 * HALE_JUMPCHARGETIME)
+#define ThisConfigurationFile "configs/vsha/cbs.cfg"
+
+#define HALE_JUMPCHARGETIME		100
+#define HALE_JUMPCHARGE			4
 #define CBS_MAX_ARROWS 			9
+
+int HaleChargeCoolDown[PLYR];
+
+bool InRage[PATHX];
 
 char CBSModel[PATHX];
 char CBSModelPrefix[PATHX];
@@ -40,20 +46,108 @@ int Hale[PLYR];
 float WeighDownTimer = 0.0;
 float RageDist = 800.0;
 
-char playsound[PATHX];
-
 public void OnPluginStart()
 {
+		CreateConVar("vsha_cbs_version", "1.0", "VSHA CBS Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	//ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("saxtonhale") );
 	//AutoExecConfig(true, "VSHA-Boss-SaxtonHale");
 }
 
+public void Load_VSHAHooks()
+{
+	if(!VSHAHookEx(VSHAHook_OnBossIntroTalk, OnBossIntroTalk))
+	{
+		LogError("Error loading VSHAHook_OnBossIntroTalk forwards for cbs.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss))
+	{
+		LogError("Error loading VSHAHook_OnPlayerKilledByBoss forwards for cbs.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss))
+	{
+		LogError("Error loading VSHAHook_OnKillingSpreeByBoss forwards for cbs.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossKilled, OnBossKilled))
+	{
+		LogError("Error loading VSHAHook_OnBossKilled forwards for cbs.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossWin, OnBossWin))
+	{
+		LogError("Error loading VSHAHook_OnBossWin forwards for cbs.");
+	}
+	//if(!VSHAHookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
+	//{
+		//LogError("Error loading VSHAHook_OnMessageTimer forwards for cbs.");
+	//}
+	if(!VSHAHookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
+	{
+		LogError("Error loading VSHAHook_OnBossAirblasted forwards for cbs.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossSetHP, OnBossSetHP))
+	{
+		LogError("Error loading VSHAHook_OnBossSetHP forwards for cbs.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnLastSurvivor, OnLastSurvivor))
+	{
+		LogError("Error loading VSHAHook_OnLastSurvivor forwards for cbs.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossTimer, OnBossTimer))
+	{
+		LogError("Error loading VSHAHook_OnBossTimer forwards for cbs.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnPrepBoss, OnPrepBoss))
+	{
+		LogError("Error loading VSHAHook_OnPrepBoss forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnMusic, OnMusic))
+	{
+		LogError("Error loading VSHAHook_OnMusic forwards for saxton hale.");
+	}
+	//if(!VSHAHookEx(VSHAHook_OnModelTimer, OnModelTimer))
+	//{
+		//LogError("Error loading VSHAHook_OnModelTimer forwards for saxton hale.");
+	//}
+	if(!VSHAHookEx(VSHAHook_OnBossRage, OnBossRage))
+	{
+		LogError("Error loading VSHAHook_OnBossRage forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnGameOver, OnGameOver))
+	{
+		LogError("Error loading VSHAHook_OnGameOver forwards for saxton hale.");
+	}
+	//if(!VSHAHookEx(VSHAHook_OnBossTimer_1_Second, OnBossTimer_1_Second))
+	//{
+		//LogError("Error loading VSHAHook_OnGameOver forwards for saxton hale.");
+	//}
+}
 public void OnAllPluginsLoaded()
 {
 	ThisPluginHandle = view_as<Handle>( VSHA_RegisterBoss("cbs","Christian Brutal Sniper") );
 
 	HookEvent("player_changeclass", ChangeClass);
 
+	if(!VSHAHookEx(VSHAHook_OnBossSelected, OnBossSelected))
+	{
+		LogError("Error loading VSHAHook_OnBossSelected forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnConfiguration_Load_Sounds, OnConfiguration_Load_Sounds))
+	{
+		LogError("Error loading VSHAHook_OnConfiguration_Load_Sounds forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnConfiguration_Load_Materials, OnConfiguration_Load_Materials))
+	{
+		LogError("Error loading VSHAHook_OnConfiguration_Load_Materials forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnConfiguration_Load_Models, OnConfiguration_Load_Models))
+	{
+		LogError("Error loading VSHAHook_OnConfiguration_Load_Models forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_ShowBossHelpMenu, OnShowBossHelpMenu))
+	{
+		LogError("Error loading VSHAHook_ShowBossHelpMenu forwards for saxton hale.");
+	}
+
+	// LoadConfiguration ALWAYS after VSHAHook
 	VSHA_LoadConfiguration("configs/vsha/cbs.cfg");
 }
 public void OnPluginEnd()
@@ -82,17 +176,17 @@ public void OnClientDisconnect(int client)
 		Hale[client] = 0;
 		bool see[PLYR];
 		see[Hale[client]] = true;
-		int tHale;
-		if (VSHA_GetPresetBossPlayer() > 0) tHale = VSHA_GetPresetBossPlayer();
-		else tHale = VSHA_FindNextBoss(see, sizeof(see));
-		if (IsValidClient(tHale))
-		{
-			if (GetClientTeam(tHale) != 3)
-			{
-				ForceTeamChange(Hale[client], 3);
+		//int tHale;
+		//if (VSHA_GetPresetBossPlayer() > 0) tHale = VSHA_GetPresetBossPlayer();
+		//else tHale = VSHA_FindNextBoss( see, sizeof(see) );
+		//if (IsValidClient(tHale))
+		//{
+			//if (GetClientTeam(tHale) != 3)
+			//{
+				//ForceTeamChange(Hale[client], 3);
 				//DP("vsha-saxtonhale 166 ForceTeamChange(i, 3)");
-			}
-		}
+			//}
+		//}
 	}
 }
 public Action ChangeClass(Event event, const char[] name, bool dontBroadcast)
@@ -105,13 +199,11 @@ public Action ChangeClass(Event event, const char[] name, bool dontBroadcast)
 	}
 	return Plugin_Continue;
 }
-
-public Action VSHA_OnPlayerKilledByBoss()
+public void OnPlayerKilledByBoss(int iiBoss, int attacker)
 {
-	int iiBoss = VSHA_GetVar(EventBoss);
-	int attacker = VSHA_GetVar(EventAttacker);
+	if(Hale[iiBoss] != iiBoss) return;
 
-	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
+	//char playsound[PATHX];
 
 	if (GetEntPropEnt(attacker, Prop_Send, "m_hActiveWeapon") == GetPlayerWeaponSlot(attacker, TFWeaponSlot_Melee))
 	{
@@ -168,14 +260,12 @@ public Action VSHA_OnPlayerKilledByBoss()
 		}
 		if (!StrEqual(playsound, "")) EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	}*/
-	return Plugin_Continue;
 }
-public Action VSHA_OnKillingSpreeByBoss()
+public void OnKillingSpreeByBoss(int iiBoss, int attacker)
 {
-	int iiBoss = VSHA_GetVar(EventBoss);
-	int attacker = VSHA_GetVar(EventAttacker);
+	if(Hale[iiBoss] != iiBoss) return;
 
-	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
+	char playsound[PATHX];
 
 	if (!GetRandomInt(0, 3))
 		Format(playsound, PLATFORM_MAX_PATH, CBS0);
@@ -186,15 +276,12 @@ public Action VSHA_OnKillingSpreeByBoss()
 
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossKilled() //victim is boss
+public void OnBossKilled(int iiBoss, int attacker) //victim is boss
 {
-	int iiBoss = VSHA_GetVar(EventBoss);
-	//int attacker = VSHA_GetVar(EventAttacker);
+	if(Hale[iiBoss] != iiBoss) return;
 
-	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
+	//char playsound[PATHX];
 
 	// As far as I can see, there is no fail sound for cbs
 	/*
@@ -204,15 +291,12 @@ public Action VSHA_OnBossKilled() //victim is boss
 	*/
 
 	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
-	Hale[iiBoss] = 0;
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossWin()
+public void OnBossWin(Event event, int iiBoss)
 {
-	//VSHA_GetVar(SmEvent,event);
-	int iiBoss = VSHA_GetVar(EventBoss);
+	if(Hale[iiBoss] != iiBoss) return;
 
-	if(Hale[iiBoss] != iiBoss) return Plugin_Continue;
+	//char playsound[PATHX];
 
 // no win sounds for cbs
 /*
@@ -228,10 +312,29 @@ public Action VSHA_OnBossWin()
 
 	SDKUnhook(Hale[iiBoss], SDKHook_OnTakeDamage, OnTakeDamage);
 	Hale[iiBoss] = 0;
-	return Plugin_Continue;
+
+	// Dynamically unload private forwards
+	//UnLoad_VSHAHooks();
 }
-public Action VSHA_MessageTimer()
+public void OnGameOver() // best play to reset all variables
 {
+	LoopMaxPLYR(players)
+	{
+		if(Hale[players])
+		{
+			Hale[players]=0;
+			HaleCharge[players]=0;
+		}
+		if(ValidPlayer(players))
+		{
+			StopSound(players, SNDCHAN_AUTO, CBSTheme);
+		}
+	}
+}
+/*        NO LONGER USING.. HANDLED INTERNALLY, unless you just want to handle it.
+public Action OnMessageTimer(int iiBoss)
+{
+	if ( iiBoss!= Hale[iiBoss] ) return Plugin_Continue;
 	//SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
 	char text[PATHX];
 	int client;
@@ -252,57 +355,61 @@ public Action VSHA_MessageTimer()
 			ShowHudText(client, -1, text);
 		}
 	}
-
-	return Plugin_Continue;
-}
-public Action VSHA_OnBossAirblasted()
+}*/
+public void OnBossAirblasted(Event event, int iiBoss)
 {
-	int iiBoss = VSHA_GetVar(EventBoss);
-	//int airblaster = VSHA_GetVar(EventAttacker);
-
-	if (iiBoss != Hale[iiBoss]) return Plugin_Continue;
+	if (iiBoss != Hale[iiBoss]) return;
 	//float rage = 0.04*RageDMG;
 	//HaleRage += RoundToCeil(rage);
 	//if (HaleRage > RageDMG) HaleRage = RageDMG;
 	VSHA_SetBossRage(Hale[iiBoss], VSHA_GetBossRage(Hale[iiBoss])+4.0); //make this a convar/cvar!
-
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossSelected()
+public void OnBossSelected(int iiBoss)
 {
-	int iiBoss = VSHA_GetVar(EventClient);
+	if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle)
+	{
+		// reset boss
+		if(iiBoss == Hale[iiBoss])
+		{
+			Hale[iiBoss]=0;
+			HaleCharge[iiBoss]=0;
+		}
+		return;
+	}
+
+	CPrintToChatAll("%s, CBS Boss Selected!",VSHA_COLOR);
+
 	if (VSHA_IsBossPlayer(iiBoss)) Hale[iiBoss] = iiBoss;
 	if (iiBoss != Hale[iiBoss] && VSHA_IsBossPlayer(iiBoss))
 	{
 		VSHA_SetBossPlayer(Hale[iiBoss], false);
-		Hale[iiBoss] = 0;
-		ForceTeamChange(iiBoss, 3);
+		Hale[iiBoss] = iiBoss;
+		//ForceTeamChange(iiBoss, 3);
 		//DP("vsha-cbs 526 ForceTeamChange(iiBoss, 3)");
-		return Plugin_Stop;
 	}
+	// Dynamically load private forwards
+	Load_VSHAHooks();
 	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
-
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossIntroTalk()
+public void OnBossIntroTalk()
 {
+	char playsound[PATHX];
+
 	strcopy(playsound, PLATFORM_MAX_PATH, CBS0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossSetHP()
+public Action OnBossSetHP(int BossEntity, int &BossMaxHealth)
 {
-	int iClient = VSHA_GetVar(EventClient);
-	if (iClient != Hale[iClient]) return Plugin_Continue;
-	int BossMax = HealthCalc( 760.8, view_as<float>( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
-	VSHA_SetBossMaxHealth(Hale[iClient], BossMax);
-
-	return Plugin_Continue;
+	if (BossEntity != Hale[BossEntity]) return Plugin_Continue;
+	BossMaxHealth = HealthCalc( 760.8, float( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
+	//VSHA_SetBossMaxHealth(Hale[BossEntity], BossMax);
+	return Plugin_Changed;
 }
-public Action VSHA_OnLastSurvivor()
+public void OnLastSurvivor()
 {
+	char playsound[PATHX];
+
 	if (!GetRandomInt(0, 2))
 		Format(playsound, PLATFORM_MAX_PATH, "%s", CBS0);
 	else
@@ -312,142 +419,194 @@ public Action VSHA_OnLastSurvivor()
 
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-
-	return Plugin_Continue;
 }
-public Action VSHA_OnBossTimer()
+public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
 {
-	int iClient = VSHA_GetVar(EventClient);
-	if (iClient != Hale[iClient]) return Plugin_Continue;
+	if (iiBoss != Hale[iiBoss]) return;
+	char playsound[PATHX];
 	float speed;
-	int curHealth = VSHA_GetBossHealth(iClient), curMaxHp = VSHA_GetBossMaxHealth(iClient);
-	if (curHealth <= curMaxHp) speed = 340.0 + 0.7 * (100-curHealth*100/curMaxHp); //convar/cvar for speed here!
-	SetEntPropFloat(iClient, Prop_Send, "m_flMaxspeed", speed);
-
-	int buttons = GetClientButtons(iClient);
-	if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iClient] >= 0 )
+	//int curHealth = VSHA_GetBossHealth(iiBoss), curMaxHp = VSHA_GetBossMaxHealth(iiBoss);
+	// temporary health fix
+	if (curHealth < 0)
 	{
-		if (HaleCharge[iClient] + 5 < HALE_JUMPCHARGE) HaleCharge[iClient] += 5;
-		else HaleCharge[iClient] = HALE_JUMPCHARGE;
-		if (!(buttons & IN_SCORE))
-		{
-			SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Jump Charge: %i%", HaleCharge[iClient]);
-		}
+		ForcePlayerSuicide(iiBoss);
+		return;
 	}
-	else if (HaleCharge[iClient] < 0)
+	if(GetClientHealth(iiBoss) != curHealth)
 	{
-		HaleCharge[iClient] += 5;
-		if (!(buttons & IN_SCORE))
+		SetEntityHealth(iiBoss,curHealth);
+	}
+	if (curHealth <= curMaxHp) speed = 340.0 + 0.7 * (100.0-float(curHealth)*100.0/float(curMaxHp)); //convar/cvar for speed here!
+	SetEntPropFloat(iiBoss, Prop_Send, "m_flMaxspeed", speed);
+
+	//int buttons = GetClientButtons(iiBoss);
+	//if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iiBoss] >= 0 )
+	if (HaleChargeCoolDown[iiBoss] <= GetTime())
+	{
+		if ( ((buttons & IN_DUCK) || (buttons & IN_ATTACK2)) && HaleCharge[iiBoss] >= 0 )
 		{
-			SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(iClient, -1, "Super Jump will be ready again in: %i", (-HaleCharge[iClient]/10));
+			if ((HaleCharge[iiBoss] + HALE_JUMPCHARGE) < HALE_JUMPCHARGETIME) HaleCharge[iiBoss] += HALE_JUMPCHARGE;
+			else HaleCharge[iiBoss] = HALE_JUMPCHARGETIME;
+			//if (!(buttons & IN_SCORE))
+			if (!(buttons & IN_SCORE))
+			{
+				//if(!InitHaleTimer[iiBoss])
+				//{
+					SetHudTextParams(-1.0, 0.70, HudTextScreenHoldTime, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
+					ShowSyncHudText(iiBoss, hHudSync, "Jump Charge: %i% ", HaleCharge[iiBoss]);
+					//InitHaleTimer[iiBoss]=true;
+				//}
+			}
+		}
+		// 5 * 60 = 300
+		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
+		// 300 = 1 minute wait
+		float ExtraBoost = float(HaleCharge[iiBoss]) * 2;
+		if ( HaleCharge[iiBoss] > 1 && SuperJump(iiBoss, ExtraBoost, -15.0, HaleCharge[iiBoss], -150) ) //put convar/cvar for jump sensitivity here!
+		{
+			HaleChargeCoolDown[iiBoss] = GetTime()+3;
+			strcopy(playsound, PLATFORM_MAX_PATH, CBSJump1);
+			EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 		}
 	}
 	else
 	{
-		// 5 * 60 = 300
-		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
-		// 300 = 1 minute wait
-		float ExtraBoost = float(HaleCharge[iClient]) * 2;
-		if ( HaleCharge[iClient] > 1 && SuperJump(iClient, ExtraBoost, -15.0, HaleCharge[iClient], -150) ) //put convar/cvar for jump sensitivity here!
+		HaleCharge[iiBoss] = 0;
+		if (!(buttons & IN_SCORE))
 		{
-			strcopy(playsound, PLATFORM_MAX_PATH, "");
-			strcopy(playsound, PLATFORM_MAX_PATH, CBSJump1);
-			EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, NULL_VECTOR, NULL_VECTOR, false, 0.0);
+			//if(!InitHaleTimer[iiBoss])
+			//{
+				SetHudTextParams(-1.0, 0.75, HudTextScreenHoldTime, 90, 255, 90, 255, 0, 0.0, 0.0, 0.0);
+				ShowSyncHudText(iiBoss, hHudSync2, "Super Jump will be ready again in: %d ", (HaleChargeCoolDown[iiBoss]-GetTime()));
+				//InitHaleTimer[iiBoss]=true;
+			//}
 		}
 	}
 
-	if (VSHA_GetAliveRedPlayers() == 1) PrintCenterTextAll("Christian Brutal Sniper's Current Health is: %i of %i", curHealth, curMaxHp);
-	if (OnlyScoutsLeft()) VSHA_SetBossRage(iClient, VSHA_GetBossRage(iClient)+0.5);
+	int iAlivePlayers;
+	LoopAlivePlayers(alivePlayers)
+	{
+		++iAlivePlayers;
+	}
+	float AddToRage = 0.0;//VSHA_GetBossRage(iiBoss);
 
-	if (!(GetEntityFlags(iClient) & FL_ONGROUND)) WeighDownTimer += 0.2;
+	if (iAlivePlayers > 12)
+	{
+		//PrintCenterTextAll("Christian Brutal Sniper's Current Health is: %i of %i", curHealth, curMaxHp);
+		AddToRage += 0.5;
+		//VSHA_SetBossRage(iiBoss, VSHA_GetBossRage(iiBoss)+0.2);
+	}
+	else if(iAlivePlayers > 1)
+	{
+		//AddToRage += (float((MaxClients + 1) - iAlivePlayers) * 0.001);
+		AddToRage += float(iAlivePlayers) * 0.001;
+	}
+	int iGetOtherTeam = GetClientTeam(iiBoss) == 2 ? 3:2;
+	if ( OnlyScoutsLeft(iGetOtherTeam) )
+	{
+		AddToRage += 1.0;
+		//VSHA_SetBossRage(iiBoss, VSHA_GetBossRage(iiBoss)+0.5);
+	}
+
+	if(AddToRage > 0)
+	{
+		VSHA_SetBossRage(iiBoss, (VSHA_GetBossRage(iiBoss)+AddToRage));
+	}
+
+	//VSHA_SetBossRage(iiBoss, VSHA_GetBossRage(iiBoss)+1.0);
+
+	if ( !(GetEntityFlags(iiBoss) & FL_ONGROUND) ) WeighDownTimer += 0.2;
 	else WeighDownTimer = 0.0;
 
-	if ( (buttons & IN_DUCK) && Weighdown(iClient, WeighDownTimer, 60.0, 0.0) )
+	if ( (buttons & IN_DUCK) && Weighdown(iiBoss, WeighDownTimer, 60.0, 0.0) )
 	{
 		//CPrintToChat(client, "{olive}[VSHE]{default} You just used your weighdown!");
 		//all this just to do a cprint? It's not like weighdown has a limit...
 	}
-
-	return Plugin_Continue;
 }
-public Action VSHA_OnPrepBoss()
+public void OnPrepBoss(int iiBoss)
 {
-	int iClient = VSHA_GetVar(EventOnPrepBoss);
+	if(VSHA_GetBossHandle(iiBoss)!=ThisPluginHandle) return;
 
-	if (iClient != Hale[iClient]) return Plugin_Continue;
-	TF2_SetPlayerClass(iClient, TFClass_Sniper, _, false);
-	HaleCharge[iClient] = 0;
+	if (iiBoss != Hale[iiBoss]) return;
+	TF2_SetPlayerClass(iiBoss, TFClass_Sniper, _, false);
+	HaleCharge[iiBoss] = 0;
 
-	TF2_RemoveAllWeapons2(iClient);
-	TF2_RemovePlayerDisguise(iClient);
+	TF2_RemoveAllWeapons2(iiBoss);
+	TF2_RemovePlayerDisguise(iiBoss);
 
-	bool pri = IsValidEntity(GetPlayerWeaponSlot(iClient, TFWeaponSlot_Primary));
-	bool sec = IsValidEntity(GetPlayerWeaponSlot(iClient, TFWeaponSlot_Secondary));
-	bool mel = IsValidEntity(GetPlayerWeaponSlot(iClient, TFWeaponSlot_Melee));
+	bool pri = IsValidEntity(GetPlayerWeaponSlot(iiBoss, TFWeaponSlot_Primary));
+	bool sec = IsValidEntity(GetPlayerWeaponSlot(iiBoss, TFWeaponSlot_Secondary));
+	bool mel = IsValidEntity(GetPlayerWeaponSlot(iiBoss, TFWeaponSlot_Melee));
 
 	if (pri || sec || !mel)
 	{
-		TF2_RemoveAllWeapons2(iClient);
+		TF2_RemoveAllWeapons2(iiBoss);
 		char attribs[PATH];
 		Format(attribs, sizeof(attribs), "68 ; 2.0 ; 2 ; 3.0 ; 259 ; 1.0 ; 252 ; 0.6 ; 214 ; %d", GetRandomInt(999, 9999));
-		int CBSWeapon = SpawnWeapon(iClient, "tf_weapon_club", 171, 100, 4, attribs);
-		SetEntPropEnt(iClient, Prop_Send, "m_hActiveWeapon", CBSWeapon);
+		int CBSWeapon = SpawnWeapon(iiBoss, "tf_weapon_club", 171, 100, 4, attribs);
+		SetEntPropEnt(iiBoss, Prop_Send, "m_hActiveWeapon", CBSWeapon);
 	}
-
-	return Plugin_Continue;
 }
-public Action VSHA_OnMusic()
+public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 {
-	char BossTheme[256];
-	float time;
-
+	if (iiBoss<0 || iiBoss != Hale[iiBoss])
+	{
+		return Plugin_Continue;
+	}
+	//PrintToChatAll("MIKUTheme OnMusic %s",MIKUTheme);
 	BossTheme = CBSTheme;
 	time = 131.0;
-	StringMap SoundMap = new StringMap();
-	SoundMap.SetString("Sound", BossTheme);
-	VSHA_SetVar(EventSound, SoundMap);
-	VSHA_SetVar(EventTime, time);
+
+	//StringMap SoundMap = new StringMap();
+	//SoundMap.SetString("Sound", BossTheme);
+	//VSHA_SetVar(EventSound,SoundMap);
+	//VSHA_SetVar(EventTime,time);
 
 	return Plugin_Continue;
 }
-
-public Action VSHA_OnModelTimer()
+/*
+public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
 {
-	int iClient = VSHA_GetVar(EventModelTimer);
+	if(ThisPluginHandle != plugin) return Plugin_Continue;
 
-	char modelpath[PATHX];
+	if(!ValidPlayer(iClient)) return Plugin_Continue;
 
 	//DP("VSHA_OnModelTimer");
 	if (iClient != Hale[iClient])
 	{
-		SetVariantString("");
-		AcceptEntityInput(iClient, "SetCustomModel");
-		return Plugin_Stop;
+		//SetVariantString("");
+		//AcceptEntityInput(iClient, "SetCustomModel");
+		return Plugin_Continue;
 	}
 	modelpath = CBSModel;
 
-	StringMap ModelMap = new StringMap();
-	ModelMap.SetString("Model", modelpath);
-	VSHA_SetVar(EventModel,ModelMap);
+	PrintToChatAll("cbs %d OnModelTimer %s", iClient, modelpath);
+
+	//strcopy(STRING(modelpath), MikuModel);
+
+	//StringMap ModelMap = new StringMap();
+	//ModelMap.SetString("Model", modelpath);
+	//VSHA_SetVar(EventModel,ModelMap);
 
 	SetVariantString(modelpath);
 	AcceptEntityInput(iClient, "SetCustomModel");
 	SetEntProp(iClient, Prop_Send, "m_bUseClassAnimations", 1);
 
-	return Plugin_Continue;
-}
-
-public Action VSHA_OnBossRage()
+	return Plugin_Changed;
+}*/
+public void OnBossRage(int iiBoss)
 {
-	int iClient = VSHA_GetVar(EventBoss);
-
-	if (iClient != Hale[iClient]) return Plugin_Continue;
+	if (iiBoss != Hale[iiBoss]) return;
+	if (InRage[iiBoss]) return;
+	// Helps prevent multiple rages
+	InRage[iiBoss] = true;
+	char playsound[PATHX];
+	//DP("iiBoss = %d",iiBoss);
 	float pos[3];
-	GetEntPropVector(iClient, Prop_Send, "m_vecOrigin", pos);
+	GetEntPropVector(iiBoss, Prop_Send, "m_vecOrigin", pos);
 	pos[2] += 20.0;
-	TF2_AddCondition(iClient, view_as<TFCond>(42), 4.0);
+	TF2_AddCondition(iiBoss, view_as<TFCond>(42), 4.0);
 	if (GetRandomInt(0, 1))
 	{
 		Format(playsound, PLATFORM_MAX_PATH, "%s", CBS1);
@@ -456,17 +615,15 @@ public Action VSHA_OnBossRage()
 	{
 		Format(playsound, PLATFORM_MAX_PATH, "%s", CBS3);
 	}
-	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
-	EmitSoundToAll(playsound, iClient, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iClient, pos, NULL_VECTOR, true, 0.0);
+	EmitSoundToAll(playsound, iiBoss, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, pos, NULL_VECTOR, true, 0.0);
+	EmitSoundToAll(playsound, iiBoss, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, pos, NULL_VECTOR, true, 0.0);
 
-	TF2_RemoveWeaponSlot(iClient, TFWeaponSlot_Primary);
-	SetEntPropEnt(iClient, Prop_Send, "m_hActiveWeapon", SpawnWeapon(iClient, "tf_weapon_compound_bow", 1005, 100, 5, "2 ; 2.1 ; 6 ; 0.5 ; 37 ; 0.0 ; 280 ; 19 ; 551 ; 1"));
-	SetAmmo(iClient, TFWeaponSlot_Primary, ((VSHA_GetAliveRedPlayers() >= CBS_MAX_ARROWS) ? CBS_MAX_ARROWS : VSHA_GetAliveRedPlayers()));
+	TF2_RemoveWeaponSlot(iiBoss, TFWeaponSlot_Primary);
+	SetEntPropEnt(iiBoss, Prop_Send, "m_hActiveWeapon", SpawnWeapon(iiBoss, "tf_weapon_compound_bow", 1005, 100, 5, "2 ; 2.1 ; 6 ; 0.5 ; 37 ; 0.0 ; 280 ; 19 ; 551 ; 1"));
+	SetAmmo(iiBoss, TFWeaponSlot_Primary, ((VSHA_GetAliveRedPlayers() >= CBS_MAX_ARROWS) ? CBS_MAX_ARROWS : VSHA_GetAliveRedPlayers()));
 
-	CreateTimer(0.6, UseRage, GetClientUserId(iClient));
-	CreateTimer(0.1, UseBowRage, GetClientUserId(iClient));
-
-	return Plugin_Continue;
+	CreateTimer(0.6, UseRage, GetClientUserId(iiBoss));
+	CreateTimer(0.1, UseBowRage, GetClientUserId(iiBoss));
 }
 public Action UseBowRage(Handle hTimer, int userid)
 {
@@ -507,6 +664,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if(!IsValidEdict(attacker)) return Plugin_Continue;
 
+	//char playsound[PATHX];
+
 	if ( CheckRoundState() == 0 && (victim == Hale[victim] || (victim != attacker && attacker != Hale[attacker])) )
 	{
 		damage *= 0.0;
@@ -518,7 +677,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		if(GetEntityFlags(victim) & FL_ONGROUND)
 		{
 			//DP("Hale Fall Damage");
-			damage = (VSHA_GetBossHealth(victim) > 100) ? 10.0 : 100.0; //please don't fuck with this.
+			damage = (VSHA_GetBossHealth(Hale[victim]) > 100) ? 10.0 : 100.0; //please don't fuck with this.
+			//damage = 0.0;
 			return Plugin_Changed;
 		}
 	}
@@ -567,11 +727,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Changed;
 			}
 		}
-		int ent = -1;
-		while ((ent = FindEntityByClassname2(ent, "tf_wearable_demoshield")) != -1)
+		int shield = VSHA_HasShield(victim);
+		if(shield > -1 && weapon == GetPlayerWeaponSlot(attacker, 2))
 		{
-			if (GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity") == victim && !GetEntProp(ent, Prop_Send, "m_bDisguiseWearable") && weapon == GetPlayerWeaponSlot(attacker, 2))
-			{
 				//int HitsTaken = VSHA_GetHits(victim);
 				//int HitsRequired = 0;
 				/*int index = GetItemIndex(ent);
@@ -583,7 +741,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				TF2_AddCondition(victim, TFCond_Bonked, 0.1);
 				//if (HitsRequired <= HitsTaken)
 				//{
-				TF2_RemoveWearable(victim, ent);
+				TF2_RemoveWearable(victim, shield);
+				VSHA_SetShield(victim, -1);
 				float Pos[3];
 				GetEntPropVector(victim, Prop_Send, "m_vecOrigin", Pos);
 				EmitSoundToClient(victim, "player/spy_shield_break.wav", _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, 0.7, 100, _, Pos, NULL_VECTOR, false, 0.0);
@@ -592,7 +751,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				EmitSoundToClient(attacker, "player/spy_shield_break.wav", _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, 0.7, 100, _, Pos, NULL_VECTOR, false, 0.0);
 				//}
 				//return Plugin_Continue;
-			}
 		}
 	}
 	else if (Hale[victim] == victim && Hale[attacker] != attacker)
@@ -899,8 +1057,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 	return Plugin_Continue;
 }
-
-
 public Action UseRage(Handle hTimer, int userid)
 {
 	int iClient = GetClientOfUserId(userid);
@@ -923,7 +1079,7 @@ public Action UseRage(Handle hTimer, int userid)
 			{
 				int flags = TF_STUNFLAGS_GHOSTSCARE;
 				flags |= TF_STUNFLAG_NOSOUNDOREFFECT;
-				PawnTimer( RemoveEnt, 5.0, EntIndexToEntRef(AttachParticle(i, "yikes_fx", 75.0)) );
+				CreateTimer( 5.0, RemoveEnt, EntIndexToEntRef(AttachParticle(i, "yikes_fx", 75.0)) );
 				if (CheckRoundState() != 0) TF2_StunPlayer(i, 5.0, _, flags, iClient);
 			}
 		}
@@ -961,17 +1117,16 @@ public Action Timer_StopTickle(Handle timer, any userid)
 	return Plugin_Continue;
 }
 // stocks
-stock bool OnlyScoutsLeft()
+stock bool OnlyScoutsLeft( int iTeam )
 {
 	for (int client; client <= MaxClients; client++)
 	{
-		if (IsValidClient(client) && IsPlayerAlive(client) && GetClientTeam(client) == 2)
+		if (IsValidClient(client) && IsPlayerAlive(client) && GetClientTeam(client) == iTeam)
 		{
-			if (TF2_GetPlayerClass(client) != TFClass_Scout) break;
-			return true;
+			if (TF2_GetPlayerClass(client) != TFClass_Scout) return false;
 		}
 	}
-	return false;
+	return true;
 }
 stock void SetAmmo(int client, int wepslot, int newAmmo)
 {
@@ -983,8 +1138,10 @@ stock void SetAmmo(int client, int wepslot, int newAmmo)
 }
 
 // LOAD CONFIGURATION
-public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
+public void OnConfiguration_Load_Sounds(char[] cFile, char[] skey, char[] value, bool &bPreCacheFile, bool &bAddFileToDownloadsTable)
 {
+	if(!StrEqual(cFile, ThisConfigurationFile)) return;
+
 	if(StrEqual(skey, "CBSTheme"))
 	{
 		strcopy(STRING(CBSTheme), value);
@@ -1030,11 +1187,13 @@ public void VSHA_OnConfiguration_Load_Sounds(char[] skey, char[] value, bool &bP
 
 	if(bPreCacheFile || bAddFileToDownloadsTable)
 	{
-		PrintToServer("Loading Sounds %s = %s",skey,value);
+		PrintToServer("Loading Sounds %s = '%s'",skey,value);
 	}
 }
-public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
+public void OnConfiguration_Load_Materials(char[] cFile, char[] skey, char[] value, bool &bPrecacheGeneric, bool &bAddFileToDownloadsTable)
 {
+	if(!StrEqual(cFile, ThisConfigurationFile)) return;
+
 	if(StrEqual(skey, "MaterialPrefix"))
 	{
 		char s[PATHX];
@@ -1052,13 +1211,17 @@ public void VSHA_OnConfiguration_Load_Materials(char[] skey, char[] value, bool 
 		}
 	}
 }
-public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
+public void OnConfiguration_Load_Models(char[] cFile, char[] skey, char[] value, bool &bPreCacheModel, bool &bAddFileToDownloadsTable)
 {
+	if(!StrEqual(cFile, ThisConfigurationFile)) return;
+
 	if(StrEqual(skey, "CBSModel"))
 	{
 		strcopy(STRING(CBSModel), value);
 		bPreCacheModel = true;
 		bAddFileToDownloadsTable = true;
+		// YOU MUST HAVE THIS: in order to fix your model
+		VSHA_SetPluginModel(CBSModel);
 	}
 	else if(StrEqual(skey, "CBSModelPrefix"))
 	{
@@ -1086,6 +1249,7 @@ public void VSHA_OnConfiguration_Load_Models(char[] skey, char[] value, bool &bP
 /*
 public void VSHA_OnConfiguration_Load_Misc(char[] skey, char[] value)
 {
+* if(!StrEqual(cFile, ThisConfigurationFile)) return;
 }
 */
 
@@ -1248,4 +1412,29 @@ public Action StopVelocity(Handle timer,any client)
 		float Velocity[3] = {0.0, 0.0, 0.0};
 		TeleportEntity(client, ClientOrigin, NULL_VECTOR, Velocity);
 	}
+}
+
+// Is triggered by VSHA engine when a boos needs a help menu
+public void OnShowBossHelpMenu(int iiBoss)
+{
+	if(Hale[iiBoss] != iiBoss) return;
+
+	if(Hale[iiBoss] == iiBoss && ValidPlayer(iiBoss))
+	{
+		Handle panel = CreatePanel();
+		char s[512];
+		Format(s, 512, "Help menu not created for cbs yet.");
+		SetPanelTitle(panel, s);
+		DrawPanelItem(panel, "Exit");
+		SendPanelToClient(panel, iiBoss, HintPanelH, 12);
+		CloseHandle(panel);
+	}
+	return;
+}
+
+public int HintPanelH(Handle menu, MenuAction action, int param1, int param2)
+{
+	if (!ValidPlayer(param1)) return;
+	//if (action == MenuAction_Select || (action == MenuAction_Cancel && param2 == MenuCancel_Exit)) VSHFlags[param1] |= VSHFLAG_CLASSHELPED;
+	return;
 }

@@ -26,7 +26,10 @@ int CurrentBossGame = 0;
 
 // Themes
 char BossVsBoss1[PATHX];
+float BossVsBoss1Time = -1.0;
+
 char DuoBoss1[PATHX];
+float DuoBoss1Time = -1.0;
 
 bool ThemeMusicIsPlaying = false;
 
@@ -73,15 +76,28 @@ public void OnAllPluginsLoaded()
 	{
 		LogError("Error loading VSHAHook_OnConfiguration_Load_Sounds forwards for saxton hale.");
 	}
+	if(!VSHAHookEx(VSHAHook_OnConfiguration_Load_Misc, OnConfiguration_Load_Misc))
+	{
+		LogError("Error loading VSHAHook_OnConfiguration_Load_Misc forwards for saxton hale.");
+	}
 
 	if(!VSHAHookEx(VSHAHook_OnBossSetHP_Pre, OnBossSetHP_Pre))
 	{
 		LogError("Error loading VSHA_OnBossSetHP_Pre forwards for saxton hale.");
 	}
+	//if(!VSHAHookEx(VSHAHook_OnBossSetHP_Post, OnBossSetHP_Post))
+	//{
+		//LogError("Error loading VSHAHook_OnBossSetHP_Post forwards for saxton hale.");
+	//}
 
 	if(!VSHAHookEx(VSHAHook_OnBossTimer, OnBossTimer))
 	{
 		LogError("Error loading VSHAHook_OnBossTimer forwards for saxton hale.");
+	}
+
+	if(!VSHAHookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
+	{
+		LogError("Error loading VSHAHook_OnMessageTimer forwards for cbs.");
 	}
 
 	//if(!VSHAHookEx(VSHAHook_OnBossWin, OnBossWin))
@@ -154,6 +170,7 @@ public Action OnGameMode_ForceBossTeamChange(VSHA_EVENTS vshaEvent, int iiBoss, 
 {
 	//VSHA_IsBossPlayer(iiBoss)
 	if(!ThisEnabled.BoolValue) return Plugin_Continue;
+	if(CurrentBossGame == 0) return Plugin_Continue;
 
 	if(CurrentBossGame == DuoBossGameMode)
 	{
@@ -223,6 +240,7 @@ public Action OnGameMode_ForceBossTeamChange(VSHA_EVENTS vshaEvent, int iiBoss, 
 public Action OnGameMode_ForcePlayerTeamChange(VSHA_EVENTS vshaEvent, int iClient, int iTeam)
 {
 	if(!ThisEnabled.BoolValue) return Plugin_Continue;
+	if(CurrentBossGame == 0) return Plugin_Continue;
 
 	if(CurrentBossGame == DuoBossGameMode)
 	{
@@ -309,9 +327,31 @@ public Action OnGameMode_ForcePlayerTeamChange(VSHA_EVENTS vshaEvent, int iClien
 public Action OnGameMode_WatchGameModeTimer()
 {
 	if(!ThisEnabled.BoolValue) return Plugin_Continue;
+	if(CurrentBossGame == 0) return Plugin_Continue;
 
 	if(GameModeType.IntValue > 0 || CurrentBossGame > 0)
 	{
+		if(VSHA_GetPlayerCount()>1)
+		{
+			if(GetTeamPlayerCount(TEAM_BLUE)<=0 || GetTeamPlayerCount(TEAM_RED)<=0)
+			{
+				for (int i = 1; i <= MaxClients; i++)
+				{
+					if ( IsValidClient(i) && IsOnBlueOrRedTeam(i) )
+					{
+						if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
+						{
+							ForceTeamChange(i, TEAM_RED);
+						}
+						else if(GetTeamPlayerCount(TEAM_BLUE)<GetTeamPlayerCount(TEAM_RED))
+						{
+							ForceTeamChange(i, TEAM_BLUE);
+						}
+					}
+				}
+			}
+		}
+
 		return Plugin_Handled;
 	}
 
@@ -497,16 +537,60 @@ public Action OnGameMode_BossSetup()
 
 public Action OnBossSetHP_Pre(int BossEntity, int &BossMaxHealth)
 {
-	if(CurrentBossGame != BossVsBossGameMode) return Plugin_Continue;
-	//if(!ValidPlayer(BossEntity)) return;
+	if(CurrentBossGame == BossVsBossGameMode)
+	{
+		//if(!ValidPlayer(BossEntity)) return;
 
-	//DP("OnBossSetHP_Pre %d",BossEntity);
+		//DP("OnBossSetHP_Pre %d",BossEntity);
 
-	BossMaxHealth = 1000;
-	//int BossMaxHealth = HealthCalc( 760.8, float( CountBossTeam(BossEntity) ), 1.0, 1.0341, 2046.0 );
-	//VSHA_SetBossHealth(BossEntity, BossMaxHealth);
-	//VSHA_SetBossMaxHealth(BossEntity, BossMaxHealth);
-	//BossMaxHealth = 1000;
+		BossMaxHealth = 1000;
+		//int BossMaxHealth = HealthCalc( 760.8, float( CountBossTeam(BossEntity) ), 1.0, 1.0341, 2046.0 );
+		//VSHA_SetBossHealth(BossEntity, BossMaxHealth);
+		//VSHA_SetBossMaxHealth(BossEntity, BossMaxHealth);
+		//BossMaxHealth = 1000;
+		return Plugin_Handled;
+	}
+	else if(CurrentBossGame == DuoBossGameMode)
+	{
+		BossMaxHealth = RoundToFloor(float(VSHA_GetBossMaxHealth(BossEntity)) / 3.0);
+
+		//VSHA_SetBossHealth(BossEntity, GBMaxHealth);
+		//VSHA_SetBossMaxHealth(BossEntity, GBMaxHealth);
+
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
+}
+/*
+public void OnBossSetHP_Post(int iEntity)
+{
+	if(CurrentBossGame <= 0) return;
+	char sBossName[32];
+	char sClientName[32];
+
+	if(VSHA_IsBossPlayer(iEntity))
+	{
+		if(VSHA_GetBossHealth(iEntity)>0)
+		{
+			if(VSHA_GetBossName(iEntity,STRING(sBossName)))
+			{
+				GetClientName(iEntity,STRING(sClientName));
+				CPrintToChatAll("%s %s became %s starting with %d HP",VSHA_COLOR,sClientName,sBossName,VSHA_GetBossHealth(iEntity));
+			}
+		}
+		else
+		{
+			if(VSHA_GetBossName(iEntity,STRING(sBossName)))
+			{
+				GetClientName(iEntity,STRING(sClientName));
+				LogError("[VSHA] %s became %s starting with %d HP",sClientName,sBossName,VSHA_GetBossMaxHealth(iEntity));
+			}
+		}
+	}
+}*/
+public Action OnMessageTimer(int iiBoss)
+{
+	if(CurrentBossGame <= 0) return Plugin_Continue;
 	return Plugin_Handled;
 }
 
@@ -522,6 +606,7 @@ public Action MusicTimerStart(Handle timer, int userid)
 	}
 }*/
 
+// temp health fix for all game modes
 public void OnEquipPlayer_Post(int iClient)
 {
 	if(!ThisEnabled.BoolValue) return;
@@ -554,10 +639,10 @@ public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 		if(GameModeMusicEnable.BoolValue)
 		{
 			BossTheme = BossVsBoss1;
-			time = 94.0;
+			time = BossVsBoss1Time;
 		}
 
-		LoopIngamePlayers(BossEntity)
+		LoopIngameClients(BossEntity)
 		{
 			if(VSHA_IsBossPlayer(BossEntity))
 			{
@@ -567,6 +652,14 @@ public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 				//SetEntProp(BossEntity, Prop_Data, "m_iMaxHealth", 1000);
 				//SetEntProp(BossEntity, Prop_Data, "m_iHealth", 1000);
 				//TF2_RegeneratePlayer(BossEntity);
+
+				char sBossName[32];
+				char sClientName[32];
+				if(VSHA_GetBossName(BossEntity,STRING(sBossName)))
+				{
+					GetClientName(BossEntity,STRING(sClientName));
+					CPrintToChatAll("%s %s became %s starting with %d HP",VSHA_COLOR,sClientName,sBossName,1000);
+				}
 			}
 			else
 			{
@@ -577,14 +670,23 @@ public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 	}
 	else if(CurrentBossGame == DuoBossGameMode)
 	{
+		ThemeMusicIsPlaying = true;
 		LoopIngamePlayers(BossEntity)
 		{
 			if(VSHA_IsBossPlayer(BossEntity))
 			{
-				int GBMaxHealth = RoundToFloor(float(VSHA_GetBossMaxHealth(BossEntity)) / 2.0);
+				int GBMaxHealth = RoundToFloor(float(VSHA_GetBossMaxHealth(BossEntity)) / 3.0);
 
 				VSHA_SetBossHealth(BossEntity, GBMaxHealth);
 				VSHA_SetBossMaxHealth(BossEntity, GBMaxHealth);
+
+				char sBossName[32];
+				char sClientName[32];
+				if(VSHA_GetBossName(BossEntity,STRING(sBossName)))
+				{
+					GetClientName(BossEntity,STRING(sClientName));
+					CPrintToChatAll("%s %s became %s starting with %d HP",VSHA_COLOR,sClientName,sBossName,GBMaxHealth);
+				}
 			}
 			else
 			{
@@ -592,11 +694,10 @@ public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 				TF2_RegeneratePlayer(BossEntity);
 			}
 		}
-		ThemeMusicIsPlaying = true;
 		if(GameModeMusicEnable.BoolValue)
 		{
 			BossTheme = DuoBoss1;
-			time = 121.0;
+			time = DuoBoss1Time;
 		}
 	}
 
@@ -646,7 +747,21 @@ public void OnConfiguration_Load_Sounds(char[] cFile, char[] skey, char[] value,
 		PrintToChatAll("Loading GAME MODE THEMES %s = %s",skey,value);
 	}
 }
+public void OnConfiguration_Load_Misc(char[] cFile, char[] skey, char[] value)
+{
+	if(!StrEqual(cFile, ThisConfigurationFile)) return;
 
+	if(StrEqual(skey, "BossVsBoss1Time"))
+	{
+		if(StrEqual(value,"")) return;
+		BossVsBoss1Time = StringToFloat(value);
+	}
+	else if(StrEqual(skey, "DuoBoss1Time"))
+	{
+		if(StrEqual(value,"")) return;
+		DuoBoss1Time = StringToFloat(value);
+	}
+}
 public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
 {
 	if(CurrentBossGame != BossVsBossGameMode) return;
@@ -654,14 +769,14 @@ public void OnBossTimer(int iiBoss, int &curHealth, int &curMaxHp, int buttons, 
 	{
 		if(GetClientTeam(iiBoss)==2)
 		{
-			SetPlayerRGB(iiBoss,100,0,0);
+			SetPlayerRGB(iiBoss,255,0,0);
 			SetEntityAlpha(iiBoss,255);
 			//new wpn=W3GetCurrentWeaponEnt(client);
 			//SetEntityAlpha(wpn,0);
 		}
 		else if(GetClientTeam(iiBoss)==3)
 		{
-			SetPlayerRGB(iiBoss,0,0,100);
+			SetPlayerRGB(iiBoss,0,0,255);
 			SetEntityAlpha(iiBoss,255);
 			//new wpn=W3GetCurrentWeaponEnt(client);
 			//SetEntityAlpha(wpn,0);

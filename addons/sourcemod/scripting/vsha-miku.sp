@@ -10,7 +10,7 @@ public Plugin myinfo =
 	name 			= "Hatsunemiku",
 	author 			= "Valve",
 	description 		= "Hatsunemiku",
-	version 		= "1.1",
+	version 		= "1.2",
 	url 			= "http://en.wikipedia.org/wiki/Hatsune_Miku"
 }
 
@@ -568,6 +568,7 @@ public void OnBossSelected(int iiBoss)
 		if(iiBoss == Hale[iiBoss])
 		{
 			Hale[iiBoss]=0;
+			HaleCharge[iiBoss]=0;
 		}
 		return;
 	}
@@ -741,7 +742,7 @@ public void OnPrepBoss(int iiBoss)
 }
 public Action OnMusic(int iiBoss, char BossTheme[PATHX], float &time)
 {
-	if (iiBoss != Hale[iiBoss])
+	if (iiBoss<0 || iiBoss != Hale[iiBoss])
 	{
 		return Plugin_Continue;
 	}
