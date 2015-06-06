@@ -12,7 +12,7 @@ public Action OnGetMaxHealth(int client, int &maxhealth)
 	{
 		return Plugin_Continue;
 	}
-	if(!ValidPlayer(client,true) return Plugin_Continue;
+	if(!ValidPlayer(client,true)) return Plugin_Continue;
 	if(!bIsBoss[client]) return Plugin_Continue;
 	if(iBossMaxHealth[client]<=0) return Plugin_Continue;
 
