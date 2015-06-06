@@ -280,6 +280,9 @@ native void VSHA_BossSelected_Forward(int client);
 native void VSHA_SetClientQueuePoints(int client, int points);
 native int VSHA_GetClientQueuePoints(int client);
 
+// BOSS
+native bool VSHA_GetBossName(int iiBoss, char[] BossShortName, int size);
+
 native int VSHA_AddBoss(int iiBoss);
 // USE STOCK if your just going to add a random boss VSHA_AddBossStock();
 stock int VSHA_AddBossStock(int iiBoss = -1)
@@ -325,9 +328,9 @@ enum VSHAHookType
 	VSHAHook_OnBossKillBuilding,
 	VSHAHook_OnBossAirblasted,
 	VSHAHook_OnBossSelected,
-	VSHAHook_OnBossSetHP_Pre,
-	VSHAHook_OnBossSetHP,
-	VSHAHook_OnBossSetHP_Post,
+	VSHAHook_OnBossSetHP_Pre, // make health changes here (non-boss)
+	VSHAHook_OnBossSetHP,	// for bosses to make health changes
+	VSHAHook_OnBossSetHP_Post, // read only, please don't make any changes here
 	VSHAHook_OnBossRage,
 	VSHAHook_OnBossTimer,
 	VSHAHook_OnBossTimer_1_Second,

@@ -486,6 +486,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHA_GetClientQueuePoints",Native_GetClientQueuePoints);
 	CreateNative("VSHA_AddBoss",Native_AddBoss);
 
+	CreateNative("VSHA_GetBossName", Native_GetBossName);
+
 	// may use in future.. depends
 	//vsha_Events_AskPluginLoad2();
 
@@ -850,13 +852,13 @@ public void UnRegisterNonBossAddon(Handle pluginhndl)
 
 	hArrayNonBossSubplugins.Erase(iPlugin);
 }
-public bool GetBossName(Handle pluginhandle, char BossName[32])
+public bool GetBossName(Handle pluginhandle, char[] BossName, int stringsize)
 {
 	int BossPluginID = FindByBossSubPluginByID(pluginhandle);
 	if(BossPluginID > -1)
 	{
 		StringMap BossSubplug = hArrayBossSubplugins.Get(BossPluginID);
-		return BossSubplug.GetString("BossLongName", STRING(BossName));
+		return BossSubplug.GetString("BossLongName", BossName, stringsize);
 	}
 	return false;
 }
@@ -1643,3 +1645,14 @@ public int Native_SetPluginModel(Handle plugin, int numParams)
 	return false;
 }
 
+public int Native_GetBossName(Handle plugin, int numParams)
+{
+	int iiBoss = GetNativeCell(1);
+	char[] sBossName = "";
+	int stringsize = GetNativeCell(3);
+	if(GetNativeString(2, sBossName, stringsize) == SP_ERROR_NONE)
+	{
+		return GetBossName(Storage[iiBoss],sBossName,stringsize);
+	}
+	return false;
+}
