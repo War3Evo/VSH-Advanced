@@ -278,10 +278,6 @@ public void Load_VSHAHooks()
 	{
 		LogError("Error loading VSHAHook_OnBossWin forwards for miku.");
 	}
-	//if(!VSHAHookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
-	//{
-		//LogError("Error loading VSHAHook_OnMessageTimer forwards for miku.");
-	//}
 	if(!VSHAHookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
 	{
 		LogError("Error loading VSHAHook_OnBossAirblasted forwards for miku.");
@@ -310,22 +306,14 @@ public void Load_VSHAHooks()
 	{
 		LogError("Error loading VSHAHook_OnMusic forwards for miku.");
 	}
-	//if(!VSHAHookEx(VSHAHook_OnModelTimer, OnModelTimer))
-	//{
-		//LogError("Error loading VSHAHook_OnModelTimer forwards for miku.");
-	//}
 	if(!VSHAHookEx(VSHAHook_OnBossRage, OnBossRage))
 	{
 		LogError("Error loading VSHAHook_OnBossRage forwards for miku.");
 	}
-	if(!VSHAHookEx(VSHAHook_OnGameOver, OnGameOver))
+	if(!VSHAHookEx(VSHAHook_ShowBossHelpMenu, OnShowBossHelpMenu))
 	{
-		LogError("Error loading VSHAHook_OnGameOver forwards for miku.");
+		LogError("Error loading VSHAHook_ShowBossHelpMenu forwards for saxton hale.");
 	}
-	//if(!VSHAHookEx(VSHAHook_OnBossTimer_1_Second, OnBossTimer_1_Second))
-	//{
-		//LogError("Error loading VSHAHook_OnGameOver forwards for miku.");
-	//}
 }
 
 public void UnLoad_VSHAHooks()
@@ -350,13 +338,13 @@ public void UnLoad_VSHAHooks()
 	{
 		LogError("Error unloading VSHAHook_OnBossWin forwards for miku.");
 	}
-	//if(!VSHAUnhookEx(VSHAHook_OnMessageTimer, OnMessageTimer))
-	//{
-		//LogError("Error unloading VSHAHook_OnMessageTimer forwards for miku.");
-	//}
 	if(!VSHAUnhookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
 	{
 		LogError("Error unloading VSHAHook_OnBossAirblasted forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossChangeClass, OnChangeClass))
+	{
+		LogError("Error loading VSHAHook_OnBossChangeClass forwards for saxton hale.");
 	}
 	if(!VSHAUnhookEx(VSHAHook_OnBossSetHP, OnBossSetHP))
 	{
@@ -378,13 +366,13 @@ public void UnLoad_VSHAHooks()
 	{
 		LogError("Error unloading VSHAHook_OnMusic forwards for miku.");
 	}
-	//if(!VSHAUnhookEx(VSHAHook_OnModelTimer, OnModelTimer))
-	//{
-		//LogError("Error unloading VSHAHook_OnModelTimer forwards for miku.");
-	//}
 	if(!VSHAUnhookEx(VSHAHook_OnBossRage, OnBossRage))
 	{
 		LogError("Error unloading VSHAHook_OnBossRage forwards for miku.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_ShowBossHelpMenu, OnShowBossHelpMenu))
+	{
+		LogError("Error unloading VSHAHook_ShowBossHelpMenu forwards for saxton hale.");
 	}
 }
 
@@ -392,11 +380,13 @@ public void OnAllPluginsLoaded()
 {
 	hThisPlugin = view_as<Handle>( VSHA_RegisterBoss("miku","Hatsunemiku") );
 
-	//HookEvent("player_changeclass", ChangeClass);
-
 	if(!VSHAHookEx(VSHAHook_OnBossSelected, OnBossSelected))
 	{
 		LogError("Error loading VSHAHook_OnBossSelected forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnGameOver, OnGameOver))
+	{
+		LogError("Error loading VSHAHook_OnGameOver forwards for miku.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnConfiguration_Load_Sounds, OnConfiguration_Load_Sounds))
 	{
@@ -409,10 +399,6 @@ public void OnAllPluginsLoaded()
 	if(!VSHAHookEx(VSHAHook_OnConfiguration_Load_Models, OnConfiguration_Load_Models))
 	{
 		LogError("Error loading VSHAHook_OnConfiguration_Load_Models forwards for saxton hale.");
-	}
-	if(!VSHAHookEx(VSHAHook_ShowBossHelpMenu, OnShowBossHelpMenu))
-	{
-		LogError("Error loading VSHAHook_ShowBossHelpMenu forwards for saxton hale.");
 	}
 
 	// LoadConfiguration ALWAYS after VSHAHook
@@ -519,31 +505,6 @@ public void OnGameOver() // best play to reset all variables
 	// Dynamically unload private forwards
 	UnLoad_VSHAHooks();
 }
-/*        NO LONGER USING.. HANDLED INTERNALLY, unless you just want to handle it.
-public Action OnMessageTimer(int iiBoss)
-{
-	if ( iiBoss!= Hale[iiBoss] ) return Plugin_Continue;
-	//SetHudTextParams(-1.0, 0.4, 10.0, 255, 255, 255, 255);
-	char text[PATHX];
-	int client;
-	for (client = 1; client <= MaxClients; client++)
-	{
-		if ( !IsValidClient(client) ) continue;
-		if ( client == Hale[client] )
-		{
-			Format( text, sizeof(text), "%N became Saxton Hale with %i HP", client, VSHA_GetBossMaxHealth(client) );
-			break;
-		}
-	}
-	for (client = 1; client <= MaxClients; client++)
-	{
-		if ( IsValidClient(client) )
-		{
-			SetHudTextParams(-1.0, 0.60, HudTextScreenHoldTime, 90, 255, 90, 200, 0, 0.0, 0.0, 0.0);
-			ShowHudText(client, -1, text);
-		}
-	}
-}*/
 public void OnBossAirblasted(Handle BossPlugin, Event event, int iiBoss)
 {
 	if (hThisPlugin != BossPlugin) return;
