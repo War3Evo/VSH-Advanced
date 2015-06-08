@@ -4,13 +4,13 @@ public Action Timer_DrawGame(Handle timer)
 {
 	if (iLowestBossHP < CountDownHealthLimit.IntValue || CheckRoundState() != 1) return Plugin_Stop;
 
-	int time = timeleft;
+	int itime = timeleft;
 	timeleft--;
 	char timeDisplay[6];
-	if (time/60 > 9) IntToString(time/60, timeDisplay, sizeof(timeDisplay));
-	else Format(timeDisplay, sizeof(timeDisplay), "0%i", time/60);
+	if (itime/60 > 9) IntToString(time/60, timeDisplay, sizeof(timeDisplay));
+	else Format(timeDisplay, sizeof(timeDisplay), "0%i", itime/60);
 
-	if (time%60 > 9) Format(timeDisplay, sizeof(timeDisplay), "%s:%i", timeDisplay, time%60);
+	if (itime%60 > 9) Format(timeDisplay, sizeof(timeDisplay), "%s:%i", timeDisplay, time%60);
 	else Format(timeDisplay, sizeof(timeDisplay), "%s:0%i", timeDisplay, time%60);
 
 	SetHudTextParams(-1.0, 0.17, 1.1, 255, 255, 255, 200);
@@ -18,7 +18,7 @@ public Action Timer_DrawGame(Handle timer)
 	{
 		if ( IsClientValid(client) && !(GetClientButtons(client) & IN_SCORE) ) ShowSyncHudText(client, TimeLeftHUD, timeDisplay);
 	}
-	switch ( time )
+	switch ( itime )
 	{
 		case 300:	EmitSoundToAll("vo/announcer_ends_5min.mp3");
 		case 120:	EmitSoundToAll("vo/announcer_ends_2min.mp3");

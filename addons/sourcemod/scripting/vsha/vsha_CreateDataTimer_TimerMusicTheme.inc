@@ -5,11 +5,11 @@ public Action TimerMusicTheme(Handle timer, DataPack pack)
 	if (Enabled && (CheckRoundState() == ROUNDSTATE_START_ROUND_TIMER || CheckRoundState() == ROUNDSTATE_EVENT_ROUND_START))
 	{
 		char sound[PATHX];
-		float time = -1.0;
+		float ftime = -1.0;
 
 		pack.Reset();
 		pack.ReadString( sound, sizeof(sound) );
-		time = pack.ReadFloat();
+		ftime = pack.ReadFloat();
 
 		//PrintToChatAll("sound: %s",sound);
 
@@ -20,12 +20,12 @@ public Action TimerMusicTheme(Handle timer, DataPack pack)
 				EmitSoundToAll(sound, _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, nullvec, nullvec, false, 0.0);
 				PrintToServer("[VSHA] Music Theme '%s' played.",sound);
 
-				if(time > 0.0)
+				if(ftime > 0.0)
 				{
 					DataPack SndPack = new DataPack();
 					SndPack.WriteString(sound);
-					SndPack.WriteFloat(time);
-					MusicTimer = CreateTimer(time, TimerMusicTheme, SndPack, TIMER_DATA_HNDL_CLOSE);
+					SndPack.WriteFloat(ftime);
+					MusicTimer = CreateTimer(ftime, TimerMusicTheme, SndPack, TIMER_DATA_HNDL_CLOSE);
 				}
 			}
 		}

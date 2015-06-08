@@ -9,7 +9,7 @@ public Action MusicPlay(Handle Timer, int userid)
 		return;
 	}
 	char sound[PATHX];
-	float time = -1.0;
+	float ftime = -1.0;
 	ClearTimer(MusicTimer);
 
 	sound[0] = '\0';
@@ -18,23 +18,23 @@ public Action MusicPlay(Handle Timer, int userid)
 	//SoundMap.SetString("Sound", sound);
 
 	//VSHA_SetVar(EventSound,SoundMap);
-	//VSHA_SetVar(EventTime,time);
+	//VSHA_SetVar(EventTime,ftime);
 	//VSHA_Private_Forward("VSHA_OnMusic");
 
 	if(AllowMusic)
 	{
-		VSHA_OnMusic(Storage[iClient], iClient, sound, time);
+		VSHA_OnMusic(Storage[iClient], iClient, sound, ftime);
 	}
 	else if(userid == -2)
 	{
 		// Send OnMusic to Game Mode Addon
-		VSHA_OnMusic(Storage[iClient], -2, sound, time);
+		VSHA_OnMusic(Storage[iClient], -2, sound, ftime);
 	}
 
 	//SoundMap = VSHA_GetVar(EventSound);
-	//time = view_as<float>(VSHA_GetVar(EventTime));
+	//ftime = view_as<float>(VSHA_GetVar(EventTime));
 
-	//PrintToChatAll("Music Time %.2f",time);
+	//PrintToChatAll("Music Time %.2f",ftime);
 
 	//SoundMap.GetString("Sound",STRING(sound));
 
@@ -48,14 +48,14 @@ public Action MusicPlay(Handle Timer, int userid)
 			EmitSoundToAll(sound, _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, nullvec, nullvec, false, 0.0);
 			PrintToServer("[VSHA] Music Theme '%s' played.",sound);
 
-			if ( time > 0.0 )
+			if ( ftime > 0.0 )
 			{
 				//PrintToChatAll("Started CreateDataTimer for MusicPlay");
 
 				DataPack SndPack = new DataPack();
 				SndPack.WriteString(sound);
-				SndPack.WriteFloat(time);
-				MusicTimer = CreateTimer(time, TimerMusicTheme, SndPack, TIMER_DATA_HNDL_CLOSE);
+				SndPack.WriteFloat(ftime);
+				MusicTimer = CreateTimer(ftime, TimerMusicTheme, SndPack, TIMER_DATA_HNDL_CLOSE);
 			}
 		}
 	}

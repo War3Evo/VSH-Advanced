@@ -613,7 +613,7 @@ public void OnPrepBoss(Handle BossPlugin, int iiBoss)
 		SetEntPropEnt(iiBoss, Prop_Send, "m_hActiveWeapon", SaxtonWeapon);
 	}
 }
-public Action OnMusic(Handle BossPlugin, int iiBoss, char BossTheme[PATHX], float &time)
+public Action OnMusic(Handle BossPlugin, int iiBoss, char BossTheme[PATHX], float &ftime)
 {
 	if (hThisPlugin != BossPlugin) return Plugin_Continue;
 
@@ -623,24 +623,24 @@ public Action OnMusic(Handle BossPlugin, int iiBoss, char BossTheme[PATHX], floa
 	}
 
 	//char BossTheme[256];
-	//float time;
+	//float ftime;
 
 	switch ( GetRandomInt(0, 2) )
 	{
 		case 0:
 		{
 			BossTheme = HaleTheme1;
-			time = 150.0;
+			ftime = 150.0;
 		}
 		case 1:
 		{
 			BossTheme = HaleTheme2;
-			time = 150.0;
+			ftime = 150.0;
 		}
 		case 2:
 		{
 			BossTheme = HaleTheme3;
-			time = 220.0;
+			ftime = 220.0;
 		}
 	}
 	//StringMap SoundMap = new StringMap();
