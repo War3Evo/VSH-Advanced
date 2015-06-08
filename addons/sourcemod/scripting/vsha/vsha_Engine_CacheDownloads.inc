@@ -2,12 +2,11 @@
 
 public void CacheDownloads()
 {
-	Call_StartForward(AddToDownloads);
+	VSHA_AddToDownloads();
 #if defined DEBUG
 	DEBUGPRINT1("VSH Engine::CacheDownloads() **** AddToDownloads Forward Called ****");
 	DEBUGPRINT3("VSH Engine::CacheDownloads() **** AddToDownloads Forward Called ****");
 #endif
-	Call_Finish();
 	AddFileToDownloadsTable("sound/saxton_hale/9000.wav");
 	PrecacheSound("saxton_hale/9000.wav", true);
 	PrecacheSound("vo/announcer_am_capincite01.wav", true);
