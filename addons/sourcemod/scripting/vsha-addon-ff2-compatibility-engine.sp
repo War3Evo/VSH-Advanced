@@ -26,6 +26,10 @@ ArrayList hArrayDownloads = null;
 
 bool areSubPluginsEnabled = false;
 
+Handle hThisPlugin = null;
+
+bool InRage[PLYR];
+
 #define MAJOR_REVISION "1"
 #define MINOR_REVISION "10"
 #define STABLE_REVISION "6"
@@ -515,6 +519,7 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 	//int ArgNum;
 	char s[10];
 
+	char life_name[32];
 	char ability_name2[64];
 	char plugin_name2[64];
 	char arg_string[64];
@@ -527,6 +532,9 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 			KvGetString(BossKV, "name",ability_name2,64);
 
 			KvGetString(BossKV, "plugin_name",plugin_name2,64);
+
+			KvGetString(BossKV, "life",life_name,64);
+			BossSubplug.SetString("life", life_name);
 
 			// example: ability1name
 			Format(sStoreString,32,"%sname",sAbility);
@@ -558,6 +566,10 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 		}
 	}
 
+	ReplaceString(STRING(characterShortName), characterName, " ", false);
+	MyStringMap.GetString("character",characterName);
+	hThisPlugin = view_as<Handle>( VSHA_RegisterBoss(characterShortName,characterName) );
+
 	hArrayBossSubplugins.Push(BossSubplug);
 }
 
@@ -567,6 +579,10 @@ public void LoadPluginForwards()
 	char sAbility[10];
 	char sGetString[64];
 	char sPluginNameString[PATHX];
+
+	char characterName[32];
+
+	char characterShortName[16];
 
 	bool found = false;
 
@@ -607,9 +623,6 @@ public void LoadPluginForwards()
 				if(PluginHandle != null)
 				{
 					LogError("Found %s plugin for hooking FF2 Functions!",sPluginNameString);
-					LogError("Found %s plugin for hooking FF2 Functions!",sPluginNameString);
-					LogError("Found %s plugin for hooking FF2 Functions!",sPluginNameString);
-					LogError("Found %s plugin for hooking FF2 Functions!",sPluginNameString);
 					funcID = GetFunctionByName(PluginHandle, "FF2_PreAbility");
 					if(funcID != INVALID_FUNCTION)
 					{
@@ -629,7 +642,7 @@ public void LoadPluginForwards()
 						// hook function
 						if(AddToForward(p_OnAbility, PluginHandle, funcID))
 						{
-							LogError("AddToForward SuccessFul!");
+							LogError("FF2_OnAbility AddToForward SuccessFul!");
 						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnMusic");
@@ -640,7 +653,7 @@ public void LoadPluginForwards()
 						// hook function
 						if(AddToForward(p_OnMusic, PluginHandle, funcID))
 						{
-							LogError("AddToForward SuccessFul!");
+							LogError("FF2_OnMusic AddToForward SuccessFul!");
 						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnTriggerHurt");
@@ -651,7 +664,7 @@ public void LoadPluginForwards()
 						// hook function
 						if(AddToForward(p_OnTriggerHurt, PluginHandle, funcID))
 						{
-							LogError("AddToForward SuccessFul!");
+							LogError("FF2_OnTriggerHurt AddToForward SuccessFul!");
 						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnSpecialSelected");
@@ -662,7 +675,7 @@ public void LoadPluginForwards()
 						// hook function
 						if(AddToForward(p_OnSpecialSelected, PluginHandle, funcID))
 						{
-							LogError("AddToForward SuccessFul!");
+							LogError("FF2_OnSpecialSelected AddToForward SuccessFul!");
 						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnAddQueuePoints");
@@ -673,7 +686,7 @@ public void LoadPluginForwards()
 						// hook function
 						if(AddToForward(p_OnAddQueuePoints, PluginHandle, funcID))
 						{
-							LogError("AddToForward SuccessFul!");
+							LogError("FF2_OnAddQueuePoints AddToForward SuccessFul!");
 						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnLoadCharacterSet");
@@ -684,7 +697,7 @@ public void LoadPluginForwards()
 						// hook function
 						if(AddToForward(p_OnLoadCharacterSet, PluginHandle, funcID))
 						{
-							LogError("AddToForward SuccessFul!");
+							LogError("FF2_OnLoadCharacterSet AddToForward SuccessFul!");
 						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnLoseLife");
@@ -695,7 +708,7 @@ public void LoadPluginForwards()
 						// hook function
 						if(AddToForward(p_OnLoseLife, PluginHandle, funcID))
 						{
-							LogError("AddToForward SuccessFul!");
+							LogError("FF2_OnLoseLife AddToForward SuccessFul!");
 						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnAlivePlayersChanged");
@@ -706,7 +719,7 @@ public void LoadPluginForwards()
 						// hook function
 						if(AddToForward(p_OnAlivePlayersChanged, PluginHandle, funcID))
 						{
-							LogError("AddToForward SuccessFul!");
+							LogError("FF2_OnAlivePlayersChanged AddToForward SuccessFul!");
 						}
 					}
 				}
@@ -1190,10 +1203,217 @@ public int Native_IsVSHMap(Handle plugin, int numParams)
 
 
 
+///////////////// VSHA interface
+public void OnBossRage(Handle BossPlugin, int iiBoss)
+{
+	if (hThisPlugin != BossPlugin) return;
+
+	// Helps prevent multiple rages
+	InRage[iiBoss] = true;
+
+	char ability[10];
+	char sStringHolder[10];
+	char lives[MAXRANDOMS][3];
+
+	int count = hArrayBossSubplugins.Length;
+	for (int x = 0; x < count; x++)
+	{
+		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
+
+		for(int i=1; ; i++)
+		{
+			Format(sAbility,10,"ability%i",i);
+			Format(sGetString,64,"%sarg0",sAbility);
+
+			if(MyStringMap.GetString(sGetString, sStringHolder, 64))
+			{
+				if(StringToInt(sStringHolder)>0)
+				{
+					continue;
+				}
+
+				if(MyStringMap.GetString("life", sStringHolder, 64))
+				{
+					if(!sStringHolder[0])
+					{
+						char abilityName[64]; char pluginName[64];
+						Format(sGetString,64,"%sname",sAbility);
+						MyStringMap.GetString(sGetString, abilityName, 64)
+						Format(sGetString,64,"%splugin_name",sAbility);
+						MyStringMap.GetString(sGetString, pluginName, 64)
+						UseAbility(abilityName, pluginName, boss, 0);
+					}
+					else
+					{
+						int count=ExplodeString(ability, " ", lives, MAXRANDOMS, 3);
+						for(int j; j<count; j++)
+						{
+							if(StringToInt(lives[j])==BossLives[boss])
+							{
+								char abilityName[64]; char pluginName[64];
+								Format(sGetString,64,"%sname",sAbility);
+								MyStringMap.GetString(sGetString, abilityName, 64)
+								Format(sGetString,64,"%splugin_name",sAbility);
+								MyStringMap.GetString(sGetString, pluginName, 64)
+								UseAbility(abilityName, pluginName, boss, 0);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	float position[3];
+	GetEntPropVector(client, Prop_Send, "m_vecOrigin", position);
+
+	char sound[PLATFORM_MAX_PATH];
+	if(RandomSoundAbility("sound_ability", sound, PLATFORM_MAX_PATH, boss))
+	{
+		//FF2flags[Boss[boss]]|=FF2FLAG_TALKING;
+		EmitSoundToAll(sound, client, _, _, _, _, _, client, position);
+		EmitSoundToAll(sound, client, _, _, _, _, _, client, position);
+
+		for(int target=1; target<=MaxClients; target++)
+		{
+			if(IsClientInGame(target) && target!=Boss[boss])
+			{
+				EmitSoundToClient(target, sound, client, _, _, _, _, _, client, position);
+				EmitSoundToClient(target, sound, client, _, _, _, _, _, client, position);
+			}
+		}
+		FF2flags[Boss[boss]]&=~FF2FLAG_TALKING;
+	}
+	emitRageSound[boss]=true;
+}
 
 
 
 
 
+stock void UseAbility(const String:ability_name[], const String:plugin_name[], client, slot, buttonMode=0)
+{
+	bool enabled=true;
+	Call_StartForward(PreAbility);
+	Call_PushCell(client);
+	Call_PushString(plugin_name);
+	Call_PushString(ability_name);
+	Call_PushCell(slot);
+	Call_PushCellRef(enabled);
+	Call_Finish();
+
+	if(!enabled)
+	{
+		return;
+	}
+
+	Action action=Plugin_Continue;
+	Call_StartForward(OnAbility);
+	Call_PushCell(client);
+	Call_PushString(plugin_name);
+	Call_PushString(ability_name);
+	if(slot==-1)
+	{
+		Call_PushCell(3);  //Status - we're assuming here a life-loss ability will always be in use if it gets called
+		Call_Finish(action);
+	}
+	else if(!slot)
+	{
+		FF2flags[Boss[client]]&=~FF2FLAG_BOTRAGE;
+		Call_PushCell(3);  //Status - we're assuming here a rage ability will always be in use if it gets called
+		Call_Finish(action);
+		BossCharge[client][slot]=0.0;
+	}
+	else
+	{
+		SetHudTextParams(-1.0, 0.88, 0.15, 255, 255, 255, 255);
+		new button;
+		switch(buttonMode)
+		{
+			case 2:
+			{
+				button=IN_RELOAD;
+			}
+			default:
+			{
+				button=IN_DUCK|IN_ATTACK2;
+			}
+		}
+
+		if(GetClientButtons(Boss[client]) & button)
+		{
+			if(!(FF2flags[Boss[client]] & FF2FLAG_USINGABILITY))
+			{
+				FF2flags[Boss[client]]|=FF2FLAG_USINGABILITY;
+				switch(buttonMode)
+				{
+					case 2:
+					{
+						SetInfoCookies(Boss[client], 0, CheckInfoCookies(Boss[client], 0)-1);
+					}
+					default:
+					{
+						SetInfoCookies(Boss[client], 1, CheckInfoCookies(Boss[client], 1)-1);
+					}
+				}
+			}
+
+			if(BossCharge[client][slot]>=0.0)
+			{
+				Call_PushCell(2);  //Status
+				Call_Finish(action);
+				float charge=100.0*0.2/GetAbilityArgumentFloat(client, plugin_name, ability_name, 1, 1.5);
+				if(BossCharge[client][slot]+charge<100.0)
+				{
+					BossCharge[client][slot]+=charge;
+				}
+				else
+				{
+					BossCharge[client][slot]=100.0;
+				}
+			}
+			else
+			{
+				Call_PushCell(1);  //Status
+				Call_Finish(action);
+				BossCharge[client][slot]+=0.2;
+			}
+		}
+		else if(BossCharge[client][slot]>0.3)
+		{
+			float angles[3];
+			GetClientEyeAngles(Boss[client], angles);
+			if(angles[0]<-45.0)
+			{
+				Call_PushCell(3);
+				Call_Finish(action);
+				Handle data;
+				CreateDataTimer(0.1, Timer_UseBossCharge, data);
+				WritePackCell(data, client);
+				WritePackCell(data, slot);
+				WritePackFloat(data, -1.0*GetAbilityArgumentFloat(client, plugin_name, ability_name, 2, 5.0));
+				ResetPack(data);
+			}
+			else
+			{
+				Call_PushCell(0);  //Status
+				Call_Finish(action);
+				BossCharge[client][slot]=0.0;
+			}
+		}
+		else if(BossCharge[client][slot]<0.0)
+		{
+			Call_PushCell(1);  //Status
+			Call_Finish(action);
+			BossCharge[client][slot]+=0.2;
+		}
+		else
+		{
+			Call_PushCell(0);  //Status
+			Call_Finish(action);
+		}
+	}
+}
 
 
