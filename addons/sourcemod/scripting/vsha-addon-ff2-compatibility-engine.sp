@@ -161,6 +161,11 @@ public void OnAllPluginsLoaded()
 	if(!FindCharacters())
 	{
 		LogError("[VSHA] FindCharacters Failed!");
+		LogError("[VSHA] FindCharacters Failed!");
+		LogError("[VSHA] FindCharacters Failed!");
+		LogError("[VSHA] FindCharacters Failed!");
+		LogError("[VSHA] FindCharacters Failed!");
+		LogError("[VSHA] FindCharacters Failed!");
 	}
 }
 
@@ -355,6 +360,7 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 
 	StringMap BossSubplug = new StringMap(); //CreateTrie();
 
+	PrintToServer("character %s",character);
 	BossSubplug.SetString("character", character);
 
 	BossKV=CreateKeyValues("character");
@@ -396,8 +402,12 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 	BossSubplug.SetString("filename", character);
 	BossSubplug.SetString("name", config);
 
+	PrintToServer("filename %s",character);
+	PrintToServer("name %s",config);
+
 	BossSubplug.SetValue("bBlockVoice", KvGetNum(BossKV, "sound_block_vo", 0));
 	BossSubplug.SetValue("BossSpeed", KvGetFloat(BossKV, "maxspeed", 340.0));
+
 	//BossRageDamage=KvGetFloat(BossKV, "ragedamage", 1900.0);
 
 	// For Downloads
@@ -478,10 +488,12 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 			// example: ability1name
 			Format(sStoreString,32,"%sname",sAbility);
 			BossSubplug.SetString(sStoreString, ability_name2);
+			PrintToServer("ability name %s",sStoreString);
 
 			// example: ability1plugin_name
 			Format(sStoreString,32,"%splugin_name",sAbility);
 			BossSubplug.SetString(sStoreString, plugin_name2);
+			PrintToServer("plugin_name %s",sStoreString);
 
 			for(int x=1; ; x++)
 			{
@@ -496,6 +508,7 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 				// example: ability1arg0
 				Format(sStoreString,32,"%sarg%i",sAbility,ArgNum);
 				BossSubplug.SetValue(sStoreString, ArgNum);
+				PrintToServer("sStoreString %s",sStoreString);
 			}
 		}
 	}
