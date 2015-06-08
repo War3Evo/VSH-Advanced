@@ -167,7 +167,8 @@ native Handle VSHA_RegisterNonBossAddon();
 native void VSHA_UnRegisterNonBossAddon();
 
 // BOSS
-native Handle VSHA_RegisterBoss(char BossShortName[16], char BossLongName[32]); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
+// set bypassHandleRestrictions to true when you have more than one boss to register inside the same plugin
+native Handle VSHA_RegisterBoss(char BossShortName[16], char BossLongName[32], bool bypassHandleRestrictions=false); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
 
 // BOSS
 native Handle VSHA_GetBossPluginHandle(int iiBoss);

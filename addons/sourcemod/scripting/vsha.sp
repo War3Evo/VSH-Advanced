@@ -523,7 +523,8 @@ public int Native_RegisterBossSubplugin(Handle plugin, int numParams)
 	char BossSubPluginName[32];
 	GetNativeString(2, BossSubPluginName, sizeof(BossSubPluginName));
 	VSHAError erroar;
-	Handle BossHandle = RegisterBoss( plugin, ShortBossSubPluginName, BossSubPluginName, erroar ); //ALL PROPS TO COOKIES.NET AKA COOKIES.IO
+	bool bypassHandleRestrictions = view_as<bool>(GetNativeCell(1));
+	Handle BossHandle = RegisterBoss( plugin, ShortBossSubPluginName, BossSubPluginName, erroar, bypassHandleRestrictions ); //ALL PROPS TO COOKIES.NET AKA COOKIES.IO
 	return view_as<int>( BossHandle );
 }
 
@@ -859,7 +860,7 @@ public bool GetBossName(Handle pluginhandle, char[] BossName, int stringsize)
 	}
 	return false;
 }
-public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const char longname[32], VSHAError &error)
+public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const char longname[32], VSHAError &error, bool bypassHandleRestrictions)
 {
 	if (!ValidateName(shortname))
 	{
@@ -867,11 +868,16 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 		error = Error_InvalidName;
 		return null;
 	}
-	if (FindByBossSubPlugin(pluginhndl) != null)
+	// allows us to store multiple bosses from the same plugin
+	// if we set bypassHandleRestrictions to true
+	if(!bypassHandleRestrictions)
 	{
-		LogError("**** RegisterBoss - Boss Subplugin Already Registered ****");
-		error = Error_SubpluginAlreadyRegistered;
-		return null;
+		if (FindByBossSubPlugin(pluginhndl) != null)
+		{
+			LogError("**** RegisterBoss - Boss Subplugin Already Registered ****");
+			error = Error_SubpluginAlreadyRegistered;
+			return null;
+		}
 	}
 	if (FindBossName(shortname) != null)
 	{
