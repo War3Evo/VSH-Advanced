@@ -112,9 +112,6 @@ Handle DrawGameTimer = null;
 Handle hHudSynchronizer = null;
 Handle hHudSynchronizer2 = null;
 
-//Forward Handles
-Handle AddToDownloads;
-
 // may use later?
 //Handle g_VSHA_GlobalEventFH;
 any VSHA_VarArr[VSHA_Var];

@@ -377,10 +377,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	PrintToServer("");
 	PrintToServer("");
 
-	// F O R W A R D S ==============================================================================================
-	AddToDownloads = CreateGlobalForward("VSHA_AddToDownloads", ET_Ignore);
-	//===========================================================================================================================
-
 	// N A T I V E S ============================================================================================================
 	CreateNative("VSHA_LoadConfiguration", Native_LoadConfigurationSubplugin);
 

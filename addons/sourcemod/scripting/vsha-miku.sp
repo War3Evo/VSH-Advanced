@@ -144,7 +144,7 @@ stock const char MikuRandomVoice[][] = {
 	"saxton_hale/miku/miku_what_is_this.mp3"
 };
 
-public void VSHA_AddToDownloads()
+public void OnAddToDownloads()
 {
 	char s[PLATFORM_MAX_PATH];
 	int i = 0;
@@ -380,6 +380,10 @@ public void OnAllPluginsLoaded()
 {
 	hThisPlugin = view_as<Handle>( VSHA_RegisterBoss("miku","Hatsunemiku") );
 
+	if(!VSHAHookEx(VSHAHook_AddToDownloads, OnAddToDownloads))
+	{
+		LogError("Error loading VSHAHook_AddToDownloads forwards for saxton hale.");
+	}
 	if(!VSHAHookEx(VSHAHook_OnBossSelected, OnBossSelected))
 	{
 		LogError("Error loading VSHAHook_OnBossSelected forwards for saxton hale.");
