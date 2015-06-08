@@ -312,7 +312,7 @@ native Handle FF2_GetSpecialKV(int boss, int specialIndex=0);
  * @param client	Client's index
  * @return			Client's FF2 flags
  */
-native void FF2_GetFF2flags(int client);
+native int FF2_GetFF2flags(int client);
 
 /**
  * Sets a client's flags for FF2
