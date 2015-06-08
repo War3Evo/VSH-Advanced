@@ -338,9 +338,9 @@ stock void EnableSubPlugins(bool force=false)
 
 				for (int x = 0; x < count; x++)
 				{
-					StringMap MyStringMap = hArrayBossSubplugins.Get(x);
+					StringMap MyStringMap3 = hArrayBossSubplugins.Get(x);
 
-					if(MyStringMap.GetString(sFindString, sPluginNameString, 64))
+					if(MyStringMap3.GetString(sFindString, sPluginNameString, 64))
 					{
 						if(StrContains(filename, sPluginNameString, false)!=-1)
 						{
@@ -445,6 +445,14 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 
 	BossSubplug.SetString("filename", character);
 	BossSubplug.SetString("name", config);
+
+	char characterShortName[16];
+	char characterLongName[32];
+
+	strcopy(STRING(characterLongName), config);
+
+	ReplaceString(STRING(characterShortName), characterLongName, " ", false);
+	hThisPlugin = view_as<Handle>( VSHA_RegisterBoss(characterShortName,characterLongName) );
 
 	PrintToServer("filename %s",character);
 	PrintToServer("name %s",config);
@@ -566,10 +574,6 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 		}
 	}
 
-	ReplaceString(STRING(characterShortName), characterName, " ", false);
-	MyStringMap.GetString("character",characterName);
-	hThisPlugin = view_as<Handle>( VSHA_RegisterBoss(characterShortName,characterName) );
-
 	hArrayBossSubplugins.Push(BossSubplug);
 }
 
@@ -579,10 +583,6 @@ public void LoadPluginForwards()
 	char sAbility[10];
 	char sGetString[64];
 	char sPluginNameString[PATHX];
-
-	char characterName[32];
-
-	char characterShortName[16];
 
 	bool found = false;
 
@@ -595,7 +595,7 @@ public void LoadPluginForwards()
 	int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
 	for (int x = 0; x < count; x++)
 	{
-		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
+		StringMap MyStringMap2 = hArrayBossSubplugins.Get(x);
 
 //sm plugins load freaks/shadow93_bosses.ff2
 
@@ -606,7 +606,7 @@ public void LoadPluginForwards()
 
 			LogError("LOOKING FOR sGetString %s FF2 Functions!",sGetString);
 
-			if(MyStringMap.GetString(sGetString, sPluginNameString, 64))
+			if(MyStringMap2.GetString(sGetString, sPluginNameString, 64))
 			{
 				LogError("LOOKING FOR sPluginNameString %s FF2 Functions!",sPluginNameString);
 
@@ -1211,7 +1211,8 @@ public void OnBossRage(Handle BossPlugin, int iiBoss)
 	// Helps prevent multiple rages
 	InRage[iiBoss] = true;
 
-	char ability[10];
+	char sAbility[10];
+	char sGetString[10];
 	char sStringHolder[10];
 	char lives[MAXRANDOMS][3];
 
@@ -1238,24 +1239,24 @@ public void OnBossRage(Handle BossPlugin, int iiBoss)
 					{
 						char abilityName[64]; char pluginName[64];
 						Format(sGetString,64,"%sname",sAbility);
-						MyStringMap.GetString(sGetString, abilityName, 64)
+						MyStringMap.GetString(sGetString, abilityName, 64);
 						Format(sGetString,64,"%splugin_name",sAbility);
-						MyStringMap.GetString(sGetString, pluginName, 64)
-						UseAbility(abilityName, pluginName, boss, 0);
+						MyStringMap.GetString(sGetString, pluginName, 64);
+						UseAbility(abilityName, pluginName, iiBoss, 0);
 					}
 					else
 					{
-						int count=ExplodeString(ability, " ", lives, MAXRANDOMS, 3);
-						for(int j; j<count; j++)
+						int mycount=ExplodeString(sStringHolder, " ", lives, MAXRANDOMS, 3);
+						for(int j; j<mycount; j++)
 						{
-							if(StringToInt(lives[j])==BossLives[boss])
+							if(StringToInt(lives[j])==VSHA_GetLives(iiBoss))
 							{
 								char abilityName[64]; char pluginName[64];
 								Format(sGetString,64,"%sname",sAbility);
-								MyStringMap.GetString(sGetString, abilityName, 64)
+								MyStringMap.GetString(sGetString, abilityName, 64);
 								Format(sGetString,64,"%splugin_name",sAbility);
-								MyStringMap.GetString(sGetString, pluginName, 64)
-								UseAbility(abilityName, pluginName, boss, 0);
+								MyStringMap.GetString(sGetString, pluginName, 64);
+								UseAbility(abilityName, pluginName, iiBoss, 0);
 								break;
 							}
 						}
@@ -1264,6 +1265,7 @@ public void OnBossRage(Handle BossPlugin, int iiBoss)
 			}
 		}
 	}
+	/*
 
 	float position[3];
 	GetEntPropVector(client, Prop_Send, "m_vecOrigin", position);
@@ -1283,20 +1285,39 @@ public void OnBossRage(Handle BossPlugin, int iiBoss)
 				EmitSoundToClient(target, sound, client, _, _, _, _, _, client, position);
 			}
 		}
-		FF2flags[Boss[boss]]&=~FF2FLAG_TALKING;
+		//FF2flags[Boss[boss]]&=~FF2FLAG_TALKING;
 	}
-	emitRageSound[boss]=true;
+	//emitRageSound[boss]=true;
+	*/
 }
 
 
 
 
+/**
+ * FF2_ONABILITY IS KNOWN TO BE BUGGED AND WILL NOT BE FIXED TO PRESERVE BACKWARDS COMPATABILITY.  DO NOT USE IT.
+ * Called when a Boss uses an ability (Rage, jump, teleport, etc)
+ * Called every 0.2 seconds for charge abilities
+ *
+ * Use FF2_PreAbility with enabled=false ONLY to prevent FF2_OnAbility!
+ *
+ * @param boss	 		Boss's index
+ * @param pluginName	Name of plugin with this ability
+ * @param abilityName 	Name of ability
+ * @param slot			Slot of ability (THIS DOES NOT RETURN WHAT YOU THINK IT RETURNS FOR FF2_ONABILITY-if you insist on using this, refer to freak_fortress_2.sp to see what it actually does)
+ * 							0 - Rage or life-loss
+ * 							1 - Jump or teleport
+ * 							2 - Other
+ * @param status		Status of ability (DO NOT ACCESS THIS.  IT DOES NOT EXIST AND MIGHT CRASH YOUR SERVER)
+ * @return				Plugin_Stop can not prevent the ability. Use FF2_PreAbility with enabled=false
+ */
+//forward void FF2_PreAbility(int boss, const char[] pluginName, const char[] abilityName, int slot, bool &enabled);
 
-stock void UseAbility(const String:ability_name[], const String:plugin_name[], client, slot, buttonMode=0)
+stock void UseAbility(const char[] ability_name, const char[] plugin_name, int iiBoss, int slot, int buttonMode=0)
 {
 	bool enabled=true;
-	Call_StartForward(PreAbility);
-	Call_PushCell(client);
+	Call_StartForward(p_PreAbility);
+	Call_PushCell(iiBoss);
 	Call_PushString(plugin_name);
 	Call_PushString(ability_name);
 	Call_PushCell(slot);
@@ -1309,8 +1330,8 @@ stock void UseAbility(const String:ability_name[], const String:plugin_name[], c
 	}
 
 	Action action=Plugin_Continue;
-	Call_StartForward(OnAbility);
-	Call_PushCell(client);
+	Call_StartForward(p_OnAbility);
+	Call_PushCell(iiBoss);
 	Call_PushString(plugin_name);
 	Call_PushString(ability_name);
 	if(slot==-1)
@@ -1320,15 +1341,15 @@ stock void UseAbility(const String:ability_name[], const String:plugin_name[], c
 	}
 	else if(!slot)
 	{
-		FF2flags[Boss[client]]&=~FF2FLAG_BOTRAGE;
+		//FF2flags[Boss[iiBoss]]&=~FF2FLAG_BOTRAGE;
 		Call_PushCell(3);  //Status - we're assuming here a rage ability will always be in use if it gets called
 		Call_Finish(action);
-		BossCharge[client][slot]=0.0;
+		//BossCharge[iiBoss][slot]=0.0;
 	}
 	else
 	{
 		SetHudTextParams(-1.0, 0.88, 0.15, 255, 255, 255, 255);
-		new button;
+		int button;
 		switch(buttonMode)
 		{
 			case 2:
@@ -1341,20 +1362,20 @@ stock void UseAbility(const String:ability_name[], const String:plugin_name[], c
 			}
 		}
 
-		if(GetClientButtons(Boss[client]) & button)
+		if(GetClientButtons(iiBoss) & button)
 		{
-			if(!(FF2flags[Boss[client]] & FF2FLAG_USINGABILITY))
+			if(!(FF2flags[iiBoss] & FF2FLAG_USINGABILITY))
 			{
-				FF2flags[Boss[client]]|=FF2FLAG_USINGABILITY;
+				FF2flags[iiBoss]|=FF2FLAG_USINGABILITY;
 				switch(buttonMode)
 				{
 					case 2:
 					{
-						SetInfoCookies(Boss[client], 0, CheckInfoCookies(Boss[client], 0)-1);
+						SetInfoCookies(iiBoss, 0, CheckInfoCookies(iiBoss, 0)-1);
 					}
 					default:
 					{
-						SetInfoCookies(Boss[client], 1, CheckInfoCookies(Boss[client], 1)-1);
+						SetInfoCookies(iiBoss, 1, CheckInfoCookies(iiBoss, 1)-1);
 					}
 				}
 			}
@@ -1383,30 +1404,30 @@ stock void UseAbility(const String:ability_name[], const String:plugin_name[], c
 		else if(BossCharge[client][slot]>0.3)
 		{
 			float angles[3];
-			GetClientEyeAngles(Boss[client], angles);
+			GetClientEyeAngles(iiBoss, angles);
 			if(angles[0]<-45.0)
 			{
 				Call_PushCell(3);
 				Call_Finish(action);
 				Handle data;
 				CreateDataTimer(0.1, Timer_UseBossCharge, data);
-				WritePackCell(data, client);
+				WritePackCell(data, iiBoss);
 				WritePackCell(data, slot);
-				WritePackFloat(data, -1.0*GetAbilityArgumentFloat(client, plugin_name, ability_name, 2, 5.0));
+				WritePackFloat(data, -1.0*GetAbilityArgumentFloat(iiBoss, plugin_name, ability_name, 2, 5.0));
 				ResetPack(data);
 			}
 			else
 			{
 				Call_PushCell(0);  //Status
 				Call_Finish(action);
-				BossCharge[client][slot]=0.0;
+				//BossCharge[iiBoss][slot]=0.0;
 			}
 		}
-		else if(BossCharge[client][slot]<0.0)
+		else if(BossCharge[iiBoss][slot]<0.0)
 		{
 			Call_PushCell(1);  //Status
 			Call_Finish(action);
-			BossCharge[client][slot]+=0.2;
+			//BossCharge[iiBoss][slot]+=0.2;
 		}
 		else
 		{
