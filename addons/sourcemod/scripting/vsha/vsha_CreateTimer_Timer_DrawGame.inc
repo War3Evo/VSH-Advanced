@@ -7,11 +7,11 @@ public Action Timer_DrawGame(Handle timer)
 	int itime = timeleft;
 	timeleft--;
 	char timeDisplay[6];
-	if (itime/60 > 9) IntToString(time/60, timeDisplay, sizeof(timeDisplay));
+	if (itime/60 > 9) IntToString(itime/60, timeDisplay, sizeof(timeDisplay));
 	else Format(timeDisplay, sizeof(timeDisplay), "0%i", itime/60);
 
-	if (itime%60 > 9) Format(timeDisplay, sizeof(timeDisplay), "%s:%i", timeDisplay, time%60);
-	else Format(timeDisplay, sizeof(timeDisplay), "%s:0%i", timeDisplay, time%60);
+	if (itime%60 > 9) Format(timeDisplay, sizeof(timeDisplay), "%s:%i", timeDisplay, itime%60);
+	else Format(timeDisplay, sizeof(timeDisplay), "%s:0%i", timeDisplay, itime%60);
 
 	SetHudTextParams(-1.0, 0.17, 1.1, 255, 255, 255, 200);
 	for (int client = 1; client <= MaxClients; client++)
@@ -28,7 +28,7 @@ public Action Timer_DrawGame(Handle timer)
 		case 1, 2, 3, 4, 5:
 		{
 			char sound[PATHX];
-			Format(sound, PATHX, "vo/announcer_ends_%isec.mp3", time);
+			Format(sound, PATHX, "vo/announcer_ends_%isec.mp3", itime);
 			EmitSoundToAll(sound);
 		}
 		case 0:
