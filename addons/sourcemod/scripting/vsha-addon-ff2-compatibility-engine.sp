@@ -51,7 +51,15 @@ Handle OnLoseLife;
 Handle OnAlivePlayersChanged;
 */
 
-
+Handle p_PreAbility;
+Handle p_OnAbility;
+Handle p_OnMusic;
+Handle p_OnTriggerHurt;
+Handle p_OnSpecialSelected;
+Handle p_OnAddQueuePoints;
+Handle p_OnLoadCharacterSet;
+Handle p_OnLoseLife;
+Handle p_OnAlivePlayersChanged;
 
 public Plugin myinfo = {
 	name = "VSHA - Freak Fortress 2",
@@ -109,18 +117,35 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("FF2_GetAlivePlayers", Native_GetAlivePlayers);  //TODO: Deprecated, remove in 2.0.0
 	CreateNative("FF2_GetBossPlayers", Native_GetBossPlayers);  //TODO: Deprecated, remove in 2.0.0
 	CreateNative("FF2_Debug", Native_Debug);
-
-
-	PreAbility=CreateForward("FF2_PreAbility", ET_Hook, Param_Cell, Param_String, Param_String, Param_Cell, Param_CellByRef);  //Boss, plugin name, ability name, slot, enabled
-	OnAbility=CreateForward("FF2_OnAbility", ET_Hook, Param_Cell, Param_String, Param_String, Param_Cell);  //Boss, plugin name, ability name, status
-	OnMusic=CreateForward("FF2_OnMusic", ET_Hook, Param_String, Param_FloatByRef);
-	OnTriggerHurt=CreateForward("FF2_OnTriggerHurt", ET_Hook, Param_Cell, Param_Cell, Param_FloatByRef);
-	OnSpecialSelected=CreateForward("FF2_OnSpecialSelected", ET_Hook, Param_Cell, Param_CellByRef, Param_String);  //Boss, character index, character name
-	OnAddQueuePoints=CreateForward("FF2_OnAddQueuePoints", ET_Hook, Param_Array);
-	OnLoadCharacterSet=CreateForward("FF2_OnLoadCharacterSet", ET_Hook, Param_CellByRef, Param_String);
-	OnLoseLife=CreateForward("FF2_OnLoseLife", ET_Hook, Param_Cell, Param_CellByRef, Param_Cell);  //Boss, lives left, max lives
-	OnAlivePlayersChanged=CreateForward("FF2_OnAlivePlayersChanged", ET_Hook, Param_Cell, Param_Cell);  //Players, bosses
 */
+
+	//"FF2_PreAbility"
+	p_PreAbility=CreateForward( ET_Hook, Param_Cell, Param_String, Param_String, Param_Cell, Param_CellByRef);  //Boss, plugin name, ability name, slot, enabled
+
+	//"FF2_OnAbility"
+	p_OnAbility=CreateForward( ET_Hook, Param_Cell, Param_String, Param_String, Param_Cell);  //Boss, plugin name, ability name, status
+
+	//"FF2_OnMusic"
+	p_OnMusic=CreateForward( ET_Hook, Param_String, Param_FloatByRef);
+
+	//"FF2_OnTriggerHurt"
+	p_OnTriggerHurt=CreateForward( ET_Hook, Param_Cell, Param_Cell, Param_FloatByRef);
+
+	//"FF2_OnSpecialSelected"
+	p_OnSpecialSelected=CreateForward( ET_Hook, Param_Cell, Param_CellByRef, Param_String);  //Boss, character index, character name
+
+	//"FF2_OnAddQueuePoints"
+	p_OnAddQueuePoints=CreateForward( ET_Hook, Param_Array);
+
+	//"FF2_OnLoadCharacterSet"
+	p_OnLoadCharacterSet=CreateForward( ET_Hook, Param_CellByRef, Param_String);
+
+	//"FF2_OnLoseLife"
+	p_OnLoseLife=CreateForward( ET_Hook, Param_Cell, Param_CellByRef, Param_Cell);  //Boss, lives left, max lives
+
+	//"FF2_OnAlivePlayersChanged"
+	p_OnAlivePlayersChanged=CreateForward( ET_Hook, Param_Cell, Param_Cell);  //Players, bosses
+
 	RegPluginLibrary("freak_fortress_2");
 
 	return APLRes_Success;
@@ -290,6 +315,8 @@ stock void EnableSubPlugins(bool force=false)
 			ServerCommand("sm plugins load freaks/%s", filename);
 		}
 	}
+
+	LoadPluginForwards();
 }
 
 stock void DisableSubPlugins(bool force=false)
@@ -475,4 +502,153 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 
 	hArrayBossSubplugins.Push(BossSubplug);
 }
+
+
+public void LoadPluginForwards()
+{
+	char sAbility[10];
+	char sGetString[64];
+	char sPluginNameString[PATHX];
+
+	bool found = false;
+
+	//char cFilePath[PATHX];
+
+	Handle PluginHandle;
+	Function funcID;
+
+	// Load Character Plugin Forwards
+	int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
+	for (int x = 0; x < count; x++)
+	{
+		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
+
+		for(int i=1; ; i++)
+		{
+			Format(sAbility,10,"ability%i",i);
+			Format(sGetString,32,"%splugin_name",sAbility);
+
+			if(MyStringMap.GetString(sGetString, sPluginNameString, 64))
+			{
+				//BuildPath(Path_SM, cFilePath, PLATFORM_MAX_PATH, "plugins/freaks/%s.smx", sPluginNameString);
+
+				PluginHandle = FindPluginByFile(sPluginNameString);
+				if(PluginHandle != null)
+				{
+					PrintToServer("Found %s plugin for hooking FF2 Functions!",sPluginNameString);
+					funcID = GetFunctionByName(PluginHandle, "FF2_PreAbility");
+					if(funcID != INVALID_FUNCTION)
+					{
+						found = true;
+						PrintToServer("Found %s FF2_PreAbility FF2 Function!",sPluginNameString);
+						// hook function
+						AddToForward(p_PreAbility, PluginHandle, funcID);
+					}
+					funcID = GetFunctionByName(PluginHandle, "FF2_OnAbility");
+					if(funcID != INVALID_FUNCTION)
+					{
+						found = true;
+						PrintToServer("Found %s FF2_OnAbility FF2 Function!",sPluginNameString);
+						// hook function
+						AddToForward(p_OnAbility, PluginHandle, funcID);
+					}
+					funcID = GetFunctionByName(PluginHandle, "FF2_OnMusic");
+					if(funcID != INVALID_FUNCTION)
+					{
+						found = true;
+						PrintToServer("Found %s FF2_OnMusic FF2 Function!",sPluginNameString);
+						// hook function
+						AddToForward(p_OnMusic, PluginHandle, funcID);
+					}
+					funcID = GetFunctionByName(PluginHandle, "FF2_OnTriggerHurt");
+					if(funcID != INVALID_FUNCTION)
+					{
+						found = true;
+						PrintToServer("Found %s FF2_OnTriggerHurt FF2 Function!",sPluginNameString);
+						// hook function
+						AddToForward(p_OnTriggerHurt, PluginHandle, funcID);
+					}
+					funcID = GetFunctionByName(PluginHandle, "FF2_OnSpecialSelected");
+					if(funcID != INVALID_FUNCTION)
+					{
+						found = true;
+						PrintToServer("Found %s FF2_OnSpecialSelected FF2 Function!",sPluginNameString);
+						// hook function
+						AddToForward(p_OnSpecialSelected, PluginHandle, funcID);
+					}
+					funcID = GetFunctionByName(PluginHandle, "FF2_OnAddQueuePoints");
+					if(funcID != INVALID_FUNCTION)
+					{
+						found = true;
+						PrintToServer("Found %s FF2_OnAddQueuePoints FF2 Function!",sPluginNameString);
+						// hook function
+						AddToForward(p_OnAddQueuePoints, PluginHandle, funcID);
+					}
+					funcID = GetFunctionByName(PluginHandle, "FF2_OnLoadCharacterSet");
+					if(funcID != INVALID_FUNCTION)
+					{
+						found = true;
+						PrintToServer("Found %s FF2_OnLoadCharacterSet FF2 Function!",sPluginNameString);
+						// hook function
+						AddToForward(p_OnLoadCharacterSet, PluginHandle, funcID);
+					}
+					funcID = GetFunctionByName(PluginHandle, "FF2_OnLoseLife");
+					if(funcID != INVALID_FUNCTION)
+					{
+						found = true;
+						PrintToServer("Found %s FF2_OnLoseLife FF2 Function!",sPluginNameString);
+						// hook function
+						AddToForward(p_OnLoseLife, PluginHandle, funcID);
+					}
+					funcID = GetFunctionByName(PluginHandle, "FF2_OnAlivePlayersChanged");
+					if(funcID != INVALID_FUNCTION)
+					{
+						found = true;
+						PrintToServer("Found %s FF2_OnAlivePlayersChanged FF2 Function!",sPluginNameString);
+						// hook function
+						AddToForward(p_OnAlivePlayersChanged, PluginHandle, funcID);
+					}
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		if(found)
+		{
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+			PrintToServer("FF2 FUNCTIONS FOUND!");
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
