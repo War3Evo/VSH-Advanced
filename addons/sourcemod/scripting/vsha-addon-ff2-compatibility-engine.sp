@@ -325,9 +325,13 @@ stock void EnableSubPlugins(bool force=false)
 		}
 	}
 
+	//LoadPluginForwards();
+	CreateTimer(10.0, LoadPluginForwardsTimer, _);
+}
+public Action LoadPluginForwardsTimer(Handle timer, any data)
+{
 	LoadPluginForwards();
 }
-
 stock void DisableSubPlugins(bool force=false)
 {
 	if(!areSubPluginsEnabled && !force)
@@ -558,8 +562,8 @@ public void LoadPluginForwards()
 			{
 				LogError("LOOKING FOR sPluginNameString %s FF2 Functions!",sPluginNameString);
 
-				//Format(cFilePath,PATHX,"freaks/%s.ff2",sPluginNameString);
-				Format(cFilePath,PATHX,"%s.ff2",sPluginNameString);
+				Format(cFilePath,PATHX,"freaks/%s.ff2",sPluginNameString);
+				//Format(cFilePath,PATHX,"%s.ff2",sPluginNameString);
 
 				//LogError("sPluginNameString %s",sPluginNameString);
 
@@ -580,7 +584,10 @@ public void LoadPluginForwards()
 						found = true;
 						LogError("Found %s FF2_PreAbility FF2 Function!",sPluginNameString);
 						// hook function
-						AddToForward(p_PreAbility, PluginHandle, funcID);
+						if(AddToForward(p_PreAbility, PluginHandle, funcID))
+						{
+							LogError("AddToForward SuccessFul!");
+						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnAbility");
 					if(funcID != INVALID_FUNCTION)
@@ -588,7 +595,10 @@ public void LoadPluginForwards()
 						found = true;
 						LogError("Found %s FF2_OnAbility FF2 Function!",sPluginNameString);
 						// hook function
-						AddToForward(p_OnAbility, PluginHandle, funcID);
+						if(AddToForward(p_OnAbility, PluginHandle, funcID))
+						{
+							LogError("AddToForward SuccessFul!");
+						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnMusic");
 					if(funcID != INVALID_FUNCTION)
@@ -596,7 +606,10 @@ public void LoadPluginForwards()
 						found = true;
 						LogError("Found %s FF2_OnMusic FF2 Function!",sPluginNameString);
 						// hook function
-						AddToForward(p_OnMusic, PluginHandle, funcID);
+						if(AddToForward(p_OnMusic, PluginHandle, funcID))
+						{
+							LogError("AddToForward SuccessFul!");
+						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnTriggerHurt");
 					if(funcID != INVALID_FUNCTION)
@@ -604,7 +617,10 @@ public void LoadPluginForwards()
 						found = true;
 						LogError("Found %s FF2_OnTriggerHurt FF2 Function!",sPluginNameString);
 						// hook function
-						AddToForward(p_OnTriggerHurt, PluginHandle, funcID);
+						if(AddToForward(p_OnTriggerHurt, PluginHandle, funcID))
+						{
+							LogError("AddToForward SuccessFul!");
+						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnSpecialSelected");
 					if(funcID != INVALID_FUNCTION)
@@ -612,7 +628,10 @@ public void LoadPluginForwards()
 						found = true;
 						LogError("Found %s FF2_OnSpecialSelected FF2 Function!",sPluginNameString);
 						// hook function
-						AddToForward(p_OnSpecialSelected, PluginHandle, funcID);
+						if(AddToForward(p_OnSpecialSelected, PluginHandle, funcID))
+						{
+							LogError("AddToForward SuccessFul!");
+						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnAddQueuePoints");
 					if(funcID != INVALID_FUNCTION)
@@ -620,7 +639,10 @@ public void LoadPluginForwards()
 						found = true;
 						LogError("Found %s FF2_OnAddQueuePoints FF2 Function!",sPluginNameString);
 						// hook function
-						AddToForward(p_OnAddQueuePoints, PluginHandle, funcID);
+						if(AddToForward(p_OnAddQueuePoints, PluginHandle, funcID))
+						{
+							LogError("AddToForward SuccessFul!");
+						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnLoadCharacterSet");
 					if(funcID != INVALID_FUNCTION)
@@ -628,7 +650,10 @@ public void LoadPluginForwards()
 						found = true;
 						LogError("Found %s FF2_OnLoadCharacterSet FF2 Function!",sPluginNameString);
 						// hook function
-						AddToForward(p_OnLoadCharacterSet, PluginHandle, funcID);
+						if(AddToForward(p_OnLoadCharacterSet, PluginHandle, funcID))
+						{
+							LogError("AddToForward SuccessFul!");
+						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnLoseLife");
 					if(funcID != INVALID_FUNCTION)
@@ -636,7 +661,10 @@ public void LoadPluginForwards()
 						found = true;
 						LogError("Found %s FF2_OnLoseLife FF2 Function!",sPluginNameString);
 						// hook function
-						AddToForward(p_OnLoseLife, PluginHandle, funcID);
+						if(AddToForward(p_OnLoseLife, PluginHandle, funcID))
+						{
+							LogError("AddToForward SuccessFul!");
+						}
 					}
 					funcID = GetFunctionByName(PluginHandle, "FF2_OnAlivePlayersChanged");
 					if(funcID != INVALID_FUNCTION)
@@ -644,7 +672,10 @@ public void LoadPluginForwards()
 						found = true;
 						LogError("Found %s FF2_OnAlivePlayersChanged FF2 Function!",sPluginNameString);
 						// hook function
-						AddToForward(p_OnAlivePlayersChanged, PluginHandle, funcID);
+						if(AddToForward(p_OnAlivePlayersChanged, PluginHandle, funcID))
+						{
+							LogError("AddToForward SuccessFul!");
+						}
 					}
 				}
 			}
