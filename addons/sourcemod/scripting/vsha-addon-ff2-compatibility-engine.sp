@@ -316,13 +316,45 @@ stock void EnableSubPlugins(bool force=false)
 		}
 	}
 
+	int count = hArrayBossSubplugins.Length;
+	char sAbility[10];
+	char sFindString[64];
+	char sPluginNameString[PATHX];
+	bool found = false;
+
 	directory=OpenDirectory(path);
 	while(ReadDirEntry(directory, filename, PLATFORM_MAX_PATH, filetype))
 	{
 		if(filetype==FileType_File && StrContains(filename, ".ff2", false)!=-1)
 		{
-			ServerCommand("sm plugins load freaks/%s", filename);
+			for(int i=1; ; i++)
+			{
+				Format(sAbility,10,"ability%i",i);
+				Format(sFindString,64,"%splugin_name",sAbility);
+
+				for (int x = 0; x < count; x++)
+				{
+					StringMap MyStringMap = hArrayBossSubplugins.Get(x);
+
+					if(MyStringMap.GetString(sFindString, sPluginNameString, 64))
+					{
+						if(StrContains(filename, sPluginNameString, false)!=-1)
+						{
+							// load only needed plugins
+							//ServerCommand("sm plugins load freaks/%s", filename);
+							found = true;
+							InsertServerCommand("sm plugins load freaks/%s", filename);
+							break;
+						}
+					}
+				}
+			}
+			//ServerCommand("sm plugins load freaks/%s", filename);
 		}
+	}
+	if(found)
+	{
+		ServerExecute();
 	}
 
 	//LoadPluginForwards();
