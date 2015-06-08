@@ -26,6 +26,10 @@ ArrayList hArrayDownloads = null;
 
 bool areSubPluginsEnabled = false;
 
+#define MAJOR_REVISION "1"
+#define MINOR_REVISION "10"
+#define STABLE_REVISION "6"
+
 #define MAXRANDOMS 16
 
 enum Operators
@@ -76,9 +80,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	if(!StrContains(plugin, "freaks/"))  //Prevent plugins/freaks/freak_fortress_2.ff2 from loading if it exists -.-
 	{
 		strcopy(error, err_max, "There is a duplicate copy of Freak Fortress 2 inside the /plugins/freaks folder.  Please remove it");
-		return APLRes_Failure;
+		//return APLRes_Failure;
 	}
-/*
+
 	CreateNative("FF2_IsFF2Enabled", Native_IsEnabled);
 	CreateNative("FF2_GetFF2Version", Native_FF2Version);
 	CreateNative("FF2_GetBossUserId", Native_GetBoss);
@@ -117,7 +121,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("FF2_GetAlivePlayers", Native_GetAlivePlayers);  //TODO: Deprecated, remove in 2.0.0
 	CreateNative("FF2_GetBossPlayers", Native_GetBossPlayers);  //TODO: Deprecated, remove in 2.0.0
 	CreateNative("FF2_Debug", Native_Debug);
-*/
+
 
 	//"FF2_PreAbility"
 	p_PreAbility=CreateForward( ET_Hook, Param_Cell, Param_String, Param_String, Param_Cell, Param_CellByRef);  //Boss, plugin name, ability name, slot, enabled
@@ -148,7 +152,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	RegPluginLibrary("freak_fortress_2");
 
-	return APLRes_Success;
+	//return APLRes_Success;
 }
 
 public void OnAllPluginsLoaded()
@@ -212,7 +216,7 @@ public bool FindCharacters()  //TODO: Investigate KvGotoFirstSubKey; KvGotoNextK
 	if(!FileExists(config))
 	{
 		LogError("[FF2] Freak Fortress 2 disabled-can not find characters.cfg!");
-		return false;
+		//return false;
 	}
 
 	Handle Kv=CreateKeyValues("");
@@ -472,43 +476,48 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 	KvRewind(BossKV);
 	char sAbility[10];
 	char sStoreString[32];
-	int ArgNum;
+	//int ArgNum;
 	char s[10];
+
+	char ability_name2[64];
+	char plugin_name2[64];
+	char arg_string[64];
+
 	for(int i=1; i<MAXRANDOMS; i++)
 	{
 		Format(sAbility,10,"ability%i",i);
 		if(KvJumpToKey(BossKV,sAbility))
 		{
-			char ability_name2[64];
 			KvGetString(BossKV, "name",ability_name2,64);
 
-			char plugin_name2[64];
 			KvGetString(BossKV, "plugin_name",plugin_name2,64);
 
 			// example: ability1name
 			Format(sStoreString,32,"%sname",sAbility);
 			BossSubplug.SetString(sStoreString, ability_name2);
-			PrintToServer("ability name %s",sStoreString);
+			LogError("ability name %s",sStoreString);
 
 			// example: ability1plugin_name
 			Format(sStoreString,32,"%splugin_name",sAbility);
 			BossSubplug.SetString(sStoreString, plugin_name2);
-			PrintToServer("plugin_name %s",sStoreString);
+			LogError("plugin_name %s",sStoreString);
 
 			for(int x=1; ; x++)
 			{
 				Format(s,10,"arg%i",x);
-				ArgNum = KvGetNum(BossKV, s, -1);
+				//ArgNum = KvGetNum(BossKV, s, -1);
 
-				if(ArgNum == -1)
+				KvGetString(BossKV, s ,arg_string,64, "notfound");
+
+				if(StrEqual(arg_string,"notfound"))
 				{
 					break;
 				}
 
 				// example: ability1arg0
-				Format(sStoreString,32,"%sarg%i",sAbility,ArgNum);
-				BossSubplug.SetValue(sStoreString, ArgNum);
-				PrintToServer("sStoreString %s",sStoreString);
+				Format(sStoreString,32,"%s%s",sAbility,s);
+				BossSubplug.SetString(sStoreString, arg_string);
+				LogError("sStoreString %s",sStoreString);
 			}
 		}
 	}
@@ -525,7 +534,7 @@ public void LoadPluginForwards()
 
 	bool found = false;
 
-	//char cFilePath[PATHX];
+	char cFilePath[PATHX];
 
 	Handle PluginHandle;
 	Function funcID;
@@ -536,24 +545,40 @@ public void LoadPluginForwards()
 	{
 		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
 
+//sm plugins load freaks/shadow93_bosses.ff2
+
 		for(int i=1; ; i++)
 		{
 			Format(sAbility,10,"ability%i",i);
-			Format(sGetString,32,"%splugin_name",sAbility);
+			Format(sGetString,64,"%splugin_name",sAbility);
+
+			LogError("LOOKING FOR sGetString %s FF2 Functions!",sGetString);
 
 			if(MyStringMap.GetString(sGetString, sPluginNameString, 64))
 			{
-				//BuildPath(Path_SM, cFilePath, PLATFORM_MAX_PATH, "plugins/freaks/%s.smx", sPluginNameString);
+				LogError("LOOKING FOR sPluginNameString %s FF2 Functions!",sPluginNameString);
 
-				PluginHandle = FindPluginByFile(sPluginNameString);
+				//Format(cFilePath,PATHX,"freaks/%s.ff2",sPluginNameString);
+				Format(cFilePath,PATHX,"%s.ff2",sPluginNameString);
+
+				//LogError("sPluginNameString %s",sPluginNameString);
+
+				//BuildPath(Path_SM, cFilePath, PLATFORM_MAX_PATH, "plugins/freaks/%s.ff2", sPluginNameString);
+
+				LogError("cFilePath %s",cFilePath);
+
+				PluginHandle = FindPluginByFile(cFilePath);
 				if(PluginHandle != null)
 				{
-					PrintToServer("Found %s plugin for hooking FF2 Functions!",sPluginNameString);
+					LogError("Found %s plugin for hooking FF2 Functions!",sPluginNameString);
+					LogError("Found %s plugin for hooking FF2 Functions!",sPluginNameString);
+					LogError("Found %s plugin for hooking FF2 Functions!",sPluginNameString);
+					LogError("Found %s plugin for hooking FF2 Functions!",sPluginNameString);
 					funcID = GetFunctionByName(PluginHandle, "FF2_PreAbility");
 					if(funcID != INVALID_FUNCTION)
 					{
 						found = true;
-						PrintToServer("Found %s FF2_PreAbility FF2 Function!",sPluginNameString);
+						LogError("Found %s FF2_PreAbility FF2 Function!",sPluginNameString);
 						// hook function
 						AddToForward(p_PreAbility, PluginHandle, funcID);
 					}
@@ -561,7 +586,7 @@ public void LoadPluginForwards()
 					if(funcID != INVALID_FUNCTION)
 					{
 						found = true;
-						PrintToServer("Found %s FF2_OnAbility FF2 Function!",sPluginNameString);
+						LogError("Found %s FF2_OnAbility FF2 Function!",sPluginNameString);
 						// hook function
 						AddToForward(p_OnAbility, PluginHandle, funcID);
 					}
@@ -569,7 +594,7 @@ public void LoadPluginForwards()
 					if(funcID != INVALID_FUNCTION)
 					{
 						found = true;
-						PrintToServer("Found %s FF2_OnMusic FF2 Function!",sPluginNameString);
+						LogError("Found %s FF2_OnMusic FF2 Function!",sPluginNameString);
 						// hook function
 						AddToForward(p_OnMusic, PluginHandle, funcID);
 					}
@@ -577,7 +602,7 @@ public void LoadPluginForwards()
 					if(funcID != INVALID_FUNCTION)
 					{
 						found = true;
-						PrintToServer("Found %s FF2_OnTriggerHurt FF2 Function!",sPluginNameString);
+						LogError("Found %s FF2_OnTriggerHurt FF2 Function!",sPluginNameString);
 						// hook function
 						AddToForward(p_OnTriggerHurt, PluginHandle, funcID);
 					}
@@ -585,7 +610,7 @@ public void LoadPluginForwards()
 					if(funcID != INVALID_FUNCTION)
 					{
 						found = true;
-						PrintToServer("Found %s FF2_OnSpecialSelected FF2 Function!",sPluginNameString);
+						LogError("Found %s FF2_OnSpecialSelected FF2 Function!",sPluginNameString);
 						// hook function
 						AddToForward(p_OnSpecialSelected, PluginHandle, funcID);
 					}
@@ -593,7 +618,7 @@ public void LoadPluginForwards()
 					if(funcID != INVALID_FUNCTION)
 					{
 						found = true;
-						PrintToServer("Found %s FF2_OnAddQueuePoints FF2 Function!",sPluginNameString);
+						LogError("Found %s FF2_OnAddQueuePoints FF2 Function!",sPluginNameString);
 						// hook function
 						AddToForward(p_OnAddQueuePoints, PluginHandle, funcID);
 					}
@@ -601,7 +626,7 @@ public void LoadPluginForwards()
 					if(funcID != INVALID_FUNCTION)
 					{
 						found = true;
-						PrintToServer("Found %s FF2_OnLoadCharacterSet FF2 Function!",sPluginNameString);
+						LogError("Found %s FF2_OnLoadCharacterSet FF2 Function!",sPluginNameString);
 						// hook function
 						AddToForward(p_OnLoadCharacterSet, PluginHandle, funcID);
 					}
@@ -609,7 +634,7 @@ public void LoadPluginForwards()
 					if(funcID != INVALID_FUNCTION)
 					{
 						found = true;
-						PrintToServer("Found %s FF2_OnLoseLife FF2 Function!",sPluginNameString);
+						LogError("Found %s FF2_OnLoseLife FF2 Function!",sPluginNameString);
 						// hook function
 						AddToForward(p_OnLoseLife, PluginHandle, funcID);
 					}
@@ -617,7 +642,7 @@ public void LoadPluginForwards()
 					if(funcID != INVALID_FUNCTION)
 					{
 						found = true;
-						PrintToServer("Found %s FF2_OnAlivePlayersChanged FF2 Function!",sPluginNameString);
+						LogError("Found %s FF2_OnAlivePlayersChanged FF2 Function!",sPluginNameString);
 						// hook function
 						AddToForward(p_OnAlivePlayersChanged, PluginHandle, funcID);
 					}
@@ -631,8 +656,8 @@ public void LoadPluginForwards()
 
 		if(found)
 		{
-			PrintToServer("FF2 FUNCTIONS FOUND!");
-			PrintToServer("FF2 FUNCTIONS FOUND!");
+			LogError("FF2 FUNCTIONS FOUND!");
+			LogError("FF2 FUNCTIONS FOUND!");
 			PrintToServer("FF2 FUNCTIONS FOUND!");
 			PrintToServer("FF2 FUNCTIONS FOUND!");
 			PrintToServer("FF2 FUNCTIONS FOUND!");
@@ -649,12 +674,456 @@ public void LoadPluginForwards()
 			PrintToServer("FF2 FUNCTIONS FOUND!");
 			PrintToServer("FF2 FUNCTIONS FOUND!");
 		}
+		else
+		{
+			LogError("FF2 FUNCTIONS F A I L!");
+			LogError("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+			PrintToServer("FF2 FUNCTIONS F A I L!");
+		}
 	}
 }
 
 
 
 
+
+public int Native_IsEnabled(Handle plugin, int numParams)
+{
+	return true;
+}
+
+public int Native_FF2Version(Handle plugin, int numParams)
+{
+	int version[3];  //Blame the compiler for this mess -.-
+	version[0]=StringToInt(MAJOR_REVISION);
+	version[1]=StringToInt(MINOR_REVISION);
+	version[2]=StringToInt(STABLE_REVISION);
+	SetNativeArray(1, version, sizeof(version));
+	#if !defined DEV_REVISION
+		return false;
+	#else
+		return true;
+	#endif
+}
+
+public int Native_GetBoss(Handle plugin, int numParams)
+{
+	//int boss=GetNativeCell(1);
+	/*
+	if(boss>=0 && boss<=MaxClients && IsValidClient(Boss[boss]))
+	{
+		//return GetClientUserId(Boss[boss]);
+	}*/
+	return -1;
+}
+
+public int Native_GetIndex(Handle plugin, int numParams)
+{
+	////return GetBossIndex(GetNativeCell(1));
+	return 0;
+}
+
+public int Native_GetTeam(Handle plugin, int numParams)
+{
+	////return BossTeam;
+	return TEAM_BLUE;
+}
+
+public int Native_GetSpecial(Handle plugin, int numParams)
+{
+	/*
+	int index=GetNativeCell(1), dstrlen=GetNativeCell(3), see=GetNativeCell(4);
+	char s[dstrlen];
+	if(see)
+	{
+		if(index<0) //return false;
+		if(!BossKV[index]) //return false;
+		KvRewind(BossKV[index]);
+		KvGetString(BossKV[index], "name", s, dstrlen);
+		SetNativeString(2, s,dstrlen);
+	}
+	else
+	{
+		if(index<0) //return false;
+		if(Special[index]<0) //return false;
+		if(!BossKV[Special[index]]) //return false;
+		KvRewind(BossKV[Special[index]]);
+		KvGetString(BossKV[Special[index]], "name", s, dstrlen);
+		SetNativeString(2, s,dstrlen);
+	}*/
+	return true;
+}
+
+public int Native_GetBossHealth(Handle plugin, int numParams)
+{
+	////return BossHealth[GetNativeCell(1)];
+	return 2500;
+}
+
+public int Native_SetBossHealth(Handle plugin, int numParams)
+{
+	//BossHealth[GetNativeCell(1)]=GetNativeCell(2);
+}
+
+public int Native_GetBossMaxHealth(Handle plugin, int numParams)
+{
+	////return BossHealthMax[GetNativeCell(1)];
+	return 2500;
+}
+
+public int Native_SetBossMaxHealth(Handle plugin, int numParams)
+{
+	//BossHealthMax[GetNativeCell(1)]=GetNativeCell(2);
+}
+
+public int Native_GetBossLives(Handle plugin, int numParams)
+{
+	////return BossLives[GetNativeCell(1)];
+	//return 3;
+	return 1;
+}
+
+public int Native_SetBossLives(Handle plugin, int numParams)
+{
+	//BossLives[GetNativeCell(1)]=GetNativeCell(2);
+}
+
+public int Native_GetBossMaxLives(Handle plugin, int numParams)
+{
+	//return BossLivesMax[GetNativeCell(1)];
+	return 1;
+}
+
+public int Native_SetBossMaxLives(Handle plugin, int numParams)
+{
+	//BossLivesMax[GetNativeCell(1)]=GetNativeCell(2);
+}
+
+public int Native_GetBossCharge(Handle plugin, int numParams)
+{
+	//return _:BossCharge[GetNativeCell(1)][GetNativeCell(2)];
+	return 0;
+}
+
+public int Native_SetBossCharge(Handle plugin, int numParams)
+{
+	//BossCharge[GetNativeCell(1)][GetNativeCell(2)]=Float:GetNativeCell(3);
+}
+
+public int Native_GetBossRageDamage(Handle plugin, int numParams)
+{
+	//return BossRageDamage[GetNativeCell(1)];
+	return 0;
+}
+
+public int Native_SetBossRageDamage(Handle plugin, int numParams)
+{
+	//BossRageDamage[GetNativeCell(1)]=GetNativeCell(2);
+}
+
+public int Native_GetRoundState(Handle plugin, int numParams)
+{
+	/*
+	if(CheckRoundState()<=0)
+	{
+		return 0;
+	}
+	return CheckRoundState();*/
+	return 0;
+}
+
+public int Native_GetRageDist(Handle plugin, int numParams)
+{
+	/*
+	int index=GetNativeCell(1);
+	decl String:plugin_name[64];
+	GetNativeString(2,plugin_name,64);
+	decl String:ability_name[64];
+	GetNativeString(3,ability_name,64);
+
+	if(!BossKV[Special[index]]) //return _:0.0;
+	KvRewind(BossKV[Special[index]]);
+	decl Float:see;
+	if(!ability_name[0])
+	{
+		//return _:KvGetFloat(BossKV[Special[index]],"ragedist",400.0);
+	}
+	decl String:s[10];
+	for(int i=1; i<MAXRANDOMS; i++)
+	{
+		Format(s,10,"ability%i",i);
+		if(KvJumpToKey(BossKV[Special[index]],s))
+		{
+			decl String:ability_name2[64];
+			KvGetString(BossKV[Special[index]], "name",ability_name2,64);
+			if(strcmp(ability_name,ability_name2))
+			{
+				KvGoBack(BossKV[Special[index]]);
+				continue;
+			}
+			if((see=KvGetFloat(BossKV[Special[index]],"dist",-1.0))<0)
+			{
+				KvRewind(BossKV[Special[index]]);
+				see=KvGetFloat(BossKV[Special[index]],"ragedist",400.0);
+			}
+			//return _:see;
+		}
+	}
+	return _:0.0;
+*/
+	return view_as<int>(0.0);
+}
+
+public int Native_HasAbility(Handle plugin, int numParams)
+{
+	/*
+	decl String:pluginName[64], String:abilityName[64];
+
+	int boss=GetNativeCell(1);
+	GetNativeString(2, pluginName, sizeof(pluginName));
+	GetNativeString(3, abilityName, sizeof(abilityName));
+	if(boss==-1 || Special[boss]==-1 || !BossKV[Special[boss]])
+	{
+		//return false;
+	}
+
+	KvRewind(BossKV[Special[boss]]);
+	if(!BossKV[Special[boss]])
+	{
+		LogError("Failed KV: %i %i", boss, Special[boss]);
+		//return false;
+	}
+
+	decl String:ability[12];
+	for(int i=1; i<MAXRANDOMS; i++)
+	{
+		Format(ability, sizeof(ability), "ability%i", i);
+		if(KvJumpToKey(BossKV[Special[boss]], ability))  //Does this ability number exist?
+		{
+			decl String:abilityName2[64];
+			KvGetString(BossKV[Special[boss]], "name", abilityName2, sizeof(abilityName2));
+			if(StrEqual(abilityName, abilityName2))  //Make sure the ability names are equal
+			{
+				decl String:pluginName2[64];
+				KvGetString(BossKV[Special[boss]], "plugin_name", pluginName2, sizeof(pluginName2));
+				if(!pluginName[0] || !pluginName2[0] || StrEqual(pluginName, pluginName2))  //Make sure the plugin names are equal
+				{
+					//return true;
+				}
+			}
+			KvGoBack(BossKV[Special[boss]]);
+		}
+	}
+	return false;*/
+	return false;
+}
+
+public int Native_DoAbility(Handle plugin, int numParams)
+{
+	/*
+	decl String:plugin_name[64];
+	decl String:ability_name[64];
+	GetNativeString(2,plugin_name,64);
+	GetNativeString(3,ability_name,64);
+	UseAbility(ability_name,plugin_name, GetNativeCell(1), GetNativeCell(4), GetNativeCell(5));
+	*/
+}
+
+public int Native_GetAbilityArgument(Handle plugin, int numParams)
+{
+	/*
+	decl String:plugin_name[64];
+	decl String:ability_name[64];
+	GetNativeString(2,plugin_name,64);
+	GetNativeString(3,ability_name,64);
+	return GetAbilityArgument(GetNativeCell(1),plugin_name,ability_name,GetNativeCell(4),GetNativeCell(5));
+	*/
+	return 0;
+}
+
+public int Native_GetAbilityArgumentFloat(Handle plugin, int numParams)
+{
+	/*
+	decl String:plugin_name[64];
+	decl String:ability_name[64];
+	GetNativeString(2,plugin_name,64);
+	GetNativeString(3,ability_name,64);
+	return _:GetAbilityArgumentFloat(GetNativeCell(1),plugin_name,ability_name,GetNativeCell(4),GetNativeCell(5));
+	*/
+	return view_as<int>(0.0);
+}
+
+public int Native_GetAbilityArgumentString(Handle plugin, int numParams)
+{
+	/*
+	decl String:plugin_name[64];
+	GetNativeString(2,plugin_name,64);
+	decl String:ability_name[64];
+	GetNativeString(3,ability_name,64);
+	int dstrlen=GetNativeCell(6);
+	char s[dstrlen+1];
+	GetAbilityArgumentString(GetNativeCell(1),plugin_name,ability_name,GetNativeCell(4),s,dstrlen);
+	SetNativeString(5,s,dstrlen);*/
+}
+
+public int Native_GetDamage(Handle plugin, int numParams)
+{
+	/*
+	int client=GetNativeCell(1);
+	if(!IsValidClient(client))
+	{
+		return 0;
+	}
+	return Damage[client];*/
+	return 0;
+}
+
+public int Native_GetFF2flags(Handle plugin, int numParams)
+{
+	//return FF2flags[GetNativeCell(1)];
+	return 0;
+}
+
+public int Native_SetFF2flags(Handle plugin, int numParams)
+{
+	//FF2flags[GetNativeCell(1)]=GetNativeCell(2);
+}
+
+public int Native_GetQueuePoints(Handle plugin, int numParams)
+{
+	//return GetClientQueuePoints(GetNativeCell(1));
+	return 0;
+}
+
+public int Native_SetQueuePoints(Handle plugin, int numParams)
+{
+	//SetClientQueuePoints(GetNativeCell(1), GetNativeCell(2));
+}
+
+public int Native_GetSpecialKV(Handle plugin, int numParams)
+{
+	/*
+	int index=GetNativeCell(1);
+	bool isNumOfSpecial=bool:GetNativeCell(2);
+	if(isNumOfSpecial)
+	{
+		if(index!=-1 && index<Specials)
+		{
+			if(BossKV[index]!=INVALID_HANDLE)
+			{
+				KvRewind(BossKV[index]);
+			}
+			//return _:BossKV[index];
+		}
+	}
+	else
+	{
+		if(index!=-1 && index<=MaxClients && Special[index]!=-1 && Special[index]<MAXSPECIALS)
+		{
+			if(BossKV[Special[index]]!=INVALID_HANDLE)
+			{
+				KvRewind(BossKV[Special[index]]);
+			}
+			//return _:BossKV[Special[index]];
+		}
+	}
+	return _:INVALID_HANDLE;
+	*/
+	return 0;
+}
+
+public int Native_StartMusic(Handle plugin, int numParams)
+{
+	//Timer_MusicPlay(INVALID_HANDLE,GetNativeCell(1));
+}
+
+public int Native_StopMusic(Handle plugin, int numParams)
+{
+	//StopMusic(GetNativeCell(1));
+}
+
+public int Native_RandomSound(Handle plugin, int numParams)
+{
+	/*
+	int length=GetNativeCell(3)+1;
+	int boss=GetNativeCell(4);
+	int slot=GetNativeCell(5);
+	char sound[length];
+	int kvLength;
+
+	GetNativeStringLength(1, kvLength);
+	kvLength++;
+
+	decl String:keyvalue[kvLength];
+	GetNativeString(1, keyvalue, kvLength);
+
+	bool soundExists;
+	if(!strcmp(keyvalue, "sound_ability"))
+	{
+		soundExists=RandomSoundAbility(keyvalue, sound, length, boss, slot);
+	}
+	else
+	{
+		soundExists=RandomSound(keyvalue, sound, length, boss);
+	}
+	SetNativeString(2, sound, length);
+	return soundExists;*/
+}
+
+public int Native_GetClientGlow(Handle plugin, int numParams)
+{
+	/*
+	int client=GetNativeCell(1);
+	if(IsValidClient(client))
+	{
+		return _:GlowTimer[client];
+	}
+	else
+	{
+		return -1;
+	}*/
+	return -1;
+}
+
+public int Native_SetClientGlow(Handle plugin, int numParams)
+{
+	//SetClientGlow(GetNativeCell(1), GetNativeCell(2), GetNativeCell(3));
+}
+
+public int Native_GetAlivePlayers(Handle plugin, int numParams)
+{
+	//return RedAlivePlayers;
+}
+
+public int Native_GetBossPlayers(Handle plugin, int numParams)
+{
+	//return BlueAlivePlayers;
+}
+
+public int Native_Debug(Handle plugin, int numParams)
+{
+	//return GetConVarBool(cvarDebug);
+}
+
+public int Native_IsVSHMap(Handle plugin, int numParams)
+{
+	//return false;
+}
 
 
 
