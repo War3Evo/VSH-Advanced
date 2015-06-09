@@ -460,16 +460,18 @@ stock int GetHealingTarget(int client, bool checkgun=false)
 {
 	int medigun = GetPlayerWeaponSlot(client, TFWeaponSlot_Secondary);
 
+	if ( !IsValidEdict(medigun) || !IsValidEntity(medigun) ) return -1;
+
+	/*
 	if(!checkgun)
 	{
-		if(GetEntProp(medigun, Prop_Send, "m_bHealing"))
+		if((medigun > MaxClients) && GetEntProp(medigun, Prop_Send, "m_bHealing"))
 		{
 			return GetEntPropEnt(medigun, Prop_Send, "m_hHealingTarget");
 		}
 		return -1;
-	}
+	}*/
 
-	if ( !IsValidEdict(medigun) || !IsValidEntity(medigun) ) return -1;
 	char s[32]; GetEdictClassname(medigun, s, sizeof(s));
 	if (!strcmp(s, "tf_weapon_medigun", false))
 	{
