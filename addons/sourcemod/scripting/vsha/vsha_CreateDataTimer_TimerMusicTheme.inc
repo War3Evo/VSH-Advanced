@@ -35,7 +35,9 @@ public Action TimerMusicTheme(Handle timer, DataPack pack)
 	{
 		//PrintToChatAll("vsha_CreateDataTimer_TimerMusicTheme stopped MusicPlay");
 		ClearTimer(MusicTimer);
+		MusicTimer = null;
 		return Plugin_Stop;
 	}
+	MusicTimer = null;
 	return Plugin_Continue;
 }

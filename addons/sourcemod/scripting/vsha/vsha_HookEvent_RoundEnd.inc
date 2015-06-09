@@ -11,18 +11,6 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 #endif
 		return Plugin_Continue;
 	}
-	// Stop RoundStart Timers
-	ClearTimer(HandletTenSecStartTimer);
-	ClearTimer(HandletTenSecStartTimer2);
-	bTenSecStart[0] = false;
-	bTenSecStart[1] = false;
-	ClearTimer(hBossStartTimer);
-	ClearTimer(hInitBossTimer);
-	ClearTimer(hBossResponse);
-	ClearTimer(hDoMessage);
-
-	ClearTimer(MusicTimer);
-
 	TeamRoundCounter++;
 	RoundCount++;
 	int i;
@@ -126,7 +114,8 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 			ShowHudText(i, -1, "Most Damage Dealt By:\n1)%i - %s\n2)%i - %s\n3)%i - %s\n\nDamage Dealt: %i\nScore for this round: %i", iDamage[top[0]], first, iDamage[top[1]], second, iDamage[top[2]], third, iDamage[i], RoundFloat(iDamage[i]/600.0));
 		}
 	}
-	CreateTimer(3.0, CalcScores, _, TIMER_FLAG_NO_MAPCHANGE);
+
+	CreateTimer(0.2, CalcScores, _, TIMER_FLAG_NO_MAPCHANGE);
 
 	VSHA_OnGameOver();
 

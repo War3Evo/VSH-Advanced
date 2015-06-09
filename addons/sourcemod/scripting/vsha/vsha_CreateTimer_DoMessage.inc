@@ -2,7 +2,11 @@
 
 public Action DoMessage(Handle timer, int data)
 {
-	if (CheckRoundState() != 0) return Plugin_Continue;
+	if (CheckRoundState() != 0)
+	{
+		hDoMessage = null;
+		return Plugin_Continue;
+	}
 
 	int entity = -1;
 	while ( (entity = FindEntityByClassname2(entity, "func_door")) != -1 )
@@ -54,5 +58,6 @@ public Action DoMessage(Handle timer, int data)
 	{
 		if ( IsValidClient(client) ) ShowHudText(client, -1, text);
 	}*/
+	hDoMessage = null;
 	return Plugin_Continue;
 }

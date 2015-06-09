@@ -22,12 +22,12 @@ Handle Storage[PLYR];
 BossArrayListIndex[PLYR];
 
 // Timer Handles
-Handle HandletTenSecStartTimer;
-Handle HandletTenSecStartTimer2;
-Handle hBossStartTimer;
-Handle hInitBossTimer;
-Handle hBossResponse;
-Handle hDoMessage;
+Handle HandletTenSecStartTimer = null;
+Handle HandletTenSecStartTimer2 = null;
+Handle hBossStartTimer = null;
+Handle hInitBossTimer = null;
+Handle hBossResponse = null;
+Handle hDoMessage = null;
 
 //ints
 int iModelRetrys[PLYR],

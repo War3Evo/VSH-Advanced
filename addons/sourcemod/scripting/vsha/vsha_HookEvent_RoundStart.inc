@@ -38,6 +38,21 @@ public Action RoundStartFunction()
 		return Plugin_Continue;
 	}
 
+	// Stop RoundStart Timers
+	// hopefully I'm add enough Handle = null after
+	// a timer stops, so that it won't error this
+	// and prevent the round from starting!
+	ClearTimer(HandletTenSecStartTimer);
+	ClearTimer(HandletTenSecStartTimer2);
+	bTenSecStart[0] = false;
+	bTenSecStart[1] = false;
+	ClearTimer(hBossStartTimer);
+	ClearTimer(hInitBossTimer);
+	ClearTimer(hBossResponse);
+	ClearTimer(hDoMessage);
+
+	ClearTimer(MusicTimer);
+
 	// We do this on round end, why need it on round start?
 	// commenting this out to try and defeat a bug
 	//ClearTimer(MusicTimer);
@@ -155,7 +170,7 @@ public Action RoundStartFunction()
 	bTenSecStart[1] = true;
 
 	HandletTenSecStartTimer = CreateTimer(29.1, tTenSecStart, 0);
-	HandletTenSecStartTimer2 = CreateTimer(60.1, tTenSecStart, 1);
+	HandletTenSecStartTimer2 = CreateTimer(60.1, tTenSecStart2, 1);
 
 	hBossStartTimer = CreateTimer(9.1, BossStart); // 9.1
 	hInitBossTimer = CreateTimer(0.2, InitBoss);

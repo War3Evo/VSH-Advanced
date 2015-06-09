@@ -342,13 +342,13 @@ public Action OnGameMode_WatchGameModeTimer()
 				{
 					if ( IsValidClient(i) && IsOnBlueOrRedTeam(i) )
 					{
-						if(GetTeamPlayerCount(TEAM_BLUE)>GetTeamPlayerCount(TEAM_RED))
-						{
-							ForceTeamChange(i, TEAM_RED);
-						}
-						else if(GetTeamPlayerCount(TEAM_BLUE)<GetTeamPlayerCount(TEAM_RED))
+						if(GetTeamPlayerCount(TEAM_BLUE)<=0)
 						{
 							ForceTeamChange(i, TEAM_BLUE);
+						}
+						else if(GetTeamPlayerCount(TEAM_RED)<=0)
+						{
+							ForceTeamChange(i, TEAM_RED);
 						}
 					}
 				}

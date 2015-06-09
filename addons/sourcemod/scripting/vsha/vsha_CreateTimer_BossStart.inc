@@ -82,4 +82,6 @@ public Action BossStart(Handle timer, int data)
 	// VSH Engine::TimerBossStart() **** Boss & Client Loop Timers created ****
 
 	if ( !PointType && iPlaying > AliveToEnable.IntValue ) SetControlPoint(false); //GetConVarInt(AliveToEnable)
+
+	hBossStartTimer = null;
 }

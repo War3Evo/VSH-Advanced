@@ -6,6 +6,10 @@ public void ClearVariablesRoundStart(int client)
 	iDamage[client] = 0;
 	iModelRetrys[client] = 25;
 	VSHHelped[client] = false;
+
+	Storage[client] = null;
+	BossArrayListIndex[client] = -1;
+	iBossUserID[client] = 0;
 }
 
 public void ClearAllVariables()

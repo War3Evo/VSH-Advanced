@@ -11,5 +11,6 @@ public Action InitBoss(Handle timer, int data)
 			CreateTimer(0.2, MakeBoss, iBossUserID[i]);
 		}
 	}
+	hInitBossTimer = null;
 	return Plugin_Continue;
 }
