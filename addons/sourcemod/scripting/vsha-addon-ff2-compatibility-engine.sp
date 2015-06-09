@@ -1,4 +1,6 @@
 
+// iBossArrayListIndex and local variable BossIndex will need some thought and work.
+
 
 #pragma semicolon 1
 
@@ -354,7 +356,11 @@ public void OnAddToDownloads()
 	for (int i = 0; i < hArrayDownloads.Length; i++)
 	{
 		hArrayDownloads.GetString(i, STRING(cbuffer));
-		AddFileToDownloadsTable(cbuffer);
+		if(FileExists(cbuffer))
+		{
+			PrintToServer("[FF2] AddFileToDownloadsTable:%s",cbuffer);
+			AddFileToDownloadsTable(cbuffer);
+		}
 	}
 
 	EnableSubPlugins();
@@ -474,7 +480,7 @@ stock void EnableSubPlugins(bool force=false)
 	char sAbility[10];
 	char sFindString[64];
 	char sPluginNameString[PATHX];
-	bool found = false;
+	//bool found = false;
 
 	directory=OpenDirectory(path);
 	while(ReadDirEntry(directory, filename, PLATFORM_MAX_PATH, filetype))
@@ -496,8 +502,8 @@ stock void EnableSubPlugins(bool force=false)
 						{
 							// load only needed plugins
 							//ServerCommand("sm plugins load freaks/%s", filename);
-							found = true;
-							InsertServerCommand("sm plugins load freaks/%s", filename);
+							//found = true;
+							ServerCommand("sm plugins load freaks/%s", filename);
 							break;
 						}
 					}
@@ -506,10 +512,10 @@ stock void EnableSubPlugins(bool force=false)
 			//ServerCommand("sm plugins load freaks/%s", filename);
 		}
 	}
-	if(found)
-	{
-		ServerExecute();
-	}
+	//if(found)
+	//{
+		//ServerExecute();
+	//}
 
 	//LoadPluginForwards();
 	CreateTimer(10.0, LoadPluginForwardsTimer, _);
@@ -596,8 +602,8 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 	BossSubplug.SetString("filename", character);
 	BossSubplug.SetString("name", config);
 
-	LogError("FF2 filename %d",character);
-	LogError("FF2 name %d",config);
+	LogError("FF2 filename %s",character);
+	LogError("FF2 name %s",config);
 
 	char characterShortName[16];
 	char characterLongName[32];
@@ -1841,15 +1847,13 @@ public void OnBossSelected(int iBossArrayListIndex, int iiBoss)
 		return;
 	}
 
-	char BossShortName[16];
+	//char BossShortName[16];
+	//VSHA_GetBossName(iiBoss, BossShortName, 16);
+	//int iBossIndex = FindBossIndexByShortName(BossShortName);
 
-	VSHA_GetBossName(iiBoss, BossShortName, 16);
-
-	int iBossIndex = FindBossIndexByShortName(BossShortName);
-
-	if(iBossIndex > -1)
+	if(iBossArrayListIndex > -1)
 	{
-		BossIndex[iiBoss] = iBossIndex;
+		BossIndex[iiBoss] = iBossArrayListIndex;
 
 		//CPrintToChatAll("%s, Miku Boss Selected!",VSHA_COLOR);
 
