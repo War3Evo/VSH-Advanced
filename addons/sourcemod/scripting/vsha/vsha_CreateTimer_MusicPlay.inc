@@ -23,12 +23,12 @@ public Action MusicPlay(Handle Timer, int userid)
 
 	if(AllowMusic)
 	{
-		VSHA_OnMusic(Storage[iClient], iClient, sound, ftime);
+		VSHA_OnMusic(iClient, sound, ftime);
 	}
 	else if(userid == -2)
 	{
 		// Send OnMusic to Game Mode Addon
-		VSHA_OnMusic(Storage[iClient], -2, sound, ftime);
+		VSHA_OnMusic(-2, sound, ftime);
 	}
 
 	//SoundMap = VSHA_GetVar(EventSound);

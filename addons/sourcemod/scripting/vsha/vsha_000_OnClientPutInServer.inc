@@ -5,6 +5,7 @@ public void OnClientPutInServer(int client)
 	//SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	SDKHook(client, SDKHook_PreThink, OnPreThink);
 	Storage[client] = null;
+	BossArrayListIndex[client] = -1;
 	iBoss[client] = -1;
 	iPresetBoss[client] = -1;
 	bIsBoss[client] = false;

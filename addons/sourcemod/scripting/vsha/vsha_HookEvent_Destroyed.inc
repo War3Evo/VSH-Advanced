@@ -14,7 +14,7 @@ public Action Destroyed(Event event, const char[] name, bool dontBroadcast)
 			//VSHA_SetVar(EventAttacker,attacker);
 			//VSHA_Private_Forward("VSHA_OnBossKillBuilding");
 
-			VSHA_OnBossKillBuilding(Storage[attacker], event, attacker);
+			VSHA_OnBossKillBuilding(event, attacker);
 		}
 	}
 	return Plugin_Continue;

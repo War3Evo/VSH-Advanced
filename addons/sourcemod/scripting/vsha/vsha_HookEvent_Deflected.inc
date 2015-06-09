@@ -8,7 +8,7 @@ public Action Deflected(Event event, const char[] name, bool dontBroadcast)
 	{
 		//int airblaster = GetClientOfUserId(event.GetInt("userid"));
 
-		VSHA_OnBossAirblasted(Storage[client], event, client);
+		VSHA_OnBossAirblasted(event, client);
 
 	}
 	return Plugin_Continue;

@@ -8,6 +8,7 @@ public void OnPluginStart()
 
 	hArrayModelManagerPlugin = new ArrayList();
 	hArrayModelManagerStringName = new ArrayList(ByteCountToCells(PATHX));
+	//hArrayModelManagerBossShortName = new ArrayList(ByteCountToCells(PATHX));
 
 	//hArrayAutomaticHooking = new ArrayList();
 

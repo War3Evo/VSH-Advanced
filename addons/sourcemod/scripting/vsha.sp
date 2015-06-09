@@ -153,7 +153,7 @@ enum VSHAError
 //#include "vsha/"
 //#include "vsha/"
 
-public Handle PickBossSpecial(int &select)
+public int PickBossSpecial(int &select)
 {
 	int pick = -1;
 	if (select == -1) pick = GetRandomInt( 0, hArrayBossSubplugins.Length-1 ); //GetArraySize(hArrayBossSubplugins)-1 );
@@ -164,7 +164,7 @@ public Handle PickBossSpecial(int &select)
 	}
 	//Storage[client] = GetBossSubPlugin(hArrayBossSubplugins.Get(pick)); //GetArrayCell(hArrayBossSubplugins, iBoss[client]));
 
-	return ( GetBossSubPlugin(hArrayBossSubplugins.Get(pick)) );
+	return pick; //( GetBossSubPlugin(hArrayBossSubplugins.Get(pick)) );
 }
 
 public void SearchForItemPacks()
@@ -526,8 +526,8 @@ public int Native_RegisterBossSubplugin(Handle plugin, int numParams)
 	GetNativeString(2, BossSubPluginName, sizeof(BossSubPluginName));
 	VSHAError erroar;
 	bool bypassHandleRestrictions = view_as<bool>(GetNativeCell(1));
-	Handle BossHandle = RegisterBoss( plugin, ShortBossSubPluginName, BossSubPluginName, erroar, bypassHandleRestrictions ); //ALL PROPS TO COOKIES.NET AKA COOKIES.IO
-	return view_as<int>( BossHandle );
+	int iBossArrayListIndex = RegisterBoss( plugin, ShortBossSubPluginName, BossSubPluginName, erroar, bypassHandleRestrictions ); //ALL PROPS TO COOKIES.NET AKA COOKIES.IO
+	return iBossArrayListIndex;
 }
 
 public int Native_GetBossHandle(Handle plugin, int numParams)
@@ -754,6 +754,11 @@ public int Native_SetBossPlayer(Handle plugin, int numParams)
 	{
 		int iiBoss = GetNativeCell(1);
 		Storage[iiBoss] = plugin;
+
+		// needs to be updated to set the ArrayListIndex too!
+		//BossArrayListIndex[boss] = PickBossSpecial(iPresetBoss[boss]);
+		//Storage[boss] = GetBossSubPlugin(hArrayBossSubplugins.Get(BossArrayListIndex[boss]));
+
 		iBossUserID[iiBoss] = GetClientUserId(iiBoss);
 		bIsBoss[iiBoss] = GetNativeCell(2);
 	}
@@ -872,13 +877,13 @@ public bool GetBossName(Handle pluginhandle, char[] BossName, int stringsize)
 	}
 	return false;
 }
-public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const char longname[32], VSHAError &error, bool bypassHandleRestrictions)
+public int RegisterBoss(Handle pluginhndl, const char shortname[16], const char longname[32], VSHAError &error, bool bypassHandleRestrictions)
 {
 	if (!ValidateName(shortname))
 	{
 		LogError("**** RegisterBoss - Invalid Name ****");
 		error = Error_InvalidName;
-		return null;
+		return -1;
 	}
 	// allows us to store multiple bosses from the same plugin
 	// if we set bypassHandleRestrictions to true
@@ -888,14 +893,14 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 		{
 			LogError("**** RegisterBoss - Boss Subplugin Already Registered ****");
 			error = Error_SubpluginAlreadyRegistered;
-			return null;
+			return -1;
 		}
 	}
 	if (FindBossName(shortname) != null)
 	{
 		LogError("**** RegisterBoss - Boss Name Already Exists ****");
 		error = Error_AlreadyExists;
-		return null;
+		return -1;
 	}
 	// Create the trie to hold the data about the boss
 	StringMap BossSubplug = new StringMap(); //CreateTrie();
@@ -928,6 +933,8 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 					iBossUserID[plyrBoss] = GetClientUserId(plyrBoss);
 					bIsBoss[plyrBoss] = true;
 					Storage[plyrBoss] = pluginhndl;
+					BossArrayListIndex[plyrBoss] = hArrayBossSubplugins.Length-1;
+
 
 					//VSHA_OnBossSelected(plyrBoss);
 
@@ -958,11 +965,11 @@ public Handle RegisterBoss(Handle pluginhndl, const char shortname[16], const ch
 	}
 
 	error = Error_None;
-	return pluginhndl;
+	return hArrayBossSubplugins.Length-1;
 }
 public Action LoadPluginTimer(Handle hTimer, int plyrBoss)
 {
-	VSHA_OnBossSelected(Storage[plyrBoss], plyrBoss);
+	VSHA_OnBossSelected(plyrBoss);
 	//PrintToChatAll("VSHA_OnBossSelected %d",plyrBoss);
 	//ReplyToCommand(client, "[VSH Engine] Reload Finished");
 	return Plugin_Continue;
@@ -1303,46 +1310,46 @@ public void VSHA_AddToDownloads() // 0
 	Call_Finish();
 }
 
-public void VSHA_OnPlayerKilledByBoss(Handle BossPlugin, int iiBoss, int attacker) // 3
+public void VSHA_OnPlayerKilledByBoss(int iiBoss, int attacker) // 3
 {
 	Call_StartForward(p_OnPlayerKilledByBoss);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(iiBoss);
 	Call_PushCell(attacker);
 	Call_Finish();
 }
 
-public void VSHA_OnKillingSpreeByBoss(Handle BossPlugin, int iiBoss, int attacker) // 3
+public void VSHA_OnKillingSpreeByBoss(int iiBoss, int attacker) // 3
 {
 	Call_StartForward(p_OnKillingSpreeByBoss);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(iiBoss);
 	Call_PushCell(attacker);
 	Call_Finish();
 }
 
-public void VSHA_OnBossKilled(Handle BossPlugin, int iiBoss, int attacker) // 3
+public void VSHA_OnBossKilled(int iiBoss, int attacker) // 3
 {
 	Call_StartForward(p_OnBossKilled);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(iiBoss);
 	Call_PushCell(attacker);
 	Call_Finish();
 }
 
-public void VSHA_OnBossWin(Handle BossPlugin, Event event, int iiBoss) // 3
+public void VSHA_OnBossWin(Event event, int iiBoss) // 3
 {
 	Call_StartForward(p_OnBossWin);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(event);
 	Call_PushCell(iiBoss);
 	Call_Finish();
 }
 
-public void VSHA_OnBossKillBuilding(Handle BossPlugin, Event event, int iiBoss) // 3
+public void VSHA_OnBossKillBuilding(Event event, int iiBoss) // 3
 {
 	Call_StartForward(p_OnBossKillBuilding);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(event);
 	Call_PushCell(iiBoss);
 	Call_Finish();
@@ -1357,56 +1364,56 @@ public Action VSHA_OnMessageTimer(int iiBoss) // 1
 	return result;
 }
 
-public void VSHA_OnBossAirblasted(Handle BossPlugin, Event event, int attacker) // 3
+public void VSHA_OnBossAirblasted(Event event, int iiBoss) // 3
 {
 	Call_StartForward(p_OnBossAirblasted);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(event);
-	Call_PushCell(attacker);
+	Call_PushCell(iiBoss);
 	Call_Finish();
 }
 
-public void VSHA_OnBossChangeClass(Handle BossPlugin, Event event, int iiBoss) // 3
+public void VSHA_OnBossChangeClass(Event event, int iiBoss) // 3
 {
 	Call_StartForward(p_OnBossChangeClass);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(event);
 	Call_PushCell(iiBoss);
 	Call_Finish();
 }
 
-public void VSHA_OnBossSelected(Handle BossPlugin, int iiBoss) // 2
+public void VSHA_OnBossSelected(int iiBoss) // 2
 {
 	Call_StartForward(p_OnBossSelected);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(iiBoss);
 	Call_Finish();
 }
 
-public Action VSHA_OnBossSetHP_Pre(Handle BossPlugin, int BossEntity, int &BossMaxHealth) // 3
+public Action VSHA_OnBossSetHP_Pre(int BossEntity, int &BossMaxHealth) // 3
 {
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnBossSetHP_Pre);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[BossEntity]);
 	Call_PushCell(BossEntity);
 	Call_PushCellRef(BossMaxHealth);
 	Call_Finish(result);
 	return result;
 }
-public Action VSHA_OnBossSetHP(Handle BossPlugin, int BossEntity, int &BossMaxHealth) // 3
+public Action VSHA_OnBossSetHP(int BossEntity, int &BossMaxHealth) // 3
 {
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnBossSetHP);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[BossEntity]);
 	Call_PushCell(BossEntity);
 	Call_PushCellRef(BossMaxHealth);
 	Call_Finish(result);
 	return result;
 }
-public void VSHA_OnBossSetHP_Post(Handle BossPlugin, int iEntity) // 2
+public void VSHA_OnBossSetHP_Post(int iEntity) // 2
 {
 	Call_StartForward(p_OnBossSetHP_Post);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iEntity]);
 	Call_PushCell(iEntity);
 	Call_Finish();
 }
@@ -1417,10 +1424,10 @@ public void VSHA_OnLastSurvivor() // 0
 	Call_Finish();
 }
 
-public void VSHA_OnBossTimer(Handle BossPlugin, int iiBoss) // 7
+public void VSHA_OnBossTimer(int iiBoss) // 7
 {
 	Call_StartForward(p_OnBossTimer);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(iiBoss);
 	Call_PushCellRef(iBossHealth[iiBoss]);
 	Call_PushCellRef(iBossMaxHealth[iiBoss]);
@@ -1429,26 +1436,26 @@ public void VSHA_OnBossTimer(Handle BossPlugin, int iiBoss) // 7
 	Call_PushCell(hHudSynchronizer2);
 	Call_Finish();
 }
-public void VSHA_OnBossTimer_1_Second(Handle BossPlugin, int iiBoss) // 2
+public void VSHA_OnBossTimer_1_Second(int iiBoss) // 2
 {
 	Call_StartForward(p_OnBossTimer_1_Second);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(iiBoss);
 	Call_Finish();
 }
-public void VSHA_OnPrepBoss(Handle BossPlugin, int iiBoss) // 2
+public void VSHA_OnPrepBoss(int iiBoss) // 2
 {
 	Call_StartForward(p_OnPrepBoss);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(iiBoss);
 	Call_Finish();
 }
 
-public Action VSHA_OnMusic(Handle BossPlugin, int iClient, char BossTheme[PATHX], float &time) // 4
+public Action VSHA_OnMusic(int iClient, char BossTheme[PATHX], float &time) // 4
 {
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnMusic);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iClient]);
 	Call_PushCell(iClient);
 	Call_PushStringEx(STRING(BossTheme),0, SM_PARAM_COPYBACK);
 	Call_PushFloatRef(time);
@@ -1456,21 +1463,21 @@ public Action VSHA_OnMusic(Handle BossPlugin, int iClient, char BossTheme[PATHX]
 	return result;
 }
 
-public Action VSHA_OnModelTimer(Handle BossPlugin, int iClient, char modelpath[PATHX]) // 3
+public Action VSHA_OnModelTimer(int iClient, char modelpath[PATHX]) // 3
 {
 	Action result = Plugin_Continue;
 	Call_StartForward(p_OnModelTimer);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iClient]);
 	Call_PushCell(iClient);
 	Call_PushStringEx(STRING(modelpath),0, SM_PARAM_COPYBACK);
 	Call_Finish(result);
 	return result;
 }
 
-public void VSHA_OnBossRage(Handle BossPlugin, int iiBoss) // 2
+public void VSHA_OnBossRage(int iiBoss) // 2
 {
 	Call_StartForward(p_OnBossRage);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(iiBoss);
 	Call_Finish();
 }
@@ -1540,10 +1547,10 @@ public void VSHA_OnEquipPlayer_Post(int iEntity) // 1
 	Call_Finish();
 }
 
-public void VSHA_ShowBossHelpMenu(Handle BossPlugin, int iEntity) // 2
+public void VSHA_ShowBossHelpMenu(int iEntity) // 2
 {
 	Call_StartForward(p_ShowBossHelpMenu);
-	Call_PushCell(BossPlugin);
+	Call_PushCell(BossArrayListIndex[iEntity]);
 	Call_PushCell(iEntity);
 	Call_Finish();
 }
@@ -1611,7 +1618,7 @@ public int Native_BossSelected_Forward(Handle plugin, int numParams)
 	int iClient = GetNativeCell(1);
 	if(ValidPlayer(iClient))
 	{
-		VSHA_OnBossSelected(Storage[iClient], iClient);
+		VSHA_OnBossSelected(iClient);
 	}
 	return 0;
 }
@@ -1651,7 +1658,8 @@ public int Native_AddBoss(Handle plugin, int numParams)
 
 	iBossUserID[boss] = GetClientUserId(boss);
 	bIsBoss[boss] = true;
-	Storage[boss] = PickBossSpecial(iPresetBoss[boss]);
+	BossArrayListIndex[boss] = PickBossSpecial(iPresetBoss[boss]);
+	Storage[boss] = GetBossSubPlugin(hArrayBossSubplugins.Get(BossArrayListIndex[boss]));
 
 	return boss;
 }
@@ -1670,21 +1678,37 @@ public int Native_SetHealthBar(Handle plugin, int numParams)
 public int Native_SetPluginModel(Handle plugin, int numParams)
 {
 	char ModelString[PATHX];
+	char tmpModelString[PATHX];
 	if(GetNativeString(1, STRING(ModelString)) == SP_ERROR_NONE)
 	{
 		for (int i = 0; i < hArrayModelManagerPlugin.Length; i++)
 		{
 			if (hArrayModelManagerPlugin.Get(i) == plugin)
 			{
-				// if found same plugin, overwrite old model
-				hArrayModelManagerStringName.SetString(i,ModelString);
-				return true;
+				hArrayModelManagerStringName.GetString(i,tmpModelString,PATHX);
+				if(StrEqual(ModelString,tmpModelString,false))
+				{
+					// if found same plugin, overwrite old model
+					//hArrayModelManagerStringName.SetString(i,ModelString);
+					return true;
+				}
 			}
 		}
 
 		hArrayModelManagerPlugin.Push(plugin);
 		hArrayModelManagerStringName.PushString(ModelString);
-		return true;
+		/*
+
+		char bossShortName[PATHX];
+		if(GetNativeString(2, STRING(bossShortName)) == SP_ERROR_NONE)
+		{
+			hArrayModelManagerBossShortName.PushString(bossShortName);
+		}
+		else
+		{
+			hArrayModelManagerBossShortName.PushString("");
+		}
+		return true;*/
 	}
 	return false;
 }

@@ -9,7 +9,7 @@ public Action DoTaunt(int client, const char[] command, int argc)
 
 	bNoTaunt[client] = true;
 
-	VSHA_OnBossRage(Storage[client], client);
+	VSHA_OnBossRage(client);
 
 	CreateTimer(1.5, TimerNoTaunting, iBossUserID[client], TIMER_FLAG_NO_MAPCHANGE);
 	flCharge[client] = 0.0;

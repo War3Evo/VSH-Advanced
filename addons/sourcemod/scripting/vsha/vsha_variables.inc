@@ -13,10 +13,13 @@ StringMap hTrieBossSubplugins = null;	// Map <Boss Name, Subplugin Handle>
 // Model Manager
 ArrayList hArrayModelManagerPlugin = null;
 ArrayList hArrayModelManagerStringName = null;
+//ArrayList hArrayModelManagerBossShortName = null;
 
 //Handles
 Handle Storage[PLYR];
 //Handle ModelTimer[PLYR];
+
+BossArrayListIndex[PLYR];
 
 // Timer Handles
 Handle HandletTenSecStartTimer;

@@ -37,7 +37,9 @@ public Action WatchGameModeTimer(Handle hTimer)
 		{
 			iBossUserID[boss] = GetClientUserId(boss);
 			bIsBoss[boss] = true;
-			Storage[boss] = PickBossSpecial(iPresetBoss[boss]);
+			BossArrayListIndex[boss] = PickBossSpecial(iPresetBoss[boss]);
+			Storage[boss] = GetBossSubPlugin(hArrayBossSubplugins.Get(BossArrayListIndex[boss]));
+
 
 			//DP("vsha_CreateTimer_WatchGameMode ForceTeamChange(boss,TEAM_BLUE)");
 
@@ -56,7 +58,8 @@ public Action WatchGameModeTimer(Handle hTimer)
 		{
 			iBossUserID[boss] = GetClientUserId(boss);
 			bIsBoss[boss] = true;
-			Storage[boss] = PickBossSpecial(iPresetBoss[boss]);
+			BossArrayListIndex[boss] = PickBossSpecial(iPresetBoss[boss]);
+			Storage[boss] = GetBossSubPlugin(hArrayBossSubplugins.Get(BossArrayListIndex[boss]));
 
 			LoopAlivePlayers(iTarget)
 			{

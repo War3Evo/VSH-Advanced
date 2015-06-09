@@ -168,7 +168,9 @@ native void VSHA_UnRegisterNonBossAddon();
 
 // BOSS
 // set bypassHandleRestrictions to true when you have more than one boss to register inside the same plugin
-native Handle VSHA_RegisterBoss(char BossShortName[16], char BossLongName[32], bool bypassHandleRestrictions=false); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
+
+// returns the BossArrayListIndex instead of plugin handle.
+native int VSHA_RegisterBoss(char BossShortName[16], char BossLongName[32], bool bypassHandleRestrictions=false); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
 
 // BOSS
 native Handle VSHA_GetBossPluginHandle(int iiBoss);
@@ -271,8 +273,9 @@ native int VSHA_GetPlayerCount();
 // ANY PLAYER // no need much anymore.. handled interally
 native void VSHA_CallModelTimer(float time, int client);
 
-// ANY PLAYER
-native bool VSHA_SetPluginModel(char ModelString[PATHX]); // sets up a model for a boss plugin for model manager
+// ANY PLAYER // Only good for plugins that are not packs of bosses
+// 				this native uses plugin-handle to look up boss
+native bool VSHA_SetPluginModel(char ModelString[PATHX], char BossShortName[PATHX]=""); // sets up a model for a boss plugin for model manager
 
 // ANY PLAYER
 native void VSHA_SetShield(int client, int ShieldEntity); // set the entity of the shield if a player is wearing a demoshield
@@ -284,7 +287,7 @@ native void VSHA_SetClientQueuePoints(int client, int points);
 native int VSHA_GetClientQueuePoints(int client);
 
 // BOSS
-native bool VSHA_GetBossName(int iiBoss, char[] BossShortName, int size);
+native bool VSHA_GetBossName(int iiBoss, char[] BossLongName, int size);
 
 native int VSHA_AddBoss(int iiBoss);
 // USE STOCK if your just going to add a random boss VSHA_AddBossStock();
@@ -380,28 +383,28 @@ typeset VSHAHookCB
 	// VSHAHook OnBossSelected
 	// VSHAHook OnPrepBoss
 	// VSHAHook OnBossRage
-	// VSHAHook ShowPlayerHelpMenu
 	// VSHAHook ShowBossHelpMenu
-	// VSHAHook OnLastSurvivorLoop
 	// VSHAHook OnBossTimer_1_Second
 	// VSHAHook OnBossSetHP_Post
-	function void (Handle BossPlugin, int iEntity);
+	function void (int iBossArrayListIndex, int iEntity);
 
 	// VSHAHook OnBossTimer
-	function void (Handle BossPlugin, int iEntity, int &iiBossHealth, int &iiBossMaxHealth, int buttons, Handle hHudSync, Handle hHudSync2);
+	function void (int BossArrayListIndex, int iEntity, int &iiBossHealth, int &iiBossMaxHealth, int buttons, Handle hHudSync, Handle hHudSync2);
 
 	// VSHAHook OnEquipPlayer_Pre
 	// VSHAHook OnMessageTimer
 	function Action (int iEntity);
 
 	// VSHAHook OnEquipPlayer_Post
+	// VSHAHook OnLastSurvivorLoop
+	// VSHAHook ShowPlayerHelpMenu
 	function void (int iEntity);
 
 	// VSHAHook OnPlayerKilledByBoss
 	// VSHAHook OnKillingSpreeByBoss
 	// VSHAHook OnBossKilled
 	// VSHAHook OnUberTimer
-	function void (Handle BossPlugin, int iEntity, int OtherEntity);
+	function void (int BossArrayListIndex, int iEntity, int OtherEntity);
 
 	// VSHAHook OnUberTimer -- may want to move this whole thing into player's equipment plugin
 	function void (int iMedic, int iTarget);
@@ -410,17 +413,17 @@ typeset VSHAHookCB
 	// VSHAHook OnBossKillBuilding
 	// VSHAHook OnBossAirblasted
 	// VSHAHook OnBossChangeClass
-	function void (Handle BossPlugin, Event smEvent, int iEntity);
+	function void (int BossArrayListIndex, Event smEvent, int iEntity);
 
 	// VSHAHook OnBossSetHP_Pre
 	// VSHAHook OnBossSetHP
-	function Action (Handle BossPlugin, int BossEntity, int &BossMaxHealth);
+	function Action (int BossArrayListIndex, int BossEntity, int &BossMaxHealth);
 
 	// VSHAHook OnMusic
-	function Action (Handle BossPlugin, int iiBoss, char BossTheme[PATHX], float &time);
+	function Action (int BossArrayListIndex, int iiBoss, char BossTheme[PATHX], float &time);
 
 	// VSHAHook OnModelTimer
-	function Action (Handle BossPlugin, int iiBoss, char modelpath[PATHX]);
+	function Action (int BossArrayListIndex, int iiBoss, char modelpath[PATHX]);
 
 	// VSHAHook OnConfiguration_Load_Sounds
 	// VSHAHook OnConfiguration_Load_Materials

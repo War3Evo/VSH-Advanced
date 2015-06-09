@@ -34,6 +34,7 @@ public void ClearAllVariables()
 		iBossUserID[player]=0;
 		iModelRetrys[player] = 25;
 		Storage[player] = null;
+		BossArrayListIndex[player] = -1;
 		iBoss[player] = -1;
 		iPresetBoss[player] = -1;
 		bIsBoss[player] = false;

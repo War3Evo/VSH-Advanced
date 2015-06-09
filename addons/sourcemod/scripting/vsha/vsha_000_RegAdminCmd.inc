@@ -58,6 +58,7 @@ public int MenuHandler_ReloadBoss(Menu menu, MenuAction action, int client, int 
 			if(Storage[plyrBoss] == plugin)
 			{
 				Storage[plyrBoss] = null;
+				BossArrayListIndex[plyrBoss] = -1;
 				ReloadPlayer[plyrBoss] = true;
 				PrintToChatAll("ReloadPlayer %d",plyrBoss);
 			}

@@ -456,9 +456,19 @@ stock int GetClientCloakIndex(int client)
 	if ( strncmp(classname, "tf_wea", 6, false) != 0 ) return -1;
 	return GetEntProp(wep, Prop_Send, "m_iItemDefinitionIndex");
 }
-stock int GetHealingTarget(int client)
+stock int GetHealingTarget(int client, bool checkgun=false)
 {
 	int medigun = GetPlayerWeaponSlot(client, TFWeaponSlot_Secondary);
+
+	if(!checkgun)
+	{
+		if(GetEntProp(medigun, Prop_Send, "m_bHealing"))
+		{
+			return GetEntPropEnt(medigun, Prop_Send, "m_hHealingTarget");
+		}
+		return -1;
+	}
+
 	if ( !IsValidEdict(medigun) || !IsValidEntity(medigun) ) return -1;
 	char s[32]; GetEdictClassname(medigun, s, sizeof(s));
 	if (!strcmp(s, "tf_weapon_medigun", false))

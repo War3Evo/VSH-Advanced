@@ -41,7 +41,7 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 				//VSHA_SetVar(EventBoss,i);
 				//VSHA_Private_Forward("VSHA_OnBossWin");
 
-				VSHA_OnBossWin(Storage[i], event, i);
+				VSHA_OnBossWin(event, i);
 
 				playedwinsound = true;
 			}
