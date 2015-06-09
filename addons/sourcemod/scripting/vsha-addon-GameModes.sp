@@ -396,6 +396,8 @@ public Action OnGameMode_BossSetup()
 	CurrentBossGame = iGameMode;
 	PreviousBossGame = iGameMode;
 
+	if(CurrentBossGame == 0) return Plugin_Continue;
+
 	if(CurrentBossGame == DuoBossGameMode)
 	{
 		if(VSHA_GetPlayerCount()<3)

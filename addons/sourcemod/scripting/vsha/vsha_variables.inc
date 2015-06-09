@@ -28,6 +28,7 @@ Handle hBossStartTimer = null;
 Handle hInitBossTimer = null;
 Handle hBossResponse = null;
 Handle hDoMessage = null;
+Handle hForceRoundStartCheckTimer = null;
 
 //ints
 int iModelRetrys[PLYR],
