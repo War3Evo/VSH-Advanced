@@ -17,6 +17,7 @@
 #define REQUIRE_PLUGIN
 
 #include <vsha>
+#include <vsha_stocks>
 #include <freak_fortress_2>
 
 #define PLUGIN_VERSION "1.0"
@@ -45,6 +46,9 @@ enum Operators
 	Operator_Divide,
 	Operator_Exponent,
 };
+
+float BossCharge[PLYR+1][8];
+int FF2flags[PLYR+1];
 
 /*
 int Specials;
@@ -811,13 +815,13 @@ public int Native_GetBoss(Handle plugin, int numParams)
 public int Native_GetIndex(Handle plugin, int numParams)
 {
 	////return GetBossIndex(GetNativeCell(1));
-	return 0;
+	return -1;
 }
 
 public int Native_GetTeam(Handle plugin, int numParams)
 {
-	////return BossTeam;
-	return TEAM_BLUE;
+	//return BossTeam;
+	return 0;
 }
 
 public int Native_GetSpecial(Handle plugin, int numParams)
@@ -848,79 +852,98 @@ public int Native_GetSpecial(Handle plugin, int numParams)
 public int Native_GetBossHealth(Handle plugin, int numParams)
 {
 	////return BossHealth[GetNativeCell(1)];
-	return 2500;
+	return VSHA_GetBossHealth(GetNativeCell(1));
 }
 
 public int Native_SetBossHealth(Handle plugin, int numParams)
 {
 	//BossHealth[GetNativeCell(1)]=GetNativeCell(2);
+	VSHA_SetBossHealth(GetNativeCell(1), GetNativeCell(2));
 }
 
 public int Native_GetBossMaxHealth(Handle plugin, int numParams)
 {
-	////return BossHealthMax[GetNativeCell(1)];
-	return 2500;
+	//return BossHealthMax[GetNativeCell(1)];
+	return VSHA_GetBossMaxHealth(GetNativeCell(1));
 }
 
 public int Native_SetBossMaxHealth(Handle plugin, int numParams)
 {
 	//BossHealthMax[GetNativeCell(1)]=GetNativeCell(2);
+	VSHA_SetBossMaxHealth(GetNativeCell(1), GetNativeCell(2));
 }
 
 public int Native_GetBossLives(Handle plugin, int numParams)
 {
-	////return BossLives[GetNativeCell(1)];
-	//return 3;
-	return 1;
+	//return BossLives[GetNativeCell(1)];
+	return VSHA_GetLives(GetNativeCell(1));
 }
 
 public int Native_SetBossLives(Handle plugin, int numParams)
 {
 	//BossLives[GetNativeCell(1)]=GetNativeCell(2);
+	VSHA_SetLives(GetNativeCell(1), GetNativeCell(2));
 }
 
 public int Native_GetBossMaxLives(Handle plugin, int numParams)
 {
 	//return BossLivesMax[GetNativeCell(1)];
-	return 1;
+	return VSHA_GetMaxLives(GetNativeCell(1));
 }
 
 public int Native_SetBossMaxLives(Handle plugin, int numParams)
 {
 	//BossLivesMax[GetNativeCell(1)]=GetNativeCell(2);
+	VSHA_SetMaxLives(GetNativeCell(1), GetNativeCell(2));
 }
 
 public int Native_GetBossCharge(Handle plugin, int numParams)
 {
 	//return _:BossCharge[GetNativeCell(1)][GetNativeCell(2)];
-	return 0;
+	int slot = GetNativeCell(2);
+	if(slot == 0)
+	{
+		return view_as<int>(VSHA_GetBossRage(GetNativeCell(1)));
+	}
+	else
+	{
+		return view_as<int>(BossCharge[GetNativeCell(1)][GetNativeCell(2)]);
+	}
 }
 
 public int Native_SetBossCharge(Handle plugin, int numParams)
 {
 	//BossCharge[GetNativeCell(1)][GetNativeCell(2)]=Float:GetNativeCell(3);
+	int slot = GetNativeCell(2);
+	if(slot == 0)
+	{
+		VSHA_SetBossRage(GetNativeCell(1), view_as<float>(GetNativeCell(3)));
+	}
+	else
+	{
+		BossCharge[GetNativeCell(1)][GetNativeCell(2)]=view_as<float>(GetNativeCell(3));
+	}
 }
 
 public int Native_GetBossRageDamage(Handle plugin, int numParams)
 {
 	//return BossRageDamage[GetNativeCell(1)];
-	return 0;
+	return VSHA_GetDamage(GetNativeCell(1));
 }
 
 public int Native_SetBossRageDamage(Handle plugin, int numParams)
 {
 	//BossRageDamage[GetNativeCell(1)]=GetNativeCell(2);
+	VSHA_SetDamage(GetNativeCell(1), GetNativeCell(2));
 }
 
 public int Native_GetRoundState(Handle plugin, int numParams)
 {
-	/*
 	if(CheckRoundState()<=0)
 	{
 		return 0;
 	}
-	return CheckRoundState();*/
-	return 0;
+	return CheckRoundState();
 }
 
 public int Native_GetRageDist(Handle plugin, int numParams)
@@ -1199,6 +1222,7 @@ public int Native_Debug(Handle plugin, int numParams)
 public int Native_IsVSHMap(Handle plugin, int numParams)
 {
 	//return false;
+	return IsVSHMap();
 }
 
 
@@ -1339,14 +1363,15 @@ stock void UseAbility(const char[] ability_name, const char[] plugin_name, int i
 		Call_PushCell(3);  //Status - we're assuming here a life-loss ability will always be in use if it gets called
 		Call_Finish(action);
 	}
-	else if(!slot)
+	else if(!slot) // not 0 ... means 0 is changed to true.. slot is 0
 	{
-		//FF2flags[Boss[iiBoss]]&=~FF2FLAG_BOTRAGE;
+		FF2flags[iiBoss]&=~FF2FLAG_BOTRAGE;
 		Call_PushCell(3);  //Status - we're assuming here a rage ability will always be in use if it gets called
 		Call_Finish(action);
-		//BossCharge[iiBoss][slot]=0.0;
+		BossCharge[iiBoss][slot]=0.0;
+		VSHA_SetBossRage(iiBoss, 0.0);
 	}
-	else
+	else // slot is anything from 1+
 	{
 		SetHudTextParams(-1.0, 0.88, 0.15, 255, 255, 255, 255);
 		int button;
@@ -1371,37 +1396,37 @@ stock void UseAbility(const char[] ability_name, const char[] plugin_name, int i
 				{
 					case 2:
 					{
-						SetInfoCookies(iiBoss, 0, CheckInfoCookies(iiBoss, 0)-1);
+						//SetInfoCookies(iiBoss, 0, CheckInfoCookies(iiBoss, 0)-1);
 					}
 					default:
 					{
-						SetInfoCookies(iiBoss, 1, CheckInfoCookies(iiBoss, 1)-1);
+						//SetInfoCookies(iiBoss, 1, CheckInfoCookies(iiBoss, 1)-1);
 					}
 				}
 			}
 
-			if(BossCharge[client][slot]>=0.0)
+			if(BossCharge[iiBoss][slot]>=0.0)
 			{
 				Call_PushCell(2);  //Status
 				Call_Finish(action);
-				float charge=100.0*0.2/GetAbilityArgumentFloat(client, plugin_name, ability_name, 1, 1.5);
-				if(BossCharge[client][slot]+charge<100.0)
+				float charge=100.0*0.2/GetAbilityArgumentFloat(iiBoss, plugin_name, ability_name, 1, 1.5);
+				if(BossCharge[iiBoss][slot]+charge<100.0)
 				{
-					BossCharge[client][slot]+=charge;
+					BossCharge[iiBoss][slot]+=charge;
 				}
 				else
 				{
-					BossCharge[client][slot]=100.0;
+					BossCharge[iiBoss][slot]=100.0;
 				}
 			}
 			else
 			{
 				Call_PushCell(1);  //Status
 				Call_Finish(action);
-				BossCharge[client][slot]+=0.2;
+				BossCharge[iiBoss][slot]+=0.2;
 			}
 		}
-		else if(BossCharge[client][slot]>0.3)
+		else if(BossCharge[iiBoss][slot]>0.3)
 		{
 			float angles[3];
 			GetClientEyeAngles(iiBoss, angles);
@@ -1420,14 +1445,14 @@ stock void UseAbility(const char[] ability_name, const char[] plugin_name, int i
 			{
 				Call_PushCell(0);  //Status
 				Call_Finish(action);
-				//BossCharge[iiBoss][slot]=0.0;
+				BossCharge[iiBoss][slot]=0.0;
 			}
 		}
 		else if(BossCharge[iiBoss][slot]<0.0)
 		{
 			Call_PushCell(1);  //Status
 			Call_Finish(action);
-			//BossCharge[iiBoss][slot]+=0.2;
+			BossCharge[iiBoss][slot]+=0.2;
 		}
 		else
 		{
@@ -1437,4 +1462,131 @@ stock void UseAbility(const char[] ability_name, const char[] plugin_name, int i
 	}
 }
 
+public Action Timer_UseBossCharge(Handle timer, Handle data)
+{
+	BossCharge[ReadPackCell(data)][ReadPackCell(data)]=ReadPackFloat(data);
+	return Plugin_Continue;
+}
+
+stock int GetAbilityArgument(int index, const char[] plugin_name, const char[] ability_name, int arg, int defvalue=0)
+{
+	if(index==-1)
+		return 0;
+
+	char sAbility[10];
+	char sFindString[10];
+
+	char sStringHolder[64];
+	char sStringHolder2[64];
+
+	int count = hArrayBossSubplugins.Length;
+	for (int x = 0; x < count; x++)
+	{
+		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
+
+		for(int i=1; ; i++)
+		{
+			Format(sAbility,10,"ability%i",i);
+			Format(sFindString,64,"%sname",sAbility);
+
+			MyStringMap.GetString(sFindString, sStringHolder, 64);
+
+			Format(sFindString,64,"%splugin_name",sAbility);
+
+			MyStringMap.GetString(sFindString, sStringHolder2, 64);
+
+			if(StrEqual(sStringHolder,ability_name) && StrEqual(sStringHolder2,plugin_name))
+			{
+				Format(sFindString,64,"%sarg%i",sAbility,arg);
+				if(MyStringMap.GetString(sFindString, sStringHolder, 64))
+				{
+					return (StringToInt(sStringHolder));
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+stock float GetAbilityArgumentFloat(int index, const char[] plugin_name, const char[] ability_name, int arg, float defvalue=0.0)
+{
+	if(index==-1)
+		return 0.0;
+
+	char sAbility[10];
+	char sFindString[10];
+
+	char sStringHolder[64];
+	char sStringHolder2[64];
+
+	int count = hArrayBossSubplugins.Length;
+	for (int x = 0; x < count; x++)
+	{
+		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
+
+		for(int i=1; ; i++)
+		{
+			Format(sAbility,10,"ability%i",i);
+			Format(sFindString,64,"%sname",sAbility);
+
+			MyStringMap.GetString(sFindString, sStringHolder, 64);
+
+			Format(sFindString,64,"%splugin_name",sAbility);
+
+			MyStringMap.GetString(sFindString, sStringHolder2, 64);
+
+			if(StrEqual(sStringHolder,ability_name) && StrEqual(sStringHolder2,plugin_name))
+			{
+				Format(sFindString,64,"%sarg%i",sAbility,arg);
+				if(MyStringMap.GetString(sFindString, sStringHolder, 64))
+				{
+					return (StringToFloat(sStringHolder));
+				}
+			}
+		}
+	}
+	return 0.0;
+}
+
+stock void GetAbilityArgumentString(int index,const char[] plugin_name,const char[] ability_name, int arg, char[] buffer, int buflen,const char[] defvalue="")
+{
+	if(index==-1)
+	{
+		strcopy(buffer,buflen,"");
+		return;
+	}
+
+	char sAbility[10];
+	char sFindString[10];
+
+	char sStringHolder[64];
+	char sStringHolder2[64];
+
+	int count = hArrayBossSubplugins.Length;
+	for (int x = 0; x < count; x++)
+	{
+		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
+
+		for(int i=1; ; i++)
+		{
+			Format(sAbility,10,"ability%i",i);
+			Format(sFindString,64,"%sname",sAbility);
+
+			MyStringMap.GetString(sFindString, sStringHolder, 64);
+
+			Format(sFindString,64,"%splugin_name",sAbility);
+
+			MyStringMap.GetString(sFindString, sStringHolder2, 64);
+
+			if(StrEqual(sStringHolder,ability_name) && StrEqual(sStringHolder2,plugin_name))
+			{
+				Format(sFindString,64,"%sarg%i",sAbility,arg);
+				if(MyStringMap.GetString(sFindString, sStringHolder, 64))
+				{
+					strcopy(buffer, buflen, sStringHolder);
+				}
+			}
+		}
+	}
+}
 

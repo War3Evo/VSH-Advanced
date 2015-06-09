@@ -184,6 +184,8 @@ native void VSHA_SetDifficulty(int iiBoss, int difficultylevel);
 // ANY PLAYER
 native int VSHA_GetLives(int client); /* gets the player's lives, you can get/set lives for both players and bosses */
 native void VSHA_SetLives(int client, int lives);
+native int VSHA_GetMaxLives(int client); /* gets the player's lives, you can get/set lives for both players and bosses */
+native void VSHA_SetMaxLives(int client, int lives);
 
 // BOSS
 native int VSHA_GetPresetBoss(int iiBoss); //this gets the preset boss special ID, similar to VSH Special or FF2 Get special

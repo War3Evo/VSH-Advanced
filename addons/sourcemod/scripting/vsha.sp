@@ -407,6 +407,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	CreateNative("VSHA_GetLives", Native_GetLives);
 	CreateNative("VSHA_SetLives", Native_SetLives);
+	CreateNative("VSHA_GetMaxLives", Native_GetMaxLives);
+	CreateNative("VSHA_SetMaxLives", Native_SetMaxLives);
 
 	CreateNative("VSHA_GetPresetBoss", Native_GetPresetBoss);
 	CreateNative("VSHA_SetPresetBoss", Native_SetPresetBoss);
@@ -560,6 +562,16 @@ public int Native_GetLives(Handle plugin, int numParams)
 public int Native_SetLives(Handle plugin, int numParams)
 {
 	iLives[GetNativeCell(1)] = GetNativeCell(2);
+	return 0;
+}
+
+public int Native_GetMaxLives(Handle plugin, int numParams)
+{
+	return iMaxLives[GetNativeCell(1)];
+}
+public int Native_SetMaxLives(Handle plugin, int numParams)
+{
+	iMaxLives[GetNativeCell(1)] = GetNativeCell(2);
 	return 0;
 }
 

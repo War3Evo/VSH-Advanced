@@ -552,6 +552,7 @@ stock void Debug(char[] buffer, any ...)
 }
 
 // These exist for compatibility reasons (<1.10.1)
+/*
 #pragma deprecated Use TF2_RemoveWeaponSlot
 stock void TF2_RemoveWeaponSlot2(int client, int slot)
 {
@@ -565,7 +566,7 @@ stock void TF2_RemoveAllWeapons2(int client)
 	{
 		TF2_RemoveWeaponSlot(client, slot);
 	}
-}
+}*/
 
 public SharedPlugin __pl_FF2=
 {
