@@ -231,6 +231,10 @@ public void Load_VSHAHooks()
 	{
 		LogError("Error loading VSHAHook_ShowBossHelpMenu forwards for saxton hale.");
 	}*/
+	if(!VSHAHookEx(VSHAHook_OnBossRage, OnBossRage))
+	{
+		LogError("Error loading VSHAHook_OnBossRage forwards for miku.");
+	}
 }
 
 public void UnLoad_VSHAHooks()
@@ -292,6 +296,10 @@ public void UnLoad_VSHAHooks()
 	{
 		LogError("Error unloading VSHAHook_ShowBossHelpMenu forwards for saxton hale.");
 	}*/
+	if(!VSHAUnhookEx(VSHAHook_OnBossRage, OnBossRage))
+	{
+		LogError("Error unloading VSHAHook_OnBossRage forwards for miku.");
+	}
 }
 public void OnAllPluginsLoaded()
 {
@@ -588,6 +596,9 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 	BossSubplug.SetString("filename", character);
 	BossSubplug.SetString("name", config);
 
+	LogError("FF2 filename %d",character);
+	LogError("FF2 name %d",config);
+
 	char characterShortName[16];
 	char characterLongName[32];
 
@@ -598,12 +609,15 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 	ReplaceString(STRING(characterShortName), " ", "", false);
 
 	BossSubplug.SetString("shortname", characterShortName);
+	LogError("FF2 shortname %s",characterShortName);
 	int BossArrayListIndex = VSHA_RegisterBoss(characterShortName,characterLongName);
 
 	BossSubplug.SetValue("BossArrayListIndex", BossArrayListIndex);
 
-	KvSetString(BossKV, "model", key);
+	KvGetString(BossKV, "model", key, PLATFORM_MAX_PATH);
 	BossSubplug.SetString("model", key);
+	LogError("FF2 Model %s",key);
+	LogError("FF2 BossArrayListIndex %d",BossArrayListIndex);
 	VSHA_SetPluginModel(BossArrayListIndex,key);
 
 
