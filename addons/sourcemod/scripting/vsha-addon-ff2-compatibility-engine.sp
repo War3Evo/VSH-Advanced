@@ -40,6 +40,7 @@ int BossIndex[PLYR]; // boss index
 #define MINOR_REVISION "10"
 #define STABLE_REVISION "6"
 
+#define MAXSPECIALS 64 // helps to maybe prevent the server from stalling
 #define MAXRANDOMS 16
 
 enum Operators
@@ -437,7 +438,7 @@ public bool FindCharacters()  //TODO: Investigate KvGotoFirstSubKey; KvGotoNextK
 	KvRewind(Kv);
 
 	//for(int i=1; i<MAXSPECIALS; i++)
-	for(int i=1; ; i++)
+	for(int i=1; i<MAXSPECIALS ; i++)
 	{
 		IntToString(i, key, sizeof(key));
 		KvGetString(Kv, key, config, PLATFORM_MAX_PATH);
@@ -487,7 +488,7 @@ stock void EnableSubPlugins(bool force=false)
 	{
 		if(filetype==FileType_File && StrContains(filename, ".ff2", false)!=-1)
 		{
-			for(int i=1; ; i++)
+			for(int i=1; i<MAXRANDOMS ; i++)
 			{
 				Format(sAbility,10,"ability%i",i);
 				Format(sFindString,64,"%splugin_name",sAbility);
@@ -574,7 +575,7 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 	}
 
 	// Checker to see if all plugins required for ff2 exists
-	for(int i=1; ; i++)
+	for(int i=1; i<MAXRANDOMS ; i++)
 	{
 		Format(config, 10, "ability%i", i);
 		if(KvJumpToKey(BossKV, config))
@@ -772,7 +773,7 @@ public void LoadPluginForwards()
 
 //sm plugins load freaks/shadow93_bosses.ff2
 
-		for(int i=1; ; i++)
+		for(int i=1; i<MAXRANDOMS ; i++)
 		{
 			Format(sAbility,10,"ability%i",i);
 			Format(sGetString,64,"%splugin_name",sAbility);
@@ -1446,7 +1447,7 @@ public void OnBossRage(int iBossArrayListIndex, int iiBoss)
 		MyStringMap.GetValue("BossArrayListIndex", myBossArrayListIndex);
 		if(myBossArrayListIndex != iBossArrayListIndex) continue;
 
-		for(int i=1; ; i++)
+		for(int i=1; i<MAXRANDOMS ; i++)
 		{
 			Format(sAbility,10,"ability%i",i);
 			Format(sGetString,64,"%sarg0",sAbility);
@@ -1789,7 +1790,7 @@ stock void GetAbilityArgumentString(int client,const char[] plugin_name,const ch
 	//{
 	StringMap MyStringMap = hArrayBossSubplugins.Get(index);
 
-	for(int i=1; ; i++)
+	for(int i=1; i<MAXRANDOMS ; i++)
 	{
 		Format(sAbility,10,"ability%i",i);
 		Format(sFindString,64,"%sname",sAbility);
@@ -1820,16 +1821,16 @@ stock int FindBossIndexByShortName(char BossShortName[16])
 	{
 		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
 
-		for(int i=1; ; i++)
+		//for(int i=1; ; i++)
+		//{
+		if(MyStringMap.GetString("shortname", sStringHolder, 64))
 		{
-			if(MyStringMap.GetString("shortname", sStringHolder, 64))
+			if(StrEqual(sStringHolder,BossShortName))
 			{
-				if(StrEqual(sStringHolder,BossShortName))
-				{
-					return x;
-				}
+				return x;
 			}
 		}
+		//}
 	}
 	return -1;
 }
