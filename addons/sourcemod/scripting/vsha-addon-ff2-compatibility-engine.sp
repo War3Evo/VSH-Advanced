@@ -1182,26 +1182,38 @@ public int Native_RandomSound(Handle plugin, int numParams)
 	}
 	SetNativeString(2, sound, length);
 	return soundExists;*/
+	return 0;
 }
 
 public int Native_GetClientGlow(Handle plugin, int numParams)
 {
-	/*
 	int client=GetNativeCell(1);
 	if(IsValidClient(client))
 	{
-		return _:GlowTimer[client];
+		return view_as<int>(VSHA_GetGlowTimer(client));
 	}
 	else
 	{
 		return -1;
-	}*/
-	return -1;
+	}
 }
 
 public int Native_SetClientGlow(Handle plugin, int numParams)
 {
 	//SetClientGlow(GetNativeCell(1), GetNativeCell(2), GetNativeCell(3));
+	int client = GetNativeCell(1);
+
+	float iTimer2 = GetNativeCell(3);
+	float iTimer;
+	if(iTimer2 > 0.0)
+	{
+		iTimer = iTimer2;
+	}
+	else
+	{
+		iTimer = VSHA_GetGlowTimer(client) + GetNativeCell(2);
+	}
+	VSHA_SetGlowTimer(client, iTimer);
 }
 
 public int Native_GetAlivePlayers(Handle plugin, int numParams)
@@ -1217,6 +1229,7 @@ public int Native_GetBossPlayers(Handle plugin, int numParams)
 public int Native_Debug(Handle plugin, int numParams)
 {
 	//return GetConVarBool(cvarDebug);
+	return false;
 }
 
 public int Native_IsVSHMap(Handle plugin, int numParams)
@@ -1225,9 +1238,20 @@ public int Native_IsVSHMap(Handle plugin, int numParams)
 	return IsVSHMap();
 }
 
+///////////////// VSHA interface ///////////////////////////////////////
+///////////////// VSHA interface ///////////////////////////////////////
+///////////////// VSHA interface ///////////////////////////////////////
+///////////////// VSHA interface ///////////////////////////////////////
+///////////////// VSHA interface ///////////////////////////////////////
+///////////////// VSHA interface ///////////////////////////////////////
+///////////////// VSHA interface ///////////////////////////////////////
+///////////////// VSHA interface ///////////////////////////////////////
+///////////////// VSHA interface ///////////////////////////////////////
+///////////////// VSHA interface ///////////////////////////////////////
+///////////////// VSHA interface ///////////////////////////////////////
+///////////////// VSHA interface ///////////////////////////////////////
 
 
-///////////////// VSHA interface
 public void OnBossRage(Handle BossPlugin, int iiBoss)
 {
 	if (hThisPlugin != BossPlugin) return;
