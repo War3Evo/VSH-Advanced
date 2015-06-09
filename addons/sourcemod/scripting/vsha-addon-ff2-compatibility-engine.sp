@@ -31,6 +31,8 @@ Handle hThisPlugin = null;
 
 bool InRage[PLYR];
 
+int BossIndex[PLYR]; // boss index
+
 #define MAJOR_REVISION "1"
 #define MINOR_REVISION "10"
 #define STABLE_REVISION "6"
@@ -453,9 +455,11 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 	char characterShortName[16];
 	char characterLongName[32];
 
-	strcopy(STRING(characterLongName), config);
+	strcopy(STRING(characterLongName), character);
 
 	ReplaceString(STRING(characterShortName), characterLongName, " ", false);
+
+	BossSubplug.SetString("shortname", characterShortName);
 	hThisPlugin = view_as<Handle>( VSHA_RegisterBoss(characterShortName,characterLongName) );
 
 	PrintToServer("filename %s",character);
@@ -803,19 +807,17 @@ public int Native_FF2Version(Handle plugin, int numParams)
 
 public int Native_GetBoss(Handle plugin, int numParams)
 {
-	//int boss=GetNativeCell(1);
-	/*
-	if(boss>=0 && boss<=MaxClients && IsValidClient(Boss[boss]))
+	int boss=GetNativeCell(1);
+	if(boss>=0 && boss<=MaxClients && IsValidClient(boss))
 	{
-		//return GetClientUserId(Boss[boss]);
-	}*/
+		return GetClientUserId(boss);
+	}
 	return -1;
 }
 
 public int Native_GetIndex(Handle plugin, int numParams)
 {
-	////return GetBossIndex(GetNativeCell(1));
-	return -1;
+	return BossIndex[GetNativeCell(1)];
 }
 
 public int Native_GetTeam(Handle plugin, int numParams)
@@ -824,15 +826,38 @@ public int Native_GetTeam(Handle plugin, int numParams)
 	return 0;
 }
 
+/**
+ * Gets the character name of the Boss
+ *
+ * @param boss	 			Boss's index
+ * @param buffer			Buffer for boss' character name
+ * @param bufferLength		Length of buffer string
+ * @param clientMeaning		0 - "client" parameter means index of current Boss
+ *							1 - "client" parameter means number of Boss in characters.cfg-1
+ * @return					True if boss exists, false if not
+ */
+//native bool FF2_GetBossSpecial(int boss=0, char[] buffer, int bufferLength, int clientMeaning=0);
 public int Native_GetSpecial(Handle plugin, int numParams)
 {
 	/*
+	char BossShortName[16];
+
+	VSHA_GetBossName(iiBoss, BossShortName, 16);
+
+	int iBossIndex = FindBossIndexByShortName(BossShortName);
+
+	if(iBossIndex > -1)
+	{
+
 	int index=GetNativeCell(1), dstrlen=GetNativeCell(3), see=GetNativeCell(4);
 	char s[dstrlen];
 	if(see)
 	{
-		if(index<0) //return false;
-		if(!BossKV[index]) //return false;
+		if(index<0) return false;
+		if(!index) return false;
+		VSHA_GetBossName(index, BossShortName, 16);
+
+
 		KvRewind(BossKV[index]);
 		KvGetString(BossKV[index], "name", s, dstrlen);
 		SetNativeString(2, s,dstrlen);
@@ -846,7 +871,9 @@ public int Native_GetSpecial(Handle plugin, int numParams)
 		KvGetString(BossKV[Special[index]], "name", s, dstrlen);
 		SetNativeString(2, s,dstrlen);
 	}*/
-	return true;
+
+	SetNativeString(2, "",16);
+	return 1;
 }
 
 public int Native_GetBossHealth(Handle plugin, int numParams)
@@ -1497,45 +1524,59 @@ stock int GetAbilityArgument(int index, const char[] plugin_name, const char[] a
 	if(index==-1)
 		return 0;
 
+	int index = BossIndex[client];
+
+	if(index > hArrayBossSubplugins.Length)
+	{
+		return 0;
+	}
+
 	char sAbility[10];
 	char sFindString[10];
 
 	char sStringHolder[64];
 	char sStringHolder2[64];
 
-	int count = hArrayBossSubplugins.Length;
-	for (int x = 0; x < count; x++)
+	//int count = hArrayBossSubplugins.Length;
+	//for (int x = 0; x < count; x++)
+	//{
+	StringMap MyStringMap = hArrayBossSubplugins.Get(index);
+
+	for(int i=1; ; i++)
 	{
-		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
+		Format(sAbility,10,"ability%i",i);
+		Format(sFindString,64,"%sname",sAbility);
 
-		for(int i=1; ; i++)
+		MyStringMap.GetString(sFindString, sStringHolder, 64);
+
+		Format(sFindString,64,"%splugin_name",sAbility);
+
+		MyStringMap.GetString(sFindString, sStringHolder2, 64);
+
+		if(StrEqual(sStringHolder,ability_name) && StrEqual(sStringHolder2,plugin_name))
 		{
-			Format(sAbility,10,"ability%i",i);
-			Format(sFindString,64,"%sname",sAbility);
-
-			MyStringMap.GetString(sFindString, sStringHolder, 64);
-
-			Format(sFindString,64,"%splugin_name",sAbility);
-
-			MyStringMap.GetString(sFindString, sStringHolder2, 64);
-
-			if(StrEqual(sStringHolder,ability_name) && StrEqual(sStringHolder2,plugin_name))
+			Format(sFindString,64,"%sarg%i",sAbility,arg);
+			if(MyStringMap.GetString(sFindString, sStringHolder, 64))
 			{
-				Format(sFindString,64,"%sarg%i",sAbility,arg);
-				if(MyStringMap.GetString(sFindString, sStringHolder, 64))
-				{
-					return (StringToInt(sStringHolder));
-				}
+				return (StringToInt(sStringHolder));
 			}
 		}
 	}
+	//}
 	return 0;
 }
 
-stock float GetAbilityArgumentFloat(int index, const char[] plugin_name, const char[] ability_name, int arg, float defvalue=0.0)
+stock float GetAbilityArgumentFloat(int client, const char[] plugin_name, const char[] ability_name, int arg, float defvalue=0.0)
 {
-	if(index==-1)
+	if(client==-1)
 		return 0.0;
+
+	int index = BossIndex[client];
+
+	if(index > hArrayBossSubplugins.Length)
+	{
+		return 0.0;
+	}
 
 	char sAbility[10];
 	char sFindString[10];
@@ -1543,40 +1584,47 @@ stock float GetAbilityArgumentFloat(int index, const char[] plugin_name, const c
 	char sStringHolder[64];
 	char sStringHolder2[64];
 
-	int count = hArrayBossSubplugins.Length;
-	for (int x = 0; x < count; x++)
+	//int count = hArrayBossSubplugins.Length;
+	//for (int index = 0; index < count; index++)
+	//{
+	StringMap MyStringMap = hArrayBossSubplugins.Get(index);
+
+	for(int i=1; ; i++)
 	{
-		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
+		Format(sAbility,10,"ability%i",i);
+		Format(sFindString,64,"%sname",sAbility);
 
-		for(int i=1; ; i++)
+		MyStringMap.GetString(sFindString, sStringHolder, 64);
+
+		Format(sFindString,64,"%splugin_name",sAbility);
+
+		MyStringMap.GetString(sFindString, sStringHolder2, 64);
+
+		if(StrEqual(sStringHolder,ability_name) && StrEqual(sStringHolder2,plugin_name))
 		{
-			Format(sAbility,10,"ability%i",i);
-			Format(sFindString,64,"%sname",sAbility);
-
-			MyStringMap.GetString(sFindString, sStringHolder, 64);
-
-			Format(sFindString,64,"%splugin_name",sAbility);
-
-			MyStringMap.GetString(sFindString, sStringHolder2, 64);
-
-			if(StrEqual(sStringHolder,ability_name) && StrEqual(sStringHolder2,plugin_name))
+			Format(sFindString,64,"%sarg%i",sAbility,arg);
+			if(MyStringMap.GetString(sFindString, sStringHolder, 64))
 			{
-				Format(sFindString,64,"%sarg%i",sAbility,arg);
-				if(MyStringMap.GetString(sFindString, sStringHolder, 64))
-				{
-					return (StringToFloat(sStringHolder));
-				}
+				return (StringToFloat(sStringHolder));
 			}
 		}
 	}
+	//}
 	return 0.0;
 }
 
-stock void GetAbilityArgumentString(int index,const char[] plugin_name,const char[] ability_name, int arg, char[] buffer, int buflen,const char[] defvalue="")
+stock void GetAbilityArgumentString(int client,const char[] plugin_name,const char[] ability_name, int arg, char[] buffer, int buflen,const char[] defvalue="")
 {
-	if(index==-1)
+	if(client==-1)
 	{
 		strcopy(buffer,buflen,"");
+		return;
+	}
+
+	int index = BossIndex[client];
+
+	if(index > hArrayBossSubplugins.Length)
+	{
 		return;
 	}
 
@@ -1586,6 +1634,37 @@ stock void GetAbilityArgumentString(int index,const char[] plugin_name,const cha
 	char sStringHolder[64];
 	char sStringHolder2[64];
 
+	//int count = hArrayBossSubplugins.Length;
+	//for (int index = 0; index < count; index++)
+	//{
+	StringMap MyStringMap = hArrayBossSubplugins.Get(index);
+
+	for(int i=1; ; i++)
+	{
+		Format(sAbility,10,"ability%i",i);
+		Format(sFindString,64,"%sname",sAbility);
+
+		MyStringMap.GetString(sFindString, sStringHolder, 64);
+
+		Format(sFindString,64,"%splugin_name",sAbility);
+
+		MyStringMap.GetString(sFindString, sStringHolder2, 64);
+
+		if(StrEqual(sStringHolder,ability_name) && StrEqual(sStringHolder2,plugin_name))
+		{
+			Format(sFindString,64,"%sarg%i",sAbility,arg);
+			if(MyStringMap.GetString(sFindString, sStringHolder, 64))
+			{
+				strcopy(buffer, buflen, sStringHolder);
+			}
+		}
+	}
+	//}
+}
+
+stock int FindBossIndexByShortName(char BossShortName[16])
+{
+	char sStringHolder[64];
 	int count = hArrayBossSubplugins.Length;
 	for (int x = 0; x < count; x++)
 	{
@@ -1593,24 +1672,45 @@ stock void GetAbilityArgumentString(int index,const char[] plugin_name,const cha
 
 		for(int i=1; ; i++)
 		{
-			Format(sAbility,10,"ability%i",i);
-			Format(sFindString,64,"%sname",sAbility);
-
-			MyStringMap.GetString(sFindString, sStringHolder, 64);
-
-			Format(sFindString,64,"%splugin_name",sAbility);
-
-			MyStringMap.GetString(sFindString, sStringHolder2, 64);
-
-			if(StrEqual(sStringHolder,ability_name) && StrEqual(sStringHolder2,plugin_name))
+			if(MyStringMap.GetString("shortname", sStringHolder, 64))
 			{
-				Format(sFindString,64,"%sarg%i",sAbility,arg);
-				if(MyStringMap.GetString(sFindString, sStringHolder, 64))
+				if(StrEqual(sStringHolder,BossShortName))
 				{
-					strcopy(buffer, buflen, sStringHolder);
+					return x;
 				}
 			}
 		}
 	}
+	return -1;
 }
 
+
+public void OnBossSelected(Handle BossPlugin, int iiBoss)
+{
+	if(BossPlugin!=hThisPlugin)
+	{
+		// reset variables
+		SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+		HaleCharge[iiBoss]=0;
+		InRage[iiBoss]=false;
+		BossIndex[iiBoss]=-1;
+		return;
+	}
+
+	char BossShortName[16];
+
+	VSHA_GetBossName(iiBoss, BossShortName, 16);
+
+	int iBossIndex = FindBossIndexByShortName(BossShortName);
+
+	if(iBossIndex > -1)
+	{
+		BossIndex[iiBoss] = iBossIndex;
+
+		//CPrintToChatAll("%s, Miku Boss Selected!",VSHA_COLOR);
+
+		// Dynamically load private forwards
+		Load_VSHAHooks();
+		SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+	}
+}
