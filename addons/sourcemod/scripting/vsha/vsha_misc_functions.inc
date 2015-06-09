@@ -30,7 +30,6 @@ public int GetClientQueuePoints(int client)
 public void SetClientQueuePoints(int client, int points)
 {
 	if (!IsValidClient(client)) return;
-	if (IsFakeClient(client)) return;
 	if (!AreClientCookiesCached(client)) return;
 	char strPoints[32]; IntToString(points, strPoints, sizeof(strPoints));
 	SetClientCookie(client, PointCookie, strPoints);
