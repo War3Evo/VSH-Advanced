@@ -33,6 +33,7 @@ Handle hDoMessage;
 int iModelRetrys[PLYR],
 	iBossUserID[PLYR],		//USERID NUM OVER CLIENT INT
 	iBoss[PLYR],		//THIS IS NOT THE USER, IT'S THE SPECIAL BOSS IDs
+	iQueuePoints[PLYR],		// sometimes the queuepoints system fails, this is for backup
 	iDifficulty[PLYR],
 	iPresetBoss[PLYR],
 	iBossHealth[PLYR],

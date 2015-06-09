@@ -22,17 +22,29 @@ public void CheckArena()
 
 public int GetClientQueuePoints(int client)
 {
-	if (!IsValidClient(client)) return -1;
-	if (!AreClientCookiesCached(client)) return -1;
-	char strPoints[32]; GetClientCookie(client, PointCookie, strPoints, sizeof(strPoints));
-	return StringToInt(strPoints);
+	if (!IsValidClient(client)) return 0;
+	if (!AreClientCookiesCached(client))
+	{
+		return iQueuePoints[client];
+	}
+	else
+	{
+		char strPoints[32]; GetClientCookie(client, PointCookie, strPoints, sizeof(strPoints));
+		return StringToInt(strPoints);
+	}
 }
 public void SetClientQueuePoints(int client, int points)
 {
 	if (!IsValidClient(client)) return;
-	if (!AreClientCookiesCached(client)) return;
-	char strPoints[32]; IntToString(points, strPoints, sizeof(strPoints));
-	SetClientCookie(client, PointCookie, strPoints);
+	if (!AreClientCookiesCached(client))
+	{
+		iQueuePoints[client]=points;
+	}
+	else
+	{
+		char strPoints[32]; IntToString(points, strPoints, sizeof(strPoints));
+		SetClientCookie(client, PointCookie, strPoints);
+	}
 }
 
 public bool OnlyScoutsLeft()
