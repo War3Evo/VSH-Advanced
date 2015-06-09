@@ -37,6 +37,7 @@ public Action RoundStartFunction()
 #endif
 		return Plugin_Continue;
 	}
+
 	// We do this on round end, why need it on round start?
 	// commenting this out to try and defeat a bug
 	//ClearTimer(MusicTimer);
