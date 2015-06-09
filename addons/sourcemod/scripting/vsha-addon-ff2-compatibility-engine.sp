@@ -51,7 +51,13 @@ enum Operators
 };
 
 float BossCharge[PLYR+1][8];
+float Marketed[PLYR+1];
 int FF2flags[PLYR+1];
+
+int detonations[PLYR+1];
+
+float circuitStun;
+int allowedDetonations;
 
 /*
 int Specials;
@@ -166,11 +172,140 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	//return APLRes_Success;
 }
 
+public void Load_VSHAHooks()
+{
+	/*
+	if(!VSHAHookEx(VSHAHook_OnBossIntroTalk, OnBossIntroTalk))
+	{
+		LogError("Error loading VSHAHook_OnBossIntroTalk forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss))
+	{
+		LogError("Error loading VSHAHook_OnPlayerKilledByBoss forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss))
+	{
+		LogError("Error loading VSHAHook_OnKillingSpreeByBoss forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossKilled, OnBossKilled))
+	{
+		LogError("Error loading VSHAHook_OnBossKilled forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossWin, OnBossWin))
+	{
+		LogError("Error loading VSHAHook_OnBossWin forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
+	{
+		LogError("Error loading VSHAHook_OnBossAirblasted forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossChangeClass, OnChangeClass))
+	{
+		LogError("Error loading VSHAHook_OnBossChangeClass forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossSetHP, OnBossSetHP))
+	{
+		LogError("Error loading VSHAHook_OnBossSetHP forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnLastSurvivor, OnLastSurvivor))
+	{
+		LogError("Error loading VSHAHook_OnLastSurvivor forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossTimer, OnBossTimer))
+	{
+		LogError("Error loading VSHAHook_OnBossTimer forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnPrepBoss, OnPrepBoss))
+	{
+		LogError("Error loading VSHAHook_OnPrepBoss forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnMusic, OnMusic))
+	{
+		LogError("Error loading VSHAHook_OnMusic forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossRage, OnBossRage))
+	{
+		LogError("Error loading VSHAHook_OnBossRage forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_ShowBossHelpMenu, OnShowBossHelpMenu))
+	{
+		LogError("Error loading VSHAHook_ShowBossHelpMenu forwards for saxton hale.");
+	}*/
+}
+
+public void UnLoad_VSHAHooks()
+{
+	/*
+	if(!VSHAUnhookEx(VSHAHook_OnBossIntroTalk, OnBossIntroTalk))
+	{
+		LogError("Error unloading VSHAHook_OnBossIntroTalk forwards for miku.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnPlayerKilledByBoss, OnPlayerKilledByBoss))
+	{
+		LogError("Error unloading VSHAHook_OnPlayerKilledByBoss forwards for miku.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnKillingSpreeByBoss, OnKillingSpreeByBoss))
+	{
+		LogError("Error unloading VSHAHook_OnKillingSpreeByBoss forwards for miku.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossKilled, OnBossKilled))
+	{
+		LogError("Error unloading VSHAHook_OnBossKilled forwards for miku.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossWin, OnBossWin))
+	{
+		LogError("Error unloading VSHAHook_OnBossWin forwards for miku.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossAirblasted, OnBossAirblasted))
+	{
+		LogError("Error unloading VSHAHook_OnBossAirblasted forwards for miku.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossChangeClass, OnChangeClass))
+	{
+		LogError("Error loading VSHAHook_OnBossChangeClass forwards for saxton hale.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossSetHP, OnBossSetHP))
+	{
+		LogError("Error unloading VSHAHook_OnBossSetHP forwards for miku.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnLastSurvivor, OnLastSurvivor))
+	{
+		LogError("Error unloading VSHAHook_OnLastSurvivor forwards for miku.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossTimer, OnBossTimer))
+	{
+		LogError("Error unloading VSHAHook_OnBossTimer forwards for miku.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnPrepBoss, OnPrepBoss))
+	{
+		LogError("Error unloading VSHAHook_OnPrepBoss forwards for miku.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnMusic, OnMusic))
+	{
+		LogError("Error unloading VSHAHook_OnMusic forwards for miku.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_OnBossRage, OnBossRage))
+	{
+		LogError("Error unloading VSHAHook_OnBossRage forwards for miku.");
+	}
+	if(!VSHAUnhookEx(VSHAHook_ShowBossHelpMenu, OnShowBossHelpMenu))
+	{
+		LogError("Error unloading VSHAHook_ShowBossHelpMenu forwards for saxton hale.");
+	}*/
+}
 public void OnAllPluginsLoaded()
 {
 	if(!VSHAHookEx(VSHAHook_AddToDownloads, OnAddToDownloads))
 	{
 		LogError("Error loading VSHAHook_AddToDownloads forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossSelected, OnBossSelected))
+	{
+		LogError("Error loading VSHAHook_OnBossSelected forwards for saxton hale.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnGameOver, OnGameOver))
+	{
+		LogError("Error loading VSHAHook_OnGameOver forwards for miku.");
 	}
 
 	if(!FindCharacters())
@@ -462,6 +597,11 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 
 	BossSubplug.SetString("shortname", characterShortName);
 	hThisPlugin = view_as<Handle>( VSHA_RegisterBoss(characterShortName,characterLongName) );
+
+	KvSetString(BossKV, "model", section);
+	BossSubplug.SetString("model", section);
+	VSHA_SetPluginModel(section,characterShortName);
+
 
 	PrintToServer("filename %s",character);
 	PrintToServer("name %s",config);
@@ -948,9 +1088,9 @@ public int Native_GetRageDist(Handle plugin, int numParams)
 {
 	/*
 	int index=GetNativeCell(1);
-	decl String:plugin_name[64];
+	char plugin_name[64];
 	GetNativeString(2,plugin_name,64);
-	decl String:ability_name[64];
+	char ability_name[64];
 	GetNativeString(3,ability_name,64);
 
 	if(!BossKV[Special[index]]) //return _:0.0;
@@ -960,13 +1100,13 @@ public int Native_GetRageDist(Handle plugin, int numParams)
 	{
 		//return _:KvGetFloat(BossKV[Special[index]],"ragedist",400.0);
 	}
-	decl String:s[10];
+	char s[10];
 	for(int i=1; i<MAXRANDOMS; i++)
 	{
 		Format(s,10,"ability%i",i);
 		if(KvJumpToKey(BossKV[Special[index]],s))
 		{
-			decl String:ability_name2[64];
+			char ability_name2[64];
 			KvGetString(BossKV[Special[index]], "name",ability_name2,64);
 			if(strcmp(ability_name,ability_name2))
 			{
@@ -983,133 +1123,130 @@ public int Native_GetRageDist(Handle plugin, int numParams)
 	}
 	return _:0.0;
 */
-	return view_as<int>(0.0);
+	return view_as<int>(400.0);
 }
 
 public int Native_HasAbility(Handle plugin, int numParams)
 {
-	/*
-	decl String:pluginName[64], String:abilityName[64];
-
 	int boss=GetNativeCell(1);
+
+	if(boss==-1 || BossIndex[boss]==-1)
+	{
+		return false;
+	}
+
+	int index = BossIndex[boss];
+
+	if(index > hArrayBossSubplugins.Length)
+	{
+		return 0;
+	}
+
+	char pluginName[64]; char abilityName[64];
+
 	GetNativeString(2, pluginName, sizeof(pluginName));
 	GetNativeString(3, abilityName, sizeof(abilityName));
-	if(boss==-1 || Special[boss]==-1 || !BossKV[Special[boss]])
-	{
-		//return false;
-	}
 
-	KvRewind(BossKV[Special[boss]]);
-	if(!BossKV[Special[boss]])
-	{
-		LogError("Failed KV: %i %i", boss, Special[boss]);
-		//return false;
-	}
+	char sAbility[10];
+	char sFindString[10];
 
-	decl String:ability[12];
-	for(int i=1; i<MAXRANDOMS; i++)
+	char sStringHolder[64];
+	char sStringHolder2[64];
+
+	//int count = hArrayBossSubplugins.Length;
+	//for (int index = 0; index < count; index++)
+	//{
+	StringMap MyStringMap = hArrayBossSubplugins.Get(index);
+
+	for(int i=1; i<MAXRANDOMS ; i++)
 	{
-		Format(ability, sizeof(ability), "ability%i", i);
-		if(KvJumpToKey(BossKV[Special[boss]], ability))  //Does this ability number exist?
+		Format(sAbility,10,"ability%i",i);
+		Format(sFindString,64,"%sname",sAbility);
+
+		MyStringMap.GetString(sFindString, sStringHolder, 64);
+
+		Format(sFindString,64,"%splugin_name",sAbility);
+
+		MyStringMap.GetString(sFindString, sStringHolder2, 64);
+
+		if(StrEqual(sStringHolder,abilityName) && StrEqual(sStringHolder2,pluginName))
 		{
-			decl String:abilityName2[64];
-			KvGetString(BossKV[Special[boss]], "name", abilityName2, sizeof(abilityName2));
-			if(StrEqual(abilityName, abilityName2))  //Make sure the ability names are equal
-			{
-				decl String:pluginName2[64];
-				KvGetString(BossKV[Special[boss]], "plugin_name", pluginName2, sizeof(pluginName2));
-				if(!pluginName[0] || !pluginName2[0] || StrEqual(pluginName, pluginName2))  //Make sure the plugin names are equal
-				{
-					//return true;
-				}
-			}
-			KvGoBack(BossKV[Special[boss]]);
+			return true;
 		}
 	}
-	return false;*/
+
 	return false;
 }
 
 public int Native_DoAbility(Handle plugin, int numParams)
 {
-	/*
-	decl String:plugin_name[64];
-	decl String:ability_name[64];
+	char plugin_name[64];
+	char ability_name[64];
 	GetNativeString(2,plugin_name,64);
 	GetNativeString(3,ability_name,64);
 	UseAbility(ability_name,plugin_name, GetNativeCell(1), GetNativeCell(4), GetNativeCell(5));
-	*/
 }
 
 public int Native_GetAbilityArgument(Handle plugin, int numParams)
 {
-	/*
-	decl String:plugin_name[64];
-	decl String:ability_name[64];
+	char plugin_name[64];
+	char ability_name[64];
 	GetNativeString(2,plugin_name,64);
 	GetNativeString(3,ability_name,64);
 	return GetAbilityArgument(GetNativeCell(1),plugin_name,ability_name,GetNativeCell(4),GetNativeCell(5));
-	*/
-	return 0;
 }
 
 public int Native_GetAbilityArgumentFloat(Handle plugin, int numParams)
 {
-	/*
-	decl String:plugin_name[64];
-	decl String:ability_name[64];
+	char plugin_name[64];
+	char ability_name[64];
 	GetNativeString(2,plugin_name,64);
 	GetNativeString(3,ability_name,64);
-	return _:GetAbilityArgumentFloat(GetNativeCell(1),plugin_name,ability_name,GetNativeCell(4),GetNativeCell(5));
-	*/
-	return view_as<int>(0.0);
+	return view_as<int>(GetAbilityArgumentFloat(GetNativeCell(1),plugin_name,ability_name,GetNativeCell(4),GetNativeCell(5)));
 }
 
 public int Native_GetAbilityArgumentString(Handle plugin, int numParams)
 {
-	/*
-	decl String:plugin_name[64];
+	char plugin_name[64];
 	GetNativeString(2,plugin_name,64);
-	decl String:ability_name[64];
+	char ability_name[64];
 	GetNativeString(3,ability_name,64);
 	int dstrlen=GetNativeCell(6);
-	char s[dstrlen+1];
+	char[] s = new char[dstrlen+1];
 	GetAbilityArgumentString(GetNativeCell(1),plugin_name,ability_name,GetNativeCell(4),s,dstrlen);
-	SetNativeString(5,s,dstrlen);*/
+	SetNativeString(5,s,dstrlen);
 }
 
 public int Native_GetDamage(Handle plugin, int numParams)
 {
-	/*
 	int client=GetNativeCell(1);
 	if(!IsValidClient(client))
 	{
 		return 0;
 	}
-	return Damage[client];*/
-	return 0;
+	return VSHA_GetDamage(client);
 }
 
 public int Native_GetFF2flags(Handle plugin, int numParams)
 {
-	//return FF2flags[GetNativeCell(1)];
-	return 0;
+	return FF2flags[GetNativeCell(1)];
 }
 
 public int Native_SetFF2flags(Handle plugin, int numParams)
 {
-	//FF2flags[GetNativeCell(1)]=GetNativeCell(2);
+	FF2flags[GetNativeCell(1)]=GetNativeCell(2);
 }
 
 public int Native_GetQueuePoints(Handle plugin, int numParams)
 {
 	//return GetClientQueuePoints(GetNativeCell(1));
-	return 0;
+	return VSHA_GetClientQueuePoints(GetNativeCell(1));
 }
 
 public int Native_SetQueuePoints(Handle plugin, int numParams)
 {
 	//SetClientQueuePoints(GetNativeCell(1), GetNativeCell(2));
+	VSHA_SetClientQueuePoints(GetNativeCell(1), GetNativeCell(2));
 }
 
 public int Native_GetSpecialKV(Handle plugin, int numParams)
@@ -1141,7 +1278,7 @@ public int Native_GetSpecialKV(Handle plugin, int numParams)
 	}
 	return _:INVALID_HANDLE;
 	*/
-	return 0;
+	return -1;
 }
 
 public int Native_StartMusic(Handle plugin, int numParams)
@@ -1166,7 +1303,7 @@ public int Native_RandomSound(Handle plugin, int numParams)
 	GetNativeStringLength(1, kvLength);
 	kvLength++;
 
-	decl String:keyvalue[kvLength];
+	char keyvalue[kvLength];
 	GetNativeString(1, keyvalue, kvLength);
 
 	bool soundExists;
@@ -1490,9 +1627,9 @@ public Action Timer_UseBossCharge(Handle timer, Handle data)
 	return Plugin_Continue;
 }
 
-stock int GetAbilityArgument(int index, const char[] plugin_name, const char[] ability_name, int arg, int defvalue=0)
+stock int GetAbilityArgument(int client, const char[] plugin_name, const char[] ability_name, int arg, int defvalue=0)
 {
-	if(index==-1)
+	if(client==-1)
 		return 0;
 
 	int index = BossIndex[client];
@@ -1513,7 +1650,7 @@ stock int GetAbilityArgument(int index, const char[] plugin_name, const char[] a
 	//{
 	StringMap MyStringMap = hArrayBossSubplugins.Get(index);
 
-	for(int i=1; ; i++)
+	for(int i=1; i<MAXRANDOMS ; i++)
 	{
 		Format(sAbility,10,"ability%i",i);
 		Format(sFindString,64,"%sname",sAbility);
@@ -1681,424 +1818,704 @@ public void OnBossSelected(Handle BossPlugin, int iiBoss)
 		//CPrintToChatAll("%s, Miku Boss Selected!",VSHA_COLOR);
 
 		// Dynamically load private forwards
-		//Load_VSHAHooks();
+		Load_VSHAHooks();
 		SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 	}
 }
-
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
+public void OnGameOver() // best play to reset all variables
 {
-	if(!IsValidEdict(attacker)) return Plugin_Continue;
-	//DP("attacker = %d, victim = %d, hale[victim] = %d",attacker,victim,Hale[victim]);
-	//if((attacker <= 0) && (victim == Hale[victim])) return Plugin_Continue;
-	if(attacker <= 0)  return Plugin_Continue;
-	if(!ValidPlayer(victim))  return Plugin_Continue;
-
-	// removed the = sign because we need to detect when hale takes damage from falls,
-	// so we can remove that damage.
-
-	if(TF2_IsPlayerInCondition(victim, TFCond_Ubercharged)) return Plugin_Continue;
-
-	//char playsound[PATHX];
-
-	if ( CheckRoundState() == 0 && (VSHA_GetBossPluginHandle(victim)==hThisPlugin || (victim != attacker && VSHA_GetBossPluginHandle(attacker)!=hThisPlugin)) )
+	LoopMaxPLYR(players)
 	{
-		damage *= 0.0;
+		//HaleCharge[players]=0;
+		InRage[players]=false;
+		BossIndex[players]=-1;
+
+		//if(ValidPlayer(players))
+		//{
+			//StopSound(players, SNDCHAN_AUTO, MIKUTheme);
+		//}
+	}
+	// Dynamically unload private forwards
+	UnLoad_VSHAHooks();
+}
+
+public Action OnTakeDamage(int client, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
+{
+	if(!IsValidEdict(attacker))
+	{
+		return Plugin_Continue;
+	}
+
+	static bool foundDmgCustom; bool dmgCustomInOTD;
+	if(!foundDmgCustom)
+	{
+		dmgCustomInOTD=(GetFeatureStatus(FeatureType_Capability, "SDKHook_DmgCustomInOTD")==FeatureStatus_Available);
+		foundDmgCustom=true;
+	}
+
+	if((attacker<=0 || client==attacker) && VSHA_GetBossPluginHandle(client)==hThisPlugin)
+	{
+		return Plugin_Handled;
+	}
+
+	if(TF2_IsPlayerInCondition(client, TFCond_Ubercharged))
+	{
+		return Plugin_Continue;
+	}
+
+	if(!CheckRoundState() && VSHA_GetBossPluginHandle(client)==hThisPlugin)
+	{
+		damage*=0.0;
 		return Plugin_Changed;
 	}
-	if ((damagetype & DMG_FALL) && VSHA_GetBossPluginHandle(victim)==hThisPlugin)
+
+	float position[3];
+	GetEntPropVector(attacker, Prop_Send, "m_vecOrigin", position);
+	if(VSHA_IsBossPlayer(attacker))
 	{
-		//DP("DMG_FALL victim = %d, hale[victim] = %d",victim,Hale[victim]);
-		if(GetEntityFlags(victim) & FL_ONGROUND)
+		if(IsValidClient(client) && VSHA_GetBossPluginHandle(client)!=hThisPlugin && !TF2_IsPlayerInCondition(client, TFCond_Bonked))
 		{
-			//DP("Hale Fall Damage");
-			damage = (VSHA_GetBossHealth(victim) > 100) ? 10.0 : 100.0; //please don't fuck with this.
-			//damage = 0.0;
-			return Plugin_Changed;
-		}
-	}
-	switch (damagecustom)
-	{
-		case TF_CUSTOM_TAUNT_GRAND_SLAM, TF_CUSTOM_TAUNT_FENCING, TF_CUSTOM_TAUNT_GRENADE, TF_CUSTOM_TAUNT_BARBARIAN_SWING, TF_CUSTOM_TAUNT_ENGINEER_SMASH:
-		{
-			damage *= 10.0;
-			return Plugin_Changed;
-			//case TF_CUSTOM_TAUNT_HIGH_NOON:
-		}
-	}
-	float AttackerPos[3];
-	GetEntPropVector(attacker, Prop_Send, "m_vecOrigin", AttackerPos); //Spot of attacker
-	if (ValidPlayer(attacker) && VSHA_GetBossPluginHandle(attacker)==hThisPlugin)
-	{
-		if (TF2_IsPlayerInCondition(victim, TFCond_DefenseBuffed))
-		{
-			ScaleVector(damageForce, 9.0);
-			damage *= 0.3;
-			return Plugin_Changed;
-		}
-		if (TF2_IsPlayerInCondition(victim, TFCond_DefenseBuffMmmph))
-		{
-			damage *= 9;
-			TF2_AddCondition(victim, TFCond_Bonked, 0.1);
-			return Plugin_Changed;
-		}
-		if (TF2_IsPlayerInCondition(victim, TFCond_CritMmmph))
-		{
-			damage *= 0.25;
-			return Plugin_Changed;
-		}
-		if (TF2_GetPlayerClass(victim) == TFClass_Spy)
-		{
-			if (GetEntProp(victim, Prop_Send, "m_bFeignDeathReady") && !TF2_IsPlayerInCondition(victim, TFCond_Cloaked))
+			if(TF2_IsPlayerInCondition(client, TFCond_DefenseBuffed))
 			{
-				if (damagetype & DMG_CRIT) damagetype &= ~DMG_CRIT;
-				damage = 600.0; //make convar/cvar heer
+				ScaleVector(damageForce, 9.0);
+				damage*=0.3;
 				return Plugin_Changed;
-			}
-			if (TF2_IsPlayerInCondition(victim, TFCond_Cloaked) && TF2_IsPlayerInCondition(victim, TFCond_DeadRingered))
-			{
-				if (damagetype & DMG_CRIT) damagetype &= ~DMG_CRIT;
-				damage = 850.0; //make convar/cvar heer!
-				return Plugin_Changed;
-			}
-		}
-		int shield = VSHA_HasShield(victim);
-		if(shield > -1 && ValidPlayer(attacker) && weapon == GetPlayerWeaponSlot(attacker, 2))
-		{
-				//int HitsTaken = VSHA_GetHits(victim);
-				//int HitsRequired = 0;
-				/*int index = GetItemIndex(ent);
-				switch (index)
-				{
-					case 131: HitsRequired = 2;
-					case 406: HitsRequired = 1;
-				}*/
-				TF2_AddCondition(victim, TFCond_Bonked, 0.1);
-				//if (HitsRequired <= HitsTaken)
-				//{
-				if(IsValidEntity(shield))
-				{
-					if(GetEntPropEnt(shield, Prop_Send, "m_hOwnerEntity")==victim && !GetEntProp(shield, Prop_Send, "m_bDisguiseWearable"))
-					{
-						TF2_RemoveWearable(victim, shield);
-					}
-				}
-				VSHA_SetShield(victim, -1);
-				float Pos[3];
-				GetEntPropVector(victim, Prop_Send, "m_vecOrigin", Pos);
-				EmitSoundToClient(victim, "player/spy_shield_break.wav", _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, 0.7, 100, _, Pos, NULL_VECTOR, false, 0.0);
-				EmitSoundToClient(victim, "player/spy_shield_break.wav", _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, 0.7, 100, _, Pos, NULL_VECTOR, false, 0.0);
-				EmitSoundToClient(attacker, "player/spy_shield_break.wav", _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, 0.7, 100, _, Pos, NULL_VECTOR, false, 0.0);
-				EmitSoundToClient(attacker, "player/spy_shield_break.wav", _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, 0.7, 100, _, Pos, NULL_VECTOR, false, 0.0);
-				//}
-				//return Plugin_Continue;
-		}
-	}
-	else if (ValidPlayer(attacker) && ValidPlayer(victim) && VSHA_GetBossPluginHandle(victim)==hThisPlugin && VSHA_GetBossPluginHandle(attacker)!=hThisPlugin)
-	{
-		if (attacker <= MaxClients && attacker > 0)
-		{
-			int iFlags = GetEntityFlags(victim);
-			if ( (iFlags & (FL_ONGROUND|FL_DUCKING)) == (FL_ONGROUND|FL_DUCKING) )
-			{
-				damage *= 0.2;
-				return Plugin_Changed;
-			}
-			if (damagecustom == TF_CUSTOM_BOOTS_STOMP)
-			{
-				damage = 1024.0;
-				return Plugin_Changed;
-			}
-			if ( damagecustom == TF_CUSTOM_TELEFRAG )
-			{
-				if (!IsPlayerAlive(attacker))
-				{
-					damage = 1.0;
-					return Plugin_Changed;
-				}
-				damage = view_as<float>( VSHA_GetBossHealth(victim) ); //(HaleHealth > 9001 ? 15.0:float(GetEntProp(Hale, Prop_Send, "m_iHealth")) + 90.0);
-				int teleowner = FindTeleOwner(attacker);
-				if (IsValidClient(teleowner) && teleowner != attacker)
-				{
-					VSHA_SetDamage(teleowner, VSHA_GetDamage(teleowner)+9001);
-					//Damage[teleowner] += 9001; //RoundFloat(9001.0 * 3 / 5);
-					PrintCenterText(teleowner, "TELEFRAG ASSIST! Nice job setting up!");
-				}
-				PrintCenterText(attacker, "TELEFRAG! You are a Pro!");
-				PrintCenterText(victim, "TELEFRAG! Be careful around quantum tunneling devices!");
-				return Plugin_Changed;
-			}
-			int heavyhealth = GetClientHealth(attacker);
-			char classname[32];
-			if (IsValidEdict(weapon)) GetEdictClassname(weapon, classname, sizeof(classname));
-			if ( !strcmp(classname, "tf_weapon_shotgun_hwg", false) && heavyhealth < 451 )
-			{
-				SetEntityHealth(attacker, heavyhealth+(RoundFloat(damage)/2));
 			}
 
-			int weapindex = GetItemIndex(weapon);
-			switch (weapindex)
+			if(TF2_IsPlayerInCondition(client, TFCond_DefenseBuffMmmph))
 			{
-				case 593:       //Third Degree
+				damage*=9;
+				TF2_AddCondition(client, TFCond_Bonked, 0.1);
+				return Plugin_Changed;
+			}
+
+			if(TF2_IsPlayerInCondition(client, TFCond_CritMmmph))
+			{
+				damage*=0.25;
+				return Plugin_Changed;
+			}
+
+			int shield = VSHA_HasShield(client);
+
+			if(shield && damage)
+			{
+				TF2_RemoveWearable(client, shield);
+				EmitSoundToClient(client, "player/spy_shield_break.wav", _, _, _, _, 0.7, _, _, position, _, false);
+				EmitSoundToClient(client, "player/spy_shield_break.wav", _, _, _, _, 0.7, _, _, position, _, false);
+				EmitSoundToClient(attacker, "player/spy_shield_break.wav", _, _, _, _, 0.7, _, _, position, _, false);
+				EmitSoundToClient(attacker, "player/spy_shield_break.wav", _, _, _, _, 0.7, _, _, position, _, false);
+				TF2_AddCondition(client, TFCond_Bonked, 0.1);
+				VSHA_SetShield(client, 0);
+				return Plugin_Continue;
+			}
+
+			switch(TF2_GetPlayerClass(client))
+			{
+				case TFClass_Spy:
 				{
-					int healers[MAXPLAYERS];
-					int healercount = 0;
-					for (int i = 1; i <= MaxClients; i++)
+					if(GetEntProp(client, Prop_Send, "m_bFeignDeathReady") && !TF2_IsPlayerInCondition(client, TFCond_Cloaked))
 					{
-						if (IsValidClient(i) && IsPlayerAlive(i) && (GetHealingTarget(i) == attacker))
+						if(damagetype & DMG_CRIT)
 						{
-							healers[healercount] = i;
-							healercount++;
+							damagetype&=~DMG_CRIT;
+						}
+						damage=620.0;
+						return Plugin_Changed;
+					}
+
+					if(TF2_IsPlayerInCondition(client, TFCond_Cloaked) && TF2_IsPlayerInCondition(client, TFCond_DeadRingered))
+					{
+						if(damagetype & DMG_CRIT)
+						{
+							damagetype&=~DMG_CRIT;
+						}
+						damage=850.0;
+						return Plugin_Changed;
+					}
+
+					if(GetEntProp(client, Prop_Send, "m_bFeignDeathReady") || TF2_IsPlayerInCondition(client, TFCond_DeadRingered))
+					{
+						if(damagetype & DMG_CRIT)
+						{
+							damagetype&=~DMG_CRIT;
+						}
+						damage=620.0;
+						return Plugin_Changed;
+					}
+				}
+				case TFClass_Soldier:
+				{
+					if(IsValidEdict((weapon=GetPlayerWeaponSlot(client, TFWeaponSlot_Secondary))) && GetEntProp(weapon, Prop_Send, "m_iItemDefinitionIndex")==226 && !(FF2flags[client] & FF2FLAG_ISBUFFED))  //Battalion's Backup
+					{
+						SetEntPropFloat(client, Prop_Send, "m_flRageMeter", 100.0);
+					}
+				}
+			}
+
+			if(damage<=160.0)  //TODO: Wat
+			{
+				damage*=3;
+				return Plugin_Changed;
+			}
+		}
+	}
+	else
+	{
+		//int boss=GetBossIndex(client);
+		//if(boss!=-1)
+		if(VSHA_GetBossPluginHandle(client)==hThisPlugin)
+		{
+			int boss=client;
+			if(attacker<=MaxClients)
+			{
+				bool bIsTelefrag; bool bIsBackstab;
+				if(dmgCustomInOTD)
+				{
+					if(damagecustom==TF_CUSTOM_BACKSTAB)
+					{
+						bIsBackstab=true;
+					}
+					else if(damagecustom==TF_CUSTOM_TELEFRAG)
+					{
+						bIsTelefrag=true;
+					}
+				}
+				else if(weapon!=4095 && IsValidEdict(weapon) && weapon==GetPlayerWeaponSlot(attacker, TFWeaponSlot_Melee) && damage>1000.0)
+				{
+					char classname[32];
+					if(GetEdictClassname(weapon, classname, sizeof(classname)) && !strcmp(classname, "tf_weapon_knife", false))
+					{
+						bIsBackstab=true;
+					}
+				}
+				else if(!IsValidEntity(weapon) && (damagetype & DMG_CRUSH)==DMG_CRUSH && damage==1000.0)
+				{
+					bIsTelefrag=true;
+				}
+
+				if(bIsTelefrag)
+				{
+					damagecustom=0;
+					if(!IsPlayerAlive(attacker))
+					{
+						damage=1.0;
+						return Plugin_Changed;
+					}
+					damage=(VSHA_GetBossHealth(boss)>9001 ? 9001.0 : float(GetEntProp(boss, Prop_Send, "m_iHealth"))+90.0);
+
+					int teleowner=FindTeleOwner(attacker);
+					if(IsValidClient(teleowner) && teleowner!=attacker)
+					{
+						//Damage[teleowner]+=9001*3/5;
+						int tmpdmg = VSHA_GetDamage(teleowner)+(9001*3/5);
+						VSHA_SetDamage(teleowner,tmpdmg);
+						if(!(FF2flags[teleowner] & FF2FLAG_HUDDISABLED))
+						{
+							PrintHintText(teleowner, "TELEFRAG ASSIST!  Nice job setting it up!");
 						}
 					}
-					for (int i = 0; i < healercount; i++)
+
+					if(!(FF2flags[attacker] & FF2FLAG_HUDDISABLED))
 					{
-						if (IsValidClient(healers[i]) && IsPlayerAlive(healers[i]))
+						PrintHintText(attacker, "TELEFRAG! You are a pro!");
+					}
+
+					if(!(FF2flags[client] & FF2FLAG_HUDDISABLED))
+					{
+						PrintHintText(client, "TELEFRAG! Be careful around quantum tunneling devices!");
+					}
+					return Plugin_Changed;
+				}
+
+				int index;
+				if(IsValidEntity(weapon) && weapon>MaxClients && attacker<=MaxClients)
+				{
+					char classname[64];
+					GetEntityClassname(weapon, classname, sizeof(classname));
+					if(!StrContains(classname, "eyeball_boss"))  //Dang spell Monoculuses
+					{
+						index=-1;
+					}
+					else
+					{
+						index=GetEntProp(weapon, Prop_Send, "m_iItemDefinitionIndex");
+					}
+				}
+				else
+				{
+					index=-1;
+				}
+
+				switch(index)
+				{
+					case 14, 201, 230, 402, 526, 664, 752, 792, 801, 851, 881, 890, 899, 908, 957, 966:  //Sniper Rifle, Strange Sniper Rifle, Sydney Sleeper, Bazaar Bargain, Machina, Festive Sniper Rifle, Hitman's Heatmaker, Botkiller Sniper Rifles
+					{
+						switch(index)
 						{
-							int medigun = GetPlayerWeaponSlot(healers[i], TFWeaponSlot_Secondary);
-							if (IsValidEntity(medigun))
+							case 14, 201, 664, 792, 801, 851, 881, 890, 899, 908, 957, 966:  //Sniper Rifle, Strange Sniper Rifle, Festive Sniper Rifle, Botkiller Sniper Rifles
 							{
-								char cls[64];
-								GetEdictClassname(medigun, cls, sizeof(cls));
-								if (strcmp(cls, "tf_weapon_medigun", false) == 0)
+								if(CheckRoundState()!=2)
 								{
-									float uber = GetMediCharge(medigun) + (0.1 / healercount);
-									float max = 1.0;
-									if (GetEntProp(medigun, Prop_Send, "m_bChargeRelease")) max = 1.5;
-									if (uber > max) uber = max;
-									SetMediCharge(medigun, uber);
+									float chargelevel=(IsValidEntity(weapon) && weapon>MaxClients ? GetEntPropFloat(weapon, Prop_Send, "m_flChargedDamage") : 0.0);
+									float time=(VSHA_GetGlowTimer(boss)>10 ? 1.0 : 2.0);
+									time+=(VSHA_GetGlowTimer(boss)>10 ? (VSHA_GetGlowTimer(boss)>20 ? 1.0 : 2.0) : 4.0)*(chargelevel/100.0);
+									//SetClientGlow(boss, time);
+									VSHA_SetGlowTimer(boss, time);
+									if(VSHA_GetGlowTimer(boss)>30.0)
+									{
+										//GlowTimer[boss]=30.0;
+										VSHA_SetGlowTimer(boss,30.0);
+									}
+								}
+							}
+						}
+
+						if(index==752 && CheckRoundState()!=2)  //Hitman's Heatmaker
+						{
+							float chargelevel=(IsValidEntity(weapon) && weapon>MaxClients ? GetEntPropFloat(weapon, Prop_Send, "m_flChargedDamage") : 0.0);
+							float add=10+(chargelevel/10);
+							if(TF2_IsPlayerInCondition(attacker, view_as<TFCond>(46)))
+							{
+								add/=3;
+							}
+							float rage=GetEntPropFloat(attacker, Prop_Send, "m_flRageMeter");
+							SetEntPropFloat(attacker, Prop_Send, "m_flRageMeter", (rage+add>100) ? 100.0 : rage+add);
+						}
+
+						if(!(damagetype & DMG_CRIT))
+						{
+							if(TF2_IsPlayerInCondition(attacker, TFCond_CritCola) || TF2_IsPlayerInCondition(attacker, TFCond_Buffed) || TF2_IsPlayerInCondition(attacker, TFCond_CritHype))
+							{
+								damage*=1.7;
+							}
+							else
+							{
+								if(index!=230 || BossCharge[boss][0]>90.0)  //Sydney Sleeper
+								{
+									damage*=2.9;
+								}
+								else
+								{
+									damage*=2.4;
+								}
+							}
+							return Plugin_Changed;
+						}
+					}
+					case 61, 1006:  //Ambassador, Festive Ambassador
+					{
+						if(damagecustom==TF_CUSTOM_HEADSHOT)
+						{
+							damage=85.0;  //Final damage 255
+						}
+					}
+					case 132, 266, 482, 1082:  //Eyelander, HHHH, Nessie's Nine Iron, Festive Eyelander
+					{
+						IncrementHeadCount(attacker);
+					}
+					case 214:  //Powerjack
+					{
+						int health=GetClientHealth(attacker);
+						int max=GetEntProp(attacker, Prop_Data, "m_iMaxHealth");
+						int newhealth=health+50;
+						if(health<max+100)
+						{
+							if(newhealth>max+100)
+							{
+								newhealth=max+100;
+							}
+							SetEntProp(attacker, Prop_Data, "m_iHealth", newhealth);
+							SetEntProp(attacker, Prop_Send, "m_iHealth", newhealth);
+						}
+
+						if(TF2_IsPlayerInCondition(attacker, TFCond_OnFire))
+						{
+							TF2_RemoveCondition(attacker, TFCond_OnFire);
+						}
+					}
+					case 317:  //Candycane
+					{
+						SpawnSmallHealthPackAt(client, GetClientTeam(attacker));
+					}
+					case 355:  //Fan O' War
+					{
+						if(BossCharge[boss][0]>0.0)
+						{
+							BossCharge[boss][0]-=5.0;
+							if(BossCharge[boss][0]<0.0)
+							{
+								BossCharge[boss][0]=0.0;
+							}
+						}
+					}
+					case 357:  //Half-Zatoichi
+					{
+						SetEntProp(weapon, Prop_Send, "m_bIsBloody", 1);
+						if(GetEntProp(attacker, Prop_Send, "m_iKillCountSinceLastDeploy")<1)
+						{
+							SetEntProp(attacker, Prop_Send, "m_iKillCountSinceLastDeploy", 1);
+						}
+
+						int health=GetClientHealth(attacker);
+						int max=GetEntProp(attacker, Prop_Data, "m_iMaxHealth");
+						int newhealth=health+50;
+						if(health<max+100)
+						{
+							if(newhealth>max+100)
+							{
+								newhealth=max+100;
+							}
+							SetEntProp(attacker, Prop_Data, "m_iHealth", newhealth);
+							SetEntProp(attacker, Prop_Send, "m_iHealth", newhealth);
+						}
+						if(TF2_IsPlayerInCondition(attacker, TFCond_OnFire))
+						{
+							TF2_RemoveCondition(attacker, TFCond_OnFire);
+						}
+					}
+					case 416:  //Market Gardener (courtesy of Chdata)
+					{
+						if(FF2flags[attacker] & FF2FLAG_ROCKET_JUMPING)
+						{
+							damage=(Pow(float(VSHA_GetBossMaxHealth(boss)), 0.74074)+512.0-(Marketed[client]/128.0*float(VSHA_GetBossMaxHealth(boss))))/3.0;
+							damagetype|=DMG_CRIT;
+
+							if(Marketed[client]<5)
+							{
+								Marketed[client]++;
+							}
+
+							PrintHintText(attacker, "%t", "Market Gardener");  //You just market-gardened the boss!
+							PrintHintText(client, "%t", "Market Gardened");  //You just got market-gardened!
+
+							EmitSoundToClient(attacker, "player/doubledonk.wav", _, _, _, _, 0.6, _, _, position, _, false);
+							EmitSoundToClient(client, "player/doubledonk.wav", _, _, _, _, 0.6, _, _, position, _, false);
+							return Plugin_Changed;
+						}
+					}
+					case 525, 595:  //Diamondback, Manmelter
+					{
+						if(GetEntProp(attacker, Prop_Send, "m_iRevengeCrits"))  //If a revenge crit was used, give a damage bonus
+						{
+							damage=85.0;  //255 final damage
+						}
+					}
+					case 528:  //Short Circuit
+					{
+						if(circuitStun)
+						{
+							TF2_StunPlayer(client, circuitStun, 0.0, TF_STUNFLAGS_SMALLBONK|TF_STUNFLAG_NOSOUNDOREFFECT, attacker);
+							EmitSoundToAll("weapons/barret_arm_zap.wav", client);
+							EmitSoundToClient(client, "weapons/barret_arm_zap.wav");
+						}
+					}
+					case 593:  //Third Degree
+					{
+						int healers[MAXPLAYERS];
+						int healerCount;
+						for(int healer; healer<=MaxClients; healer++)
+						{
+							if(IsValidClient(healer) && IsPlayerAlive(healer) && (GetHealingTarget(healer, true)==attacker))
+							{
+								healers[healerCount]=healer;
+								healerCount++;
+							}
+						}
+
+						for(int healer; healer<healerCount; healer++)
+						{
+							if(IsValidClient(healers[healer]) && IsPlayerAlive(healers[healer]))
+							{
+								int medigun=GetPlayerWeaponSlot(healers[healer], TFWeaponSlot_Secondary);
+								if(IsValidEntity(medigun))
+								{
+									char classname[64];
+									GetEdictClassname(medigun, classname, sizeof(classname));
+									if(!strcmp(classname, "tf_weapon_medigun", false))
+									{
+										float uber=GetEntPropFloat(medigun, Prop_Send, "m_flChargeLevel")+(0.1/healerCount);
+										float max=1.0;
+										if(GetEntProp(medigun, Prop_Send, "m_bChargeRelease"))
+										{
+											max=1.5;
+										}
+
+										if(uber>max)
+										{
+											uber=max;
+										}
+										SetEntPropFloat(medigun, Prop_Send, "m_flChargeLevel", uber);
+									}
 								}
 							}
 						}
 					}
-				}
-				case 14, 201, 230, 402, 526, 664, 752, 792, 801, 851, 881, 890, 899, 908, 957, 966, 1098:
-				{
-					switch (weapindex)
+					case 594:  //Phlogistinator
 					{
-						case 14, 201, 664, 792, 801, 851, 881, 890, 899, 908, 957, 966:
+						if(!TF2_IsPlayerInCondition(attacker, TFCond_CritMmmph))
 						{
-							if (CheckRoundState() != 2)
-							{
-								float chargelevel = (IsValidEntity(weapon) && weapon > MaxClients ? GetEntPropFloat(weapon, Prop_Send, "m_flChargedDamage") : 0.0);
-								float curGlow = VSHA_GetGlowTimer(victim);
-								float time = (curGlow > 10 ? 1.0 : 2.0);
-								time += (curGlow > 10 ? (curGlow > 20 ? 1 : 2) : 4)*(chargelevel/100);
-								VSHA_SetGlowTimer(victim, curGlow+time);
-								if (curGlow+time > 30.0) VSHA_SetGlowTimer(victim, 30.0); //convar/cvar heer
-								//SetEntProp(victim, Prop_Send, "m_bGlowEnabled", 1);
-								//GlowTimer += RoundToCeil(time);
-								//if (GlowTimer > 30.0) GlowTimer = 30.0;
-							}
+							damage/=2.0;
 						}
 					}
-					if (weapindex == 752 && CheckRoundState() != 2)
+					case 1099:  //Tide Turner
 					{
-						float chargelevel = (IsValidEntity(weapon) && weapon > MaxClients ? GetEntPropFloat(weapon, Prop_Send, "m_flChargedDamage") : 0.0);
-						float add = 10 + (chargelevel / 10);
-						if ( TF2_IsPlayerInCondition(attacker, view_as<TFCond>(46)) ) add /= 3.0;
-						float rage = GetEntPropFloat(attacker, Prop_Send, "m_flRageMeter");
-						SetEntPropFloat(attacker, Prop_Send, "m_flRageMeter", (rage + add > 100) ? 100.0 : rage + add);
+						SetEntPropFloat(attacker, Prop_Send, "m_flChargeMeter", 100.0);
 					}
-					if ( !(damagetype & DMG_CRIT) )
+					/*case 1104:  //Air Strike-moved to event_hurt for now since OTD doesn't display the actual damage :/
 					{
-						bool ministatus = (TF2_IsPlayerInCondition(attacker, TFCond_CritCola) || TF2_IsPlayerInCondition(attacker, TFCond_Buffed) || TF2_IsPlayerInCondition(attacker, TFCond_CritHype));
+						static Float:airStrikeDamage;
+						airStrikeDamage+=damage;
+						if(airStrikeDamage>=200.0)
+						{
+							SetEntProp(attacker, Prop_Send, "m_iDecapitations", GetEntProp(attacker, Prop_Send, "m_iDecapitations")+1);
+							airStrikeDamage-=200.0;
+						}
+					}*/
+				}
 
-						damage *= (ministatus) ? 2.222222 : 3.0;
-						if (weapindex == 230) VSHA_SetBossRage( victim, VSHA_GetBossRage(victim)-(damage/2.0/10.0) ); //make this a convar/cvar!
-						//{
-							//HaleRage -= RoundFloat(damage/2.0);
-							//if (HaleRage < 0) HaleRage = 0;
-						//}
-						return Plugin_Changed;
+				if(bIsBackstab)
+				{
+					damage=VSHA_GetBossMaxHealth(boss)*(LastBossIndex()+1)*VSHA_GetMaxLives(boss)*(0.12-VSHA_GetBossStabs(boss)/90)/3;
+					damagetype|=DMG_CRIT;
+					damagecustom=0;
+
+					EmitSoundToClient(client, "player/spy_shield_break.wav", _, _, _, _, 0.7, _, _, position, _, false);
+					EmitSoundToClient(attacker, "player/spy_shield_break.wav", _, _, _, _, 0.7, _, _, position, _, false);
+					EmitSoundToClient(client, "player/crit_received3.wav", _, _, _, _, 0.7, _, _, _, _, false);
+					EmitSoundToClient(attacker, "player/crit_received3.wav", _, _, _, _, 0.7, _, _, _, _, false);
+					SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", GetGameTime()+2.0);
+					SetEntPropFloat(attacker, Prop_Send, "m_flNextAttack", GetGameTime()+2.0);
+					SetEntPropFloat(attacker, Prop_Send, "m_flStealthNextChangeTime", GetGameTime()+2.0);
+
+					int viewmodel=GetEntPropEnt(attacker, Prop_Send, "m_hViewModel");
+					if(viewmodel>MaxClients && IsValidEntity(viewmodel) && TF2_GetPlayerClass(attacker)==TFClass_Spy)
+					{
+						int melee=GetIndexOfWeaponSlot(attacker, TFWeaponSlot_Melee);
+						int animation=15;
+						switch(melee)
+						{
+							case 727:  //Black Rose
+							{
+								animation=41;
+							}
+							case 4, 194, 665, 794, 803, 883, 892, 901, 910:  //Knife, Strange Knife, Festive Knife, Botkiller Knifes
+							{
+								animation=10;
+							}
+							case 638:  //Sharp Dresser
+							{
+								animation=31;
+							}
+						}
+						SetEntProp(viewmodel, Prop_Send, "m_nSequence", animation);
 					}
-					else if (weapindex == 230) VSHA_SetBossRage( victim, VSHA_GetBossRage(victim)-(damage*3.0/2.0/10.0) );
+
+					if(!(FF2flags[attacker] & FF2FLAG_HUDDISABLED))
+					{
+						PrintHintText(attacker, "%t", "Backstab");
+					}
+
+					if(!(FF2flags[client] & FF2FLAG_HUDDISABLED))
+					{
+						PrintHintText(client, "%t", "Backstabbed");
+					}
+
+					if(index==225 || index==574)  //Your Eternal Reward, Wanga Prick
+					{
+						CreateTimer(0.3, Timer_DisguiseBackstab, GetClientUserId(attacker));
+					}
+					else if(index==356)  //Conniver's Kunai
+					{
+						int health=GetClientHealth(attacker)+200;
+						if(health>500)
+						{
+							health=500;
+						}
+						SetEntProp(attacker, Prop_Data, "m_iHealth", health);
+						SetEntProp(attacker, Prop_Send, "m_iHealth", health);
+					}
+					else if(index==461)  //Big Earner
+					{
+						SetEntPropFloat(attacker, Prop_Send, "m_flCloakMeter", 100.0);  //Full cloak
+					}
+
+					if(GetIndexOfWeaponSlot(attacker, TFWeaponSlot_Primary)==525)  //Diamondback
+					{
+						SetEntProp(attacker, Prop_Send, "m_iRevengeCrits", GetEntProp(attacker, Prop_Send, "m_iRevengeCrits")+2);
+					}
+
+					//char sound[PLATFORM_MAX_PATH];
+					//if(RandomSound("sound_stabbed", sound, PLATFORM_MAX_PATH, boss))
 					//{
-						//HaleRage -= RoundFloat(damage*3.0/2.0);
-						//if (HaleRage < 0) HaleRage = 0;
+						//EmitSoundToAllExcept(SOUNDEXCEPT_VOICE, sound, _, _, _, _, _, _, Boss[boss], _, _, false);
+						//EmitSoundToAllExcept(SOUNDEXCEPT_VOICE, sound, _, _, _, _, _, _, Boss[boss], _, _, false);
 					//}
-				}
-				case 132, 266, 482, 1082: IncrementHeadCount(attacker);
-				case 416: // Chdata's Market Gardener backstab
-				{
-					if (VSHA_IsPlayerInJump(attacker))
+
+					if(VSHA_GetBossStabs(boss)<3)
 					{
-						float curMaxHelth = view_as<float>(VSHA_GetBossMaxHealth(victim));
-						int markethits = VSHA_GetBossMarkets(victim);
-						damage = ( Pow(curMaxHelth, (0.74074)) + 512.0 - (markethits/128*curMaxHelth) )/3.0;
-						//divide by 3 because this is basedamage and lolcrits (0.714286)) + 1024.0)
-						damagetype |= DMG_CRIT;
-
-						//if (Marketed < 5) Marketed++;
-						if (markethits < 5) VSHA_SetBossMarkets(victim, markethits+1);
-
-						PrintCenterText(attacker, "You market gardened him!");
-						PrintCenterText(victim, "You were just market gardened!");
-
-						float Pos[3];
-						GetEntPropVector(victim, Prop_Send, "m_vecOrigin", Pos);
-						EmitSoundToClient(victim, "player/doubledonk.wav", _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, 0.6, 100, _, Pos, NULL_VECTOR, false, 0.0);
-						EmitSoundToClient(attacker, "player/doubledonk.wav", _, _, SNDLEVEL_TRAFFIC, SND_NOFLAGS, 0.6, 100, _, Pos, NULL_VECTOR, false, 0.0);
-						return Plugin_Changed;
+						//Stabbed[boss]++;
+						VSHA_SetBossStabs(client,(VSHA_GetBossStabs(boss)+1));
 					}
-				}
-				case 317: SpawnSmallHealthPackAt(victim, GetClientTeam(attacker));
-				case 214:
-				{
-					int health = GetClientHealth(attacker);
-					int max = GetEntProp(attacker, Prop_Data, "m_iMaxHealth");
-					int newhealth = health+25;
-					if (health < max+50)
-					{
-						if (newhealth > max+50) newhealth = max+50;
-						SetEntProp(attacker, Prop_Data, "m_iHealth", newhealth);
-						SetEntProp(attacker, Prop_Send, "m_iHealth", newhealth);
-					}
-					if (TF2_IsPlayerInCondition(attacker, TFCond_OnFire)) TF2_RemoveCondition(attacker, TFCond_OnFire);
-				}
-				case 594: // Phlog
-				{
-					if (!TF2_IsPlayerInCondition(attacker, TFCond_CritMmmph))
-					{
-						damage /= 2.0;
-						return Plugin_Changed;
-					}
-				}
-				case 357:
-				{
-					SetEntProp(weapon, Prop_Send, "m_bIsBloody", 1);
-					if (GetEntProp(attacker, Prop_Send, "m_iKillCountSinceLastDeploy") < 1)
-					SetEntProp(attacker, Prop_Send, "m_iKillCountSinceLastDeploy", 1);
-					int health = GetClientHealth(attacker);
-					int max = GetEntProp(attacker, Prop_Data, "m_iMaxHealth");
-					int newhealth = health+35;
-					if (health < max+25)
-					{
-						if (newhealth > max+25) newhealth = max+25;
-						SetEntProp(attacker, Prop_Data, "m_iHealth", newhealth);
-						SetEntProp(attacker, Prop_Send, "m_iHealth", newhealth);
-					}
-					if (TF2_IsPlayerInCondition(attacker, TFCond_OnFire)) TF2_RemoveCondition(attacker, TFCond_OnFire);
-				}
-				case 61, 1006:  //Ambassador does 2.5x damage on headshot
-				{
-					if (damagecustom == TF_CUSTOM_HEADSHOT)
-					{
-						damage = 100.0;
-						return Plugin_Changed;
-					}
-				}
-				case 525, 595:
-				{
-					int iCrits = GetEntProp(attacker, Prop_Send, "m_iRevengeCrits");
-					if (iCrits > 0) //If a revenge crit was used, give a damage bonus
-					{
-						damage = 85.0;
-						return Plugin_Changed;
-					}
-				}
-				case 656:
-				{
-					CreateTimer(3.0, Timer_StopTickle, GetClientUserId(victim), TIMER_FLAG_NO_MAPCHANGE);
-					if (TF2_IsPlayerInCondition(attacker, TFCond_Dazed)) TF2_RemoveCondition(attacker, TFCond_Dazed);
-				}
-			}
-			if (damagecustom == TF_CUSTOM_BACKSTAB)
-			{
-				//damage = ( (Pow(float(iBossMaxHealth[victim])*0.0014, 2.0) + 899.0) - (float(iBossMaxHealth[victim])*(iStabbed[victim]/100)) )/3;
-				float curMaxHelth = view_as<float>(VSHA_GetBossMaxHealth(victim));
-				int stabamounts = VSHA_GetBossStabs(victim);
-				float changedamage = ( (Pow(curMaxHelth*0.0014, 2.0) + 899.0) - (curMaxHelth*(stabamounts/100)) );
-
-				damage = changedamage/3; // You can level "damage dealt" with backstabs
-
-				damagetype |= DMG_CRIT;
-
-				EmitSoundToClient(victim, "player/spy_shield_break.wav", _, _, SNDLEVEL_TRAFFIC, _, 0.7, 100, _, AttackerPos, _, false);
-				EmitSoundToClient(attacker, "player/spy_shield_break.wav", _, _, SNDLEVEL_TRAFFIC, _, 0.7, 100, _, AttackerPos, _, false);
-				EmitSoundToClient(victim, "player/crit_received3.wav", _, _, SNDLEVEL_TRAFFIC, _, 0.7, 100, _, _, _, false);
-				EmitSoundToClient(attacker, "player/crit_received3.wav", _, _, SNDLEVEL_TRAFFIC, _, 0.7, 100, _, _, _, false);
-				SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", GetGameTime() + 2.0);
-				SetEntPropFloat(attacker, Prop_Send, "m_flNextAttack", GetGameTime() + 2.0);
-				SetEntPropFloat(attacker, Prop_Send, "m_flStealthNextChangeTime", GetGameTime() + 1.0);
-
-				TF2_AddCondition(attacker, TFCond_SpeedBuffAlly, 1.5);
-				TF2_AddCondition(attacker, TFCond_Ubercharged, 2.0);
-
-				int viewmodel = GetEntPropEnt(attacker, Prop_Send, "m_hViewModel");
-				if (viewmodel > MaxClients && IsValidEntity(viewmodel) && TF2_GetPlayerClass(attacker) == TFClass_Spy)
-				{
-					int melee = GetIndexOfWeaponSlot(attacker, TFWeaponSlot_Melee);
-					int animation = 15;
-					switch (melee)
-					{
-						case 727: animation = 41; //Black Rose
-						case 4, 194, 665, 794, 803, 883, 892, 901, 910: animation = 10; //Knife, Strange Knife, Festive Knife, Botkiller Knifes
-						case 638: animation = 31; //Sharp Dresser
-					}
-					SetEntProp(viewmodel, Prop_Send, "m_nSequence", animation);
-				}
-				PrintCenterText(attacker, "You Tickled The Boss!");
-				PrintCenterText(victim, "You Were Just Tickled!");
-
-				int pistol = GetIndexOfWeaponSlot(attacker, TFWeaponSlot_Primary);
-				if (pistol == 525) //Diamondback gives 3 crits on backstab
-				{
-					int iCrits = GetEntProp(attacker, Prop_Send, "m_iRevengeCrits");
-					SetEntProp(attacker, Prop_Send, "m_iRevengeCrits", iCrits+2);
-				}
-				if (weapindex == 356)
-				{
-					int health = GetClientHealth(attacker) + 180;
-					if (health > 195) health = 390;
-					SetEntProp(attacker, Prop_Data, "m_iHealth", health);
-					SetEntProp(attacker, Prop_Send, "m_iHealth", health);
-				}
-				if (weapindex == 461) SetEntPropFloat(attacker, Prop_Send, "m_flCloakMeter", 100.0); //Big Earner gives full cloak on backstab
-
-				//strcopy(playsound, PLATFORM_MAX_PATH, MikuPain[GetRandomInt(0, sizeof(MikuPain)-1)]);
-				//EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, victim, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-				//EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, victim, NULL_VECTOR, NULL_VECTOR, false, 0.0);
-
-				if (stabamounts < 4) VSHA_SetBossStabs(victim, VSHA_GetBossStabs(victim)+1);
-				return Plugin_Changed;
-			}
-			if (TF2_GetPlayerClass(attacker) == TFClass_Scout)
-			{
-				if (weapindex == 45 || ((weapindex == 209 || weapindex == 294 || weapindex == 23 || weapindex == 160 || weapindex == 449) && (TF2_IsPlayerCritBuffed(victim) || TF2_IsPlayerInCondition(victim, TFCond_CritCola) || TF2_IsPlayerInCondition(victim, TFCond_Buffed) || TF2_IsPlayerInCondition(victim, TFCond_CritHype))))
-				{
-					ScaleVector(damageForce, 0.38);
 					return Plugin_Changed;
 				}
+			}
+			else
+			{
+				char classname[64];
+				if(GetEdictClassname(attacker, classname, sizeof(classname)) && !strcmp(classname, "trigger_hurt", false))
+				{
+					Action action=Plugin_Continue;
+					Call_StartForward(p_OnTriggerHurt);
+					Call_PushCell(boss);
+					Call_PushCell(attacker);
+					float damage2=damage;
+					Call_PushFloatRef(damage2);
+					Call_Finish(action);
+					if(action!=Plugin_Stop && action!=Plugin_Handled)
+					{
+						if(action==Plugin_Changed)
+						{
+							damage=damage2;
+						}
+
+						if(damage>1500.0)
+						{
+							damage=1500.0;
+						}
+
+						//if(!strcmp(currentmap, "arena_arakawa_b3", false) && damage>1000.0)
+						//{
+							//damage=490.0;
+						//}
+						//BossHealth[boss]-=RoundFloat(damage);
+						int newBossHealth = VSHA_GetBossHealth(boss)-RoundFloat(damage);
+						VSHA_SetBossHealth(boss,newBossHealth);
+						//BossCharge[boss][0]+=damage*100.0/BossRageDamage[boss];
+						float newBossRage = VSHA_GetBossRage(boss)+(damage*100.0/VSHA_GetDamage(boss));
+						VSHA_SetBossRage(boss,newBossRage);
+						if(VSHA_GetBossHealth(boss)<=0)  //Wat
+						{
+							damage*=5;
+						}
+
+						if(VSHA_GetBossRage(boss)>100.0)
+						{
+							//BossCharge[boss][0]=100.0;
+							VSHA_SetBossRage(boss,100.0);
+						}
+						return Plugin_Changed;
+					}
+					else
+					{
+						return action;
+					}
+				}
+			}
+
+			if(BossCharge[boss][0]>100.0)
+			{
+				BossCharge[boss][0]=100.0;
 			}
 		}
 		else
 		{
-			char hurt[64];
-			if (GetEdictClassname(attacker, hurt, sizeof(hurt)) && !strcmp(hurt, "trigger_hurt", false))
+			int index=(IsValidEntity(weapon) && weapon>MaxClients && attacker<=MaxClients ? GetEntProp(weapon, Prop_Send, "m_iItemDefinitionIndex") : -1);
+			if(index==307)  //Ullapool Caber
 			{
-				// Teleport the boss back to one of the spawns.
-				// And during the first 30 seconds, he can only teleport to his own spawn.
-				//TeleportToSpawn(victim, (bTenSecStart[1]) ? HaleTeam : 0);
-				if (damage >= 500.0) TeleportToSpawn(victim, GetRandomInt(2, 3));
+				if(detonations[attacker]<allowedDetonations)
+				{
+					detonations[attacker]++;
+					PrintHintText(attacker, "%t", "Detonations Left", allowedDetonations-detonations[attacker]);
+					if(allowedDetonations-detonations[attacker])  //Don't reset their caber if they have 0 detonations left
+					{
+						SetEntProp(weapon, Prop_Send, "m_bBroken", 0);
+						SetEntProp(weapon, Prop_Send, "m_iDetonated", 0);
+					}
+				}
+			}
 
-				float flMaxDmg = float(VSHA_GetBossMaxHealth(victim))*0.05;
-				if (flMaxDmg > 500.0) flMaxDmg = 500.0;
-				if (damage > flMaxDmg) damage = flMaxDmg;
-
-				VSHA_SetBossRage( victim, (VSHA_GetBossRage(victim)+(damage/50.0)) );
-				VSHA_SetBossHealth( victim, (VSHA_GetBossHealth(victim)-RoundFloat(damage)) );
-				if (VSHA_GetBossHealth(victim) <= 0) damage *= 5;
-				return Plugin_Changed;
+			if(IsValidClient(client, false) && TF2_GetPlayerClass(client)==TFClass_Soldier)  //TODO: LOOK AT THIS
+			{
+				if(damagetype & DMG_FALL)
+				{
+					int secondary=GetPlayerWeaponSlot(client, TFWeaponSlot_Secondary);
+					if(secondary<=0 || !IsValidEntity(secondary))
+					{
+						damage/=10.0;
+						return Plugin_Changed;
+					}
+				}
 			}
 		}
 	}
 	return Plugin_Continue;
 }
-public Action Timer_StopTickle(Handle timer, any userid)
+
+public Action Timer_DisguiseBackstab(Handle timer, any userid)
 {
-	int client = GetClientOfUserId(userid);
-	if (!IsValidClient(client) || !IsPlayerAlive(client)) return Plugin_Continue;
-	if (!GetEntProp(client, Prop_Send, "m_bIsReadyToHighFive") && !IsValidEntity(GetEntPropEnt(client, Prop_Send, "m_hHighFivePartner"))) TF2_RemoveCondition(client, TFCond_Taunting);
+	int client=GetClientOfUserId(userid);
+	if(IsValidClient(client, false))
+	{
+		RandomlyDisguise(client);
+	}
 	return Plugin_Continue;
+}
+stock void RandomlyDisguise(int client)	//Original code was mecha's, but the original code is broken and this uses a better method now.
+{
+	if(IsValidClient(client) && IsPlayerAlive(client))
+	{
+		int disguiseTarget=-1;
+		int team=GetClientTeam(client);
+
+		Handle disguiseArray=CreateArray();
+		for(int clientcheck; clientcheck<=MaxClients; clientcheck++)
+		{
+			if(IsValidClient(clientcheck) && GetClientTeam(clientcheck)==team && clientcheck!=client)
+			{
+				PushArrayCell(disguiseArray, clientcheck);
+			}
+		}
+
+		if(GetArraySize(disguiseArray)<=0)
+		{
+			disguiseTarget=client;
+		}
+		else
+		{
+			disguiseTarget=GetArrayCell(disguiseArray, GetRandomInt(0, GetArraySize(disguiseArray)-1));
+			if(!IsValidClient(disguiseTarget))
+			{
+				disguiseTarget=client;
+			}
+		}
+
+		int class=GetRandomInt(0, 4);
+		TFClassType classArray[]={TFClass_Scout, TFClass_Pyro, TFClass_Medic, TFClass_Engineer, TFClass_Sniper};
+		CloseHandle(disguiseArray);
+
+		if(TF2_GetPlayerClass(client)==TFClass_Spy)
+		{
+			TF2_DisguisePlayer(client, view_as<TFTeam>(team), classArray[class], disguiseTarget);
+		}
+		else
+		{
+			TF2_AddCondition(client, TFCond_Disguised, -1.0);
+			SetEntProp(client, Prop_Send, "m_nDisguiseTeam", team);
+			SetEntProp(client, Prop_Send, "m_nDisguiseClass", classArray[class]);
+			SetEntProp(client, Prop_Send, "m_iDisguiseTargetIndex", disguiseTarget);
+			SetEntProp(client, Prop_Send, "m_iDisguiseHealth", 200);
+		}
+	}
+}
+
+stock int LastBossIndex()
+{
+	for(int client=1; client<=MaxClients; client++)
+	{
+		if(!VSHA_IsBossPlayer(client))
+		{
+			return client;
+		}
+	}
+	return 0;
 }
