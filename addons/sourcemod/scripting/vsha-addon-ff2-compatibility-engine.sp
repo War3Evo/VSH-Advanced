@@ -593,16 +593,18 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 
 	strcopy(STRING(characterLongName), character);
 
-	ReplaceString(STRING(characterShortName), characterLongName, " ", false);
+	strcopy(STRING(characterShortName), characterLongName);
+
+	ReplaceString(STRING(characterShortName), " ", "", false);
 
 	BossSubplug.SetString("shortname", characterShortName);
 	int BossArrayListIndex = VSHA_RegisterBoss(characterShortName,characterLongName);
 
 	BossSubplug.SetValue("BossArrayListIndex", BossArrayListIndex);
 
-	KvSetString(BossKV, "model", section);
-	BossSubplug.SetString("model", section);
-	VSHA_SetPluginModel(BossArrayListIndex,characterShortName);
+	KvSetString(BossKV, "model", key);
+	BossSubplug.SetString("model", key);
+	VSHA_SetPluginModel(BossArrayListIndex,key);
 
 
 	PrintToServer("filename %s",character);
@@ -1387,24 +1389,42 @@ public int Native_IsVSHMap(Handle plugin, int numParams)
 ///////////////// VSHA interface ///////////////////////////////////////
 ///////////////// VSHA interface ///////////////////////////////////////
 ///////////////// VSHA interface ///////////////////////////////////////
+stock bool ThisPluginBoss(int iBossArrayListIndex)
+{
+	int myBossArrayListIndex;
+	int count = hArrayBossSubplugins.Length;
+	for (int x = 0; x < count; x++)
+	{
+		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
 
+		MyStringMap.GetValue("BossArrayListIndex", myBossArrayListIndex);
+		if(myBossArrayListIndex == iBossArrayListIndex) return true;
+	}
+	return false;
+}
 
 public void OnBossRage(int iBossArrayListIndex, int iiBoss)
 {
-	if (hThisPlugin != BossPlugin) return;
+	//if (hThisPlugin != BossPlugin) return;
+	if(!ThisPluginBoss(iBossArrayListIndex)) return;
 
 	// Helps prevent multiple rages
-	InRage[iiBoss] = true;
+	//InRage[iiBoss] = true;
 
 	char sAbility[10];
 	char sGetString[10];
 	char sStringHolder[10];
 	char lives[MAXRANDOMS][3];
 
+	int myBossArrayListIndex;
+
 	int count = hArrayBossSubplugins.Length;
 	for (int x = 0; x < count; x++)
 	{
 		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
+
+		MyStringMap.GetValue("BossArrayListIndex", myBossArrayListIndex);
+		if(myBossArrayListIndex != iBossArrayListIndex) continue;
 
 		for(int i=1; ; i++)
 		{
@@ -1797,7 +1817,7 @@ stock int FindBossIndexByShortName(char BossShortName[16])
 
 public void OnBossSelected(int iBossArrayListIndex, int iiBoss)
 {
-	if(iBossArrayListIndex!=iThisPlugin)
+	if(!ThisPluginBoss(iBossArrayListIndex))
 	{
 		// reset variables
 		SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -1855,7 +1875,7 @@ public Action OnTakeDamage(int client, int &attacker, int &inflictor, float &dam
 		foundDmgCustom=true;
 	}
 
-	if((attacker<=0 || client==attacker) && VSHA_GetBossPluginHandle(client)==hThisPlugin)
+	if((attacker<=0 || client==attacker) && ThisPluginBoss(VSHA_GetBossArrayListIndex(client)))
 	{
 		return Plugin_Handled;
 	}
@@ -1865,7 +1885,7 @@ public Action OnTakeDamage(int client, int &attacker, int &inflictor, float &dam
 		return Plugin_Continue;
 	}
 
-	if(!CheckRoundState() && VSHA_GetBossPluginHandle(client)==hThisPlugin)
+	if(!CheckRoundState() && ThisPluginBoss(VSHA_GetBossArrayListIndex(client)))
 	{
 		damage*=0.0;
 		return Plugin_Changed;
@@ -1875,7 +1895,7 @@ public Action OnTakeDamage(int client, int &attacker, int &inflictor, float &dam
 	GetEntPropVector(attacker, Prop_Send, "m_vecOrigin", position);
 	if(VSHA_IsBossPlayer(attacker))
 	{
-		if(IsValidClient(client) && VSHA_GetBossPluginHandle(client)!=hThisPlugin && !TF2_IsPlayerInCondition(client, TFCond_Bonked))
+		if(IsValidClient(client) && !ThisPluginBoss(VSHA_GetBossArrayListIndex(client)) && !TF2_IsPlayerInCondition(client, TFCond_Bonked))
 		{
 			if(TF2_IsPlayerInCondition(client, TFCond_DefenseBuffed))
 			{
@@ -1965,7 +1985,7 @@ public Action OnTakeDamage(int client, int &attacker, int &inflictor, float &dam
 	{
 		//int boss=GetBossIndex(client);
 		//if(boss!=-1)
-		if(VSHA_GetBossPluginHandle(client)==hThisPlugin)
+		if(ThisPluginBoss(VSHA_GetBossArrayListIndex(client)))
 		{
 			int boss=client;
 			if(attacker<=MaxClients)
