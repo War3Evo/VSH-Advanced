@@ -176,6 +176,9 @@ native int VSHA_RegisterBoss(char BossShortName[16], char BossLongName[32], bool
 native Handle VSHA_GetBossPluginHandle(int iiBoss);
 
 // BOSS
+native int VSHA_GetBossArrayListIndex(int iiBoss);
+
+// BOSS
 native int VSHA_GetBossUserID(int iiBoss); //gets boss' userid
 native void VSHA_SetBossUserID(int iiBoss, int userid);
 
@@ -275,7 +278,7 @@ native void VSHA_CallModelTimer(float time, int client);
 
 // ANY PLAYER // Only good for plugins that are not packs of bosses
 // 				this native uses plugin-handle to look up boss
-native bool VSHA_SetPluginModel(char ModelString[PATHX], char BossShortName[PATHX]=""); // sets up a model for a boss plugin for model manager
+native bool VSHA_SetPluginModel(int iBossArrayListIndex, char ModelString[PATHX]); // sets up a model for a boss plugin for model manager
 
 // ANY PLAYER
 native void VSHA_SetShield(int client, int ShieldEntity); // set the entity of the shield if a player is wearing a demoshield
@@ -762,6 +765,9 @@ public __pl_vsha_SetNTVOptional()
 	MarkNativeAsOptional("VSHA_CallModelTimer");
 
 	MarkNativeAsOptional("VSHA_GetBossPluginHandle");
+	MarkNativeAsOptional("VSHA_GetBossArrayListIndex");
+
 	MarkNativeAsOptional("VSHA_AddBoss");
 }
 #endif
+

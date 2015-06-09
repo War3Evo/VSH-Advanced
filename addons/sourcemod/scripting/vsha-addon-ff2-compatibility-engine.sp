@@ -28,7 +28,7 @@ ArrayList hArrayDownloads = null;
 
 bool areSubPluginsEnabled = false;
 
-Handle hThisPlugin = null;
+//int iThisPlugin = -1;
 
 bool InRage[PLYR];
 
@@ -596,11 +596,13 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 	ReplaceString(STRING(characterShortName), characterLongName, " ", false);
 
 	BossSubplug.SetString("shortname", characterShortName);
-	hThisPlugin = view_as<Handle>( VSHA_RegisterBoss(characterShortName,characterLongName) );
+	int BossArrayListIndex = VSHA_RegisterBoss(characterShortName,characterLongName);
+
+	BossSubplug.SetValue("BossArrayListIndex", BossArrayListIndex);
 
 	KvSetString(BossKV, "model", section);
 	BossSubplug.SetString("model", section);
-	VSHA_SetPluginModel(section,characterShortName);
+	VSHA_SetPluginModel(BossArrayListIndex,characterShortName);
 
 
 	PrintToServer("filename %s",character);
@@ -1387,7 +1389,7 @@ public int Native_IsVSHMap(Handle plugin, int numParams)
 ///////////////// VSHA interface ///////////////////////////////////////
 
 
-public void OnBossRage(Handle BossPlugin, int iiBoss)
+public void OnBossRage(int iBossArrayListIndex, int iiBoss)
 {
 	if (hThisPlugin != BossPlugin) return;
 
@@ -1793,9 +1795,9 @@ stock int FindBossIndexByShortName(char BossShortName[16])
 }
 
 
-public void OnBossSelected(Handle BossPlugin, int iiBoss)
+public void OnBossSelected(int iBossArrayListIndex, int iiBoss)
 {
-	if(BossPlugin!=hThisPlugin)
+	if(iBossArrayListIndex!=iThisPlugin)
 	{
 		// reset variables
 		SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -2519,3 +2521,14 @@ stock int LastBossIndex()
 	}
 	return 0;
 }
+
+/*
+stock void FindBossArrayListIndex()
+{
+	int count = hArrayBossSubplugins.Length; //GetArraySize(hMyArray);
+	for (int i = 0; i < count; i++)
+	{
+		StringMap MyStringMap = hArrayBossSubplugins.Get(i);
+		if (GetBossSubPlugin(MyStringMap) == plugin) return MyStringMap;
+	}
+}*/

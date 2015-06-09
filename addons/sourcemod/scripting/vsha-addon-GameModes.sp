@@ -550,7 +550,7 @@ public Action OnGameMode_BossSetup()
 	return Plugin_Continue;
 }
 
-public Action OnBossSetHP_Pre(Handle BossPlugin, int BossEntity, int &BossMaxHealth)
+public Action OnBossSetHP_Pre(int iBossArrayListIndex, int BossEntity, int &BossMaxHealth)
 {
 	if(CurrentBossGame == BossVsBossGameMode)
 	{
@@ -639,7 +639,7 @@ public void OnEquipPlayer_Post(int iClient)
 	}
 }
 
-public Action OnMusic(Handle BossPlugin, int iiBoss, char BossTheme[PATHX], float &time)
+public Action OnMusic(int iBossArrayListIndex, int iiBoss, char BossTheme[PATHX], float &time)
 {
 	if (iiBoss != -2) return Plugin_Continue;
 
@@ -777,7 +777,7 @@ public void OnConfiguration_Load_Misc(char[] cFile, char[] skey, char[] value)
 		DuoBoss1Time = StringToFloat(value);
 	}
 }
-public void OnBossTimer(Handle BossPlugin, int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
+public void OnBossTimer(int iBossArrayListIndex, int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
 {
 	if(CurrentBossGame != BossVsBossGameMode) return;
 	if(ValidPlayer(iiBoss,true))

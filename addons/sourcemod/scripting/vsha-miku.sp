@@ -14,7 +14,7 @@ public Plugin myinfo =
 	url 			= "http://en.wikipedia.org/wiki/Hatsune_Miku"
 }
 
-Handle hThisPlugin = null; //DO NOT TOUCH THIS, THIS IS JUST USED AS HOLDING DATA.
+int iThisPlugin = -1; //DO NOT TOUCH THIS, THIS IS USED TO IDENTIFY THIS BOSS PLUGIN.
 
 #define ThisConfigurationFile "configs/vsha/miku.cfg"
 
@@ -378,7 +378,7 @@ public void UnLoad_VSHAHooks()
 
 public void OnAllPluginsLoaded()
 {
-	hThisPlugin = view_as<Handle>( VSHA_RegisterBoss("miku","Hatsunemiku") );
+	iThisPlugin = VSHA_RegisterBoss("miku","Hatsunemiku");
 
 	if(!VSHAHookEx(VSHAHook_AddToDownloads, OnAddToDownloads))
 	{
@@ -437,16 +437,16 @@ public void OnMapEnd()
 		//}
 	//}
 //}
-public void OnChangeClass(Handle BossPlugin, Event event, int iiBoss)
+public void OnChangeClass(int iBossArrayListIndex, Event event, int iiBoss)
 {
-	if (hThisPlugin != BossPlugin) return;
+	if (iThisPlugin != iBossArrayListIndex) return;
 
 	if (TF2_GetPlayerClass(iiBoss) != TFClass_Scout) TF2_SetPlayerClass(iiBoss, TFClass_Scout, _, false);
 	TF2_RemovePlayerDisguise(iiBoss);
 }
-public void OnPlayerKilledByBoss(Handle BossPlugin, int iiBoss, int attacker)
+public void OnPlayerKilledByBoss(int iBossArrayListIndex, int iiBoss, int attacker)
 {
-	if (hThisPlugin != BossPlugin) return;
+	if (iThisPlugin != iBossArrayListIndex) return;
 
 	char playsound[PATHX];
 
@@ -456,9 +456,9 @@ public void OnPlayerKilledByBoss(Handle BossPlugin, int iiBoss, int attacker)
 	}
 	if ( !StrEqual(playsound, "") ) EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public void OnKillingSpreeByBoss(Handle BossPlugin, int iiBoss, int attacker)
+public void OnKillingSpreeByBoss(int iBossArrayListIndex, int iiBoss, int attacker)
 {
-	if (hThisPlugin != BossPlugin) return;
+	if (iThisPlugin != iBossArrayListIndex) return;
 
 	char playsound[PATHX];
 
@@ -467,9 +467,9 @@ public void OnKillingSpreeByBoss(Handle BossPlugin, int iiBoss, int attacker)
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, attacker, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public void OnBossKilled(Handle BossPlugin, int iiBoss, int attacker) //victim is boss
+public void OnBossKilled(int iBossArrayListIndex, int iiBoss, int attacker) //victim is boss
 {
-	if (hThisPlugin != BossPlugin) return;
+	if (iThisPlugin != iBossArrayListIndex) return;
 
 	char playsound[PATHX];
 
@@ -478,9 +478,9 @@ public void OnBossKilled(Handle BossPlugin, int iiBoss, int attacker) //victim i
 
 	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
-public void OnBossWin(Handle BossPlugin, Event event, int iiBoss)
+public void OnBossWin(int iBossArrayListIndex, Event event, int iiBoss)
 {
-	if (hThisPlugin != BossPlugin) return;
+	if (iThisPlugin != iBossArrayListIndex) return;
 
 	char playsound[PATHX];
 
@@ -509,17 +509,17 @@ public void OnGameOver() // best play to reset all variables
 	// Dynamically unload private forwards
 	UnLoad_VSHAHooks();
 }
-public void OnBossAirblasted(Handle BossPlugin, Event event, int iiBoss)
+public void OnBossAirblasted(int iBossArrayListIndex, Event event, int iiBoss)
 {
-	if (hThisPlugin != BossPlugin) return;
+	if (iThisPlugin != iBossArrayListIndex) return;
 	//float rage = 0.04*RageDMG;
 	//HaleRage += RoundToCeil(rage);
 	//if (HaleRage > RageDMG) HaleRage = RageDMG;
 	VSHA_SetBossRage(iiBoss, VSHA_GetBossRage(iiBoss)+4.0); //make this a convar/cvar!
 }
-public void OnBossSelected(Handle BossPlugin, int iiBoss)
+public void OnBossSelected(int iBossArrayListIndex, int iiBoss)
 {
-	if(BossPlugin!=hThisPlugin)
+	if(iBossArrayListIndex!=iThisPlugin)
 	{
 		// reset variables
 		SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -542,9 +542,9 @@ public void OnBossIntroTalk()
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public Action OnBossSetHP(Handle BossPlugin, int BossEntity, int &BossMaxHealth)
+public Action OnBossSetHP(int iBossArrayListIndex, int BossEntity, int &BossMaxHealth)
 {
-	if (hThisPlugin != BossPlugin) return Plugin_Continue;
+	if (iThisPlugin != iBossArrayListIndex) return Plugin_Continue;
 	BossMaxHealth = HealthCalc( 760.8, float( VSHA_GetPlayerCount() ), 1.0, 1.0341, 2046.0 );
 	//VSHA_SetBossMaxHealth(Hale[BossEntity], BossMax);
 	return Plugin_Changed;
@@ -558,9 +558,9 @@ public void OnLastSurvivor()
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, _, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 }
-public void OnBossTimer(Handle BossPlugin, int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
+public void OnBossTimer(int iBossArrayListIndex, int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
 {
-	if (hThisPlugin != BossPlugin) return;
+	if (iThisPlugin != iBossArrayListIndex) return;
 
 	char playsound[PATHX];
 	float speed;
@@ -664,9 +664,9 @@ public void OnBossTimer(Handle BossPlugin, int iiBoss, int &curHealth, int &curM
 		//all this just to do a cprint? It's not like weighdown has a limit...
 	}
 }
-public void OnPrepBoss(Handle BossPlugin, int iiBoss)
+public void OnPrepBoss(int iBossArrayListIndex, int iiBoss)
 {
-	if (hThisPlugin != BossPlugin) return;
+	if (iThisPlugin != iBossArrayListIndex) return;
 
 	TF2_SetPlayerClass(iiBoss, TFClass_Scout, _, false);
 	HaleCharge[iiBoss] = 0;
@@ -687,9 +687,9 @@ public void OnPrepBoss(Handle BossPlugin, int iiBoss)
 		SetEntPropEnt(iiBoss, Prop_Send, "m_hActiveWeapon", SaxtonWeapon);
 	}
 }
-public Action OnMusic(Handle BossPlugin, int iiBoss, char BossTheme[PATHX], float &time)
+public Action OnMusic(int iBossArrayListIndex, int iiBoss, char BossTheme[PATHX], float &time)
 {
-	if (hThisPlugin != BossPlugin) return Plugin_Continue;
+	if (iThisPlugin != iBossArrayListIndex) return Plugin_Continue;
 
 	if (iiBoss<0)
 	{
@@ -737,9 +737,9 @@ public Action OnModelTimer(Handle plugin, int iClient, char modelpath[PATHX])
 
 	return Plugin_Changed;
 }*/
-public void OnBossRage(Handle BossPlugin, int iiBoss)
+public void OnBossRage(int iBossArrayListIndex, int iiBoss)
 {
-	if (hThisPlugin != BossPlugin) return;
+	if (iThisPlugin != iBossArrayListIndex) return;
 
 	// Helps prevent multiple rages
 	InRage[iiBoss] = true;
@@ -756,7 +756,7 @@ public void OnBossRage(Handle BossPlugin, int iiBoss)
 }
 public void TF2_OnConditionAdded(int client, TFCond condition)
 {
-	if(VSHA_GetBossPluginHandle(client)!=hThisPlugin) return;
+	if(VSHA_GetBossArrayListIndex(client)!=iThisPlugin) return;
 
 	switch (condition)
 	{
@@ -790,12 +790,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 	char playsound[PATHX];
 
-	if ( CheckRoundState() == 0 && (VSHA_GetBossPluginHandle(victim)==hThisPlugin || (victim != attacker && VSHA_GetBossPluginHandle(attacker)!=hThisPlugin)) )
+	if ( CheckRoundState() == 0 && (VSHA_GetBossArrayListIndex(victim)==iThisPlugin || (victim != attacker && VSHA_GetBossArrayListIndex(attacker)!=iThisPlugin)) )
 	{
 		damage *= 0.0;
 		return Plugin_Changed;
 	}
-	if ((damagetype & DMG_FALL) && VSHA_GetBossPluginHandle(victim)==hThisPlugin)
+	if ((damagetype & DMG_FALL) && VSHA_GetBossArrayListIndex(victim)==iThisPlugin)
 	{
 		//DP("DMG_FALL victim = %d, hale[victim] = %d",victim,Hale[victim]);
 		if(GetEntityFlags(victim) & FL_ONGROUND)
@@ -817,7 +817,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 	float AttackerPos[3];
 	GetEntPropVector(attacker, Prop_Send, "m_vecOrigin", AttackerPos); //Spot of attacker
-	if (ValidPlayer(attacker) && VSHA_GetBossPluginHandle(attacker)==hThisPlugin)
+	if (ValidPlayer(attacker) && VSHA_GetBossArrayListIndex(attacker)==iThisPlugin)
 	{
 		if (TF2_IsPlayerInCondition(victim, TFCond_DefenseBuffed))
 		{
@@ -883,7 +883,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				//return Plugin_Continue;
 		}
 	}
-	else if (ValidPlayer(attacker) && ValidPlayer(victim) && VSHA_GetBossPluginHandle(victim)==hThisPlugin && VSHA_GetBossPluginHandle(attacker)!=hThisPlugin)
+	else if (ValidPlayer(attacker) && ValidPlayer(victim) && VSHA_GetBossArrayListIndex(victim)==iThisPlugin && VSHA_GetBossArrayListIndex(attacker)!=iThisPlugin)
 	{
 		if (attacker <= MaxClients && attacker > 0)
 		{
@@ -1306,7 +1306,7 @@ public void OnConfiguration_Load_Models(char[] cFile, char[] skey, char[] value,
 		bPreCacheModel = true;
 		bAddFileToDownloadsTable = true;
 		// For Model Manager:
-		VSHA_SetPluginModel(MikuModel);
+		VSHA_SetPluginModel(iThisPlugin, MikuModel);
 	}
 	else if(StrEqual(skey, "MikuModelPrefix"))
 	{
@@ -1342,7 +1342,7 @@ bool lastframewasground[MAXPLAYERS + 1];
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if(VSHA_GetBossPluginHandle(client)!=hThisPlugin) return Plugin_Continue;
+	if(VSHA_GetBossArrayListIndex(client)!=iThisPlugin) return Plugin_Continue;
 
 	if(!InRage[client] && (JumpCoolDown[client] > GetTime())) return Plugin_Continue;
 
@@ -1448,9 +1448,9 @@ public Action EndRage(Handle thandle, int userid)
 }
 
 // Is triggered by VSHA engine when a boos needs a help menu
-public void OnShowBossHelpMenu(Handle BossPlugin, int iiBoss)
+public void OnShowBossHelpMenu(int iBossArrayListIndex, int iiBoss)
 {
-	if (hThisPlugin != BossPlugin) return;
+	if (iThisPlugin != iBossArrayListIndex) return;
 
 	if(ValidPlayer(iiBoss))
 	{

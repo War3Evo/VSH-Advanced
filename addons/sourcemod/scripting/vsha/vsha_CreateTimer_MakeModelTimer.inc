@@ -8,15 +8,15 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 
 	if ( (CheckRoundState() == ROUNDSTATE_INVALID) || (CheckRoundState() == ROUNDSTATE_ROUND_END) ) return Plugin_Continue;
 
-	Handle plugin = null;
+	int iBossArrayListIndex = -1;
 	char ModelString[PATHX];
 	char sClientName[32];
 	for (int i = 0; i < hArrayModelManagerPlugin.Length; i++)
 	{
-		plugin = hArrayModelManagerPlugin.Get(i);
+		iBossArrayListIndex = hArrayModelManagerPlugin.Get(i);
 		hArrayModelManagerStringName.GetString(i, STRING(ModelString));
 
-		if(plugin == null) continue;
+		if(iBossArrayListIndex < 0) continue;
 
 		LoopAlivePlayers(TargetPlayer)
 		{
@@ -24,7 +24,7 @@ public Action MakeModelTimer(Handle hTimer, any userid)
 			{
 				if(bIsBoss[TargetPlayer])
 				{
-					if (Storage[TargetPlayer] == plugin)
+					if (BossArrayListIndex[TargetPlayer] == iBossArrayListIndex)
 					{
 						GetClientName(TargetPlayer,STRING(sClientName));
 						//PrintToServer("ModelString %s Applied to %s",ModelString,sClientName);

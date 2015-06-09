@@ -387,6 +387,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHA_RegisterBoss", Native_RegisterBossSubplugin);
 
 	CreateNative("VSHA_GetBossPluginHandle", Native_GetBossHandle);
+	CreateNative("VSHA_GetBossArrayListIndex", Native_GetBossArrayListIndex);
 
 	CreateNative("VSHA_SetPluginModel", Native_SetPluginModel);
 	//CreateNative("VSHA_RemovePluginModel", Native_RemovePluginModel);
@@ -533,6 +534,10 @@ public int Native_RegisterBossSubplugin(Handle plugin, int numParams)
 public int Native_GetBossHandle(Handle plugin, int numParams)
 {
 	return view_as<int>(Storage[GetNativeCell(1)]);
+}
+public int Native_GetBossArrayListIndex(Handle plugin, int numParams)
+{
+	return BossArrayListIndex[GetNativeCell(1)];
 }
 
 public int Native_GetBossUserID(Handle plugin, int numParams)
@@ -1678,24 +1683,20 @@ public int Native_SetHealthBar(Handle plugin, int numParams)
 public int Native_SetPluginModel(Handle plugin, int numParams)
 {
 	char ModelString[PATHX];
-	char tmpModelString[PATHX];
-	if(GetNativeString(1, STRING(ModelString)) == SP_ERROR_NONE)
+	int iBossArrayListIndex = GetNativeCell(1);
+	if(GetNativeString(2, STRING(ModelString)) == SP_ERROR_NONE)
 	{
 		for (int i = 0; i < hArrayModelManagerPlugin.Length; i++)
 		{
-			if (hArrayModelManagerPlugin.Get(i) == plugin)
+			if (hArrayModelManagerPlugin.Get(i) == iBossArrayListIndex)
 			{
-				hArrayModelManagerStringName.GetString(i,tmpModelString,PATHX);
-				if(StrEqual(ModelString,tmpModelString,false))
-				{
-					// if found same plugin, overwrite old model
-					//hArrayModelManagerStringName.SetString(i,ModelString);
-					return true;
-				}
+				// if found same plugin, overwrite old model
+				hArrayModelManagerStringName.SetString(i,ModelString);
+				return true;
 			}
 		}
 
-		hArrayModelManagerPlugin.Push(plugin);
+		hArrayModelManagerPlugin.Push(iBossArrayListIndex);
 		hArrayModelManagerStringName.PushString(ModelString);
 		/*
 
