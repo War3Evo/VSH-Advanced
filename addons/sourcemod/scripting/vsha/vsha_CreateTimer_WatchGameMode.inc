@@ -2,7 +2,7 @@
 
 public Action WatchGameModeTimer(Handle hTimer)
 {
-	if(!bEnabled.BoolValue) return Plugin_Continue;
+	if(!bEnabled) return Plugin_Continue;
 
 	if(VSHA_OnGameMode_WatchGameModeTimer() != Plugin_Continue)
 	{

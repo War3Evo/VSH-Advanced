@@ -74,14 +74,15 @@ float flCharge[PLYR], //SINGLE MEDIC-TAUNT/RAGE CHARGE, MAKE YOUR OWN CHARGE VAR
 	flHPTime;
 
 //bools
-bool Enabled,
+bool bEnabled,
 	bIsBoss[PLYR], //EITHER IS BOSS OR NOT
 	bInJump[PLYR],
 	bNoTaunt[PLYR],
 	bTenSecStart[2],
 	PointType, // It's being used, but not set anywhere
 	PointReady,
-	steamtools;
+	steamtools,
+	bBossCrits;
 
 //================================================================================================
 
@@ -91,7 +92,7 @@ float tf_scout_hype_pep_max;
 
 
 //cvar Handles
-ConVar bEnabled = null;
+ConVar cvarEnabled = null;
 ConVar FirstRound = null;
 ConVar MedigunReset = null;
 ConVar AliveToEnable = null;
@@ -103,6 +104,7 @@ ConVar PointDelay = null;
 ConVar QueueIncrement = null;
 //ConVar FallDmgSoldier = null;
 //ConVar DifficultyAmount = null;
+ConVar cvarBossCrits = null;
 
 //non-cvar Handles
 Handle hBossHUD;

@@ -15,7 +15,7 @@ public Action RoundStartFunction()
 {
 	//DP("RoundStart");
 	bool MakeEnabled = false;
-	if (!bEnabled.BoolValue)
+	if (!bEnabled)
 	{
 #if defined _steamtools_included
 		if (steamtools) Steam_SetGameDescription("Team Fortress");
