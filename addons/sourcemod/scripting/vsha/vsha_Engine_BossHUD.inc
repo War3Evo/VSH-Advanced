@@ -8,7 +8,7 @@ public void BossHUD(int client)
 		if (IsPlayerAlive(client) )
 		{
 			ClampCharge(flCharge[client]); //automatically clamp the rage charge so it never goes over in subplugins :>
-			if (flCharge[client] == 100.0)
+			if (flCharge[client] == flChargeLimit[client])
 			{
 				ShowSyncHudText(client, hBossHUD, "[Health]: {%i/%i} | [Charge]: FULL", iBossHealth[client], iBossMaxHealth[client]);
 			}
