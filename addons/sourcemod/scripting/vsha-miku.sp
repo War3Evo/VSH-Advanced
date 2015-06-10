@@ -527,6 +527,7 @@ public void OnBossSelected(int iBossArrayListIndex, int iiBoss)
 	{
 		// reset variables
 		HaleCharge[iiBoss]=0;
+		VSHA_SetBossRageLimit(iiBoss, 999999);
 		InRage[iiBoss]=false;
 		return;
 	}
@@ -534,6 +535,8 @@ public void OnBossSelected(int iBossArrayListIndex, int iiBoss)
 	//CPrintToChatAll("%s, Miku Boss Selected!",VSHA_COLOR);
 
 	// Dynamically load private forwards
+	VSHA_SetBossRageLimit(iiBoss, 100);
+
 	Load_VSHAHooks();
 }
 public void OnBossIntroTalk()
