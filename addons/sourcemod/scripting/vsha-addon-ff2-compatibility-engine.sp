@@ -250,6 +250,10 @@ public void Load_VSHAHooks()
 	{
 		LogError("Error loading VSHAHook_OnBossTimer forwards for ff2.");
 	}
+	if(!VSHAHookEx(VSHAHook_ShowBossHelpMenu, OnShowBossHelpMenu))
+	{
+		LogError("Error loading VSHAHook_ShowBossHelpMenu forwards for saxton hale.");
+	}
 }
 
 public void UnLoad_VSHAHooks()
@@ -559,6 +563,21 @@ stock void DisableSubPlugins(bool force=false)
 	areSubPluginsEnabled=false;
 }
 
+public int FindBossSubPluginIndex(int iIndexToFind)
+{
+	int myBossArrayListIndex;
+	int count = hArrayBossSubplugins.Length;
+	for (int x = 0; x < count; x++)
+	{
+		StringMap FindIndexStringMap = hArrayBossSubplugins.Get(x);
+
+		myBossArrayListIndex = -999;
+		FindIndexStringMap.GetValue("BossArrayListIndex", myBossArrayListIndex);
+		if(myBossArrayListIndex == iIndexToFind) return x;
+	}
+	return -1;
+}
+
 public void LoadCharacter(Handle BossKV, const char[] character)
 {
 	char extensions[][]={".mdl", ".dx80.vtx", ".dx90.vtx", ".sw.vtx", ".vvd"};
@@ -639,14 +658,34 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 	LogError("FF2 BossArrayListIndex %d",BossArrayListIndex);
 	VSHA_SetPluginModel(BossArrayListIndex,key);
 
-
 	PrintToServer("filename %s",character);
 	PrintToServer("name %s",config);
+
+	BossSubplug.SetValue("class", view_as<TFClassType>(KvGetNum(BossKV, "class", 1)));
 
 	BossSubplug.SetValue("bBlockVoice", KvGetNum(BossKV, "sound_block_vo", 0));
 	BossSubplug.SetValue("BossSpeed", KvGetFloat(BossKV, "maxspeed", 340.0));
 
-	//BossRageDamage=KvGetFloat(BossKV, "ragedamage", 1900.0);
+	BossSubplug.SetValue("ragedamage", KvGetNum(BossKV, "ragedamage", 2000));
+
+	BossSubplug.SetValue("ragedist", KvGetFloat(BossKV, "ragedist", 400.0));
+
+	KvGetString(BossKV, "health_formula", STRING(key));
+	BossSubplug.SetString("health_formula", key);
+
+	char text[512], language[20];
+	GetLanguageInfo(GetServerLanguage(), language, 8, text, 8);
+	Format(language, sizeof(language), "description_%s", language);
+
+	KvGetString(BossKV, language, text, sizeof(text));
+	if(!text[0])
+	{
+		Format(language, sizeof(language), "description_%s", "en");
+		KvGetString(BossKV, language, text, sizeof(text));  //Default to English if their language isn't available
+	}
+	ReplaceString(text, sizeof(text), "\\n", "\n");
+
+	BossSubplug.SetString("description", text);
 
 	// For Downloads
 	KvGotoFirstSubKey(BossKV);
@@ -730,6 +769,10 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 			KvGetString(BossKV, "life",life_name,64);
 			BossSubplug.SetString("life", life_name);
 
+			Format(sStoreString,64,"%sbuttonmode",sAbility);
+			int buttonmode = KvGetNum(BossKV, "buttonmode", 0);
+			BossSubplug.SetValue(sStoreString, buttonmode);
+
 			// example: ability1name
 			Format(sStoreString,32,"%sname",sAbility);
 			BossSubplug.SetString(sStoreString, ability_name2);
@@ -757,6 +800,66 @@ public void LoadCharacter(Handle BossKV, const char[] character)
 				BossSubplug.SetString(sStoreString, arg_string);
 				LogError("sStoreString %s",sStoreString);
 			}
+		}
+	}
+
+	char sWeapon[10];
+	char sWeaponName[64];
+	char sAttributes[256];
+
+	int iIndex = 0;
+	int iShow = 0;
+
+	for(int i=1; ; i++)
+	{
+		KvRewind(BossKV);
+		Format(sWeapon, 10, "weapon%i", i);
+		if(KvJumpToKey(BossKV, sWeapon))
+		{
+			KvGetString(BossKV, "name", STRING(sWeaponName));
+
+			// example weapon1name
+			Format(sStoreString,64,"%sname",sWeapon);
+			BossSubplug.SetString(sStoreString, sWeaponName);
+
+			KvGetString(BossKV, "attributes", STRING(sAttributes));
+
+			if(sAttributes[0]!='\0')
+			{
+				Format(STRING(sAttributes), "68 ; 2.0 ; 2 ; 3.0 ; %s", sAttributes);
+					//68: +2 cap rate
+					//2: x3 damage
+
+				// example weapon1attributes
+				Format(sStoreString,64,"%sattributes",sWeapon);
+				BossSubplug.SetString(sStoreString, sAttributes);
+			}
+			else
+			{
+				sAttributes="68 ; 2.0 ; 2 ; 3";
+					//68: +2 cap rate
+					//2: x3 damage
+
+				// example weapon1attributes
+				Format(sStoreString,64,"%sattributes",sWeapon);
+				BossSubplug.SetString(sStoreString, sAttributes);
+			}
+
+			iIndex = KvGetNum(BossKV, "index");
+
+			// example weapon1index
+			Format(sStoreString,64,"%sindex",sWeapon);
+			BossSubplug.SetValue(sStoreString, iIndex);
+
+			iShow = KvGetNum(BossKV, "show", 0);
+
+			// example weapon1show
+			Format(sStoreString,64,"%sshow",sWeapon);
+			BossSubplug.SetValue(sStoreString, iShow);
+		}
+		else
+		{
+			break;
 		}
 	}
 
@@ -1454,54 +1557,51 @@ public void OnBossRage(int iBossArrayListIndex, int iiBoss)
 	char sStringHolder[10];
 	char lives[MAXRANDOMS][3];
 
-	int myBossArrayListIndex;
+	//int myBossArrayListIndex = FindBossSubPluginIndex(iBossArrayListIndex);
 
-	int count = hArrayBossSubplugins.Length;
-	for (int x = 0; x < count; x++)
+	if(BossIndex[iiBoss]==-1) return;
+
+	if(BossIndex[iiBoss]!=iBossArrayListIndex) return;
+
+	StringMap MyStringMap = hArrayBossSubplugins.Get(BossIndex[iiBoss]);
+
+	for(int i=1; i<MAXRANDOMS ; i++)
 	{
-		StringMap MyStringMap = hArrayBossSubplugins.Get(x);
+		Format(sAbility,10,"ability%i",i);
+		Format(sGetString,64,"%sarg0",sAbility);
 
-		MyStringMap.GetValue("BossArrayListIndex", myBossArrayListIndex);
-		if(myBossArrayListIndex != iBossArrayListIndex) continue;
-
-		for(int i=1; i<MAXRANDOMS ; i++)
+		if(MyStringMap.GetString(sGetString, sStringHolder, 64))
 		{
-			Format(sAbility,10,"ability%i",i);
-			Format(sGetString,64,"%sarg0",sAbility);
-
-			if(MyStringMap.GetString(sGetString, sStringHolder, 64))
+			if(StringToInt(sStringHolder)>0)
 			{
-				if(StringToInt(sStringHolder)>0)
-				{
-					continue;
-				}
+				continue;
+			}
 
-				if(MyStringMap.GetString("life", sStringHolder, 64))
+			if(MyStringMap.GetString("life", sStringHolder, 64))
+			{
+				if(!sStringHolder[0])
 				{
-					if(!sStringHolder[0])
+					char abilityName[64]; char pluginName[64];
+					Format(sGetString,64,"%sname",sAbility);
+					MyStringMap.GetString(sGetString, abilityName, 64);
+					Format(sGetString,64,"%splugin_name",sAbility);
+					MyStringMap.GetString(sGetString, pluginName, 64);
+					UseAbility(abilityName, pluginName, iiBoss, 0);
+				}
+				else
+				{
+					int mycount=ExplodeString(sStringHolder, " ", lives, MAXRANDOMS, 3);
+					for(int j; j<mycount; j++)
 					{
-						char abilityName[64]; char pluginName[64];
-						Format(sGetString,64,"%sname",sAbility);
-						MyStringMap.GetString(sGetString, abilityName, 64);
-						Format(sGetString,64,"%splugin_name",sAbility);
-						MyStringMap.GetString(sGetString, pluginName, 64);
-						UseAbility(abilityName, pluginName, iiBoss, 0);
-					}
-					else
-					{
-						int mycount=ExplodeString(sStringHolder, " ", lives, MAXRANDOMS, 3);
-						for(int j; j<mycount; j++)
+						if(StringToInt(lives[j])==VSHA_GetLives(iiBoss))
 						{
-							if(StringToInt(lives[j])==VSHA_GetLives(iiBoss))
-							{
-								char abilityName[64]; char pluginName[64];
-								Format(sGetString,64,"%sname",sAbility);
-								MyStringMap.GetString(sGetString, abilityName, 64);
-								Format(sGetString,64,"%splugin_name",sAbility);
-								MyStringMap.GetString(sGetString, pluginName, 64);
-								UseAbility(abilityName, pluginName, iiBoss, 0);
-								break;
-							}
+							char abilityName[64]; char pluginName[64];
+							Format(sGetString,64,"%sname",sAbility);
+							MyStringMap.GetString(sGetString, abilityName, 64);
+							Format(sGetString,64,"%splugin_name",sAbility);
+							MyStringMap.GetString(sGetString, pluginName, 64);
+							UseAbility(abilityName, pluginName, iiBoss, 0);
+							break;
 						}
 					}
 				}
@@ -2065,62 +2165,65 @@ public void OnBossTimer(int iBossArrayListIndex, int iiBoss, int &curHealth, int
 	char sAbility[10];
 	char sFindString[10];
 
+	int iButtonmode = 0;
+
 	char sPlugin_Name[64];
-	char sButtonMode[64];
 	char sSlot0[64];
 	char sLife[10];
 
-	StringMap MyStringMap = hArrayBossSubplugins.Get(iBossArrayListIndex);
+	//int myBossArrayListIndex = FindBossSubPluginIndex(iBossArrayListIndex);
 
-	char lives[MAXRANDOMS][3];
-
-	for(int i=1; i<MAXRANDOMS ; i++)
+	if(BossIndex[iiBoss] > -1)
 	{
-		Format(sAbility,10,"ability%i",i);
+		StringMap MyStringMap = hArrayBossSubplugins.Get(BossIndex[iiBoss]);
 
+		char lives[MAXRANDOMS][3];
 
-		Format(sFindString,64,"%splugin_name",sAbility);
-		MyStringMap.GetString(sFindString, sPlugin_Name, 64);
-
-		Format(sFindString,64,"%sbuttonmode",sAbility);
-		MyStringMap.GetString(sFindString, sButtonMode, 64);
-		int buttonmode = StringToInt(sButtonMode);
-
-		Format(sFindString,64,"%sarg0",sAbility);
-		MyStringMap.GetString(sFindString, sSlot0, 64);
-		int slot0 = StringToInt(sSlot0);
-
-
-		if(slot0<1)
+		for(int i=1; i<MAXRANDOMS ; i++)
 		{
-			continue;
-		}
+			Format(sAbility,10,"ability%i",i);
 
-		Format(sFindString,10,"%slife",sAbility);
-		MyStringMap.GetString(sFindString, sLife, 10);
+			Format(sFindString,64,"%sarg0",sAbility);
+			MyStringMap.GetString(sFindString, sSlot0, 64);
+			int slot0 = StringToInt(sSlot0);
 
-		if(!sLife[0])
-		{
-			char sName[64];
-			Format(sFindString,64,"%sname",sAbility);
-			MyStringMap.GetString(sFindString, sName, 64);
-			UseAbility(sName, sPlugin_Name, iiBoss, slot0, buttonmode);
-		}
-		else
-		{
-			int mycount=ExplodeString(sLife, " ", lives, MAXRANDOMS, 3);
-			for(int j; j<mycount; j++)
+			if(slot0<1)
 			{
-				if(StringToInt(lives[j])==VSHA_GetLives(iiBoss))
-				{
-					char sName[64];
-					Format(sFindString,64,"%sname",sAbility);
-					MyStringMap.GetString(sFindString, sName, 64);
-					UseAbility(sName, sPlugin_Name, iiBoss, slot0, buttonmode);
-					break;
-				}
+				continue;
 			}
 
+			Format(sFindString,64,"%splugin_name",sAbility);
+			MyStringMap.GetString(sFindString, sPlugin_Name, 64);
+
+			Format(sFindString,64,"%sbuttonmode",sAbility);
+			MyStringMap.GetValue(sFindString, iButtonmode);
+
+			Format(sFindString,10,"%slife",sAbility);
+			MyStringMap.GetString(sFindString, sLife, 10);
+
+			if(!sLife[0])
+			{
+				char sName[64];
+				Format(sFindString,64,"%sname",sAbility);
+				MyStringMap.GetString(sFindString, sName, 64);
+				UseAbility(sName, sPlugin_Name, iiBoss, slot0, iButtonmode);
+			}
+			else
+			{
+				int mycount=ExplodeString(sLife, " ", lives, MAXRANDOMS, 3);
+				for(int j; j<mycount; j++)
+				{
+					if(StringToInt(lives[j])==VSHA_GetLives(iiBoss))
+					{
+						char sName[64];
+						Format(sFindString,64,"%sname",sAbility);
+						MyStringMap.GetString(sFindString, sName, 64);
+						UseAbility(sName, sPlugin_Name, iiBoss, slot0, iButtonmode);
+						break;
+					}
+				}
+
+			}
 		}
 	}
 
@@ -2209,4 +2312,121 @@ stock int OnlyScoutsLeft( int iTeam )
 		}
 	}
 	return countit;
+}
+
+public void DoOverlay(int client, const char[] overlay)
+{
+	int flags=GetCommandFlags("r_screenoverlay");
+	SetCommandFlags("r_screenoverlay", flags & ~FCVAR_CHEAT);
+	ClientCommand(client, "r_screenoverlay \"%s\"", overlay);
+	SetCommandFlags("r_screenoverlay", flags);
+}
+
+public void OnPrepBoss(int iBossArrayListIndex, int iiBoss)
+{
+	if(!ThisPluginBoss(iBossArrayListIndex)) return;
+
+	int client=iiBoss;
+	DoOverlay(client, "");
+	TF2_RemoveAllWeapons2(client);
+
+	//int myBossArrayListIndex = FindBossSubPluginIndex(iBossArrayListIndex);
+
+	if(BossIndex[iiBoss] == -1) return;
+
+	if(BossIndex[iiBoss] != iBossArrayListIndex) return;
+
+	StringMap BossSubplug = hArrayBossSubplugins.Get(BossIndex[iiBoss]);
+
+
+
+	char sWeapon[10];
+	char sWeaponName[64];
+	char sAttributes[256];
+
+	int iIndex = 0;
+	int iShow = 0;
+
+	int BossWeapon = 0;
+
+	char sStoreString[32];
+
+	for(int i=1; ; i++)
+	{
+		Format(sWeapon, 10, "weapon%i", i);
+		Format(sStoreString,64,"%sname",sWeapon);
+		if(BossSubplug.GetString(sStoreString, STRING(sWeaponName)))
+		{
+			// example weapon1attributes
+			Format(sStoreString,64,"%sattributes",sWeapon);
+			BossSubplug.GetString(sStoreString, STRING(sAttributes));
+
+			// example weapon1index
+			Format(sStoreString,64,"%sindex",sWeapon);
+			BossSubplug.GetValue(sStoreString, iIndex);
+
+			// example weapon1show
+			Format(sStoreString,64,"%sshow",sWeapon);
+			BossSubplug.GetValue(sStoreString, iShow);
+
+			BossWeapon=SpawnWeapon(client, sWeaponName, iIndex, 101, 5, sAttributes);
+			if(!iShow)
+			{
+				SetEntProp(BossWeapon, Prop_Send, "m_iWorldModelIndex", -1);
+				SetEntProp(BossWeapon, Prop_Send, "m_nModelIndexOverrides", -1, _, 0);
+				SetEntPropFloat(BossWeapon, Prop_Send, "m_flModelScale", 0.001);
+			}
+			SetEntPropEnt(client, Prop_Send, "m_hActiveWeapon", BossWeapon);
+
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	TFClassType class = TFClass_Scout;
+
+	BossSubplug.GetValue("class", class);
+
+	if(TF2_GetPlayerClass(client)!=class)
+	{
+		TF2_SetPlayerClass(client, class, _, false);
+	}
+
+}
+
+public void OnShowBossHelpMenu(int iBossArrayListIndex, int iiBoss)
+{
+	if(!ThisPluginBoss(iBossArrayListIndex)) return;
+
+	if(BossIndex[iiBoss] == -1) return;
+
+	if(BossIndex[iiBoss] != iBossArrayListIndex) return;
+
+	if(ValidPlayer(iiBoss))
+	{
+		StringMap BossSubplug = hArrayBossSubplugins.Get(BossIndex[iiBoss]);
+
+		char text[512];
+
+		BossSubplug.GetString("description", STRING(text));
+
+		Handle panel = CreatePanel();
+		if(!text[0])
+		{
+			Format(text, 512, "No help menu for boss.");
+		}
+		SetPanelTitle(panel, text);
+		DrawPanelItem(panel, "Exit");
+		SendPanelToClient(panel, iiBoss, HintPanelH, 20);
+		CloseHandle(panel);
+	}
+}
+
+public int HintPanelH(Handle menu, MenuAction action, int param1, int param2)
+{
+	if (!ValidPlayer(param1)) return;
+	//if (action == MenuAction_Select || (action == MenuAction_Cancel && param2 == MenuCancel_Exit)) VSHFlags[param1] |= VSHFLAG_CLASSHELPED;
+	return;
 }
