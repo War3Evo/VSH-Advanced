@@ -10,6 +10,8 @@ public void ClearVariablesRoundStart(int client)
 	Storage[client] = null;
 	BossArrayListIndex[client] = -1;
 	iBossUserID[client] = 0;
+
+	OnPreventCoreOnTakeDamageChanges[client] = false;
 }
 
 public void ClearAllVariables()
@@ -58,6 +60,7 @@ public void ClearAllVariables()
 		flKillStreak[player] = 0.0;
 		flGlowTimer[player] = 0.0;
 		bInJump[player] = false;
+		OnPreventCoreOnTakeDamageChanges[player] = false;
 	}
 	RetryCounter = 10;
 }

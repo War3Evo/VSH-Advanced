@@ -175,6 +175,11 @@ Handle p_OnGameMode_ForcePlayerTeamChange;
 Handle p_OnGameMode_WatchGameModeTimer;
 Handle p_OnGameOver;
 
+// OnTakeDamage
+Handle p_OnBossTakeFallDamage;
+
 // Multi boss
 bool AllowMusic = true;
 bool AllowHealthBar = true;
+
+bool OnPreventCoreOnTakeDamageChanges[PLYR];

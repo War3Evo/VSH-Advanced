@@ -170,7 +170,7 @@ native void VSHA_UnRegisterNonBossAddon();
 // set bypassHandleRestrictions to true when you have more than one boss to register inside the same plugin
 
 // returns the BossArrayListIndex instead of plugin handle.
-native int VSHA_RegisterBoss(char BossShortName[16], char BossLongName[32], bool bypassHandleRestrictions=false); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
+native int VSHA_RegisterBoss(char BossShortName[16], char BossLongName[32]); //EVERY DAMN BOSS SUBPLUGIN REQUIRES THIS TO WORK; PREFERABLY USE IN ONPLUGINSTART OK?
 
 // BOSS
 native Handle VSHA_GetBossPluginHandle(int iiBoss);
@@ -302,6 +302,29 @@ stock int VSHA_AddBossStock(int iiBoss = -1)
 native void VSHA_SetPlayMusic(bool bSetPlayMusic);
 native void VSHA_SetHealthBar(bool bSetHealthBar);
 
+// BOSS
+/**
+ * @brief Allows addon programmer to prevent core from making OnTakeDamage changes
+ *
+ * Best to set this OnBossSelect Hook, because every round this option is reset.
+ *
+ * You can still Hook other OnBossDamages and get the information and make changes yourself.
+ * There will be a exra option that you can send back to the core to "bypass PreventCoreOnTakeDamageChanges"
+ * for the hook that you wish to use.
+ *
+ * @param		iiBoss							client index
+ * @param		PreventCoreOnTakeDamageChanges	set true if you wish to NOT allow VSHA core to make
+ * 												damage calucations and changes that are outside
+ * 												the VSHA hooks provided.
+ *
+ * 												if not set, then the VSHA core will assume you
+ * 												wish to use core calcuations for damage.
+ *
+ *
+ * @return		returns							nothing
+ */
+native void VSHA_SetPreventCoreOnTakeDamageChanges(int iiBoss, bool PreventCoreOnTakeDamageChanges);
+
 
 // may use in future, removed for now
 //native int VSHA_CreateEvent(VSHA_EVENT event, int client);
@@ -365,6 +388,7 @@ enum VSHAHookType
 	VSHAHook_OnGameMode_ForcePlayerTeamChange,
 	VSHAHook_OnGameMode_WatchGameModeTimer,
 	VSHAHook_OnGameOver, // the very end of round or game over, best place to reset variables for your boss
+	VSHAHook_OnBossTakeFallDamage,
 };
 
 typeset VSHAHookCB
@@ -435,6 +459,9 @@ typeset VSHAHookCB
 
 	// VSHAHook OnConfiguration_Load_Misc
 	function void (char[] cFile, char[] skey, char[] value);
+
+	// VSHAHook_OnBossTakeFallDamage
+	function Action (int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom);
 };
 
 /**

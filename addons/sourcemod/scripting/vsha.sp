@@ -43,7 +43,7 @@ enum VSHAError
 #include "vsha/vsha_SDKHooks_OnPreThink.inc"
 #include "vsha/vsha_SDKHooks_OnEntityCreated.inc"
 #include "vsha/vsha_SDKHooks_OnGetMaxHealth.inc"
-//#include "vsha/"
+#include "vsha/vsha_SDKHooks_OnTakeDamage.inc"
 //#include "vsha/"
 //#include "vsha/"
 
@@ -397,6 +397,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHAUnhook", Native_Unhook);
 	CreateNative("VSHAUnhookEx", Native_UnhookEx);
 
+	CreateNative("VSHA_SetPreventCoreOnTakeDamageChanges", Native_SetPreventCoreOnTakeDamageChanges);
+
 	CreateNative("VSHA_SetPlayMusic", Native_SetPlayMusic);
 	CreateNative("VSHA_SetHealthBar", Native_SetHealthBar);
 
@@ -525,9 +527,8 @@ public int Native_RegisterBossSubplugin(Handle plugin, int numParams)
 	GetNativeString(1, ShortBossSubPluginName, sizeof(ShortBossSubPluginName));
 	char BossSubPluginName[32];
 	GetNativeString(2, BossSubPluginName, sizeof(BossSubPluginName));
-	VSHAError erroar;
-	bool bypassHandleRestrictions = view_as<bool>(GetNativeCell(1));
-	int iBossArrayListIndex = RegisterBoss( plugin, ShortBossSubPluginName, BossSubPluginName, erroar, bypassHandleRestrictions ); //ALL PROPS TO COOKIES.NET AKA COOKIES.IO
+	//VSHAError erroar;
+	int iBossArrayListIndex = RegisterBoss( plugin, ShortBossSubPluginName, BossSubPluginName ); //ALL PROPS TO COOKIES.NET AKA COOKIES.IO
 	return iBossArrayListIndex;
 }
 
@@ -882,29 +883,35 @@ public bool GetBossName(Handle pluginhandle, char[] BossName, int stringsize)
 	}
 	return false;
 }
-public int RegisterBoss(Handle pluginhndl, const char shortname[16], const char longname[32], VSHAError &error, bool bypassHandleRestrictions)
+public int RegisterBoss(Handle pluginhndl,
+			const char shortname[16],
+			const char longname[32])
 {
 	if (!ValidateName(shortname))
 	{
 		LogError("**** RegisterBoss - Invalid Name ****");
-		error = Error_InvalidName;
+		//error = Error_InvalidName;
 		return -1;
 	}
+
+	// Since we moved to using BossArrayListIndex, checking
+	// for pluginhndl duplication is stupid.
+
 	// allows us to store multiple bosses from the same plugin
 	// if we set bypassHandleRestrictions to true
-	if(!bypassHandleRestrictions)
-	{
-		if (FindByBossSubPlugin(pluginhndl) != null)
-		{
-			LogError("**** RegisterBoss - Boss Subplugin Already Registered ****");
-			error = Error_SubpluginAlreadyRegistered;
-			return -1;
-		}
-	}
+	//if(!bypassHandleRestrictions)
+	//{
+		//if (FindByBossSubPlugin(pluginhndl) != null)
+		//{
+			//LogError("**** RegisterBoss - Boss Subplugin Already Registered ****");
+			//error = Error_SubpluginAlreadyRegistered;
+			//return -1;
+		//}
+	//}
 	if (FindBossName(shortname) != null)
 	{
 		LogError("**** RegisterBoss - Boss Name Already Exists ****");
-		error = Error_AlreadyExists;
+		//error = Error_AlreadyExists;
 		return -1;
 	}
 	// Create the trie to hold the data about the boss
@@ -940,7 +947,6 @@ public int RegisterBoss(Handle pluginhndl, const char shortname[16], const char 
 					Storage[plyrBoss] = pluginhndl;
 					BossArrayListIndex[plyrBoss] = hArrayBossSubplugins.Length-1;
 
-
 					//VSHA_OnBossSelected(plyrBoss);
 
 					CreateTimer(1.0, LoadPluginTimer, plyrBoss);
@@ -969,7 +975,6 @@ public int RegisterBoss(Handle pluginhndl, const char shortname[16], const char 
 		PrintToChatAll("%s updated.",longname);
 	}
 
-	error = Error_None;
 	return hArrayBossSubplugins.Length-1;
 }
 public Action LoadPluginTimer(Handle hTimer, int plyrBoss)
@@ -1159,6 +1164,10 @@ stock Handle GetVSHAHookType(VSHAHookType vshaHOOKtype)
 		{
 			return p_OnBossTimer_1_Second;
 		}
+		case VSHAHook_OnBossTakeFallDamage:
+		{
+			return p_OnBossTakeFallDamage;
+		}
 	}
 	return null;
 }
@@ -1340,6 +1349,7 @@ public void VSHA_OnBossKilled(int iiBoss, int attacker) // 3
 	Call_PushCell(iiBoss);
 	Call_PushCell(attacker);
 	Call_Finish();
+	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public void VSHA_OnBossWin(Event event, int iiBoss) // 3
@@ -1349,6 +1359,7 @@ public void VSHA_OnBossWin(Event event, int iiBoss) // 3
 	Call_PushCell(event);
 	Call_PushCell(iiBoss);
 	Call_Finish();
+	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public void VSHA_OnBossKillBuilding(Event event, int iiBoss) // 3
@@ -1393,6 +1404,7 @@ public void VSHA_OnBossSelected(int iiBoss) // 2
 	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(iiBoss);
 	Call_Finish();
+	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public Action VSHA_OnBossSetHP_Pre(int BossEntity, int &BossMaxHealth) // 3
@@ -1616,6 +1628,52 @@ public void VSHA_OnGameOver() // 0
 	Call_StartForward(p_OnGameOver);
 	Call_Finish();
 }
+
+public Action VSHA_OnBossSetHP_Pre(int BossEntity, int &BossMaxHealth) // 3
+{
+	Action result = Plugin_Continue;
+	Call_StartForward(p_OnBossSetHP_Pre);
+	Call_PushCell(BossArrayListIndex[BossEntity]);
+	Call_PushCell(BossEntity);
+	Call_PushCellRef(BossMaxHealth);
+	Call_Finish(result);
+	return result;
+}
+
+public Action VSHA_OnBossTakeFallDamage(int victim,
+										int &attacker,
+										int &inflictor,
+										float &damage,
+										int &damagetype,
+										int &weapon,
+										float damageForce[3],
+										float damagePosition[3],
+										int damagecustom) // 10
+{
+	Action result = Plugin_Continue;
+	Call_StartForward(p_OnBossTakeFallDamage);
+	Call_PushCell(BossArrayListIndex[victim]);
+	Call_PushCell(victim);
+	Call_PushCellRef(attacker);
+	Call_PushCellRef(inflictor);
+	Call_PushFloatRef(damage);
+	Call_PushCellRef(damagetype);
+	Call_PushCellRef(weapon);
+	Call_PushArray(damageForce,3);
+	Call_PushArray(damagePosition,3);
+	Call_PushCell(damagecustom);
+	Call_Finish(result);
+	if(PreventCoreOnTakeDamageChanges)
+	return result;
+}
+
+
+
+
+
+
+
+
 // GAME MODE EXTRA NATIVES
 
 public int Native_BossSelected_Forward(Handle plugin, int numParams)
@@ -1725,3 +1783,11 @@ public int Native_GetBossName(Handle plugin, int numParams)
 	}
 	return false;
 }
+
+public int Native_SetPreventCoreOnTakeDamageChanges(Handle plugin, int numParams)
+{
+	int iiBoss = GetNativeCell(1);
+	bool PreventCoreOnTakeDamageChanges = view_as<bool>(GetNativeCell(2));
+	OnPreventCoreOnTakeDamageChanges[iiBoss] = PreventCoreOnTakeDamageChanges;
+}
+

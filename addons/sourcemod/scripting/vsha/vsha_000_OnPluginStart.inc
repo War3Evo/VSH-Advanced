@@ -77,6 +77,18 @@ public void OnPluginStart()
 
 	p_OnGameOver = CreateForward(ET_Ignore);
 
+	p_OnBossTakeFallDamage = CreateForward(ET_Hook,
+											Param_Cell,
+											Param_Cell,
+											Param_CellByRef,
+											Param_CellByRef,
+											Param_FloatByRef,
+											Param_CellByRef,
+											Param_CellByRef,
+											Param_Array,
+											Param_Array,
+											Param_Cell);
+
 	CreateConVar("vsha_version", PLUGIN_VERSION, "VSHA Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
 	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);
