@@ -58,7 +58,7 @@ enum VSHAError
 #include "vsha/vsha_000_RegConsoleCmd.inc"
 #include "vsha/vsha_000_RegAdminCmd.inc"
 #include "vsha/vsha_000_OnPlayerRunCmd.inc"
-//#include "vsha/"
+#include "vsha/vsha_000_TF2_CalcIsAttackCritical.inc"
 //#include "vsha/"
 
 //#include "vsha/"

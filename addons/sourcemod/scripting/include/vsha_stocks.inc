@@ -653,16 +653,16 @@ stock int GetMaxAmmo(int client, int slot)
 }
 stock bool TF2_IsPlayerCritBuffed(int client)
 {
-    return (TF2_IsPlayerInCondition(client, TFCond_Kritzkrieged)
-            || TF2_IsPlayerInCondition(client, TFCond_HalloweenCritCandy)
-            || TF2_IsPlayerInCondition(client, view_as<TFCond>(34))
-            || TF2_IsPlayerInCondition(client, view_as<TFCond>(35))
-            || TF2_IsPlayerInCondition(client, TFCond_CritOnFirstBlood)
-            || TF2_IsPlayerInCondition(client, TFCond_CritOnWin)
-            || TF2_IsPlayerInCondition(client, TFCond_CritOnFlagCapture)
-            || TF2_IsPlayerInCondition(client, TFCond_CritOnKill)
-            || TF2_IsPlayerInCondition(client, TFCond_CritMmmph)
-            );
+	return (TF2_IsPlayerInCondition(client, TFCond_Kritzkrieged)
+			|| TF2_IsPlayerInCondition(client, TFCond_HalloweenCritCandy)
+			|| TF2_IsPlayerInCondition(client, view_as<TFCond>(34))
+			|| TF2_IsPlayerInCondition(client, view_as<TFCond>(35))
+			|| TF2_IsPlayerInCondition(client, TFCond_CritOnFirstBlood)
+			|| TF2_IsPlayerInCondition(client, TFCond_CritOnWin)
+			|| TF2_IsPlayerInCondition(client, TFCond_CritOnFlagCapture)
+			|| TF2_IsPlayerInCondition(client, TFCond_CritOnKill)
+			|| TF2_IsPlayerInCondition(client, TFCond_CritMmmph)
+			);
 }
 stock void TeleportToSpawn(int iClient, int iTeam = 0)
 {
