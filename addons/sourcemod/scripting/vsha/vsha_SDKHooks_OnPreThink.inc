@@ -2,7 +2,7 @@
 
 public void OnPreThink(int client)
 {
-	if (Enabled)
+	if (bEnabled)
 	{
 		if (IsNearSpencer(client) && TF2_IsPlayerInCondition(client, TFCond_Cloaked))
 		{

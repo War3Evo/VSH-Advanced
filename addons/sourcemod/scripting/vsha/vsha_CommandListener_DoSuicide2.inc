@@ -2,7 +2,7 @@
 
 public Action DoSuicide2(int client, const char[] command, int argc)
 {
-	if (Enabled && bIsBoss[client] && bTenSecStart[0])
+	if (bEnabled && bIsBoss[client] && bTenSecStart[0])
 	{
 		CPrintToChat(client, "You Can't Change Teams This Early!!");
 		return Plugin_Handled;

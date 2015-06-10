@@ -2,7 +2,7 @@
 
 public Action DoSuicide(int client, const char[] command, int argc)
 {
-	if ( Enabled && (CheckRoundState() == 0 || CheckRoundState() == 1) )
+	if ( bEnabled && (CheckRoundState() == 0 || CheckRoundState() == 1) )
 	{
 		if (bIsBoss[client] && bTenSecStart[0])
 		{

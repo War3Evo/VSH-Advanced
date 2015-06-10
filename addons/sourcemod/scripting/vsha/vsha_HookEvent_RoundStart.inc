@@ -28,8 +28,8 @@ public Action RoundStartFunction()
 		return Plugin_Continue;
 	}
 	else MakeEnabled = true;
-	Enabled = MakeEnabled;
-	if ( !Enabled )
+	bEnabled = MakeEnabled;
+	if ( !bEnabled )
 	{
 #if defined DEBUG
 		DEBUGPRINT1("VSH Engine::RoundStart() **** Plugin is NOT Enabled! ****");
@@ -95,7 +95,7 @@ public Action RoundStartFunction()
 		else
 		{
 			CPrintToChatAll("{olive}[VSHA Engine]{default} Need more players to begin!");
-			Enabled = false;
+			bEnabled = false;
 			SetControlPoint(true);
 		}
 		return Plugin_Continue;
@@ -104,7 +104,7 @@ public Action RoundStartFunction()
 	if (hArrayBossSubplugins.Length < 1) //if (GetArraySize(hArrayBossSubplugins) < 1)
 	{
 		LogMessage("VSHA Engine::RoundStart() **** No Boss Subplugins Loaded ****");
-		Enabled = false;
+		bEnabled = false;
 		ClearTimer(hForceRoundStartCheckTimer);
 		return Plugin_Continue;
 	}
@@ -124,7 +124,7 @@ public Action RoundStartFunction()
 		if (boss <= 0)
 		{
 			CPrintToChatAll("{olive}[VSHA Engine]{default} Need more players to begin");
-			Enabled = false;
+			bEnabled = false;
 			return Plugin_Continue;
 		}
 

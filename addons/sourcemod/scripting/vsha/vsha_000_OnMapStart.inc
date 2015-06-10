@@ -4,7 +4,7 @@ public void OnMapStart()
 {
 	if ( IsVSHMap() )
 	{
-		Enabled = true;
+		bEnabled = true;
 
 		PrecacheModel(GIBmodel, true);
 		//BloodSpraymodelEntity = PrecacheModel(BloodDropmodel, true);
@@ -40,7 +40,7 @@ public void OnMapStart()
 	}
 	else
 	{
-		Enabled = false; //enforcing strict arena only
+		bEnabled = false; //enforcing strict arena only
 #if defined DEBUG
 		DEBUGPRINT1("VSH Engine::OnMapStart() **** Plugin Disabled Cuz current map is not VSH/FF2 compatible ****");
 		DEBUGPRINT2("{lime}VSH Engine::OnMapStart() **** Plugin Disabled Cuz current map is not VSH/FF2 compatible ****");

@@ -99,7 +99,7 @@ public Action RuptureLoop(Handle Timer, int victim)
 
 public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	if ( !Enabled || CheckRoundState() != 1 || (event.GetInt("death_flags") & TF_DEATHFLAG_DEADRINGER) )
+	if ( !bEnabled || CheckRoundState() != 1 || (event.GetInt("death_flags") & TF_DEATHFLAG_DEADRINGER) )
 	{
 #if defined DEBUG
 		DEBUGPRINT1("VSH Engine::PlayerDeath() **** PlayerDeath Skipped ****");

@@ -22,7 +22,7 @@ public Action Timer_SkipHalePanel(Handle hTimer)
 }
 public void SkipHalePanelNotify(int client)
 {
-	if (!Enabled || !IsValidClient(client) || IsVoteInProgress()) return;
+	if (!bEnabled || !IsValidClient(client) || IsVoteInProgress()) return;
 	Handle panel = CreatePanel();
 	char s[PATH];
 	SetPanelTitle(panel, "[VSHA Engine] You're the next Boss!");

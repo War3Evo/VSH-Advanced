@@ -2,7 +2,7 @@
 
 public Action DoTaunt(int client, const char[] command, int argc)
 {
-	if ( !Enabled || !bIsBoss[client] ) return Plugin_Continue;
+	if ( !bEnabled || !bIsBoss[client] ) return Plugin_Continue;
 	if (bNoTaunt[client]) return Plugin_Handled;
 	//TF2_AddCondition(client, TFCond:42, 4.0); //use this in the forward
 	if (flCharge[client] < flChargeLimit[client]) return Plugin_Continue;

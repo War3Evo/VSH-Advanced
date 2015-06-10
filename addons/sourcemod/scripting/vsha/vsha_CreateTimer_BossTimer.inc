@@ -7,7 +7,7 @@ public Action BossTimer(Handle timer)
 {
 	//if (InternalPause) return Plugin_Stop;
 
-	if ( !Enabled || CheckRoundState() == ROUNDSTATE_ROUND_END ) return Plugin_Stop;
+	if ( !bEnabled || CheckRoundState() == ROUNDSTATE_ROUND_END ) return Plugin_Stop;
 	LoopActiveBosses(client)
 	{
 		if ( IsValidClient(client) && IsPlayerAlive(client) )

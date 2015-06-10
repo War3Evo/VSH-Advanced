@@ -2,7 +2,7 @@
 
 public Action PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!Enabled) return Plugin_Continue;
+	if (!bEnabled) return Plugin_Continue;
 	int client = GetClientOfUserId( event.GetInt("userid") );
 	//if ( client && IsClientInGame(client) && (CheckRoundState() == ROUNDSTATE_EVENT_ROUND_START || CheckRoundState() == ROUNDSTATE_START_ROUND_TIMER) )
 	if ( ValidPlayer(client) )

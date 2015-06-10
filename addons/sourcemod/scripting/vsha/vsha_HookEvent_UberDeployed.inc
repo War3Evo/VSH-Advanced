@@ -2,7 +2,7 @@
 
 public Action UberDeployed(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!Enabled) return Plugin_Continue;
+	if (!bEnabled) return Plugin_Continue;
 	int client = GetClientOfUserId( event.GetInt("userid") );
 	//int target = GetClientOfUserId(event.GetInt("targetid"));
 	if (IsPlayerAlive(client) )

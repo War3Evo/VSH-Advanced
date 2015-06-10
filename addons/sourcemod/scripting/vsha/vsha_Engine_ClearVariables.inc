@@ -16,7 +16,7 @@ public void ClearVariablesRoundStart(int client)
 
 public void ClearAllVariables()
 {
-	Enabled = false;
+	bEnabled = false;
 	bTenSecStart[0] = false;
 	bTenSecStart[1] = false;
 

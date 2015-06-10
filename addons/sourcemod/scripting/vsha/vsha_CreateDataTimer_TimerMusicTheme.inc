@@ -2,7 +2,7 @@
 
 public Action TimerMusicTheme(Handle timer, DataPack pack)
 {
-	if (Enabled && (CheckRoundState() == ROUNDSTATE_START_ROUND_TIMER || CheckRoundState() == ROUNDSTATE_EVENT_ROUND_START))
+	if (bEnabled && (CheckRoundState() == ROUNDSTATE_START_ROUND_TIMER || CheckRoundState() == ROUNDSTATE_EVENT_ROUND_START))
 	{
 		char sound[PATHX];
 		float ftime = -1.0;

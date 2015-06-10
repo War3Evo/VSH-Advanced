@@ -68,7 +68,8 @@ int iModelRetrys[PLYR],
 	//BloodDropmodelEntity;
 
 //floats
-float flCharge[PLYR], //SINGLE MEDIC-TAUNT/RAGE CHARGE, MAKE YOUR OWN CHARGE VARS IN YOUR OWN BOSS SUBPLUGINS
+float flCharge[PLYR],//SINGLE MEDIC-TAUNT/RAGE CHARGE, MAKE YOUR OWN CHARGE VARS IN YOUR OWN BOSS SUBPLUGINS
+	flChargeLimit[PLYR] = {100.0, ...}, // just create some default just in case
 	flKillStreak[PLYR],
 	flGlowTimer[PLYR],
 	flHPTime;

@@ -2,7 +2,7 @@
 
 public void OnMapEnd()
 {
-	if ( Enabled )
+	if ( bEnabled )
 	{
 		SetConVarInt(FindConVar("tf_arena_use_queue"), tf_arena_use_queue);
 		SetConVarInt(FindConVar("mp_teams_unbalance_limit"), mp_teams_unbalance_limit);

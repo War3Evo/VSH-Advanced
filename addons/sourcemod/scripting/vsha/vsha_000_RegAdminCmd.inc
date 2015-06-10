@@ -97,7 +97,7 @@ public Action LoadPluginTimer(Handle hTimer, int client)
 
 public Action Command_forceboss(int client, int args)
 {
-	if (Enabled && IsClientInGame(client))
+	if (bEnabled && IsClientInGame(client))
 	{
 		Menu pickboss = new Menu(MenuHandler_ForceBoss);
 		//Handle MainMenu = CreateMenu(MenuHandler_Perks);

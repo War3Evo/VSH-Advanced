@@ -38,7 +38,7 @@ public Action CommandMakeNextSpecial(int client, int args)
 }
 public Action PickBossMenu(int client, int args)
 {
-	if (Enabled && IsClientInGame(client))
+	if (bEnabled && IsClientInGame(client))
 	{
 		Menu pickboss = new Menu(MenuHandler_PickBoss);
 		//Handle MainMenu = CreateMenu(MenuHandler_Perks);
