@@ -10,7 +10,7 @@ public Plugin myinfo =
 	name 			= "Hatsunemiku",
 	author 			= "Valve",
 	description 		= "Hatsunemiku",
-	version 		= "1.2",
+	version 		= "1.3",
 	url 			= "http://en.wikipedia.org/wiki/Hatsune_Miku"
 }
 

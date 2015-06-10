@@ -12,7 +12,7 @@ public Plugin myinfo =
 	name 			= "Boss Game Modes Fight",
 	author 			= "Valve",
 	description 		= "Saxton Haaaaaaaaaaaaale",
-	version 		= "1.0",
+	version 		= "1.1",
 	url 			= "http://wiki.teamfortress.com/wiki/VS_Saxton_Hale_Mode"
 }
 

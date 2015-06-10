@@ -10,7 +10,7 @@ public Plugin myinfo =
 	name 			= "Saxton Hale",
 	author 			= "Valve",
 	description 		= "Saxton Haaaaaaaaaaaaale",
-	version 		= "1.2",
+	version 		= "1.3",
 	url 			= "http://wiki.teamfortress.com/wiki/Saxton_Hale"
 }
 
