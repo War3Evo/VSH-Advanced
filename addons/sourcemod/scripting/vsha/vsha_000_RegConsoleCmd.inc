@@ -17,7 +17,7 @@ public Action CommandMakeNextSpecial(int client, int args)
 	char arg[32], name[64];
 	if (args < 1)
 	{
-		ReplyToCommand(client, "[VSH Engine] Usage: vsha_special <boss name>");
+		ReplyToCommand(client, "[VSHA Engine] Usage: vsha_special <boss name>");
 		return Plugin_Handled;
 	}
 	GetCmdArgString(arg, sizeof(arg));
@@ -33,7 +33,7 @@ public Action CommandMakeNextSpecial(int client, int args)
 			break;
 		}
 	}
-	ReplyToCommand(client, "[VSH Engine] Set the next Special to %s", name);
+	ReplyToCommand(client, "[VSHA Engine] Set the next Special to %s", name);
 	return Plugin_Handled;
 }
 public Action PickBossMenu(int client, int args)
@@ -42,7 +42,7 @@ public Action PickBossMenu(int client, int args)
 	{
 		Menu pickboss = new Menu(MenuHandler_PickBoss);
 		//Handle MainMenu = CreateMenu(MenuHandler_Perks);
-		pickboss.SetTitle("[VSH Engine] Choose A Boss");
+		pickboss.SetTitle("[VSHA Engine] Choose A Boss");
 		int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
 		for (int i = 0; i < count; i++)
 		{
@@ -63,7 +63,7 @@ public int MenuHandler_PickBoss(Menu menu, MenuAction action, int client, int se
         {
 		char bossnameholder[32];
 		GetTrieString(hArrayBossSubplugins.Get(selection), "BossLongName", bossnameholder, sizeof(bossnameholder));
-		ReplyToCommand(client, "[VSH Engine] You selected %s as your boss!", bossnameholder);
+		ReplyToCommand(client, "[VSHA Engine] You selected %s as your boss!", bossnameholder);
 		iPresetBoss[client] = selection;
         }
 	else if (action == MenuAction_End) delete menu;

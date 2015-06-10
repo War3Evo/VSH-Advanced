@@ -10,7 +10,7 @@ public Action Timer_SkipHalePanel(Handle hTimer)
 		{
 			if (!IsFakeClient(client))
 			{
-				CPrintToChat(client, "{olive}[VSH Engine]{default} You are going to be Hale soon! Type {olive}/halenext{default} to check/reset your queue points.");
+				CPrintToChat(client, "{olive}[VSHA Engine]{default} You are going to be Hale soon! Type {olive}/halenext{default} to check/reset your queue points.");
 				if (i == 0) SkipHalePanelNotify(client);
 			}
 			i++;
@@ -25,7 +25,7 @@ public void SkipHalePanelNotify(int client)
 	if (!Enabled || !IsValidClient(client) || IsVoteInProgress()) return;
 	Handle panel = CreatePanel();
 	char s[PATH];
-	SetPanelTitle(panel, "[VSH Engine] You're the next Boss!");
+	SetPanelTitle(panel, "[VSHA Engine] You're the next Boss!");
 	Format(s, sizeof(s), "You are going to be Hale soon! Type {olive}/halenext{default} to check/reset your queue points.\nAlternatively, use !resetq.");
 	CRemoveTags(s, sizeof(s));
 	ReplaceString(s, sizeof(s), "{olive}", "");

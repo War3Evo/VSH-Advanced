@@ -90,11 +90,11 @@ public Action RoundStartFunction()
 				RetryCounter--;
 			}
 			hForceRoundStartCheckTimer = CreateTimer(4.8, ForceRoundStartCheckTimer);
-			CPrintToChatAll("{olive}[VSH Engine]{default} Waiting for more players...");
+			CPrintToChatAll("{olive}[VSHA Engine]{default} Waiting for more players...");
 		}
 		else
 		{
-			CPrintToChatAll("{olive}[VSH Engine]{default} Need more players to begin!");
+			CPrintToChatAll("{olive}[VSHA Engine]{default} Need more players to begin!");
 			Enabled = false;
 			SetControlPoint(true);
 		}
@@ -103,7 +103,7 @@ public Action RoundStartFunction()
 	RetryCounter = 10;
 	if (hArrayBossSubplugins.Length < 1) //if (GetArraySize(hArrayBossSubplugins) < 1)
 	{
-		LogMessage("VSH Engine::RoundStart() **** No Boss Subplugins Loaded ****");
+		LogMessage("VSHA Engine::RoundStart() **** No Boss Subplugins Loaded ****");
 		Enabled = false;
 		ClearTimer(hForceRoundStartCheckTimer);
 		return Plugin_Continue;
@@ -123,7 +123,7 @@ public Action RoundStartFunction()
 
 		if (boss <= 0)
 		{
-			CPrintToChatAll("{olive}[VSH Engine]{default} Need more players to begin");
+			CPrintToChatAll("{olive}[VSHA Engine]{default} Need more players to begin");
 			Enabled = false;
 			return Plugin_Continue;
 		}

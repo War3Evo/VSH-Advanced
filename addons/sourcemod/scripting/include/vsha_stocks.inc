@@ -137,7 +137,7 @@ stock bool IsVSHMap() //just use arena maps as vsh/ff2 maps
 		BuildPath(Path_SM, config, PATHX, "configs/saxton_hale/saxton_hale_maps.cfg");
 		if (!FileExists(config))
 		{
-			LogError("[VSH Engine] **** Unable to find VSH/FF2 Compatibility Map Configs, Disabling VSH Engine ****");
+			LogError("[VSHA Engine] **** Unable to find VSH/FF2 Compatibility Map Configs, Disabling VSH Engine ****");
 			return false;
 		}
 	}
@@ -145,7 +145,7 @@ stock bool IsVSHMap() //just use arena maps as vsh/ff2 maps
 	File file = OpenFile(config, "r");
 	if (file == null)
 	{
-		LogError("[VSH Engine] **** Error Reading Maps from %s Config, Disabling VSH Engine ****", config);
+		LogError("[VSHA Engine] **** Error Reading Maps from %s Config, Disabling VSH Engine ****", config);
 		return false;
 	}
 
@@ -155,7 +155,7 @@ stock bool IsVSHMap() //just use arena maps as vsh/ff2 maps
 		tries++;
 		if (tries == 100)
 		{
-			LogError("[VSH Engine] **** Breaking Infinite Loop Looking For a Map ****");
+			LogError("[VSHA Engine] **** Breaking Infinite Loop Looking For a Map ****");
 			return false;
 		}
 

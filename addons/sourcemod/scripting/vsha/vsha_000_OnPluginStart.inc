@@ -93,8 +93,8 @@ public void OnPluginStart()
 
 	CreateConVar("vsha_version", PLUGIN_VERSION, "VSHA Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
-	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);
-	bEnabled = CreateConVar("vsha_enabled", "1", "Enable the VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	LogMessage("==== Versus Saxton Hale Advanced Engine Initializing - v%s ====", PLUGIN_VERSION);
+	bEnabled = CreateConVar("vsha_enabled", "1", "Enable the VSHA Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	FirstRound = CreateConVar("vsha_firstround", "1", "Enable first round for VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	MedigunReset = CreateConVar("vsha_medigunreset", "0.40", "default ubercharge for when mediguns reset", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	AliveToEnable = CreateConVar("vsha_alivetoenable", "3", "how many players left to enable cap", FCVAR_PLUGIN, true, 0.0, true, 16.0);

@@ -9,7 +9,7 @@ public void vsha_000_RegAdminCmd_OnPluginStart()
 public Action Command_ReloadBoss(int client, int args)
 {
 	Menu pickboss = new Menu(MenuHandler_ReloadBoss);
-	pickboss.SetTitle("[VSH Engine] Which Boss to Reload?");
+	pickboss.SetTitle("[VSHA Engine] Which Boss to Reload?");
 	int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
 	for (int i = 0; i < count; i++)
 	{
@@ -41,7 +41,7 @@ public int MenuHandler_ReloadBoss(Menu menu, MenuAction action, int client, int 
 		if(RemoveFromTrie(hTrieBossSubplugins, bossnameholder))
 		{
 			strcopy(STRING(ReloadBossShortName), bossnameholder);
-			ReplyToCommand(client, "[VSH Engine] Successful RemoveFromTrie");
+			ReplyToCommand(client, "[VSHA Engine] Successful RemoveFromTrie");
 		}
 
 		StringMap MyStringMap = hArrayBossSubplugins.Get(selection);
@@ -72,7 +72,7 @@ public int MenuHandler_ReloadBoss(Menu menu, MenuAction action, int client, int 
 
 		ServerCommand("sm plugins reload %s",hLoadPlugin);
 
-		ReplyToCommand(client, "[VSH Engine] reload of %s ...",bossnameholder);
+		ReplyToCommand(client, "[VSHA Engine] reload of %s ...",bossnameholder);
 
 		//CreateTimer(1.0, LoadPluginTimer, client);
 		//InternalCounter = 10;
@@ -101,7 +101,7 @@ public Action Command_forceboss(int client, int args)
 	{
 		Menu pickboss = new Menu(MenuHandler_ForceBoss);
 		//Handle MainMenu = CreateMenu(MenuHandler_Perks);
-		pickboss.SetTitle("[VSH Engine] Choose A Boss");
+		pickboss.SetTitle("[VSHA Engine] Choose A Boss");
 		int count = hArrayBossSubplugins.Length; //GetArraySize(hArrayBossSubplugins);
 		for (int i = 0; i < count; i++)
 		{
@@ -122,7 +122,7 @@ public int MenuHandler_ForceBoss(Menu menu, MenuAction action, int client, int s
 	{
 		char bossnameholder[32];
 		GetTrieString(hArrayBossSubplugins.Get(selection), "BossLongName", bossnameholder, sizeof(bossnameholder));
-		ReplyToCommand(client, "[VSH Engine] You selected %s as your boss!", bossnameholder);
+		ReplyToCommand(client, "[VSHA Engine] You selected %s as your boss!", bossnameholder);
 		iPresetBoss[client] = selection;
 
 		SetClientQueuePoints(client, 99999);

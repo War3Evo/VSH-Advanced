@@ -785,7 +785,7 @@ public int Native_FindNextBoss(Handle plugin, int numParams)
 	int size = GetNativeCell(2);
 	if (size < 1)
 	{
-		LogError("VSH Engine::Native_FindNextBoss() **** Invalid Array Size (size = %i) ****", size);
+		LogError("VSHA Engine::Native_FindNextBoss() **** Invalid Array Size (size = %i) ****", size);
 		return -1;
 	}
 	bool[] array = new bool[size]; GetNativeArray(1, array, size);

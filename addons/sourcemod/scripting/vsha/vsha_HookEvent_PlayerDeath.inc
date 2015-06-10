@@ -113,7 +113,7 @@ public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 	SetClientOverlay(victim, "");
 	if (!bIsBoss[victim])
 	{
-		CPrintToChat( victim, "{olive}[VSH Engine]{default} Damage dealt: {red}%i{default}. Score for this round: {red}%i{default}", iDamage[victim], RoundFloat(iDamage[victim]/600.0) );
+		CPrintToChat( victim, "{olive}[VSHA Engine]{default} Damage dealt: {red}%i{default}. Score for this round: {red}%i{default}", iDamage[victim], RoundFloat(iDamage[victim]/600.0) );
 		if (bIsBoss[attacker])
 		{
 			if ( GetGameTime() <= flKillStreak[attacker] ) iPlayerKilled[attacker][1]++;

@@ -7,7 +7,7 @@ public Action CommandQueuePoints(int client, int args)
 	if ( !Enabled ) return Plugin_Continue;
 	if (args != 2)
 	{
-		ReplyToCommand(client, "[VSH Engine] Usage: vsha_addpoints <target> <points>");
+		ReplyToCommand(client, "[VSHA Engine] Usage: vsha_addpoints <target> <points>");
 		return Plugin_Handled;
 	}
 	char s2[80];
@@ -36,7 +36,7 @@ public Action CommandQueuePoints(int client, int args)
 		SetClientQueuePoints(target_list[i], GetClientQueuePoints(target_list[i])+points);
 		LogAction(client, target_list[i], "\"%L\" added %d VSHA queue points to \"%L\"", client, points, target_list[i]);
 	}
-	ReplyToCommand(client, "[VSH Engine] Added %d queue points to %s", points, target_name);
+	ReplyToCommand(client, "[VSHA Engine] Added %d queue points to %s", points, target_name);
 	return Plugin_Handled;
 }
 public Action CommandBossSelect(int client, int args)
@@ -44,7 +44,7 @@ public Action CommandBossSelect(int client, int args)
 	if (!Enabled) return Plugin_Continue;
 	if (args < 1)
 	{
-		ReplyToCommand(client, "[VSH] Usage: hale_select <target> [\"hidden\"]");
+		ReplyToCommand(client, "[VSHA] Usage: hale_select <target> [\"hidden\"]");
 		return Plugin_Handled;
 	}
 	char s2[32];

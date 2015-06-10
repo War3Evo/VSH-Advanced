@@ -19,13 +19,13 @@ public Action CalcScores(Handle timer, int data)
 			if ( bIsBoss[i] )
 			{
 				SetClientQueuePoints(i, 0);
-				CPrintToChat(i, "{olive}[VSH Engine]{default} You now have %i queue points.", GetClientQueuePoints(i));
+				CPrintToChat(i, "{olive}[VSHA Engine]{default} You now have %i queue points.", GetClientQueuePoints(i));
 			}
 			else
 			{
-				CPrintToChat(i, "{olive}[VSH Engine]{default} You get %i+ queue points.", QueueIncrement.IntValue); //GetConVarInt(QueueIncrement));
+				CPrintToChat(i, "{olive}[VSHA Engine]{default} You get %i+ queue points.", QueueIncrement.IntValue); //GetConVarInt(QueueIncrement));
 				SetClientQueuePoints( i, (GetClientQueuePoints(i)+QueueIncrement.IntValue) );
-				CPrintToChat(i, "{olive}[VSH Engine]{default} You now have %i queue points.", GetClientQueuePoints(i));
+				CPrintToChat(i, "{olive}[VSHA Engine]{default} You now have %i queue points.", GetClientQueuePoints(i));
 			}
 		}
 	}

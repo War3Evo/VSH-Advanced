@@ -35,7 +35,7 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 			}
 			SetEntProp(i, Prop_Send, "m_bGlowEnabled", 0);
 			flGlowTimer[i] = 0.0;
-			if ( IsPlayerAlive(i) ) CPrintToChatAll("{olive}[VSH Engine]{default} %N had %i of %i", i, iBossHealth[i], iBossMaxHealth[i]);
+			if ( IsPlayerAlive(i) ) CPrintToChatAll("{olive}[VSHA Engine]{default} %N had %i of %i", i, iBossHealth[i], iBossMaxHealth[i]);
 			else
 			{
 				if (GetClientTeam(i) != HaleTeam)
