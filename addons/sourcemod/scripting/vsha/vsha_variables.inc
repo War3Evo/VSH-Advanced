@@ -177,6 +177,7 @@ Handle p_OnGameOver;
 
 // OnTakeDamage
 Handle p_OnBossTakeFallDamage;
+Handle p_OnBossStabbedPost;
 
 // Multi boss
 bool AllowMusic = true;

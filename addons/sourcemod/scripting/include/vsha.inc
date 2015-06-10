@@ -389,6 +389,7 @@ enum VSHAHookType
 	VSHAHook_OnGameMode_WatchGameModeTimer,
 	VSHAHook_OnGameOver, // the very end of round or game over, best place to reset variables for your boss
 	VSHAHook_OnBossTakeFallDamage,
+	VSHAHook_OnBossStabbedPost,
 };
 
 typeset VSHAHookCB
@@ -405,6 +406,7 @@ typeset VSHAHookCB
 	// VSHAHook AddToDownloads
 	// VSHAHook OnLastSurvivor
 	// VSHAHook OnGameOver
+	// VSHAHook_OnBossStabbedPost
 	function void ();
 
 	// VSHAHook OnBossSelected
@@ -413,6 +415,7 @@ typeset VSHAHookCB
 	// VSHAHook ShowBossHelpMenu
 	// VSHAHook OnBossTimer_1_Second
 	// VSHAHook OnBossSetHP_Post
+	// VSHAHook OnBossStabbedPost
 	function void (int iBossArrayListIndex, int iEntity);
 
 	// VSHAHook OnBossTimer

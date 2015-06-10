@@ -89,6 +89,8 @@ public void OnPluginStart()
 											Param_Array,
 											Param_Cell);
 
+	p_OnBossStabbedPost = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
+
 	CreateConVar("vsha_version", PLUGIN_VERSION, "VSHA Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
 	LogMessage("==== Versus Saxton Hale Engine Initializing - v%s ====", PLUGIN_VERSION);

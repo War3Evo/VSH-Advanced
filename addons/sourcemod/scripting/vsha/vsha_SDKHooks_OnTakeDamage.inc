@@ -387,12 +387,13 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 				if (weapindex == 461) SetEntPropFloat(attacker, Prop_Send, "m_flCloakMeter", 100.0); //Big Earner gives full cloak on backstab
 
-				// need to add a sound hook
 				//strcopy(playsound, PLATFORM_MAX_PATH, MikuPain[GetRandomInt(0, sizeof(MikuPain)-1)]);
 				//EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, victim, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 				//EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, victim, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 
 				if (stabamounts < 4) iStabbed[victim] += 1;
+
+				VSHA_OnBossStabbedPost(victim);
 
 				return Plugin_Changed;
 			}

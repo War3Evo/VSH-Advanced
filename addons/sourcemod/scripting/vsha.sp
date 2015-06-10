@@ -1168,6 +1168,10 @@ stock Handle GetVSHAHookType(VSHAHookType vshaHOOKtype)
 		{
 			return p_OnBossTakeFallDamage;
 		}
+		case VSHAHook_OnBossStabbedPost:
+		{
+			return p_OnBossStabbedPost;
+		}
 	}
 	return null;
 }
@@ -1655,6 +1659,13 @@ public Action VSHA_OnBossTakeFallDamage(int victim,
 	return result;
 }
 
+public void VSHA_OnBossStabbedPost(int victim) // 0
+{
+	Call_StartForward(p_OnBossStabbedPost);
+	Call_PushCell(BossArrayListIndex[victim]);
+	Call_PushCell(victim);
+	Call_Finish();
+}
 
 
 
