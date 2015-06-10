@@ -16,4 +16,5 @@ public void OnClientPutInServer(int client)
 	iPlayerKilled[client][1] = 1;
 	iHits[client] = 0;
 	bNoTaunt[client] = false;
+	OnPreventCoreOnTakeDamageChanges[client] = false;
 }

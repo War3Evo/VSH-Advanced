@@ -2,16 +2,19 @@
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
+	//PrintToChatAll("SDKHooks Damage victim = %d attacker = %d",victim,attacker);
 	if(!IsValidEdict(attacker)) return Plugin_Continue;
 	//DP("attacker = %d, victim = %d, hale[victim] = %d",attacker,victim,Hale[victim]);
 	//if((attacker <= 0) && (victim == Hale[victim])) return Plugin_Continue;
-	if(attacker <= 0)  return Plugin_Continue;
+	if(attacker < 0)  return Plugin_Continue;
 	if(!ValidPlayer(victim))  return Plugin_Continue;
 
 	// removed the = sign because we need to detect when hale takes damage from falls,
 	// so we can remove that damage.
 
 	if(TF2_IsPlayerInCondition(victim, TFCond_Ubercharged)) return Plugin_Continue;
+
+	//PrintToChatAll("CheckRoundState");
 
 	if ( CheckRoundState() == 0 && (bIsBoss[victim] || (victim != attacker && !bIsBoss[attacker])) )
 	{
@@ -21,29 +24,44 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			return Plugin_Changed;
 		}
 	}
-	if ((damagetype & DMG_FALL) && bIsBoss[victim])
+	//PrintToChatAll("before fall damage check");
+	if (!attacker && (damagetype & DMG_FALL) && bIsBoss[victim])
 	{
-		//DP("DMG_FALL victim = %d, hale[victim] = %d",victim,Hale[victim]);
+		//PrintToChatAll("DMG_FALL victim = %d",victim);
 		if(GetEntityFlags(victim) & FL_ONGROUND)
 		{
-			Action result = Plugin_Continue;
-			result = VSHA_OnBossTakeFallDamage(victim, attacker, inflictor, damage, damagetype, weapon, damageForce, damagePosition, damagecustom);
-			if(result == Plugin_Changed)
+			//PrintToChatAll("GetEntityFlags(victim) & FL_ONGROUND");
+			Action result = VSHA_OnBossTakeFallDamage(victim, attacker, inflictor, damage, damagetype, weapon, damageForce, damagePosition, damagecustom);
+			if(result != Plugin_Changed)
 			{
-				return Plugin_Changed;
+				//PrintToChatAll("VSHA_OnBossTakeFallDamage != Plugin_Changed");
+				if(!OnPreventCoreOnTakeDamageChanges[victim])
+				{
+					//PrintToChatAll("!OnPreventCoreOnTakeDamageChanges[victim]");
+					//DP("Hale Fall Damage");
+					damage = (iBossHealth[victim] > 100) ? 10.0 : 100.0; //please don't fuck with this.
+					//damage = 0.0;
+					return Plugin_Changed;
+				}
+				else
+				{
+					//PrintToChatAll("OnPreventCoreOnTakeDamageChanges[victim]");
+				}
 			}
-			if(!OnPreventCoreOnTakeDamageChanges[victim])
+			else
 			{
-				//DP("Hale Fall Damage");
-				damage = (iBossHealth[victim] > 100) ? 10.0 : 100.0; //please don't fuck with this.
-				//damage = 0.0;
+				//PrintToChatAll("VSHA_OnBossTakeFallDamage == Plugin_Changed");
 				return Plugin_Changed;
 			}
 		}
 	}
 
+	//PrintToChatAll("after fall damage check");
+
 	// If we create more hooks, may move this around a bit more so that the hooks can be exposed.
 	if(!OnPreventCoreOnTakeDamageChanges[victim]) return Plugin_Continue;
+
+	//PrintToChatAll("after OnPreventCoreOnTakeDamageChanges check");
 
 	switch (damagecustom)
 	{

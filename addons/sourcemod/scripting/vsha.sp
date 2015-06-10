@@ -1348,22 +1348,22 @@ public void VSHA_OnKillingSpreeByBoss(int iiBoss, int attacker) // 3
 
 public void VSHA_OnBossKilled(int iiBoss, int attacker) // 3
 {
+	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 	Call_StartForward(p_OnBossKilled);
 	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(iiBoss);
 	Call_PushCell(attacker);
 	Call_Finish();
-	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public void VSHA_OnBossWin(Event event, int iiBoss) // 3
 {
+	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 	Call_StartForward(p_OnBossWin);
 	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(event);
 	Call_PushCell(iiBoss);
 	Call_Finish();
-	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public void VSHA_OnBossKillBuilding(Event event, int iiBoss) // 3
@@ -1404,11 +1404,11 @@ public void VSHA_OnBossChangeClass(Event event, int iiBoss) // 3
 
 public void VSHA_OnBossSelected(int iiBoss) // 2
 {
+	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 	Call_StartForward(p_OnBossSelected);
 	Call_PushCell(BossArrayListIndex[iiBoss]);
 	Call_PushCell(iiBoss);
 	Call_Finish();
-	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public Action VSHA_OnBossSetHP_Pre(int BossEntity, int &BossMaxHealth) // 3
