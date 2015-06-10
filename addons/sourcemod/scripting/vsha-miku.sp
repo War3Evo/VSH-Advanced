@@ -476,7 +476,7 @@ public void OnBossKilled(int iBossArrayListIndex, int iiBoss, int attacker) //vi
 	strcopy(playsound, PLATFORM_MAX_PATH, MikuFail[GetRandomInt(0, sizeof(MikuFail)-1)]);
 	EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
 
-	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+	//SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 public void OnBossWin(int iBossArrayListIndex, Event event, int iiBoss)
 {
@@ -492,7 +492,7 @@ public void OnBossWin(int iBossArrayListIndex, Event event, int iiBoss)
 		StopSound(i, SNDCHAN_AUTO, MIKUTheme);
 	}
 
-	SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+	//SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 public void OnGameOver() // best play to reset all variables
 {
@@ -522,7 +522,7 @@ public void OnBossSelected(int iBossArrayListIndex, int iiBoss)
 	if(iBossArrayListIndex!=iThisPlugin)
 	{
 		// reset variables
-		SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+		//SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 		HaleCharge[iiBoss]=0;
 		InRage[iiBoss]=false;
 		return;
@@ -532,7 +532,7 @@ public void OnBossSelected(int iBossArrayListIndex, int iiBoss)
 
 	// Dynamically load private forwards
 	Load_VSHAHooks();
-	SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
+	//SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 public void OnBossIntroTalk()
 {
@@ -775,6 +775,7 @@ public void TF2_OnConditionAdded(int client, TFCond condition)
 	if (TF2_IsPlayerInCondition(client, view_as<TFCond>(42))
 		&& TF2_IsPlayerInCondition(client, TFCond_Dazed)) TF2_RemoveCondition(client, TFCond_Dazed);
 }
+/*
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
 	if(!IsValidEdict(attacker)) return Plugin_Continue;
@@ -1183,7 +1184,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 	}
 	return Plugin_Continue;
-}
+}*/
 public Action UseRage(Handle hTimer, any client)
 {
 	//float pos[3], pos2[3];
