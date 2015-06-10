@@ -251,14 +251,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						bool ministatus = (TF2_IsPlayerInCondition(attacker, TFCond_CritCola) || TF2_IsPlayerInCondition(attacker, TFCond_Buffed) || TF2_IsPlayerInCondition(attacker, TFCond_CritHype));
 
 						damage *= (ministatus) ? 2.222222 : 3.0;
-						if (weapindex == 230) VSHA_SetBossRage( victim, flCharge[victim]-(damage/2.0/10.0) ); //make this a convar/cvar!
+						if (weapindex == 230) flCharge[victim] -= (damage/2.0/10.0); //make this a convar/cvar!
 						//{
 							//HaleRage -= RoundFloat(damage/2.0);
 							//if (HaleRage < 0) HaleRage = 0;
 						//}
 						return Plugin_Changed;
 					}
-					else if (weapindex == 230) VSHA_SetBossRage( victim, flCharge[victim]-(damage*3.0/2.0/10.0) );
+					else if (weapindex == 230) flCharge[victim] -= (damage*3.0/2.0/10.0);
 					//{
 						//HaleRage -= RoundFloat(damage*3.0/2.0);
 						//if (HaleRage < 0) HaleRage = 0;
