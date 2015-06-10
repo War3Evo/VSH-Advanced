@@ -1,6 +1,6 @@
 #pragma semicolon 1
 #include <sourcemod>
-#include <sdkhooks>
+//#include <sdkhooks>
 #include <morecolors>
 #include <vsha>
 #include <vsha_stocks>
