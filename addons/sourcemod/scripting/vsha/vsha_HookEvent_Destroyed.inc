@@ -2,7 +2,7 @@
 
 public Action Destroyed(Event event, const char[] name, bool dontBroadcast)
 {
-	if (Enabled)
+	if (bEnabled)
 	{
 		int attacker = GetClientOfUserId(event.GetInt("attacker"));
 		if ( bIsBoss[attacker] ) //&& !GetRandomInt(0, 2) )

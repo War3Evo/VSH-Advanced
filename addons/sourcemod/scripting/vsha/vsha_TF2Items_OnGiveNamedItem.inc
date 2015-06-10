@@ -2,7 +2,7 @@
 
 public Action TF2Items_OnGiveNamedItem(int client, char[] classname, int iItemDefinitionIndex, Handle &hItem)
 {
-	if (!Enabled || bIsBoss[client]) return Plugin_Continue;
+	if (!bEnabled || bIsBoss[client]) return Plugin_Continue;
 	switch ( iItemDefinitionIndex )
 	{
 		case 40: //backburner

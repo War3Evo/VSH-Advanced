@@ -2,7 +2,7 @@
 
 public Action Deflected(Event event, const char[] name, bool dontBroadcast)
 {
-	if ( !Enabled || event.GetInt("weaponid") ) return Plugin_Continue;
+	if ( !bEnabled || event.GetInt("weaponid") ) return Plugin_Continue;
 	int client = GetClientOfUserId(event.GetInt("ownerid"));
 	if ( bIsBoss[client] )
 	{

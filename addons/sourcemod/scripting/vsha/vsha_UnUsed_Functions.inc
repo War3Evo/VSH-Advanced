@@ -4,7 +4,7 @@ public Action CommandQueuePoints(int client, int args)
 {
 	//if(InternalPause) return Plugin_Continue;
 
-	if ( !Enabled ) return Plugin_Continue;
+	if ( !bEnabled ) return Plugin_Continue;
 	if (args != 2)
 	{
 		ReplyToCommand(client, "[VSHA Engine] Usage: vsha_addpoints <target> <points>");
@@ -41,7 +41,7 @@ public Action CommandQueuePoints(int client, int args)
 }
 public Action CommandBossSelect(int client, int args)
 {
-	if (!Enabled) return Plugin_Continue;
+	if (!bEnabled) return Plugin_Continue;
 	if (args < 1)
 	{
 		ReplyToCommand(client, "[VSHA] Usage: hale_select <target> [\"hidden\"]");

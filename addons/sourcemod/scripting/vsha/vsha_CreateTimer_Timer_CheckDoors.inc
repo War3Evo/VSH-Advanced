@@ -2,7 +2,7 @@
 
 public Action Timer_CheckDoors(Handle hTimer)
 {
-	if ( (!bEnabled && CheckRoundState() != -1) || (Enabled && CheckRoundState() != 1) )
+	if ( (!bEnabled && CheckRoundState() != -1) || (bEnabled && CheckRoundState() != 1) )
 	{
 		//ClearTimer(hdoorchecktimer);
 		return Plugin_Stop;

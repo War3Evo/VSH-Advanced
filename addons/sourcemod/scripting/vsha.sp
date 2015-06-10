@@ -204,26 +204,26 @@ public void SearchForItemPacks()
 	ent = -1;*/
 	while ((ent = FindEntityByClassname2(ent, "item_ammopack_small")) != -1)
 	{
-		SetEntProp(ent, Prop_Send, "m_iTeamNum", (Enabled ? OtherTeam : 0), 4);
+		SetEntProp(ent, Prop_Send, "m_iTeamNum", (bEnabled ? OtherTeam : 0), 4);
 		//foundAmmo = true;
 	}
 
 	ent = -1;
 	while ((ent = FindEntityByClassname2(ent, "item_healthkit_small")) != -1)
 	{
-		SetEntProp(ent, Prop_Send, "m_iTeamNum", (Enabled ? OtherTeam : 0), 4);
+		SetEntProp(ent, Prop_Send, "m_iTeamNum", (bEnabled ? OtherTeam : 0), 4);
 		//foundHealth = true;
 	}
 	ent = -1;
 	while ((ent = FindEntityByClassname2(ent, "item_healthkit_medium")) != -1)
 	{
-		SetEntProp(ent, Prop_Send, "m_iTeamNum", (Enabled ? OtherTeam : 0), 4);
+		SetEntProp(ent, Prop_Send, "m_iTeamNum", (bEnabled ? OtherTeam : 0), 4);
 		//foundHealth = true;
 	}
 	ent = -1;
 	while ((ent = FindEntityByClassname2(ent, "item_healthkit_large")) != -1)
 	{
-		SetEntProp(ent, Prop_Send, "m_iTeamNum", (Enabled ? OtherTeam : 0), 4);
+		SetEntProp(ent, Prop_Send, "m_iTeamNum", (bEnabled ? OtherTeam : 0), 4);
 		//foundHealth = true;
 	}
 //#if defined DEBUG

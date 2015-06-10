@@ -2,7 +2,7 @@
 
 public Action PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 {
-	if ( !Enabled )
+	if ( !bEnabled )
 	{
 #if defined DEBUG
 		DEBUGPRINT1("VSH Engine::PlayerHurt() **** PlayerHurt Skipped ****");
