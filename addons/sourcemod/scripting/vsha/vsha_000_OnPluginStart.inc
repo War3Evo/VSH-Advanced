@@ -94,7 +94,7 @@ public void OnPluginStart()
 	CreateConVar("vsha_version", PLUGIN_VERSION, "VSHA Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
 	LogMessage("==== Versus Saxton Hale Advanced Engine Initializing - v%s ====", PLUGIN_VERSION);
-	bEnabled = CreateConVar("vsha_enabled", "1", "Enable the VSHA Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	cvarEnabled = CreateConVar("vsha_enabled", "1", "Enable the VSHA Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	FirstRound = CreateConVar("vsha_firstround", "1", "Enable first round for VSH Engine", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	MedigunReset = CreateConVar("vsha_medigunreset", "0.40", "default ubercharge for when mediguns reset", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	AliveToEnable = CreateConVar("vsha_alivetoenable", "3", "how many players left to enable cap", FCVAR_PLUGIN, true, 0.0, true, 16.0);
@@ -106,6 +106,9 @@ public void OnPluginStart()
 	QueueIncrement = CreateConVar("vsha_queueincrement", "10", "by how much queue increments", FCVAR_PLUGIN, true, 1.0, true, 999.0);
 	//FallDmgSoldier = CreateConVar("vsha_soldierfalldamage", "20.0", "divides fall damage by this number", FCVAR_PLUGIN, true, 0.0, true, 999.0);
 	//DifficultyAmount = CreateConVar("vsha_difficultyamount", "3", "how many difficulty settings you want available for bosses to choose", FCVAR_PLUGIN, true, 0.0, true, 999.0);
+	cvarBossCrits = CreateConVar("vsha_bosscrits", "0", "0 - disable, 1 - enable\nset to 1 to enable boss doing crits.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+
+	HookConVarChange(cvarBossCrits, CvarChange);
 
 	AddCommandListener(DoTaunt, "taunt");
 	AddCommandListener(DoTaunt, "+taunt");
@@ -149,4 +152,10 @@ public void OnPluginStart()
 		OnClientPutInServer(i);
 	}
 }
-
+public void CvarChange(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if(convar==cvarBossCrits)
+	{
+		bBossCrits=view_as<bool>(StringToInt(newValue));
+	}
+}

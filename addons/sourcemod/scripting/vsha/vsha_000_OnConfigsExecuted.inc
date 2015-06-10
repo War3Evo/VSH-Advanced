@@ -2,5 +2,6 @@
 
 public void OnConfigsExecuted()
 {
-	Enabled = bEnabled.BoolValue;
+	bEnabled = cvarEnabled.BoolValue;
+	bBossCrits = cvarBossCrits.BoolValue;
 }
