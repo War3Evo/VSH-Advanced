@@ -458,6 +458,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("VSHA_GetBossRage", Native_GetBossRage);
 	CreateNative("VSHA_SetBossRage", Native_SetBossRage);
 
+	CreateNative("VSHA_GetBossRageLimit", Native_GetBossRageLimit);
+	CreateNative("VSHA_SetBossRageLimit", Native_SetBossRageLimit);
+
 	CreateNative("VSHA_GetGlowTimer", Native_GetGlowTimer);
 	CreateNative("VSHA_SetGlowTimer", Native_SetGlowTimer);
 
@@ -727,6 +730,16 @@ public int Native_GetBossRage(Handle plugin, int numParams)
 public int Native_SetBossRage(Handle plugin, int numParams)
 {
 	flCharge[GetNativeCell(1)] = GetNativeCell(2);
+	return 0;
+}
+
+public int Native_GetBossRageLimit(Handle plugin, int numParams)
+{
+	return view_as<int>(flChargeLimit[GetNativeCell(1)]);
+}
+public int Native_SetBossRageLimit(Handle plugin, int numParams)
+{
+	flChargeLimit[GetNativeCell(1)] = GetNativeCell(2);
 	return 0;
 }
 

@@ -252,6 +252,9 @@ native int VSHA_GetAliveBluPlayers();
 native float VSHA_GetBossRage(int iiBoss); /* gets the charge of the hardcoded, built-in rage charge. You can create multiple rage charges or make the default one charge up from different things than just taking damage. */
 native void VSHA_SetBossRage(int iiBoss, float rage);
 
+native float VSHA_GetBossRageLimit(int iiBoss); /* gets the charge of the hardcoded, built-in rage charge. You can create multiple rage charges or make the default one charge up from different things than just taking damage. */
+native void VSHA_SetBossRageLimit(int iiBoss, float rage); // Sets the Rage Trigger Limit.  If Rage == Limit then Full Charge!
+
 // MISC
 native float VSHA_GetGlowTimer(int client); //used to set glow timers on players, use in boss subplugins plz
 native void VSHA_SetGlowTimer(int client, float glowtime);
@@ -369,7 +372,7 @@ enum VSHAHookType
 	VSHAHook_OnBossTimer_1_Second,
 	VSHAHook_OnPlayerKilledByBoss,
 	VSHAHook_OnKillingSpreeByBoss,
-	VSHAHook_OnPrepBoss,
+	VSHAHook_OnPrepBoss, // Equip Boss
 	VSHAHook_OnMusic,
 	VSHAHook_OnModelTimer,
 	VSHAHook_AddToDownloads,
