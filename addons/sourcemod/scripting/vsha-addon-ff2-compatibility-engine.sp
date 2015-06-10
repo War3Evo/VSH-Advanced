@@ -36,6 +36,14 @@ bool InRage[PLYR];
 
 int BossIndex[PLYR]; // boss index
 
+float BossSpeed[PLYR];
+
+float HPTime;
+
+#define HALE_JUMPCHARGE			5
+#define HALE_JUMPCHARGETIME		100.0
+
+
 #define MAJOR_REVISION "1"
 #define MINOR_REVISION "10"
 #define STABLE_REVISION "6"
@@ -236,7 +244,11 @@ public void Load_VSHAHooks()
 	}*/
 	if(!VSHAHookEx(VSHAHook_OnBossRage, OnBossRage))
 	{
-		LogError("Error loading VSHAHook_OnBossRage forwards for miku.");
+		LogError("Error loading VSHAHook_OnBossRage forwards for ff2.");
+	}
+	if(!VSHAHookEx(VSHAHook_OnBossTimer, OnBossTimer))
+	{
+		LogError("Error loading VSHAHook_OnBossTimer forwards for ff2.");
 	}
 }
 
@@ -301,22 +313,22 @@ public void UnLoad_VSHAHooks()
 	}*/
 	if(!VSHAUnhookEx(VSHAHook_OnBossRage, OnBossRage))
 	{
-		LogError("Error unloading VSHAHook_OnBossRage forwards for miku.");
+		LogError("Error unloading VSHAHook_OnBossRage forwards for ff2.");
 	}
 }
 public void OnAllPluginsLoaded()
 {
 	if(!VSHAHookEx(VSHAHook_AddToDownloads, OnAddToDownloads))
 	{
-		LogError("Error loading VSHAHook_AddToDownloads forwards for saxton hale.");
+		LogError("Error loading VSHAHook_AddToDownloads forwards for ff2.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnBossSelected, OnBossSelected))
 	{
-		LogError("Error loading VSHAHook_OnBossSelected forwards for saxton hale.");
+		LogError("Error loading VSHAHook_OnBossSelected forwards for ff2.");
 	}
 	if(!VSHAHookEx(VSHAHook_OnGameOver, OnGameOver))
 	{
-		LogError("Error loading VSHAHook_OnGameOver forwards for miku.");
+		LogError("Error loading VSHAHook_OnGameOver forwards for ff2.");
 	}
 
 	if(!FindCharacters())
@@ -1860,7 +1872,7 @@ public void OnBossSelected(int iBossArrayListIndex, int iiBoss)
 	{
 		BossIndex[iiBoss] = iBossArrayListIndex;
 
-		//CPrintToChatAll("%s, Miku Boss Selected!",VSHA_COLOR);
+		CPrintToChatAll("%s, ff2 boss selected!  iBossArrayListIndex = %d",VSHA_COLOR,iBossArrayListIndex);
 
 		// Dynamically load private forwards
 		Load_VSHAHooks();
@@ -1962,3 +1974,239 @@ stock void FindBossArrayListIndex()
 		if (GetBossSubPlugin(MyStringMap) == plugin) return MyStringMap;
 	}
 }*/
+
+stock int CountRedAlivePlayers()
+{
+	int iTeamCount = 0;
+	LoopAlivePlayers( client )
+	{
+		if(GetClientTeam(client)==TEAM_RED)
+		{
+			iTeamCount++;
+		}
+	}
+	return iTeamCount;
+}
+
+public void OnBossTimer(int iBossArrayListIndex, int iiBoss, int &curHealth, int &curMaxHp, int buttons, Handle hHudSync, Handle hHudSync2)
+{
+	if (BossIndex[iiBoss] != iBossArrayListIndex) return;
+
+	if(CheckRoundState()==2)
+	{
+		return;
+	}
+
+	//bool validBoss=false;
+	if(!IsValidClient(iiBoss) || !IsPlayerAlive(iiBoss) || !(FF2flags[iiBoss] & FF2FLAG_USEBOSSTIMER))
+	{
+		return;
+	}
+	//validBoss=true;
+
+	SetEntPropFloat(iiBoss, Prop_Data, "m_flMaxspeed", BossSpeed[iiBoss]+0.7*(100-curHealth*100/VSHA_GetMaxLives(iiBoss)/curMaxHp));
+
+	if(curHealth<=0 && IsPlayerAlive(iiBoss))  //Wat.  TODO:  Investigate
+	{
+		curHealth=1;
+	}
+
+	if(VSHA_GetMaxLives(iiBoss)>1)
+	{
+		SetHudTextParams(-1.0, 0.77, 0.15, 255, 255, 255, 255);
+		FF2_ShowSyncHudText(iiBoss, hHudSync2, "%t", "Boss Lives Left", VSHA_GetLives(iiBoss), VSHA_GetMaxLives(iiBoss));
+	}
+
+	if(RoundFloat(BossCharge[iiBoss][0])==100.0)
+	{
+		if(IsFakeClient(iiBoss) && !(FF2flags[iiBoss] & FF2FLAG_BOTRAGE))
+		{
+			CreateTimer(1.0, Timer_BotRage, iiBoss, TIMER_FLAG_NO_MAPCHANGE);
+			FF2flags[iiBoss]|=FF2FLAG_BOTRAGE;
+		}
+		else
+		{
+			SetHudTextParams(-1.0, 0.83, 0.15, 255, 64, 64, 255);
+			FF2_ShowSyncHudText(iiBoss, hHudSync, "%t", "do_rage");
+
+			/*
+			char sound[PLATFORM_MAX_PATH];
+			if(RandomSound("sound_full_rage", sound, PLATFORM_MAX_PATH, iiBoss) && emitRageSound[iiBoss])
+			{
+				float position[3];
+				GetEntPropVector(iiBoss, Prop_Send, "m_vecOrigin", position);
+
+				FF2flags[iiBoss]|=FF2FLAG_TALKING;
+				EmitSoundToAll(sound, iiBoss, _, _, _, _, _, iiBoss, position);
+				EmitSoundToAll(sound, iiBoss, _, _, _, _, _, iiBoss, position);
+
+				for(int target=1; target<=MaxClients; target++)
+				{
+					if(IsClientInGame(target) && target!=iiBoss)
+					{
+						EmitSoundToClient(target, sound, iiBoss, _, _, _, _, _, iiBoss, position);
+						EmitSoundToClient(target, sound, iiBoss, _, _, _, _, _, iiBoss, position);
+					}
+				}
+				FF2flags[iiBoss]&=~FF2FLAG_TALKING;
+				emitRageSound[iiBoss]=false;
+			}*/
+		}
+	}
+	else
+	{
+		SetHudTextParams(-1.0, 0.83, 0.15, 255, 255, 255, 255);
+		FF2_ShowSyncHudText(iiBoss, hHudSync, "%t", "rage_meter", RoundFloat(BossCharge[iiBoss][0]));
+	}
+	SetHudTextParams(-1.0, 0.88, 0.15, 255, 255, 255, 255);
+
+	VSHA_SetGlowTimer(iiBoss, -0.2);
+
+	char sAbility[10];
+	char sFindString[10];
+
+	char sPlugin_Name[64];
+	char sButtonMode[64];
+	char sSlot0[64];
+	char sLife[10];
+
+	StringMap MyStringMap = hArrayBossSubplugins.Get(iBossArrayListIndex);
+
+	char lives[MAXRANDOMS][3];
+
+	for(int i=1; i<MAXRANDOMS ; i++)
+	{
+		Format(sAbility,10,"ability%i",i);
+
+
+		Format(sFindString,64,"%splugin_name",sAbility);
+		MyStringMap.GetString(sFindString, sPlugin_Name, 64);
+
+		Format(sFindString,64,"%sbuttonmode",sAbility);
+		MyStringMap.GetString(sFindString, sButtonMode, 64);
+		int buttonmode = StringToInt(sButtonMode);
+
+		Format(sFindString,64,"%sarg0",sAbility);
+		MyStringMap.GetString(sFindString, sSlot0, 64);
+		int slot0 = StringToInt(sSlot0);
+
+
+		if(slot0<1)
+		{
+			continue;
+		}
+
+		Format(sFindString,10,"%slife",sAbility);
+		MyStringMap.GetString(sFindString, sLife, 10);
+
+		if(!sLife[0])
+		{
+			char sName[64];
+			Format(sFindString,64,"%sname",sAbility);
+			MyStringMap.GetString(sFindString, sName, 64);
+			UseAbility(sName, sPlugin_Name, iiBoss, slot0, buttonmode);
+		}
+		else
+		{
+			int mycount=ExplodeString(sLife, " ", lives, MAXRANDOMS, 3);
+			for(int j; j<mycount; j++)
+			{
+				if(StringToInt(lives[j])==VSHA_GetLives(iiBoss))
+				{
+					char sName[64];
+					Format(sFindString,64,"%sname",sAbility);
+					MyStringMap.GetString(sFindString, sName, 64);
+					UseAbility(sName, sPlugin_Name, iiBoss, slot0, buttonmode);
+					break;
+				}
+			}
+
+		}
+	}
+
+	if(CountRedAlivePlayers()==1)
+	{
+		/*
+		char message[512];
+		char name[64];
+		for(int target; target<=MaxClients; target++)
+		{
+			if(IsBoss(target))
+			{
+				new boss=Boss[target];
+				KvRewind(BossKV[Special[boss]]);
+				KvGetString(BossKV[Special[boss]], "name", name, sizeof(name), "=Failed name=");
+				//Format(bossLives, sizeof(bossLives), ((BossLives[boss]>1) ? ("x%i", BossLives[boss]) : ("")));
+				if(BossLives[boss]>1)
+				{
+					Format(message, sizeof(message), "%s\n%s's HP: %i of %ix%i", message, name, BossHealth[boss]-BossHealthMax[boss]*(BossLives[boss]-1), BossHealthMax[boss], BossLives[boss]);
+				}
+				else
+				{
+					Format(message, sizeof(message), "%s\n%s's HP: %i of %i", message, name, BossHealth[boss]-BossHealthMax[boss]*(BossLives[boss]-1), BossHealthMax[boss]);
+				}
+			}
+		}
+
+		for(int target; target<=MaxClients; target++)
+		{
+			if(IsValidClient(target) && !(FF2flags[target] & FF2FLAG_HUDDISABLED))
+			{
+				SetGlobalTransTarget(target);
+				PrintCenterText(target, message);
+			}
+		}*/
+
+		//if(lastPlayerGlow)
+		//{
+		VSHA_SetGlowTimer(iiBoss, 3600.0);
+		//}
+	}
+
+	if(BossCharge[iiBoss][0]<100.0)
+	{
+		int iGetOtherTeam = GetClientTeam(iiBoss) == 2 ? 3:2;
+		BossCharge[iiBoss][0]+=OnlyScoutsLeft(iGetOtherTeam)*0.2;
+		if(BossCharge[iiBoss][0]>100.0)
+		{
+			BossCharge[iiBoss][0]=100.0;
+		}
+	}
+
+	HPTime-=0.2;
+	if(HPTime<0)
+	{
+		HPTime=0.0;
+	}
+/*
+	for(int client2; client2<=MaxClients; client2++)
+	{
+		if(KSpreeTimer[client2]>0)
+		{
+			KSpreeTimer[client2]-=0.2;
+		}
+	}*/
+
+	return;
+}
+
+public Action Timer_BotRage(Handle timer, any bot)
+{
+	if(IsValidClient(bot, false))
+	{
+		FakeClientCommandEx(bot, "voicemenu 0 0");
+	}
+}
+
+stock int OnlyScoutsLeft( int iTeam )
+{
+	int countit;
+	for (int client; client <= MaxClients; client++)
+	{
+		if (IsValidClient(client) && IsPlayerAlive(client) && GetClientTeam(client) == iTeam)
+		{
+			if (TF2_GetPlayerClass(client) == TFClass_Scout) countit++;
+		}
+	}
+	return countit;
+}
