@@ -1629,17 +1629,6 @@ public void VSHA_OnGameOver() // 0
 	Call_Finish();
 }
 
-public Action VSHA_OnBossSetHP_Pre(int BossEntity, int &BossMaxHealth) // 3
-{
-	Action result = Plugin_Continue;
-	Call_StartForward(p_OnBossSetHP_Pre);
-	Call_PushCell(BossArrayListIndex[BossEntity]);
-	Call_PushCell(BossEntity);
-	Call_PushCellRef(BossMaxHealth);
-	Call_Finish(result);
-	return result;
-}
-
 public Action VSHA_OnBossTakeFallDamage(int victim,
 										int &attacker,
 										int &inflictor,
@@ -1663,7 +1652,6 @@ public Action VSHA_OnBossTakeFallDamage(int victim,
 	Call_PushArray(damagePosition,3);
 	Call_PushCell(damagecustom);
 	Call_Finish(result);
-	if(PreventCoreOnTakeDamageChanges)
 	return result;
 }
 
