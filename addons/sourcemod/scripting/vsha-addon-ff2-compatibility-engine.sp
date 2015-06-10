@@ -54,13 +54,13 @@ enum Operators
 };
 
 float BossCharge[PLYR+1][8];
-float Marketed[PLYR+1];
+//float Marketed[PLYR+1];
 int FF2flags[PLYR+1];
 
-int detonations[PLYR+1];
+//int detonations[PLYR+1];
 
-float circuitStun;
-int allowedDetonations;
+//float circuitStun;
+//int allowedDetonations;
 
 /*
 int Specials;
@@ -1846,7 +1846,6 @@ public void OnBossSelected(int iBossArrayListIndex, int iiBoss)
 	if(!ThisPluginBoss(iBossArrayListIndex))
 	{
 		// reset variables
-		SDKUnhook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 		//HaleCharge[iiBoss]=0;
 		InRage[iiBoss]=false;
 		BossIndex[iiBoss]=-1;
@@ -1865,7 +1864,6 @@ public void OnBossSelected(int iBossArrayListIndex, int iiBoss)
 
 		// Dynamically load private forwards
 		Load_VSHAHooks();
-		SDKHook(iiBoss, SDKHook_OnTakeDamage, OnTakeDamage);
 	}
 }
 public void OnGameOver() // best play to reset all variables
@@ -1882,7 +1880,7 @@ public void OnGameOver() // best play to reset all variables
 		//}
 	}
 	// Dynamically unload private forwards
-	UnLoad_VSHAHooks();
+	//UnLoad_VSHAHooks();
 }
 
 public Action Timer_DisguiseBackstab(Handle timer, any userid)
