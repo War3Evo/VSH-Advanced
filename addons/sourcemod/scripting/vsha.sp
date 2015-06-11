@@ -15,8 +15,18 @@
 //#define BloodDropmodel "sprites/blood.vmt"
 //#define BloodSpraymodel "sprites/bloodspray.vmt"
 
-// old version 0.1.3 on forums
-#define PLUGIN_VERSION			"0.1.4"
+
+#define MAJOR_REVISION "0"
+#define MINOR_REVISION "1"
+#define STABLE_REVISION "4"
+#define DEV_REVISION "Beta"
+#define BUILD_NUMBER "manual" //This gets automagically updated by Jenkins
+
+#if !defined DEV_REVISION
+#define PLUGIN_VERSION MAJOR_REVISION..."."...MINOR_REVISION..."."...STABLE_REVISION
+#else
+#define PLUGIN_VERSION MAJOR_REVISION..."."...MINOR_REVISION..."."...STABLE_REVISION..." "...DEV_REVISION..." (build "...BUILD_NUMBER...")"
+#endif
 
 public Plugin myinfo = {
 	name = "Versus Saxton Hale Engine",
