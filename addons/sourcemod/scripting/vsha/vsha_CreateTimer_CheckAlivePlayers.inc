@@ -8,18 +8,40 @@ public Action CheckAlivePlayers(Handle timer, int data)
 	{
 		if ( IsClientInGame(client) && IsPlayerAlive(client) )
 		{
-			if (GetClientTeam(client) == OtherTeam) iRedAlivePlayers++;
-			else if (GetClientTeam(client) == HaleTeam) iBluAlivePlayers++;
+			if (GetClientTeam(client) == TEAM_RED) iRedAlivePlayers++;
+			else if (GetClientTeam(client) == TEAM_BLUE) iBluAlivePlayers++;
 		}
 	}
 #if defined DEBUG
 	DEBUGPRINT1("VSH Engine::CheckAlivePlayers() **** Players Looped ****");
 #endif
-	if (iRedAlivePlayers <= 0) ForceTeamWin(HaleTeam);
+	if (iRedAlivePlayers <= 0) ForceTeamWin(TEAM_BLUE);
+	else if (iBluAlivePlayers <= 0) ForceTeamWin(TEAM_RED);
 	else if (iRedAlivePlayers == 1 && iBluAlivePlayers)
 	{
 		//VSHA_Private_Forward("VSHA_OnLastSurvivor");
-		VSHA_OnLastSurvivor();
+		VSHA_OnLastSurvivor(TEAM_RED);
+
+		/*char message[PATH];
+		for (int boss = 1; bIsBoss[boss]; boss++)
+		{
+			if (IsValidClient(boss)) Format(message, sizeof(message), "%s\n%N's Health is %i of %i", message, boss, iBossHealth[boss], iBossMaxHealth[boss]);
+		}
+		for (int target = 1; target <= MaxClients; target++)
+		{
+			if (IsValidClient(target)) PrintCenterText(target, message);
+		}
+		decl String:sound[PLATFORM_MAX_PATH];
+		if(RandomSound("sound_lastman", sound, PLATFORM_MAX_PATH))
+		{
+			EmitSoundToAll(sound);
+			EmitSoundToAll(sound);
+		}*/
+	}
+	else if (iBluAlivePlayers == 1 && iRedAlivePlayers)
+	{
+		//VSHA_Private_Forward("VSHA_OnLastSurvivor");
+		VSHA_OnLastSurvivor(TEAM_BLUE);
 
 		/*char message[PATH];
 		for (int boss = 1; bIsBoss[boss]; boss++)

@@ -1490,9 +1490,10 @@ public void VSHA_OnBossSetHP_Post(int iEntity) // 2
 	Call_Finish();
 }
 
-public void VSHA_OnLastSurvivor() // 0
+public void VSHA_OnLastSurvivor(int iTeam) // 0
 {
 	Call_StartForward(p_OnLastSurvivor);
+	Call_PushCell(iTeam);
 	Call_Finish();
 }
 
