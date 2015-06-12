@@ -93,11 +93,7 @@
 #define LoopDeadPlayers(%1) for(int %1=1;%1<=MaxClients;++%1)\
 								if(IsClientInGame(%1) && !IsPlayerAlive(%1))
 
-#define LoopActiveBosses(%1) for(int %1=1;%1<=MaxClients;++%1)\
-								if(IsClientInGame(%1) && bIsBoss[%1])
 
-#define LoopInActiveBosses(%1) for(int %1=1;%1<=MaxClients;++%1)\
-								if(IsClientInGame(%1) && !bIsBoss[%1])
 
 #define Toggle(%1) %1=%1?false:true
 

@@ -4,7 +4,8 @@
 
 //#include <sourcemod>
 #include <clientprefs>
-#include <tf2attributes>
+// tf2attrib broken
+//#include <tf2attributes>
 #include <morecolors>
 #include <sdkhooks>
 #include <vsha>
@@ -28,6 +29,12 @@
 #else
 #define PLUGIN_VERSION MAJOR_REVISION..."."...MINOR_REVISION..."."...STABLE_REVISION..." "...DEV_REVISION..." (build "...BUILD_NUMBER...")"
 #endif
+
+#define LoopActiveBosses(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientInGame(%1) && bIsBoss[%1])
+
+#define LoopInActiveBosses(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientInGame(%1) && !bIsBoss[%1])
 
 public Plugin myinfo = {
 	name = "Versus Saxton Hale Engine",
@@ -142,8 +149,8 @@ enum VSHAError
 #include "vsha/vsha_HookEvent_Destroyed.inc"
 #include "vsha/vsha_HookEvent_Deflected.inc"
 #include "vsha/vsha_HookEvent_ChangeClass.inc"
-//#include "vsha/"
-//#include "vsha/"
+#include "vsha/vsha_HookEvent_WaitingEnds.inc"
+#include "vsha/vsha_HookEvent_WaitingBegins.inc"
 
 //#include "vsha/"
 //#include "vsha/"
