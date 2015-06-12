@@ -52,6 +52,25 @@ enum VSHAError
 	Error_SubpluginAlreadyRegistered,	// The plugin registering a boss already has a boss registered
 }
 
+public int TF2_MaxHealth(int client)
+{
+	switch(TF2_GetPlayerClass(client))
+	{
+		case TFClass_Scout: return 125;
+		case TFClass_Sniper: return 125;
+		case TFClass_Soldier: return 200;
+		case TFClass_DemoMan: return 175;
+		case TFClass_Medic: return 150;
+		case TFClass_Heavy: return 300;
+		case TFClass_Pyro: return 175;
+		case TFClass_Spy: return 125;
+		case TFClass_Engineer: return 125;
+		default: return 125;
+	}
+	return 125;
+}
+
+
 #include "vsha/vsha_variables.inc"
 //#include "vsha/"
 //#include "vsha/"
@@ -170,6 +189,7 @@ enum VSHAError
 //#include "vsha/"
 //#include "vsha/"
 //#include "vsha/"
+
 
 public int PickBossSpecial(int &select)
 {

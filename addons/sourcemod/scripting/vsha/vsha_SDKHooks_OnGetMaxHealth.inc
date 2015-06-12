@@ -8,12 +8,20 @@
 */
 public Action OnGetMaxHealth(int client, int &maxhealth)
 {
-	if( CheckRoundState() != ROUNDSTATE_START_ROUND_TIMER)
-	{
-		return Plugin_Continue;
-	}
+	//if( CheckRoundState() != ROUNDSTATE_START_ROUND_TIMER)
+	//{
+		//return Plugin_Continue;
+	//}
 	if(!ValidPlayer(client,true)) return Plugin_Continue;
-	if(!bIsBoss[client]) return Plugin_Continue;
+	if(!bIsBoss[client] && bAllowPlayerHealthMax && iPlayerMaxHealth[client]>0)
+	{
+		if(CheckRoundState() != ROUNDSTATE_START_ROUND_TIMER)
+		{
+			SetEntProp(client, Prop_Data, "m_iHealth", iPlayerMaxHealth[client]);
+		}
+		maxhealth=iPlayerMaxHealth[client];
+		return Plugin_Handled;
+	}
 	if(iBossMaxHealth[client]<=0) return Plugin_Continue;
 
 	int HP = GetEntProp(client, Prop_Data, "m_iHealth");

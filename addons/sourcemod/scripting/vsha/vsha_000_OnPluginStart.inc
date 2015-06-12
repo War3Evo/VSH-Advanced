@@ -108,7 +108,10 @@ public void OnPluginStart()
 	//DifficultyAmount = CreateConVar("vsha_difficultyamount", "3", "how many difficulty settings you want available for bosses to choose", FCVAR_PLUGIN, true, 0.0, true, 999.0);
 	cvarBossCrits = CreateConVar("vsha_bosscrits", "0", "0 - disable, 1 - enable\nset to 1 to enable boss doing random crits.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 
+	cvarAllowPlayerHealthMax = CreateConVar("vsha_allow_set_maxhealth", "1", "0 - disable, 1 - enable\nAllow vsh to set player max health to vanilla defaults.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+
 	HookConVarChange(cvarBossCrits, CvarChange);
+	HookConVarChange(cvarAllowPlayerHealthMax, CvarChange);
 
 	AddCommandListener(DoTaunt, "taunt");
 	AddCommandListener(DoTaunt, "+taunt");
@@ -160,5 +163,9 @@ public void CvarChange(Handle convar, const char[] oldValue, const char[] newVal
 	if(convar==cvarBossCrits)
 	{
 		bBossCrits=view_as<bool>(StringToInt(newValue));
+	}
+	else if(convar==cvarAllowPlayerHealthMax)
+	{
+		bAllowPlayerHealthMax=view_as<bool>(StringToInt(newValue));
 	}
 }
