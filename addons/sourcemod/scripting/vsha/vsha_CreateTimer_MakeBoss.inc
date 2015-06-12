@@ -68,6 +68,13 @@ public Action MakeBoss(Handle timer, int userid)
 
 	VSHA_OnPrepBoss(iClient);
 
+	//if(!bBossCrits)
+	//{
+		//PrintToChatAll("crit mod disabled hidden before");
+		//TF2Attrib_SetByName(iClient, "crit mod disabled hidden", 1.0);
+		//PrintToChatAll("crit mod disabled hidden after");
+	//}
+
 	CreateTimer(0.2, CleanScreen, iBossUserID[iClient]);
 	return;
 }

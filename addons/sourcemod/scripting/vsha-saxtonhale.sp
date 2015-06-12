@@ -526,12 +526,15 @@ public void OnBossTimer(int iBossArrayListIndex, int iiBoss, int &curHealth, int
 		// 5 * 60 = 300
 		// 5 * .2 = 1 second, so 5 times number of seconds equals number for HaleCharge after superjump
 		// 300 = 1 minute wait
-		float ExtraBoost = float(HaleCharge[iiBoss])/4;
-		if ( HaleCharge[iiBoss] > 1 && SuperJump(iiBoss, ExtraBoost, -15.0, HaleCharge[iiBoss], -150) ) //put convar/cvar for jump sensitivity here!
+		if ( HaleCharge[iiBoss] > 1 && (GetEntityFlags(iiBoss) & FL_ONGROUND) )
 		{
-			HaleChargeCoolDown[iiBoss] = GetTime()+3;
-			Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", GetRandomInt(0, 1) ? HaleJump : HaleJump132, GetRandomInt(1, 2));
-			EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
+			float ExtraBoost = float(HaleCharge[iiBoss])/4;
+			if( SuperJump(iiBoss, ExtraBoost, -15.0, HaleCharge[iiBoss], -150) ) //put convar/cvar for jump sensitivity here!
+			{
+				HaleChargeCoolDown[iiBoss] = GetTime()+3;
+				Format(playsound, PLATFORM_MAX_PATH, "%s%i.wav", GetRandomInt(0, 1) ? HaleJump : HaleJump132, GetRandomInt(1, 2));
+				EmitSoundToAll(playsound, _, SNDCHAN_VOICE, SNDLEVEL_TRAFFIC, SND_NOFLAGS, SNDVOL_NORMAL, 100, iiBoss, NULL_VECTOR, NULL_VECTOR, false, 0.0);
+			}
 		}
 	}
 	else

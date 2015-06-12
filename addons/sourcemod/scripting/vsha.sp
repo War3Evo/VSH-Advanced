@@ -4,7 +4,8 @@
 
 //#include <sourcemod>
 #include <clientprefs>
-#include <tf2attributes>
+// tf2attrib broken
+//#include <tf2attributes>
 #include <morecolors>
 #include <sdkhooks>
 #include <vsha>
@@ -29,6 +30,12 @@
 #define PLUGIN_VERSION MAJOR_REVISION..."."...MINOR_REVISION..."."...STABLE_REVISION..." "...DEV_REVISION..." (build "...BUILD_NUMBER...")"
 #endif
 
+#define LoopActiveBosses(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientInGame(%1) && bIsBoss[%1])
+
+#define LoopInActiveBosses(%1) for(int %1=1;%1<=MaxClients;++%1)\
+								if(IsClientInGame(%1) && !bIsBoss[%1])
+
 public Plugin myinfo = {
 	name = "Versus Saxton Hale Engine",
 	author = "Diablo, Nergal, Chdata, Cookies, with special props to Powerlord + Flamin' Sarge",
@@ -44,6 +51,25 @@ enum VSHAError
 	Error_AlreadyExists,			// Boss Already Exists....
 	Error_SubpluginAlreadyRegistered,	// The plugin registering a boss already has a boss registered
 }
+
+public int TF2_MaxHealth(int client)
+{
+	switch(TF2_GetPlayerClass(client))
+	{
+		case TFClass_Scout: return 125;
+		case TFClass_Sniper: return 125;
+		case TFClass_Soldier: return 200;
+		case TFClass_DemoMan: return 175;
+		case TFClass_Medic: return 150;
+		case TFClass_Heavy: return 300;
+		case TFClass_Pyro: return 175;
+		case TFClass_Spy: return 125;
+		case TFClass_Engineer: return 125;
+		default: return 125;
+	}
+	return 125;
+}
+
 
 #include "vsha/vsha_variables.inc"
 //#include "vsha/"
@@ -142,8 +168,8 @@ enum VSHAError
 #include "vsha/vsha_HookEvent_Destroyed.inc"
 #include "vsha/vsha_HookEvent_Deflected.inc"
 #include "vsha/vsha_HookEvent_ChangeClass.inc"
-//#include "vsha/"
-//#include "vsha/"
+#include "vsha/vsha_HookEvent_WaitingEnds.inc"
+#include "vsha/vsha_HookEvent_WaitingBegins.inc"
 
 //#include "vsha/"
 //#include "vsha/"
@@ -163,6 +189,7 @@ enum VSHAError
 //#include "vsha/"
 //#include "vsha/"
 //#include "vsha/"
+
 
 public int PickBossSpecial(int &select)
 {
@@ -1463,9 +1490,10 @@ public void VSHA_OnBossSetHP_Post(int iEntity) // 2
 	Call_Finish();
 }
 
-public void VSHA_OnLastSurvivor() // 0
+public void VSHA_OnLastSurvivor(int iTeam) // 0
 {
 	Call_StartForward(p_OnLastSurvivor);
+	Call_PushCell(iTeam);
 	Call_Finish();
 }
 

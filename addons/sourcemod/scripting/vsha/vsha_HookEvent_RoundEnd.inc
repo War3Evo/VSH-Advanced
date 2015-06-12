@@ -22,6 +22,8 @@ public Action RoundEnd(Event event, const char[] name, bool dontBroadcast)
 		{
 			//ClearTimer(ModelTimer[i]);
 
+			//TF2Attrib_RemoveByName(bIsBoss[i], "crit mod disabled hidden");
+
 			SetClientQueuePoints(i, 0);
 			if (event.GetInt("team") == GetClientTeam(i) && !playedwinsound)
 			{

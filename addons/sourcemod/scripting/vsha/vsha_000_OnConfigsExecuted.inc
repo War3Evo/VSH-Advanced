@@ -4,4 +4,5 @@ public void OnConfigsExecuted()
 {
 	bEnabled = cvarEnabled.BoolValue;
 	bBossCrits = cvarBossCrits.BoolValue;
+	bAllowPlayerHealthMax = cvarAllowPlayerHealthMax.BoolValue;
 }

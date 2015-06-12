@@ -11,6 +11,8 @@ public void ClearVariablesRoundStart(int client)
 	BossArrayListIndex[client] = -1;
 	iBossUserID[client] = 0;
 
+	iPlayerMaxHealth[client] = TF2_MaxHealth(client);
+
 	OnPreventCoreOnTakeDamageChanges[client] = false;
 }
 

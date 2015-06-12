@@ -93,11 +93,7 @@
 #define LoopDeadPlayers(%1) for(int %1=1;%1<=MaxClients;++%1)\
 								if(IsClientInGame(%1) && !IsPlayerAlive(%1))
 
-#define LoopActiveBosses(%1) for(int %1=1;%1<=MaxClients;++%1)\
-								if(IsClientInGame(%1) && bIsBoss[%1])
 
-#define LoopInActiveBosses(%1) for(int %1=1;%1<=MaxClients;++%1)\
-								if(IsClientInGame(%1) && !bIsBoss[%1])
 
 #define Toggle(%1) %1=%1?false:true
 
@@ -407,7 +403,6 @@ typeset VSHAHookCB
 
 	// VSHAHook OnBossIntroTalk
 	// VSHAHook AddToDownloads
-	// VSHAHook OnLastSurvivor
 	// VSHAHook OnGameOver
 	// VSHAHook_OnBossStabbedPost
 	function void ();
@@ -428,10 +423,11 @@ typeset VSHAHookCB
 	// VSHAHook OnMessageTimer
 	function Action (int iEntity);
 
-	// VSHAHook OnEquipPlayer_Post
-	// VSHAHook OnLastSurvivorLoop
-	// VSHAHook ShowPlayerHelpMenu
-	function void (int iEntity);
+	// VSHAHook OnEquipPlayer_Post (int iEntity)
+	// VSHAHook OnLastSurvivorLoop (int iiBoss) // in Boss vs Boss mode or similar, if its only 1 boss on each team.. then it will trigger for each boss
+	// VSHAHook ShowPlayerHelpMenu (int iEntity)
+	// VSHAHook OnLastSurvivor (int iTeam) -- The Team that has 1 player left
+	function void (int iInteger);
 
 	// VSHAHook OnPlayerKilledByBoss
 	// VSHAHook OnKillingSpreeByBoss

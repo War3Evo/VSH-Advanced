@@ -28,6 +28,13 @@ public Action DoMessage(Handle timer, int data)
 	char sBossName[32];
 	char sClientName[32];
 
+	//LoopInActiveBosses(target)
+	//{
+		//if(ValidPlayer(target,true))
+		//{
+			//iPlayerMaxHealth[target] = TF2_MaxHealth(target);
+		//}
+	//}
 
 	//if(CountBosses>0)
 	//{
@@ -43,6 +50,7 @@ public Action DoMessage(Handle timer, int data)
 		}
 	}
 	//}
+
 
 	//VSHA_Private_Forward("VSHA_MessageTimer");
 	//VSHA_OnMessageTimer();

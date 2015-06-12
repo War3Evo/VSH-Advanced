@@ -39,6 +39,7 @@ int iModelRetrys[PLYR],
 	iPresetBoss[PLYR],
 	iBossHealth[PLYR],
 	iBossMaxHealth[PLYR],
+	iPlayerMaxHealth[PLYR],
 	iPlayerKilled[PLYR][2],	//0 - kill count, 1 - killing spree
 	iBossesKilled[PLYR],
 	iDamage[PLYR],
@@ -83,7 +84,9 @@ bool bEnabled,
 	PointType, // It's being used, but not set anywhere
 	PointReady,
 	steamtools,
-	bBossCrits;
+	bBossCrits,
+	bRoundWaiting = false,
+	bAllowPlayerHealthMax = true;
 
 //================================================================================================
 
@@ -106,6 +109,7 @@ ConVar QueueIncrement = null;
 //ConVar FallDmgSoldier = null;
 //ConVar DifficultyAmount = null;
 ConVar cvarBossCrits = null;
+ConVar cvarAllowPlayerHealthMax = null;
 
 //non-cvar Handles
 Handle hBossHUD;

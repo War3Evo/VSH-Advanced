@@ -4,6 +4,8 @@ public Action WatchGameModeTimer(Handle hTimer)
 {
 	if(!bEnabled) return Plugin_Continue;
 
+	if(bRoundWaiting) return Plugin_Continue;
+
 	if(VSHA_OnGameMode_WatchGameModeTimer() != Plugin_Continue)
 	{
 		return Plugin_Continue;
@@ -73,7 +75,25 @@ public Action WatchGameModeTimer(Handle hTimer)
 			return Plugin_Continue;
 		}
 	}
-	else if(BossCount > 0)
+	else if(BossCount > 0 && TeamBlueCount <= 0 && TeamRedCount > 1)
+	{
+		LoopActiveBosses(iBossNum)
+		{
+			ForceTeamChange(iBossNum,TEAM_BLUE);
+			break;
+		}
+		return Plugin_Continue;
+	}
+	else if(BossCount > 0 && TeamBlueCount > 1 && TeamRedCount <= 0)
+	{
+		LoopInActiveBosses(iBossNum)
+		{
+			ForceTeamChange(iBossNum,TEAM_RED);
+			break;
+		}
+		return Plugin_Continue;
+	}
+	else if(BossCount >= 1 && TeamBlueCount >= 1 && TeamRedCount >= 1)
 	{
 		CPrintToChatAll("{lightgreen}Bosses in the House!\nStarting Round!");
 		LoopAlivePlayers(iTarget)
