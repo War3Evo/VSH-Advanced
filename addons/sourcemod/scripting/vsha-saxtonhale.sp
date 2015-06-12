@@ -9,7 +9,7 @@ public Plugin myinfo =
 {
 	name 			= "Saxton Hale",
 	author 			= "Valve",
-	description 		= "Saxton Haaaaaaaaaaaaale",
+	description 	= "Saxton Haaaaaaaaaaaaale",
 	version 		= "1.3",
 	url 			= "http://wiki.teamfortress.com/wiki/Saxton_Hale"
 }
@@ -20,7 +20,6 @@ int iThisPlugin = -1; //DO NOT TOUCH THIS, THIS IS USED TO IDENTIFY THIS BOSS PL
 
 char HaleModel[PATHX];
 char HaleModelPrefix[PATHX];
-
 
 char HaleTheme1[PATHX];
 char HaleTheme2[PATHX];
@@ -421,7 +420,7 @@ public void OnGameOver() // best play to reset all variables
 		}
 	}
 	// Dynamically unload private forwards
-	UnLoad_VSHAHooks();
+	//UnLoad_VSHAHooks();
 }
 
 public void OnBossKillBuilding(int iBossArrayListIndex, Event event, int iiBoss)
