@@ -97,9 +97,6 @@ public int TF2_MaxHealth(int client)
 #include "vsha/vsha_000_OnPlayerRunCmd.inc"
 #include "vsha/vsha_000_TF2_CalcIsAttackCritical.inc"
 //#include "vsha/"
-
-//#include "vsha/"
-//#include "vsha/"
 //#include "vsha/"
 //#include "vsha/"
 

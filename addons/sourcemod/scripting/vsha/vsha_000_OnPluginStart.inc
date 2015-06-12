@@ -114,7 +114,6 @@ public void OnPluginStart()
 	HookConVarChange(cvarAllowPlayerHealthMax, CvarChange);
 
 	AddCommandListener(DoTaunt, "taunt");
-	AddCommandListener(DoTaunt, "+taunt");
 	AddCommandListener(CallMedVoiceMenu, "voicemenu");
 	AddCommandListener(DoSuicide, "explode");
 	AddCommandListener(DoSuicide, "kill");
