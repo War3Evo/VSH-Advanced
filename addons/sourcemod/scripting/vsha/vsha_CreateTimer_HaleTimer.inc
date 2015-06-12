@@ -24,9 +24,13 @@ public Action HaleTimer(Handle hTimer)
 			}
 			else TF2_AddCondition(iClient, TFCond_DeadRingered, 0.3);
 		}
-		if ( iRedAlivePlayers == 1 && !TF2_IsPlayerInCondition(iClient, TFCond_Cloaked) )
+		int iGetOtherTeam = GetClientTeam(iClient) == 2 ? 3:2;
+		if ( ((iGetOtherTeam==TEAM_RED && iRedAlivePlayers == 1) || (iGetOtherTeam==TEAM_BLUE && iBluAlivePlayers == 1)) && !TF2_IsPlayerInCondition(iClient, TFCond_Cloaked) )
 		{
-			TF2_AddCondition(iClient, TFCond_HalloweenCritCandy, 0.3);
+			if(bBossCrits)
+			{
+				TF2_AddCondition(iClient, TFCond_HalloweenCritCandy, 0.3);
+			}
 			int primary = GetPlayerWeaponSlot(iClient, TFWeaponSlot_Primary);
 			if (class == TFClass_Engineer && weapon == primary && StrEqual(wepclassname, "tf_weapon_sentry_revenge", false)) SetEntProp(iClient, Prop_Send, "m_iRevengeCrits", 3);
 
@@ -39,7 +43,7 @@ public Action HaleTimer(Handle hTimer)
 			//if (bAllowSuperWeap && HaleHealth >= 7000) PickSuperWeapon(i, -1); later
 			continue;
 		}
-		if ( iRedAlivePlayers == 2 && !TF2_IsPlayerInCondition(iClient, TFCond_Cloaked) ) TF2_AddCondition(iClient, TFCond_Buffed, 0.3);
+		if ( ((iGetOtherTeam==TEAM_RED && iRedAlivePlayers == 2) || (iGetOtherTeam==TEAM_BLUE && iBluAlivePlayers == 2)) && !TF2_IsPlayerInCondition(iClient, TFCond_Cloaked) ) TF2_AddCondition(iClient, TFCond_Buffed, 0.3);
 
 		//==============================	C R I T S  P A R T S	   =============================================
 		TFCond cond = TFCond_HalloweenCritCandy;
