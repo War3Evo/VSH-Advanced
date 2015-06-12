@@ -106,7 +106,7 @@ public void OnPluginStart()
 	QueueIncrement = CreateConVar("vsha_queueincrement", "10", "by how much queue increments", FCVAR_PLUGIN, true, 1.0, true, 999.0);
 	//FallDmgSoldier = CreateConVar("vsha_soldierfalldamage", "20.0", "divides fall damage by this number", FCVAR_PLUGIN, true, 0.0, true, 999.0);
 	//DifficultyAmount = CreateConVar("vsha_difficultyamount", "3", "how many difficulty settings you want available for bosses to choose", FCVAR_PLUGIN, true, 0.0, true, 999.0);
-	cvarBossCrits = CreateConVar("vsha_bosscrits", "0", "0 - disable, 1 - enable\nset to 1 to enable boss doing crits.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	cvarBossCrits = CreateConVar("vsha_bosscrits", "0", "0 - disable, 1 - enable\nset to 1 to enable boss doing random crits.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 
 	HookConVarChange(cvarBossCrits, CvarChange);
 
@@ -117,6 +117,9 @@ public void OnPluginStart()
 	AddCommandListener(DoSuicide, "kill");
 	AddCommandListener(DoSuicide2, "jointeam");
 	AddCommandListener(clDestroy, "destroy");
+
+	HookEvent("teamplay_waiting_begins", WaitingBegins);
+	HookEvent("teamplay_waiting_ends", WaitingEnds);
 
 	HookEvent("teamplay_round_start", RoundStart);
 	HookEvent("teamplay_round_win", RoundEnd);

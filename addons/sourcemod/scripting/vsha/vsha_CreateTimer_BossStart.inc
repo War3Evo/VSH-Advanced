@@ -47,12 +47,14 @@ public Action BossStart(Handle timer, int data)
 		if (iBossMaxHealth[iClient] < MaxBossHP) iBossMaxHealth[iClient] = MaxBossHP; //fallback incase accident
 		iBossHealth[iClient] = iBossMaxHealth[iClient];
 
-		int maxhp = GetEntProp(iClient, Prop_Data, "m_iMaxHealth");
+		//int maxhp = GetEntProp(iClient, Prop_Data, "m_iMaxHealth");
 
-		if (IsValidEntity(iClient)) TF2Attrib_RemoveAll(iClient);
+		// tf2attrib broken
+		//if (IsValidEntity(iClient)) TF2Attrib_RemoveAll(iClient);
 		SetEntityHealth( iClient, GetEntProp(iClient, Prop_Data, "m_iMaxHealth") );
 
-		TF2Attrib_SetByDefIndex( iClient, 26, float(iBossMaxHealth[iClient]-maxhp) );
+		// tf2attrib broken
+		//TF2Attrib_SetByDefIndex( iClient, 26, float(iBossMaxHealth[iClient]-maxhp) );
 		SetEntityHealth( iClient, iBossHealth[iClient] );
 
 		if(!VSHHelped[iClient])
