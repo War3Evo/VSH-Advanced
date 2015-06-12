@@ -83,7 +83,8 @@ bool bEnabled,
 	PointType, // It's being used, but not set anywhere
 	PointReady,
 	steamtools,
-	bBossCrits;
+	bBossCrits,
+	bRoundWaiting = false;
 
 //================================================================================================
 
