@@ -43,6 +43,7 @@ public Action RoundStartFunction()
 	// hopefully I'm add enough Handle = null after
 	// a timer stops, so that it won't error this
 	// and prevent the round from starting!
+	//PrintToChatAll("Start Clear Timers");
 	ClearTimer(HandletTenSecStartTimer);
 	ClearTimer(HandletTenSecStartTimer2);
 	bTenSecStart[0] = false;
@@ -53,6 +54,7 @@ public Action RoundStartFunction()
 	ClearTimer(hDoMessage);
 
 	ClearTimer(MusicTimer);
+	//PrintToChatAll("End Clear Timers");
 
 	// We do this on round end, why need it on round start?
 	// commenting this out to try and defeat a bug
@@ -76,31 +78,11 @@ public Action RoundStartFunction()
 #endif
 	if (GetClientCount() <= 1 || iPlaying < 2)
 	{
-		if(RetryCounter>0)
-		{
-			int entityTimer = FindEntityByClassname(-1, "team_round_timer");
-			if (entityTimer > -1)
-			{
-				SetVariantInt(5);
-				AcceptEntityInput(entityTimer, "AddTime");
-				RetryCounter=10;
-			}
-			else
-			{
-				RetryCounter--;
-			}
-			hForceRoundStartCheckTimer = CreateTimer(4.8, ForceRoundStartCheckTimer);
-			CPrintToChatAll("{olive}[VSHA Engine]{default} Waiting for more players...");
-		}
-		else
-		{
-			CPrintToChatAll("{olive}[VSHA Engine]{default} Need more players to begin!");
-			bEnabled = false;
-			SetControlPoint(true);
-		}
+		hForceRoundStartCheckTimer = CreateTimer(4.8, ForceRoundStartCheckTimer);
+		CPrintToChatAll("{olive}[VSHA Engine]{default} Waiting for more players...");
+
 		return Plugin_Continue;
 	}
-	RetryCounter = 10;
 	if (hArrayBossSubplugins.Length < 1) //if (GetArraySize(hArrayBossSubplugins) < 1)
 	{
 		LogMessage("VSHA Engine::RoundStart() **** No Boss Subplugins Loaded ****");
@@ -112,9 +94,11 @@ public Action RoundStartFunction()
 	ClearTimer(hForceRoundStartCheckTimer);
 
 	// GAME MODE STARTS HERE
+	//PrintToChatAll("VSHA_OnGameMode_BossSetup");
 
 	if(VSHA_OnGameMode_BossSetup() != Plugin_Handled)
 	{
+		//PrintToChatAll("VSHA_OnGameMode_BossSetup != Plugin_Handled");
 		SetConVarInt(FindConVar("mp_teams_unbalance_limit"), 0);
 
 		int boss = -1;
@@ -123,8 +107,9 @@ public Action RoundStartFunction()
 
 		if (boss <= 0)
 		{
-			CPrintToChatAll("{olive}[VSHA Engine]{default} Need more players to begin");
-			bEnabled = false;
+			CPrintToChatAll("{olive}[VSHA Engine]{default} No Bosses Selected.  Need at a boss to start.");
+			hForceRoundStartCheckTimer = CreateTimer(4.8, ForceRoundStartCheckTimer);
+			//bEnabled = false;
 			return Plugin_Continue;
 		}
 
@@ -185,16 +170,26 @@ public Action RoundStartFunction()
 			}
 		}
 	}
+	//else
+	//{
+		//PrintToChatAll("VSHA_OnGameMode_BossSetup == Plugin_Handled");
+	//}
 
 	bTenSecStart[0] = true;
 	bTenSecStart[1] = true;
 
+	//PrintToChatAll("start HandletTenSecStartTimer and HandletTenSecStartTimer2");
+
 	HandletTenSecStartTimer = CreateTimer(29.1, tTenSecStart, 0);
 	HandletTenSecStartTimer2 = CreateTimer(60.1, tTenSecStart2, 1);
 
+	//PrintToChatAll("start hBossStartTimer");
 	hBossStartTimer = CreateTimer(9.1, BossStart); // 9.1
+	//PrintToChatAll("start hInitBossTimer");
 	hInitBossTimer = CreateTimer(0.2, InitBoss);
+	//PrintToChatAll("start hBossResponse");
 	hBossResponse = CreateTimer(3.5, BossResponse);
+	//PrintToChatAll("start hDoMessage");
 	hDoMessage = CreateTimer(9.6, DoMessage); //9.6
 	PointReady = false;
 
@@ -219,7 +214,11 @@ public Action RoundStartFunction()
 			AcceptEntityInput(entity, "skin");
 		}
 	}
+	//PrintToChatAll("start SearchForItemPacks");
+
 	SearchForItemPacks();
+
+	//PrintToChatAll("end SearchForItemPacks");
 
 	return Plugin_Continue;
 }

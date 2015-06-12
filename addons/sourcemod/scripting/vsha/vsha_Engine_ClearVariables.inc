@@ -64,5 +64,5 @@ public void ClearAllVariables()
 		bInJump[player] = false;
 		OnPreventCoreOnTakeDamageChanges[player] = false;
 	}
-	RetryCounter = 10;
+	//RetryCounter = 10;
 }

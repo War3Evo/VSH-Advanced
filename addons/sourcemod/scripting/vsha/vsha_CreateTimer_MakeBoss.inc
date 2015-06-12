@@ -2,6 +2,8 @@
 
 public Action MakeBoss(Handle timer, int userid)
 {
+	//PrintToChatAll("Action MakeBoss Timer");
+
 	//DP("MakeBoss");
 	int iClient = GetClientOfUserId(userid);
 
@@ -66,7 +68,11 @@ public Action MakeBoss(Handle timer, int userid)
 
 	SDKHook(iClient, SDKHook_GetMaxHealth, OnGetMaxHealth);
 
+	//PrintToChatAll("before VSHA_OnPrepBoss");
+
 	VSHA_OnPrepBoss(iClient);
+
+	//PrintToChatAll("after VSHA_OnPrepBoss");
 
 	//if(!bBossCrits)
 	//{
@@ -75,6 +81,8 @@ public Action MakeBoss(Handle timer, int userid)
 		//PrintToChatAll("crit mod disabled hidden after");
 	//}
 
+	//PrintToChatAll("start CleanScreen Timer");
 	CreateTimer(0.2, CleanScreen, iBossUserID[iClient]);
+	//PrintToChatAll("return;");
 	return;
 }

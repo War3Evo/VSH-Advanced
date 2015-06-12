@@ -2,9 +2,11 @@
 
 public Action DoMessage(Handle timer, int data)
 {
+	//PrintToChatAll("Action DoMessage Timer");
 	if (CheckRoundState() != 0)
 	{
 		hDoMessage = null;
+		PrintToChatAll("CheckRoundState() != 0  ... hDoMessage = null; ... Plugin_Continue");
 		return Plugin_Continue;
 	}
 
@@ -67,5 +69,6 @@ public Action DoMessage(Handle timer, int data)
 		if ( IsValidClient(client) ) ShowHudText(client, -1, text);
 	}*/
 	hDoMessage = null;
+	//PrintToChatAll("hDoMessage = null");
 	return Plugin_Continue;
 }

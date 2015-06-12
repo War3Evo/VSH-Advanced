@@ -131,7 +131,7 @@ any VSHA_VarArr[VSHA_Var];
 
 //bool InternalPause = false;
 
-int RetryCounter = 10;
+//int RetryCounter = 10;
 
 
 // Reload

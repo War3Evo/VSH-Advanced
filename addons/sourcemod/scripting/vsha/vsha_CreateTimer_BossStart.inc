@@ -2,6 +2,8 @@
 
 public Action BossStart(Handle timer, int data)
 {
+	//PrintToChatAll("Action BossStart Timer");
+
 	iPlaying = 0;
 	LoopIngameClients(iClient) //loop iClients first for health calculation
 	{
@@ -14,6 +16,7 @@ public Action BossStart(Handle timer, int data)
 	}
 	//VSH Engine::BossStart() **** non-Boss Player loop finished
 
+	//PrintToChatAll("start LoopActiveBosses");
 	LoopActiveBosses(iClient)
 	{
 		// LoopActiveBosses takes care of this:
@@ -68,6 +71,8 @@ public Action BossStart(Handle timer, int data)
 			if ( CheckRoundState() == 0 ) CreateTimer(2.0, MusicPlay, GetClientUserId(iClient), TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
+	//PrintToChatAll("end LoopActiveBosses");
+
 	if(!AllowMusic)
 	{
 		// Send OnMusic to Game Mode Addon
@@ -75,8 +80,10 @@ public Action BossStart(Handle timer, int data)
 	}
 	// VSH Engine::TimerBossStart() **** Boss Player loop finished
 
+	//PrintToChatAll("start CheckAlivePlayers timer");
 	CreateTimer(0.2, CheckAlivePlayers);
 	// ZeroPointTwo takes care of HaleTimer and BossTimer
+	//PrintToChatAll("start ZeroPointTwo timer");
 	CreateTimer(0.2, ZeroPointTwo, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	//CreateTimer(0.2, HaleTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	//CreateTimer(0.2, BossTimer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
@@ -86,4 +93,5 @@ public Action BossStart(Handle timer, int data)
 	if ( !PointType && iPlaying > AliveToEnable.IntValue ) SetControlPoint(false); //GetConVarInt(AliveToEnable)
 
 	hBossStartTimer = null;
+	//PrintToChatAll("hBossStartTimer = null");
 }

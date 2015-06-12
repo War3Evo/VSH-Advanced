@@ -2,6 +2,8 @@
 
 public Action InitBoss(Handle timer, int data)
 {
+	//PrintToChatAll("Action InitBoss Timer");
+
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		if (IsValidClient(i) && bIsBoss[i])
@@ -12,5 +14,6 @@ public Action InitBoss(Handle timer, int data)
 		}
 	}
 	hInitBossTimer = null;
+	//PrintToChatAll("hInitBossTimer = null;");
 	return Plugin_Continue;
 }
