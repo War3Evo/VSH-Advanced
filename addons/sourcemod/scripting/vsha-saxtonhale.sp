@@ -421,7 +421,7 @@ public void OnGameOver() // best play to reset all variables
 		}
 	}
 	// Dynamically unload private forwards
-	UnLoad_VSHAHooks();
+	//UnLoad_VSHAHooks();
 }
 
 public void OnBossKillBuilding(int iBossArrayListIndex, Event event, int iiBoss)
