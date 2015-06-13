@@ -4,8 +4,7 @@
 
 //#include <sourcemod>
 #include <clientprefs>
-// tf2attrib broken
-//#include <tf2attributes>
+#include <tf2attributes>
 #include <morecolors>
 #include <sdkhooks>
 #include <vsha>

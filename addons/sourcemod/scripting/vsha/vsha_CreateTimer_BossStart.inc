@@ -52,11 +52,9 @@ public Action BossStart(Handle timer, int data)
 
 		//int maxhp = GetEntProp(iClient, Prop_Data, "m_iMaxHealth");
 
-		// tf2attrib broken
-		//if (IsValidEntity(iClient)) TF2Attrib_RemoveAll(iClient);
+		if (IsValidEntity(iClient)) TF2Attrib_RemoveAll(iClient);
 		SetEntityHealth( iClient, GetEntProp(iClient, Prop_Data, "m_iMaxHealth") );
 
-		// tf2attrib broken
 		//TF2Attrib_SetByDefIndex( iClient, 26, float(iBossMaxHealth[iClient]-maxhp) );
 		SetEntityHealth( iClient, iBossHealth[iClient] );
 

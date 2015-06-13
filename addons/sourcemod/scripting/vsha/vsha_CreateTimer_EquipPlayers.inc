@@ -5,8 +5,7 @@ public Action EquipPlayers(Handle timer, int userid)
 	int iClient = GetClientOfUserId(userid);
 	if ( iClient <= 0 || !IsPlayerAlive(iClient) || CheckRoundState() == 2) return Plugin_Continue;
 
-	// tf2attrib broken
-	//if (IsValidEntity(iClient)) TF2Attrib_RemoveAll(iClient);
+	if (IsValidEntity(iClient)) TF2Attrib_RemoveAll(iClient);
 	if(VSHA_OnGameMode_ForcePlayerTeamChange(vshaEquipPlayers, iClient, OtherTeam) != Plugin_Handled)
 	{
 		if (GetClientTeam(iClient) != OtherTeam)
@@ -154,8 +153,7 @@ public Action EquipPlayers(Handle timer, int userid)
 				SetMediCharge(weapon, 0.41);
 			}
 		}
-		// tf2attrib broken
-		//default: //TF2Attrib_SetByDefIndex( iClient, 57, float(GetClientHealth(iClient)/50) ); //make by cvar
+		default: TF2Attrib_SetByDefIndex( iClient, 57, float(GetClientHealth(iClient)/50) ); //make by cvar
 	}
 
 	// New to VSHA .. detect the shield ahead of time and store it.
