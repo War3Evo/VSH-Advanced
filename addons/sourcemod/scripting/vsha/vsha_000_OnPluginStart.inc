@@ -39,7 +39,7 @@ public void OnPluginStart()
 	p_OnBossSetHP = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_CellByRef);
 	p_OnBossSetHP_Post = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
 
-	p_OnLastSurvivor = CreateForward(ET_Ignore);
+	p_OnLastSurvivor = CreateForward(ET_Ignore, Param_Cell);
 
 	p_OnBossTimer = CreateForward(ET_Ignore, Param_Cell, Param_Cell, Param_CellByRef, Param_CellByRef, Param_Cell, Param_Cell, Param_Cell);
 	p_OnBossTimer_1_Second = CreateForward(ET_Ignore, Param_Cell, Param_Cell);
